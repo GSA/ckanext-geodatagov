@@ -3,3 +3,6 @@ syntax: glob
 *.egg-info
 *.swo
 *.swp
+conversiontool/run.sh
+conversiontool/errors.log
+conversiontool/debug.xml
