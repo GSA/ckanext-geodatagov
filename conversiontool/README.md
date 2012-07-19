@@ -4,14 +4,9 @@ Translate data to OSI
 
 1. Install Java
 2. Install Jython
-3. Copy blank_run.sh to run.sh
-4. Update run.sh
-5. ./run.sh
-6. Check the ./data/output folder (it'll be HUGE)
-
-TODO
-====
-
-1. Define results table with DOCUUID, XML and datetime of conversion
-2. Write the results back to the database.
-
+3. Run ./setup.sh
+4. Copy blank_run.sh to run.sh
+5. Update run.sh
+6. ./run.sh
+7. Put the kettle on
+8. Admire the newly insert data in the xslt_results table
