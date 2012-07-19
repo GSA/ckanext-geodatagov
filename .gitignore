@@ -6,3 +6,4 @@ syntax: glob
 conversiontool/run.sh
 conversiontool/errors.log
 conversiontool/debug.xml
+conversiontool/lib/saxon-license.lic
