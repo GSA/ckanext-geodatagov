@@ -1,5 +1,6 @@
 #!/bin/sh
 wget http://www.saxonica.com/download/SaxonPE9-4-0-4J.zip
+unzip SaxonPE9-4-0-4J.zip
 mv saxon9pe.jar lib/
 rm saxon*.jar
 rm SaxonPE9-4-0-4J.zip
