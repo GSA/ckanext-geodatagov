@@ -42,7 +42,7 @@ def usage():
 _transform = None
 _errors = 0
 _count = 0
-_batch = 50
+_batch = 100
 _write_connection = None
 
 
@@ -203,7 +203,9 @@ def run_conversion(username, password, connstring, xslt):
     offset = 0
     count = get_document_count(connection)
 
-    while offset < 10000:
+    run_total = int(os.getenv("RUNTOTAL") or count)
+
+    while offset < run_total:
         stmt, results = get_documents(connection, offset)
 
         # While we keep pulling back results, we should keep processing
