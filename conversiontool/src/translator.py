@@ -85,7 +85,7 @@ def transform(xlst, xmldoc, docuuid):
         os.remove(path)
     except TransformerException, e:
         _errors = _errors + 1
-        msg = "Error: %s\nFile:  %s\nDoc UUID: %s\n" % (e, resultfile, docuuid)
+        msg = "Error: %s\nDoc UUID: %s\n" % (e, docuuid)
         store_document_result("", docuuid, msg)
         logging.error(msg)
 
