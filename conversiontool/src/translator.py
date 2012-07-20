@@ -203,7 +203,7 @@ def run_conversion(username, password, connstring, xslt):
     offset = 0
     count = get_document_count(connection)
 
-    while offset < 50:
+    while offset < 10000:
         stmt, results = get_documents(connection, offset)
 
         # While we keep pulling back results, we should keep processing
