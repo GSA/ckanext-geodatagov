@@ -1,11 +1,9 @@
 '''
-Different harvesters for INSPIRE related resources
+Different harvesters for ISO related resources
 
-    - GeminiHarvester - CSW servers with support for the GEMINI metadata profile
-    - GeminiDocHarvester - An individual GEMINI resource
-    - GeminiWafHarvester - An index page with links to GEMINI resources
-
-TODO: Harvesters for generic INSPIRE CSW servers
+    - IsoCswHarvester - CSW servers with support for the ISO metadata profile
+    - IsoDocHarvester - An individual ISO resource
+    - IsoWafHarvester - An index page with links to ISO resources
 
 '''
 import re
@@ -62,7 +60,7 @@ def text_traceback():
         ).strip()
     return res
 
-class InspireHarvester(object):
+class IsoHarvester(object):
     csw=None
 
     validator=None
@@ -144,12 +142,12 @@ class InspireHarvester(object):
         except Exception, e:
             log.error(text_traceback())
             if not str(e).strip():
-                self._save_object_error('Error importing Gemini document.', harvest_object, 'Import')
+                self._save_object_error('Error importing ISO document.', harvest_object, 'Import')
             else:
-                self._save_object_error('Error importing Gemini document: %s' % str(e), harvest_object, 'Import')
+                self._save_object_error('Error importing ISO document: %s' % str(e), harvest_object, 'Import')
 
     def import_gemini_object(self, gemini_string):
-        
+
         # Remove XML declaration as there are problems with unicode declaration
         gemini_string = re.sub('<\?xml(.*)\?>','',gemini_string)
         xml = etree.fromstring(gemini_string)
@@ -527,7 +525,7 @@ class InspireHarvester(object):
                     break
 
         if gemini_xml is None:
-            self._save_gather_error('Content is not a valid Gemini document',self.harvest_job)
+            self._save_gather_error('Content is not a valid ISO document',self.harvest_job)
 
         if not self.validator:
             self._get_validator()
@@ -548,7 +546,7 @@ class InspireHarvester(object):
 
         return gemini_string, gemini_guid
 
-class GeminiHarvester(InspireHarvester,SingletonPlugin):
+class IsoCswHarvester(IsoHarvester,SingletonPlugin):
     '''
     A Harvester for CSW servers that implement the GEMINI metadata profile
     '''
@@ -556,13 +554,13 @@ class GeminiHarvester(InspireHarvester,SingletonPlugin):
 
     def info(self):
         return {
-            'name': 'csw',
-            'title': 'CSW Server',
+            'name': 'iso-csw',
+            'title': 'CSW Server (ISO)',
             'description': 'A server that implements OGC\'s Catalog Service for the Web (CSW) standard'
             }
 
     def gather_stage(self,harvest_job):
-        log.debug('In GeminiHarvester gather_stage')
+        log.debug('In IsoCswHarvester gather_stage')
         # Get source URL
         url = harvest_job.source.url
 
@@ -642,22 +640,22 @@ class GeminiHarvester(InspireHarvester,SingletonPlugin):
         return True
 
 
-class GeminiDocHarvester(InspireHarvester,SingletonPlugin):
+class IsoDocHarvester(IsoHarvester,SingletonPlugin):
     '''
-    A Harvester for individual GEMINI documents
+    A Harvester for individual ISO documents
     '''
 
     implements(IHarvester)
 
     def info(self):
         return {
-            'name': 'gemini-single',
-            'title': 'Single GEMINI 2 document',
-            'description': 'A single GEMINI 2.1 document'
+            'name': 'iso-single',
+            'title': 'Single ISO document',
+            'description': 'A single ISO document'
             }
 
     def gather_stage(self,harvest_job):
-        log.debug('In GeminiDocHarvester gather_stage')
+        log.debug('In IsoDocHarvester gather_stage')
 
         self.harvest_job = harvest_job
 
@@ -690,7 +688,7 @@ class GeminiDocHarvester(InspireHarvester,SingletonPlugin):
                 self._save_gather_error('Could not get the GUID for source %s' % url, harvest_job)
                 return None
         except Exception, e:
-            self._save_gather_error('Error parsing the document. Is this a valid Gemini document?: %s [%r]'% (url,e),harvest_job)
+            self._save_gather_error('Error parsing the document. Is this a valid ISO document?: %s [%r]'% (url,e),harvest_job)
             return None
 
 
@@ -699,22 +697,22 @@ class GeminiDocHarvester(InspireHarvester,SingletonPlugin):
         return True
 
 
-class GeminiWafHarvester(InspireHarvester,SingletonPlugin):
+class IsoWafHarvester(IsoHarvester,SingletonPlugin):
     '''
-    A Harvester for index pages with links to GEMINI documents
+    A Harvester for index pages with links to ISO documents
     '''
 
     implements(IHarvester)
 
     def info(self):
         return {
-            'name': 'gemini-waf',
-            'title': 'Web Accessible Folder (WAF) - GEMINI',
-            'description': 'A Web Accessible Folder (WAF) displaying a list of GEMINI 2.1 documents'
+            'name': 'iso-waf',
+            'title': 'Web Accessible Folder (WAF) - ISO',
+            'description': 'A Web Accessible Folder (WAF) displaying a list of ISO documents'
             }
 
     def gather_stage(self,harvest_job):
-        log.debug('In GeminiWafHarvester gather_stage')
+        log.debug('In IsoWafHarvester gather_stage')
 
         self.harvest_job = harvest_job
 
