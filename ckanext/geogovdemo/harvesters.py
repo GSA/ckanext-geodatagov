@@ -234,7 +234,7 @@ class IsoHarvester(object):
 
                 # If the package has a deleted state, we will only update it and reactivate it if the
                 # new document has a more recent modified date
-                if package.state == u'deleted':
+                if package and package.state == u'deleted':
                     if last_harvested_object.metadata_modified_date < self.obj.metadata_modified_date:
                         log.info('Package for object with GUID %s will be re-activated' % gemini_guid)
                         reactivate_package = True
@@ -279,6 +279,9 @@ class IsoHarvester(object):
             'spatial-data-service-type',
         ]:
             extras[name] = gemini_values[name]
+
+        if not extras['guid']:
+            extras['guid'] = self.obj.guid
 
         extras['licence'] = gemini_values.get('use-constraints', '')
         if len(extras['licence']):
