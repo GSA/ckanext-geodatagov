@@ -7,6 +7,8 @@ Different harvesters for ISO related resources
 
 '''
 import re
+import hashlib
+
 from lxml import etree
 import urllib2
 from urlparse import urlparse
@@ -137,6 +139,13 @@ class IsoHarvester(object):
             self._save_object_error('Empty content for object %s' % harvest_object.id,harvest_object,'Import')
             return False
         try:
+            # Generate GUID if not present (i.e. it's a manual import)
+            if not self.obj.guid:
+                m = hashlib.md5()
+                m.update(self.obj.content.encode('utf8',errors='ignore'))
+                self.obj.guid = m.hexdigest()
+                self.obj.save()
+
             self.import_gemini_object(harvest_object.content)
             return True
         except Exception, e:
@@ -175,6 +184,11 @@ class IsoHarvester(object):
         gemini_document = GeminiDocument(content)
         gemini_values = gemini_document.read_values()
         gemini_guid = gemini_values['guid']
+        if not gemini_guid:
+            if self.obj.guid:
+                gemini_guid = self.obj.guid
+            else:
+                raise Exception('Could not determine GUID for object %s' % self.obj.id)
 
         # Save the metadata reference date in the Harvest Object
         try:
