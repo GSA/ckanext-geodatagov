@@ -18,23 +18,22 @@ from numbers import Number
 import sys
 import uuid
 import logging
+
 log = logging.getLogger(__name__)
 
 from pylons import config
-from sqlalchemy.sql import update,and_, bindparam
+from sqlalchemy.sql import update, bindparam
 from sqlalchemy.exc import InvalidRequestError
 
 from ckan import model
-from ckan.model import Session, repo, \
-                        Package, Resource, PackageExtra, \
-                        setup_default_user_roles
+from ckan.model import Session, Package
 from ckan.lib.munge import munge_title_to_name
 from ckan.plugins.core import SingletonPlugin, implements
 from ckan.lib.helpers import json
 
 from ckan import logic
 from ckan.logic import get_action, ValidationError
-from ckan.lib.navl.validators import not_empty, ignore_missing
+from ckan.lib.navl.validators import not_empty
 
 from ckanext.harvest.interfaces import IHarvester
 from ckanext.harvest.model import HarvestObject, HarvestGatherError, \
@@ -173,7 +172,7 @@ class IsoHarvester(object):
 
         unicode_gemini_string = etree.tostring(xml, encoding=unicode, pretty_print=True)
 
-        package = self.write_package_from_gemini_string(unicode_gemini_string)
+        self.write_package_from_gemini_string(unicode_gemini_string)
 
 
     def write_package_from_gemini_string(self, content):
@@ -291,10 +290,8 @@ class IsoHarvester(object):
 
         extras['access_constraints'] = gemini_values.get('limitations-on-public-access','')
         if gemini_values.has_key('temporal-extent-begin'):
-            #gemini_values['temporal-extent-begin'].sort()
             extras['temporal_coverage-from'] = gemini_values['temporal-extent-begin']
         if gemini_values.has_key('temporal-extent-end'):
-            #gemini_values['temporal-extent-end'].sort()
             extras['temporal_coverage-to'] = gemini_values['temporal-extent-end']
 
         # Save responsible organization roles
@@ -353,7 +350,6 @@ class IsoHarvester(object):
 
         if self.obj.source.publisher_id:
             package_dict['groups'] = [{'id':self.obj.source.publisher_id}]
-
 
         if reactivate_package:
             package_dict['state'] = u'active'
@@ -474,23 +470,6 @@ class IsoHarvester(object):
         return None
 
     def _create_package_from_data(self, package_dict, package = None):
-        '''
-        {'name': 'council-owned-litter-bins',
-         'notes': 'Location of Council owned litter bins within Borough.',
-         'resources': [{'description': 'Resource locator',
-                        'format': 'Unverified',
-                        'url': 'http://www.barrowbc.gov.uk'}],
-         'tags': [{'name':'Utility and governmental services'}],
-         'title': 'Council Owned Litter Bins',
-         'extras': [{'key':'INSPIRE','value':'True'},
-                    {'key':'bbox-east-long','value': '-3.12442'},
-                    {'key':'bbox-north-lat','value': '54.218407'},
-                    {'key':'bbox-south-lat','value': '54.039634'},
-                    {'key':'bbox-west-long','value': '-3.32485'},
-                    # etc.
-                    ]
-        }
-        '''
 
         if not package:
             package_schema = logic.schema.default_create_package_schema()
@@ -509,6 +488,7 @@ class IsoHarvester(object):
                    'schema':package_schema,
                    'extras_as_string':True,
                    'api_version': '2'}
+
         if not package:
             # We need to explicitly provide a package ID, otherwise ckanext-spatial
             # won't be be able to link the extent to the package.
@@ -565,7 +545,7 @@ class IsoHarvester(object):
 
 class IsoCswHarvester(IsoHarvester,SingletonPlugin):
     '''
-    A Harvester for CSW servers that implement the GEMINI metadata profile
+    A Harvester for CSW servers that implement the ISO metadata profile
     '''
     implements(IHarvester)
 
