@@ -411,18 +411,18 @@ class IsoHarvester(object):
 
         if package == None:
             # Create new package from data.
-            package = self._create_package_from_data(package_dict)
-            log.info('Created new package ID %s with GEMINI guid %s', package['id'], gemini_guid)
+            package_id = self._create_package_from_data(package_dict)
+            log.info('Created new package ID %s with ISO guid %s', package_id, gemini_guid)
         else:
-            package = self._create_package_from_data(package_dict, package = package)
-            log.info('Updated existing package ID %s with existing GEMINI guid %s', package['id'], gemini_guid)
+            package_id = self._create_package_from_data(package_dict, package = package)
+            log.info('Updated existing package ID %s with existing ISO guid %s', package_id, gemini_guid)
 
         # Flag the other objects of this source as not current anymore
         from ckanext.harvest.model import harvest_object_table
         u = update(harvest_object_table) \
                 .where(harvest_object_table.c.package_id==bindparam('b_package_id')) \
                 .values(current=False)
-        Session.execute(u, params={'b_package_id':package['id']})
+        Session.execute(u, params={'b_package_id':package_id})
         Session.commit()
 
         # Refresh current object from session, otherwise the
@@ -434,16 +434,12 @@ class IsoHarvester(object):
         # Set reference to package in the HarvestObject and flag it as
         # the current one
         if not self.obj.package_id:
-            self.obj.package_id = package['id']
+            self.obj.package_id = package_id
 
         self.obj.current = True
         self.obj.save()
 
-
-        assert gemini_guid == [e['value'] for e in package['extras'] if e['key'] == 'guid'][0]
-        assert self.obj.id == [e['value'] for e in package['extras'] if e['key'] ==  'harvest_object_id'][0]
-
-        return package
+        return package_id
 
     def gen_new_name(self,title):
         name = munge_title_to_name(title).replace('_', '-')
@@ -487,7 +483,8 @@ class IsoHarvester(object):
                    'user':'harvest',
                    'schema':package_schema,
                    'extras_as_string':True,
-                   'api_version': '2'}
+                   'api_version': '2',
+                   'return_package_dict': False}
 
         if not package:
             # We need to explicitly provide a package ID, otherwise ckanext-spatial
@@ -501,11 +498,11 @@ class IsoHarvester(object):
             package_dict['id'] = package.id
 
         try:
-            package_dict = action_function(context, package_dict)
+            package_id = action_function(context, package_dict)
         except ValidationError,e:
             raise Exception('Validation Error: %s' % str(e.error_summary))
 
-        return package_dict
+        return package_id
 
     def get_gemini_string_and_guid(self,content,url=None):
 
