@@ -445,18 +445,11 @@ class IsoHarvester(object):
         name = munge_title_to_name(title).replace('_', '-')
         while '--' in name:
             name = name.replace('--', '-')
-        like_q = u'%s%%' % name
-        pkg_query = Session.query(Package).filter(Package.name.ilike(like_q)).limit(100)
-        taken = [pkg.name for pkg in pkg_query]
-        if name not in taken:
-            return name
+        pkg_obj = Session.query(Package).filter(Package.name == name).first()
+        if pkg_obj:
+            return name + str(uuid.uuid4())[:5]
         else:
-            counter = 1
-            while counter < 101:
-                if name+str(counter) not in taken:
-                    return name+str(counter)
-                counter = counter + 1
-            return None
+            return name
 
     def _extract_first_license_url(self,licences):
         for licence in licences:
