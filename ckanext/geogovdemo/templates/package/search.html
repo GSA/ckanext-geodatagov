@@ -1,0 +1,8 @@
+{% ckan_extends 'package/search.html' %}
+
+{% block secondary_content %}
+  {{ super() }}
+  {{ h.snippet('snippets/facet_list.html', title='Organization', name='responsible-party') }}
+
+{% endblock %}
+
