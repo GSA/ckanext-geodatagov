@@ -1,8 +1,11 @@
 {% ckan_extends 'package/search.html' %}
 
 {% block secondary_content %}
-  {{ super() }}
+
+  {{ h.snippet('snippets/facet_list.html', title='Groups', name='groups') }}
+  {{ h.snippet('snippets/facet_list.html', title='Tags', name='tags') }}
   {{ h.snippet('snippets/facet_list.html', title='Organization', name='responsible-party') }}
+  {{ h.snippet('snippets/facet_list.html', title='Formats', name='res_format') }}
 
 {% endblock %}
 
