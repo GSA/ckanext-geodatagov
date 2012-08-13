@@ -1,0 +1,18 @@
+{% ckan_extends 'package/resource_read.html' %}
+
+{% block styles %}
+  {{ super () }}
+
+  {% if res.format == 'wms' or res.format == 'WMS' %}
+    {% snippet "spatial/snippets/wms_preview_styles.html" %}
+  {% endif %}
+{% endblock %}
+
+{% block scripts %}
+  {{ super () }}
+
+  {% if res.format == 'wms' or res.format == 'WMS' %}
+    {% snippet "spatial/snippets/wms_preview_scripts.html" %}
+  {% endif %}
+{% endblock %}
+
