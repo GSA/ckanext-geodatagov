@@ -477,7 +477,7 @@ class IsoHarvester(object):
                    'schema':package_schema,
                    'extras_as_string':True,
                    'api_version': '2',
-                   'return_package_dict': False}
+                   'return_id_only': True}
 
         if not package:
             # We need to explicitly provide a package ID, otherwise ckanext-spatial
