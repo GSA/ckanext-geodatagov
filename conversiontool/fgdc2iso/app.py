@@ -19,12 +19,12 @@ import javax.xml.transform.TransformerException as TransformerException
 import javax.xml.transform.stream.StreamResult as StreamResult
 import javax.xml.transform.stream.StreamSource as StreamSource
 import net.sf.saxon.trans.XPathException as XPathException
+import config
 
 _transform = None
 
-defualt_xslt = '/var/lib/tomcat6/webapps/fgdc2iso/fgdcrse2iso19115-2.xslt'
 
-def transform(xmldoc, xslt=defualt_xslt):
+def transform(xmldoc, xslt=config.defualt_xslt):
     '''
     Runs the transform from the specified xslt against the provided
     document.  The transformer is only loaded on the first run and
