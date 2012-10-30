@@ -493,6 +493,8 @@ class CswHarvester(GeoDataGovHarvester, SingletonPlugin):
         # Get source URL
         url = harvest_job.source.url
 
+        self._set_config(harvest_job.source.config)
+
         try:
             self._setup_csw_client(url)
         except Exception, e:
@@ -599,6 +601,8 @@ class DocHarvester(GeoDataGovHarvester, SingletonPlugin):
         # Get source URL
         url = harvest_job.source.url
 
+        self._set_config(harvest_job.source.config)
+
         # Get contents
         try:
             content = self._get_content(url)
@@ -659,6 +663,8 @@ class WafHarvester(GeoDataGovHarvester, SingletonPlugin):
 
         # Get source URL
         url = harvest_job.source.url
+
+        self._set_config(harvest_job.source.config)
 
         # Get contents
         try:
