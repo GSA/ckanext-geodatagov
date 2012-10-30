@@ -1,29 +1,26 @@
 '''
-Different harvesters for ISO related resources
+Different harvesters for spatial metadata
 
     - IsoCswHarvester - CSW servers with support for the ISO metadata profile
     - IsoDocHarvester - An individual ISO resource
     - IsoWafHarvester - An index page with links to ISO resources
 
 '''
-import re
-import hashlib
-
-from lxml import etree
-import urllib2
+import cgitb
+import warnings
 from urlparse import urlparse
 from datetime import datetime
 from string import Template
 from numbers import Number
 import sys
 import uuid
+import os
 import logging
+import hashlib
 
-log = logging.getLogger(__name__)
 
-from pylons import config
+from lxml import etree
 from sqlalchemy.sql import update, bindparam
-from sqlalchemy.exc import InvalidRequestError
 
 from ckan import model
 from ckan.model import Session, Package
@@ -36,23 +33,14 @@ from ckan.logic import get_action, ValidationError
 from ckan.lib.navl.validators import not_empty
 
 from ckanext.harvest.interfaces import IHarvester
-from ckanext.harvest.model import HarvestObject, HarvestGatherError, \
-                                    HarvestObjectError
+from ckanext.harvest.model import HarvestObject
 
-from ckanext.inspire.model import GeminiDocument
+from ckanext.spatial.model import GeminiDocument
+from ckanext.spatial.harvesters import SpatialHarvester
+from ckanext.spatial.lib.csw_client import CswService
 
-from owslib import wms
+log = logging.getLogger(__name__)
 
-try:
-    from ckanext.csw.services import CswService
-    from ckanext.csw.validation import Validator
-    from owslib.csw import namespaces
-except ImportError:
-    log.error('No CSW support installed -- install ckanext-csw')
-    raise
-
-import cgitb
-import warnings
 def text_traceback():
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
@@ -61,10 +49,16 @@ def text_traceback():
         ).strip()
     return res
 
-class IsoHarvester(object):
-    csw=None
+# When developing, it might be helpful to 'export DEBUG=1' to reraise the
+# exceptions, rather them being caught.
+debug_exception_mode = bool(os.getenv('DEBUG'))
 
-    validator=None
+
+class GeoDataGovHarvester(SpatialHarvester):
+    '''
+
+    All three harvesters share the same import stage
+    '''
 
     force_import = False
 
@@ -72,60 +66,9 @@ class IsoHarvester(object):
     {"type":"Polygon","coordinates":[[[$minx, $miny],[$minx, $maxy], [$maxx, $maxy], [$maxx, $miny], [$minx, $miny]]]}
     ''')
 
-    def _is_wms(self,url):
-        try:
-            capabilities_url = wms.WMSCapabilitiesReader().capabilities_url(url)
-            res = urllib2.urlopen(capabilities_url,None,10)
-            xml = res.read()
-
-            s = wms.WebMapService(url,xml=xml)
-            return isinstance(s.contents, dict) and s.contents != {}
-        except Exception, e:
-            log.error('WMS check for %s failed with exception: %s'%(url, str(e)))
-        return False
-
-    def _setup_csw_server(self,url):
-        self.csw = CswService(url)
-
-    def _get_validator(self):
-        profiles = [
-            x.strip() for x in
-            config.get(
-                'ckan.inspire.validator.profiles',
-                'iso19139,gemini2',
-            ).split(',')
-        ]
-        self.validator = Validator(profiles=profiles)
-
-
-    def _save_gather_error(self,message,job):
-        err = HarvestGatherError(message=message,job=job)
-        try:
-            err.save()
-        except InvalidRequestError:
-            Session.rollback()
-            err.save()
-        finally:
-            log.error(message)
-
-    def _save_object_error(self,message,obj,stage=u'Fetch'):
-        err = HarvestObjectError(message=message,object=obj,stage=stage)
-        try:
-            err.save()
-        except InvalidRequestError,e:
-            Session.rollback()
-            err.save()
-        finally:
-            log.error(message)
-
-    def _get_content(self, url):
-        url = url.replace(' ','%20')
-        http_response = urllib2.urlopen(url)
-        return http_response.read()
-
-
-    # All three harvesters share the same import stage
-    def import_stage(self,harvest_object):
+    def import_stage(self, harvest_object):
+        log = logging.getLogger(__name__ + '.import')
+        log.debug('Import stage for harvest object: %s', harvest_object.id)
 
         if not harvest_object:
             log.error('No harvest object received')
@@ -148,27 +91,24 @@ class IsoHarvester(object):
             self.import_gemini_object(harvest_object.content)
             return True
         except Exception, e:
-            log.error(text_traceback())
+            log.error('Exception during import: %s' % text_traceback())
             if not str(e).strip():
-                self._save_object_error('Error importing ISO document.', harvest_object, 'Import')
+                self._save_object_error('Error importing document.', harvest_object, 'Import')
             else:
-                self._save_object_error('Error importing ISO document: %s' % str(e), harvest_object, 'Import')
+                self._save_object_error('Error importing document: %s' % str(e), harvest_object, 'Import')
+
+            if debug_exception_mode:
+                raise
 
     def import_gemini_object(self, gemini_string):
-
-        # Remove XML declaration as there are problems with unicode declaration
-        gemini_string = re.sub('<\?xml(.*)\?>','',gemini_string)
+        log = logging.getLogger(__name__ + '.import')
         xml = etree.fromstring(gemini_string)
 
-        if not self.validator:
-            self._get_validator()
-
-        if self.validator is not None:
-            valid, messages = self.validator.isvalid(xml)
-            if not valid:
-                log.error('Errors found for object with GUID %s:' % self.obj.guid)
-                out = messages[0] + ':\n' + '\n'.join(messages[1:])
-                self._save_object_error(out,self.obj,'Import')
+        valid, messages = self._get_validator().is_valid(xml)
+        if not valid:
+            log.error('Errors found for object with GUID %s:' % self.obj.guid)
+            out = messages[0] + ':\n' + '\n'.join(messages[1:])
+            self._save_object_error(out,self.obj,'Import')
 
         unicode_gemini_string = etree.tostring(xml, encoding=unicode, pretty_print=True)
 
@@ -179,10 +119,12 @@ class IsoHarvester(object):
         '''Create or update a Package based on some content that has
         come from a URL.
         '''
+        log = logging.getLogger(__name__ + '.import')
         package = None
         gemini_document = GeminiDocument(content)
         gemini_values = gemini_document.read_values()
         gemini_guid = gemini_values['guid']
+
         if not gemini_guid:
             if self.obj.guid:
                 gemini_guid = self.obj.guid
@@ -250,7 +192,7 @@ class IsoHarvester(object):
                     log.info('Document with GUID %s unchanged, skipping...' % (gemini_guid))
                 return None
         else:
-            log.info('No package with GEMINI guid %s found, let''s create one' % gemini_guid)
+            log.info('No package with guid %s found, let''s create one' % gemini_guid)
 
         extras = {
             'published_by': self.obj.source.publisher_id or '',
@@ -351,6 +293,7 @@ class IsoHarvester(object):
         if self.obj.source.publisher_id:
             package_dict['groups'] = [{'id':self.obj.source.publisher_id}]
 
+
         if reactivate_package:
             package_dict['state'] = u'active'
 
@@ -412,10 +355,10 @@ class IsoHarvester(object):
         if package == None:
             # Create new package from data.
             package_id = self._create_package_from_data(package_dict)
-            log.info('Created new package ID %s with ISO guid %s', package_id, gemini_guid)
+            log.info('Created new package ID %s with guid %s', package_id, gemini_guid)
         else:
-            package_id = self._create_package_from_data(package_dict, package = package)
-            log.info('Updated existing package ID %s with existing ISO guid %s', package_id, gemini_guid)
+            package_id = self._create_package_from_data(package_dict, package=package)
+            log.info('Updated existing package ID %s with existing guid %s', package_id, gemini_guid)
 
         # Flag the other objects of this source as not current anymore
         from ckanext.harvest.model import harvest_object_table
@@ -441,7 +384,7 @@ class IsoHarvester(object):
 
         return package_id
 
-    def gen_new_name(self,title):
+    def gen_new_name(self, title):
         name = munge_title_to_name(title).replace('_', '-')
         while '--' in name:
             name = name.replace('--', '-')
@@ -478,7 +421,6 @@ class IsoHarvester(object):
                    'extras_as_string':True,
                    'api_version': '2',
                    'return_id_only': True}
-
         if not package:
             # We need to explicitly provide a package ID, otherwise ckanext-spatial
             # won't be be able to link the extent to the package.
@@ -494,11 +436,12 @@ class IsoHarvester(object):
             package_id = action_function(context, package_dict)
         except ValidationError,e:
             raise Exception('Validation Error: %s' % str(e.error_summary))
+            if debug_exception_mode:
+                raise
 
         return package_id
 
     def get_gemini_string_and_guid(self,content,url=None):
-
         xml = etree.fromstring(content)
 
         # The validator and GeminiDocument don't like the container
@@ -512,19 +455,15 @@ class IsoHarvester(object):
                     break
 
         if gemini_xml is None:
-            self._save_gather_error('Content is not a valid ISO document',self.harvest_job)
+            self._save_gather_error('Content is not a valid Gemini document',self.harvest_job)
 
-        if not self.validator:
-            self._get_validator()
-
-        if self.validator is not None:
-            valid, messages = self.validator.isvalid(gemini_xml)
-            if not valid:
-                out = messages[0] + ':\n' + '\n'.join(messages[1:])
-                if url:
-                    self._save_gather_error('Validation error for %s %r'% (url,out),self.harvest_job)
-                else:
-                    self._save_gather_error('Validation error. %r'%out,self.harvest_job)
+        valid, messages = self._get_validator().is_valid(gemini_xml)
+        if not valid:
+            out = messages[0] + ':\n' + '\n'.join(messages[1:])
+            if url:
+                self._save_gather_error('Validation error for %s - %s'% (url,out),self.harvest_job)
+            else:
+                self._save_gather_error('Validation error - %s'%out,self.harvest_job)
 
         gemini_string = etree.tostring(gemini_xml)
         gemini_document = GeminiDocument(gemini_string)
@@ -533,33 +472,35 @@ class IsoHarvester(object):
 
         return gemini_string, gemini_guid
 
-class IsoCswHarvester(IsoHarvester,SingletonPlugin):
+class CswHarvester(GeoDataGovHarvester, SingletonPlugin):
     '''
-    A Harvester for CSW servers that implement the ISO metadata profile
+    A Harvester for CSW servers
     '''
     implements(IHarvester)
 
+    csw=None
+
     def info(self):
         return {
-            'name': 'iso-csw',
-            'title': 'CSW Server (ISO)',
+            'name': 'csw',
+            'title': 'CSW Server',
             'description': 'A server that implements OGC\'s Catalog Service for the Web (CSW) standard'
             }
 
-    def gather_stage(self,harvest_job):
-        log.debug('In IsoCswHarvester gather_stage')
+    def gather_stage(self, harvest_job):
+        log = logging.getLogger(__name__ + '.CSW.gather')
+        log.debug('CswHarvester gather_stage for job: %r', harvest_job)
         # Get source URL
         url = harvest_job.source.url
 
-        # Setup CSW server
         try:
-            self._setup_csw_server(url)
+            self._setup_csw_client(url)
         except Exception, e:
-            self._save_gather_error('Error contacting the CSW server: %s' % e,harvest_job)
+            self._save_gather_error('Error contacting the CSW server: %s' % e, harvest_job)
             return None
 
 
-        log.debug('Starting gathering for %s ' % url)
+        log.debug('Starting gathering for %s' % url)
         used_identifiers = []
         ids = []
         try:
@@ -575,7 +516,7 @@ class IsoCswHarvester(IsoHarvester,SingletonPlugin):
                         continue
 
                     # Create a new HarvestObject for this identifier
-                    obj = HarvestObject(guid = identifier, job = harvest_job)
+                    obj = HarvestObject(guid=identifier, job=harvest_job)
                     obj.save()
 
                     ids.append(obj.id)
@@ -585,7 +526,8 @@ class IsoCswHarvester(IsoHarvester,SingletonPlugin):
                     continue
 
         except Exception, e:
-            self._save_gather_error('Error gathering the identifiers from the CSW server [%r]' % e, harvest_job)
+            log.error('Exception: %s' % text_traceback())
+            self._save_gather_error('Error gathering the identifiers from the CSW server [%s]' % str(e), harvest_job)
             return None
 
         if len(ids) == 0:
@@ -595,24 +537,27 @@ class IsoCswHarvester(IsoHarvester,SingletonPlugin):
         return ids
 
     def fetch_stage(self,harvest_object):
-        url = harvest_object.source.url
-        # Setup CSW server
-        try:
-            self._setup_csw_server(url)
-        except Exception, e:
-            self._save_object_error('Error contacting the CSW server: %s' % e,harvest_object)
-            return False
+        log = logging.getLogger(__name__ + '.CSW.fetch')
+        log.debug('CswHarvester fetch_stage for object: %s', harvest_object.id)
 
+        url = harvest_object.source.url
+        try:
+            self._setup_csw_client(url)
+        except Exception, e:
+            self._save_object_error('Error contacting the CSW server: %s' % e,
+                                    harvest_object)
+            return False
 
         identifier = harvest_object.guid
         try:
-            record = self.csw.getrecordbyid([identifier],outputschema="gmi")
+            record = self.csw.getrecordbyid([identifier])
         except Exception, e:
-            self._save_object_error('Error getting the CSW record with GUID %s' % identifier,harvest_object)
+            self._save_object_error('Error getting the CSW record with GUID %s' % identifier, harvest_object)
             return False
 
         if record is None:
-            self._save_object_error('Empty record for GUID %s' % identifier,harvest_object)
+            self._save_object_error('Empty record for GUID %s' % identifier,
+                                    harvest_object)
             return False
 
         try:
@@ -620,29 +565,34 @@ class IsoCswHarvester(IsoHarvester,SingletonPlugin):
             harvest_object.content = record['xml']
             harvest_object.save()
         except Exception,e:
-            self._save_object_error('Error saving the harvest object for GUID %s [%r]' % (identifier,e),harvest_object)
+            self._save_object_error('Error saving the harvest object for GUID %s [%r]' % \
+                                    (identifier, e), harvest_object)
             return False
 
         log.debug('XML content saved (len %s)', len(record['xml']))
         return True
 
+    def _setup_csw_client(self, url):
+        self.csw = CswService(url)
 
-class IsoDocHarvester(IsoHarvester,SingletonPlugin):
+
+class DocHarvester(GeoDataGovHarvester, SingletonPlugin):
     '''
-    A Harvester for individual ISO documents
+    A Harvester for individual spatial metadata documents
     '''
 
     implements(IHarvester)
 
     def info(self):
         return {
-            'name': 'iso-single',
-            'title': 'Single ISO document',
-            'description': 'A single ISO document'
+            'name': 'single-doc',
+            'title': 'Single spatial metadata document',
+            'description': 'A single spatial metadata document'
             }
 
     def gather_stage(self,harvest_job):
-        log.debug('In IsoDocHarvester gather_stage')
+        log = logging.getLogger(__name__ + '.individual.gather')
+        log.debug('DocHarvester gather_stage for job: %r', harvest_job)
 
         self.harvest_job = harvest_job
 
@@ -675,7 +625,9 @@ class IsoDocHarvester(IsoHarvester,SingletonPlugin):
                 self._save_gather_error('Could not get the GUID for source %s' % url, harvest_job)
                 return None
         except Exception, e:
-            self._save_gather_error('Error parsing the document. Is this a valid ISO document?: %s [%r]'% (url,e),harvest_job)
+            self._save_gather_error('Error parsing the document. Is this a valid  document?: %s [%r]'% (url,e),harvest_job)
+            if debug_exception_mode:
+                raise
             return None
 
 
@@ -684,22 +636,24 @@ class IsoDocHarvester(IsoHarvester,SingletonPlugin):
         return True
 
 
-class IsoWafHarvester(IsoHarvester,SingletonPlugin):
+class WafHarvester(GeoDataGovHarvester, SingletonPlugin):
     '''
-    A Harvester for index pages with links to ISO documents
+    A Harvester for WAF (Web Accessible Folders) containing spatial metadata documents.
+    e.g. Apache serving a directory of ISO 19139 files.
     '''
 
     implements(IHarvester)
 
     def info(self):
         return {
-            'name': 'iso-waf',
-            'title': 'Web Accessible Folder (WAF) - ISO',
-            'description': 'A Web Accessible Folder (WAF) displaying a list of ISO documents'
+            'name': 'waf',
+            'title': 'Web Accessible Folder (WAF)',
+            'description': 'A Web Accessible Folder (WAF) displaying a list of spatial metadata documents'
             }
 
     def gather_stage(self,harvest_job):
-        log.debug('In IsoWafHarvester gather_stage')
+        log = logging.getLogger(__name__ + '.WAF.gather')
+        log.debug('WafHarvester gather_stage for job: %r', harvest_job)
 
         self.harvest_job = harvest_job
 

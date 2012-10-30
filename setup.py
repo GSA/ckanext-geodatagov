@@ -27,8 +27,8 @@ setup(
         [ckan.plugins]
 	# Add plugins here, eg
 	geogovdemo=ckanext.geogovdemo.plugins:Demo
-    iso_csw_harvester=ckanext.geogovdemo.harvesters:IsoCswHarvester
-    iso_doc_harvester=ckanext.geogovdemo.harvesters:IsoDocHarvester
-    iso_waf_harvester=ckanext.geogovdemo.harvesters:IsoWafHarvester
+    csw_harvester=ckanext.geogovdemo.harvesters:CswHarvester
+    doc_harvester=ckanext.geogovdemo.harvesters:DocHarvester
+    waf_harvester=ckanext.geogovdemo.harvesters:WafHarvester
 	""",
 )
