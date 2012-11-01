@@ -1,9 +1,9 @@
 '''
 Different harvesters for spatial metadata
 
-    - IsoCswHarvester - CSW servers with support for the ISO metadata profile
-    - IsoDocHarvester - An individual ISO resource
-    - IsoWafHarvester - An index page with links to ISO resources
+    - CswHarvester - CSW servers with support for the ISO metadata profile
+    - DocHarvester - An individual ISO resource
+    - WafHarvester - An index page with links to ISO resources
 
 '''
 import cgitb
