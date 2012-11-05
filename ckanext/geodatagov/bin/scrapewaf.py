@@ -10,7 +10,7 @@ import dateutil.parser
 def add_status():
     records = open('wafurls.txt')
     results = open('wafurlsstatus.txt', 'w+')
-    headers = 'count,count_with_date,server,status_code,error,id,unapproved,url'
+    headers = 'count,count_with_date,server,status_code,error,standard,id,unapproved,url'
     results.write(headers + '\n')
     writer = csv.DictWriter(
         results, headers.split(',')
@@ -37,6 +37,12 @@ def add_status():
                 extracted_waf = extract_waf(content,row_dict['url'], scraper)
                 row_dict['count'] = str(len(extracted_waf))
                 row_dict['count_with_date'] = str(len([i for i in extracted_waf if i[1]]))
+                if extracted_waf:
+                    try:
+                        standard = guess_standard(extracted_waf[0][0])
+                        row_dict['standard'] = standard
+                    except Exception, e:
+                        print 'Error guessing format. Error is', e
             else:
                 row_dict['count'] = "0"
                 row_dict['count_with_date'] = "0"
@@ -48,38 +54,22 @@ def add_status():
         writer.writerow(row_dict)
         results.flush()
 
+def guess_standard(url):
 
-def _extract_urls(content, base_url):
-    '''
-    Get the URLs out of a WAF index page
-    '''
-    try:
-        parser = etree.HTMLParser()
-        tree = etree.fromstring(content, parser=parser)
-    except Exception, inst:
-        msg = 'Couldn''t parse content into a tree: %s: %s' \
-              % (inst, content)
-        raise Exception(msg)
-    urls = []
-    for url in tree.xpath('//a/@href'):
-        url = url.strip()
-        if not url:
-            continue
-        if not url.endswith('.xml'):
-            continue
-        if '?' in url:
-            continue
-        if '#' in url:
-            continue
-        if 'mailto:' in url:
-            continue
-        urls.append(url)
-    base_url = base_url.rstrip('/').split('/')
-    if 'index' in base_url[-1]:
-        base_url.pop()
-    base_url = '/'.join(base_url)
-    base_url += '/'
-    return [base_url + i for i in urls]
+    content = requests.get(url, timeout=60).content
+    if content:
+        lowered = content.lower()
+        if '</gmd:MD_Metadata>'.lower() in lowered:
+            return 'iso'
+        if '</gmi:MI_Metadata>'.lower() in lowered:
+            return 'iso'
+        if '</metadata>'.lower() in lowered:
+            return 'fgdc'
+        return 'unknown'
+
+
+
+
 
 
 apache  = parse.SkipTo(parse.CaselessLiteral("<a href="), include=True).suppress() \
@@ -128,6 +118,8 @@ def extract_waf(content, base_url, scraper, results = None, depth=0):
     for record in parsed:
         url = record.url
         if not url:
+            continue
+        if url.startswith('_'):
             continue
         if '?' in url:
             continue
