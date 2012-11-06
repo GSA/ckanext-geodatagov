@@ -6,6 +6,8 @@ import collections
 import pyparsing as parse
 import urlparse
 import dateutil.parser
+from ckanext.geodatagov.harvesters import guess_standard
+
 
 def add_status():
     records = open('wafurls.txt')
@@ -53,22 +55,6 @@ def add_status():
     
         writer.writerow(row_dict)
         results.flush()
-
-def guess_standard(url):
-
-    content = requests.get(url, timeout=60).content
-    if content:
-        lowered = content.lower()
-        if '</gmd:MD_Metadata>'.lower() in lowered:
-            return 'iso'
-        if '</gmi:MI_Metadata>'.lower() in lowered:
-            return 'iso'
-        if '</metadata>'.lower() in lowered:
-            return 'fgdc'
-        return 'unknown'
-
-
-
 
 
 
