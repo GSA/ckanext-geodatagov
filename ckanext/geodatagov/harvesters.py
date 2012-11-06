@@ -685,20 +685,19 @@ class WafHarvester(GeoDataGovHarvester, SingletonPlugin):
         self.harvest_job = harvest_job
 
         # Get source URL
-        url = harvest_job.source.url
+        source_url = harvest_job.source.url
 
         self._set_config(harvest_job.source.config)
 
         # Get contents
         try:
-            response = requests.get(url, timeout=60)
+            response = requests.get(source_url, timeout=60)
             content = response.content
             scraper = _get_scraper(response.headers.get('server'))
         except Exception,e:
             self._save_gather_error('Unable to get content for URL: %s: %r' % \
-                                        (url, e),harvest_job)
+                                        (source_url, e),harvest_job)
             return None
-
 
         ######  Get current harvest object out of db ######
 
@@ -725,10 +724,10 @@ class WafHarvester(GeoDataGovHarvester, SingletonPlugin):
 
         url_to_modified_harvest = {} ## mapping of url to last_modified in harvest
         try:
-            for url, modified_date in _extract_waf(content,url,scraper):
+            for url, modified_date in _extract_waf(content,source_url,scraper):
                 url_to_modified_harvest[url] = modified_date
         except Exception,e:
-            msg = 'Error extracting URLs from %s, error was %s' % (url, e)
+            msg = 'Error extracting URLs from %s, error was %s' % (source_url, e)
             self._save_gather_error(msg,harvest_job)
             return None
 
@@ -757,7 +756,7 @@ class WafHarvester(GeoDataGovHarvester, SingletonPlugin):
         ids = []
         for location in new:
             obj = HarvestObject(job=harvest_job,
-                                extras=create_extras(url,
+                                extras=create_extras(location,
                                                      url_to_modified_harvest[location],
                                                      'new')
                                )
@@ -766,7 +765,7 @@ class WafHarvester(GeoDataGovHarvester, SingletonPlugin):
 
         for location in change:
             obj = HarvestObject(job=harvest_job,
-                                extras=create_extras(url,
+                                extras=create_extras(location,
                                                      url_to_modified_harvest[location],
                                                      'change'),
                                 guid=url_to_guid[url]
@@ -783,6 +782,8 @@ class WafHarvester(GeoDataGovHarvester, SingletonPlugin):
             ids.append(obj.id)
 
         if len(ids) > 0:
+            log.debug('{0} objects sent to the next stage: {1} new, {2} change, {3} delete'.format(
+                len(ids), len(new), len(change), len(delete)))
             return ids
         else:
             self._save_gather_error('No records to change',
