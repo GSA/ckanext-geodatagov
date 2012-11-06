@@ -8,7 +8,7 @@ Different harvesters for spatial metadata
 '''
 import cgitb
 import warnings
-from urlparse import urlparse
+from urlparse import urlparse, urljoin
 from datetime import datetime
 from string import Template
 from numbers import Number
@@ -18,9 +18,12 @@ import os
 import logging
 import hashlib
 
-
+import dateutil.parser
+import pyparsing as parse
+import requests
 from lxml import etree
 from sqlalchemy.sql import update, bindparam
+from sqlalchemy.orm import aliased
 
 from ckan import model
 from ckan.model import Session, Package
@@ -34,6 +37,7 @@ from ckan.lib.navl.validators import not_empty
 
 from ckanext.harvest.interfaces import IHarvester
 from ckanext.harvest.model import HarvestObject
+from ckanext.harvest.model import HarvestObjectExtra as HOExtra
 
 from ckanext.spatial.model import GeminiDocument
 from ckanext.spatial.harvesters import SpatialHarvester
@@ -670,52 +674,101 @@ class WafHarvester(GeoDataGovHarvester, SingletonPlugin):
 
         # Get contents
         try:
-            content = self._get_content(url)
+            response = requests.get(url, timeout=60)
+            content = response.content
+            scraper = _get_scraper(response.headers.get('server'))
         except Exception,e:
             self._save_gather_error('Unable to get content for URL: %s: %r' % \
                                         (url, e),harvest_job)
             return None
 
-        ids = []
+
+        ######  Get current harvest object out of db ######
+
+        url_to_modified_db = {} ## mapping of url to last_modified in db
+        url_to_guid = {} ## mapping of url to guid in db
+
+
+        HOExtraAlias1 = aliased(HOExtra)
+        HOExtraAlias2 = aliased(HOExtra)
+        query = model.Session.query(HarvestObject.guid, HOExtraAlias1.value, HOExtraAlias2.value).\
+                                    join(HOExtraAlias1, HarvestObject.extras).\
+                                    join(HOExtraAlias2, HarvestObject.extras).\
+                                    filter(HOExtraAlias1.key=='waf_modified_date').\
+                                    filter(HOExtraAlias2.key=='waf_location').\
+                                    filter(HarvestObject.current==True).\
+                                    filter(HarvestObject.harvest_source_id==harvest_job.source.id)
+
+
+        for guid, modified_date, url in query:
+            url_to_modified_db[url] = modified_date
+            url_to_guid[url] = guid
+
+        ######  Get current list of records from source ######
+
+        url_to_modified_harvest = {} ## mapping of url to last_modified in harvest
         try:
-            for url in self._extract_urls(content,url):
-                try:
-                    content = self._get_content(url)
-                except Exception, e:
-                    msg = 'Couldn\'t harvest WAF link: %s: %s' % (url, e)
-                    self._save_gather_error(msg,harvest_job)
-                    continue
-                else:
-                    # We need to extract the guid to pass it to the next stage
-                    try:
-                        gemini_string, gemini_guid = self.get_gemini_string_and_guid(content,url)
-                        if gemini_guid:
-                            log.debug('Got GUID %s' % gemini_guid)
-                            # Create a new HarvestObject for this identifier
-                            # Generally the content will be set in the fetch stage, but as we alredy
-                            # have it, we might as well save a request
-                            obj = HarvestObject(guid=gemini_guid,
-                                                job=harvest_job,
-                                                content=gemini_string)
-                            obj.save()
-
-                            ids.append(obj.id)
-
-
-                    except Exception,e:
-                        msg = 'Could not get GUID for source %s: %r' % (url,e)
-                        self._save_gather_error(msg,harvest_job)
-                        continue
+            for url, modified_date in _extract_waf(content,url,scraper):
+                url_to_modified_harvest[url] = modified_date
         except Exception,e:
-            msg = 'Error extracting URLs from %s' % url
+            msg = 'Error extracting URLs from %s, error was %s' % (url, e)
             self._save_gather_error(msg,harvest_job)
             return None
 
 
+
+        ######  Compare source and db ######
+
+        harvest_locations = set(url_to_modified_harvest.keys())
+        old_locations = set(url_to_modified_db.keys())
+
+        new = harvest_locations - old_locations
+        delete = old_locations - harvest_locations
+        possible_changes = old_locations & harvest_locations
+        change = []
+
+        for item in possible_changes:
+            if (not url_to_modified_harvest[item] or not url_to_modified_db[item] #if there is no date assume change
+                or url_to_modified_harvest[item] > url_to_modified_db[item]):
+                change.append(item)
+
+        def create_extras(url, date, status):
+            return [HOExtra(key='waf_modified_date', value=date),
+                    HOExtra(key='waf_location', value=url),
+                    HOExtra(key='status', value=status)]
+
+        ids = []
+        for location in new:
+            obj = HarvestObject(job=harvest_job,
+                                extras=create_extras(url,
+                                                     url_to_modified_harvest[location],
+                                                     'new')
+                               )
+            obj.save()
+            ids.append(obj.id)
+
+        for location in change:
+            obj = HarvestObject(job=harvest_job,
+                                extras=create_extras(url,
+                                                     url_to_modified_harvest[location],
+                                                     'change'),
+                                guid=url_to_guid[url]
+                               )
+            obj.save()
+            ids.append(obj.id)
+
+        for location in delete:
+            obj = HarvestObject(job=harvest_job,
+                                extras=create_extras('','', 'delete'),
+                                guid=url_to_guid[url]
+                               )
+            obj.save()
+            ids.append(obj.id)
+
         if len(ids) > 0:
             return ids
         else:
-            self._save_gather_error('Couldn''t find any links to metadata files',
+            self._save_gather_error('No records to change',
                                      harvest_job)
             return None
 
@@ -724,36 +777,97 @@ class WafHarvester(GeoDataGovHarvester, SingletonPlugin):
         return True
 
 
-    def _extract_urls(self, content, base_url):
-        '''
-        Get the URLs out of a WAF index page
-        '''
-        try:
-            parser = etree.HTMLParser()
-            tree = etree.fromstring(content, parser=parser)
-        except Exception, inst:
-            msg = 'Couldn''t parse content into a tree: %s: %s' \
-                  % (inst, content)
-            raise Exception(msg)
-        urls = []
-        for url in tree.xpath('//a/@href'):
-            url = url.strip()
-            if not url:
+
+apache  = parse.SkipTo(parse.CaselessLiteral("<a href="), include=True).suppress() \
+        + parse.quotedString.setParseAction(parse.removeQuotes).setResultsName('url') \
+        + parse.SkipTo("</a>", include=True).suppress() \
+        + parse.Optional(parse.Literal('</td><td align="right">')).suppress() \
+        + parse.Optional(parse.Combine(
+            parse.Word(parse.alphanums+'-') +
+            parse.Word(parse.alphanums+':')
+        ,adjacent=False, joinString=' ').setResultsName('date')
+        )
+
+iis =      parse.SkipTo("<br>").suppress() \
+         + parse.OneOrMore("<br>").suppress() \
+         + parse.Optional(parse.Combine(
+           parse.Word(parse.alphanums+'/') +
+           parse.Word(parse.alphanums+':') +
+           parse.Word(parse.alphas)
+         , adjacent=False, joinString=' ').setResultsName('date')
+         ) \
+         + parse.Word(parse.nums).suppress() \
+         + parse.Literal('<A HREF=').suppress() \
+         + parse.quotedString.setParseAction(parse.removeQuotes).setResultsName('url')
+
+other = parse.SkipTo(parse.CaselessLiteral("<a href="), include=True).suppress() \
+        + parse.quotedString.setParseAction(parse.removeQuotes).setResultsName('url')
+
+
+scrapers = {'apache': parse.OneOrMore(parse.Group(apache)),
+            'other': parse.OneOrMore(parse.Group(other)),
+            'iis': parse.OneOrMore(parse.Group(iis))}
+
+def _get_scraper(server):
+    if not server or 'apache' in server.lower():
+        return 'apache'
+    if server == 'Microsoft-IIS/7.5':
+        return 'iis'
+    else:
+        return 'other'
+
+def _extract_waf(content, base_url, scraper, results = None, depth=0):
+    if results is None:
+        results = []
+
+    base_url = base_url.rstrip('/').split('/')
+    if 'index' in base_url[-1]:
+        base_url.pop()
+    base_url = '/'.join(base_url)
+    base_url += '/'
+
+    parsed = scrapers[scraper].parseString(content)
+
+    for record in parsed:
+        url = record.url
+        if not url:
+            continue
+        if url.startswith('_'):
+            continue
+        if '?' in url:
+            continue
+        if '#' in url:
+            continue
+        if 'mailto:' in url:
+            continue
+        if '..' not in url and url[0] != '/' and url[-1] == '/':
+            new_depth = depth + 1
+            if depth > 10:
+                print 'max depth reached'
                 continue
-            if '?' in url:
+            new_url = urljoin(base_url, url)
+            if not new_url.startswith(base_url):
                 continue
-            if '/' in url:
+            print 'new_url', new_url
+            try:
+                response = requests.get(new_url)
+                content = response.content
+            except Exception, e:
+                print str(e)
                 continue
-            if '#' in url:
-                continue
-            if 'mailto:' in url:
-                continue
-            urls.append(url)
-        base_url = base_url.rstrip('/').split('/')
-        if 'index' in base_url[-1]:
-            base_url.pop()
-        base_url = '/'.join(base_url)
-        base_url += '/'
-        return [base_url + i for i in urls]
+            _extract_waf(content, new_url, scraper, results, new_depth)
+            continue
+        if not url.endswith('.xml'):
+            continue
+        date = record.date
+        if date:
+            try:
+                date = str(dateutil.parser.parse(date))
+            except Exception, e:
+                raise
+                date = None
+        results.append((urljoin(base_url, record.url), date))
+
+    return results
 
 
