@@ -1,0 +1,2 @@
+requests==0.6.4
+pyparsing==1.5.6
