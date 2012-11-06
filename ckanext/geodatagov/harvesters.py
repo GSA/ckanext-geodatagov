@@ -24,6 +24,7 @@ import requests
 from lxml import etree
 from sqlalchemy.sql import update, bindparam
 from sqlalchemy.orm import aliased
+from pylons import config
 
 from ckan import model
 from ckan.model import Session, Package
@@ -42,6 +43,7 @@ from ckanext.harvest.model import HarvestObjectExtra as HOExtra
 from ckanext.spatial.model import GeminiDocument
 from ckanext.spatial.harvesters import SpatialHarvester
 from ckanext.spatial.lib.csw_client import CswService
+from ckanext.spatial.validation import Validators
 
 log = logging.getLogger(__name__)
 
@@ -101,8 +103,48 @@ class GeoDataGovHarvester(SpatialHarvester):
         self.obj = harvest_object
 
         if harvest_object.content is None:
-            self._save_object_error('Empty content for object %s' % harvest_object.id,harvest_object,'Import')
-            return False
+            # Check if it is a non ISO document
+            original_document = get_extra(harvest_object, 'original_document')
+            original_format = get_extra(harvest_object, 'original_format')
+            if original_document:
+                if original_format == 'fgdc':
+
+                    # Valiadate against FGDC schema
+                    t = etree.fromstring(original_document)
+                    validator = Validators(profiles=['fgdc'])
+                    is_valid, errors = validator.is_valid(t)
+                    if not is_valid:
+                        log.error('Errors found for object with GUID %s:' % self.obj.guid)
+                        out = errors[0] + ':\n' + '\n'.join(errors[1:])
+                        self._save_object_error(out,self.obj,'Import')
+
+                        # TODO: Provide an option to continue anyway
+                        return False
+
+                    transform_service = config.get('ckanext.geodatagov.fgdc2iso_service')
+                    if transform_service:
+                        response = requests.post(transform_service, data=original_document.strip())
+
+                        if response.status_code == 200:
+                            self.obj.content = response.content
+                            self.obj.save()
+                        else:
+                            self._save_object_error(
+                                    'The transformation service returned an error for object {0}: [{1}] {2}'.format(
+                                        self.obj.id, response.status_code, response.content)
+                                    ,self.obj,'Import')
+                            return False
+
+                else:
+                    self._save_object_error('Unsupported metadata format for object {0}'.format(self.obj.id),self.obj,'Import')
+                    return False
+
+            else:
+                self._save_object_error('Empty content for object %s' % self.obj.id,self.obj,'Import')
+                return False
+
+        #TODO: continue from here
+
         try:
             # Generate GUID if not present (i.e. it's a manual import)
             if not self.obj.guid:
@@ -112,6 +154,7 @@ class GeoDataGovHarvester(SpatialHarvester):
                 self.obj.save()
 
             self.import_gemini_object(harvest_object.content)
+
             return True
         except Exception, e:
             log.error('Exception during import: %s' % text_traceback())
