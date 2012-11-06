@@ -70,6 +70,13 @@ def guess_standard(url):
             return 'fgdc'
         return 'unknown'
 
+def get_extra(harvest_object, key):
+    for extra in harvest_object.extras:
+        if extra.key == key:
+            return extra.value
+    return None
+
+
 
 class GeoDataGovHarvester(SpatialHarvester):
     '''
@@ -786,9 +793,69 @@ class WafHarvester(GeoDataGovHarvester, SingletonPlugin):
             return None
 
     def fetch_stage(self,harvest_object):
-        # The fetching was already done in the previous stage
-        return True
 
+        # Check harvest object status
+        status = get_extra(harvest_object,'status')
+
+        if status == 'delete':
+            # No need to fetch anything, just pass to the import stage
+            return True
+
+        elif status in ('new','change'):
+            # We need to fetch the remote document
+
+            # Get location
+            url = get_extra(harvest_object, 'waf_location')
+            if not url:
+                self._save_object_error(
+                        'No location defined for object {0}'.format(harvest_object.id)
+                        ,harvest_object)
+                return False
+
+            # Get contents
+            try:
+                content = self._get_content(url)
+            except Exception, e:
+                msg = 'Could not harvest WAF link {0}: {1}'.format(url, e)
+                self._save_object_error(msg,harvest_object)
+                return False
+
+            # Check if it is an ISO document
+            document_format = guess_standard(content)
+
+            if document_format == 'iso':
+                try:
+                    document_string, guid = self.get_gemini_string_and_guid(content,url)
+                    if guid:
+                        log.debug('Got GUID %s' % guid)
+                        harvest_object.guid = guid
+                        harvest_object.content = document_string
+                        harvest_object.save()
+
+                except Exception,e:
+                    msg = 'Could not get GUID for source {0}: {1}'.format(url, e)
+                    self._save_object_error(msg,harvest_object)
+                    return False
+            else:
+                extra = HOExtra(
+                        object=harvest_object,
+                        key='original_document',
+                        value=content)
+                extra.save()
+
+                extra = HOExtra(
+                        object=harvest_object,
+                        key='original_format',
+                        value=document_format)
+                extra.save()
+
+                if status == 'new':
+                    m = hashlib.md5()
+                    m.update(url.encode('utf8',errors='ignore'))
+                    harvest_object.guid = m.hexdigest()
+                    harvest_object.save()
+
+            return True
 
 
 apache  = parse.SkipTo(parse.CaselessLiteral("<a href="), include=True).suppress() \
