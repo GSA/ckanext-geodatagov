@@ -57,18 +57,15 @@ def text_traceback():
 # exceptions, rather them being caught.
 debug_exception_mode = bool(os.getenv('DEBUG'))
 
-def guess_standard(url):
-
-    content = requests.get(url, timeout=60).content
-    if content:
-        lowered = content.lower()
-        if '</gmd:MD_Metadata>'.lower() in lowered:
-            return 'iso'
-        if '</gmi:MI_Metadata>'.lower() in lowered:
-            return 'iso'
-        if '</metadata>'.lower() in lowered:
-            return 'fgdc'
-        return 'unknown'
+def guess_standard(content):
+    lowered = content.lower()
+    if '</gmd:MD_Metadata>'.lower() in lowered:
+        return 'iso'
+    if '</gmi:MI_Metadata>'.lower() in lowered:
+        return 'iso'
+    if '</metadata>'.lower() in lowered:
+        return 'fgdc'
+    return 'unknown'
 
 def get_extra(harvest_object, key):
     for extra in harvest_object.extras:

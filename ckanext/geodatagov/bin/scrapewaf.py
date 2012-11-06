@@ -41,7 +41,8 @@ def add_status():
                 row_dict['count_with_date'] = str(len([i for i in extracted_waf if i[1]]))
                 if extracted_waf:
                     try:
-                        standard = guess_standard(extracted_waf[0][0])
+                        content_doc = requests.get(extracted_waf[0][0], timeout=60).content
+                        standard = guess_standard(content_doc)
                         row_dict['standard'] = standard
                     except Exception, e:
                         print 'Error guessing format. Error is', e
