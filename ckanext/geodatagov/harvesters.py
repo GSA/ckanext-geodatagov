@@ -745,12 +745,12 @@ class WafHarvester(GeoDataGovHarvester, SingletonPlugin):
         ######  Get current harvest object out of db ######
 
         url_to_modified_db = {} ## mapping of url to last_modified in db
-        url_to_guid = {} ## mapping of url to guid in db
+        url_to_ids = {} ## mapping of url to guid in db
 
 
         HOExtraAlias1 = aliased(HOExtra)
         HOExtraAlias2 = aliased(HOExtra)
-        query = model.Session.query(HarvestObject.guid, HOExtraAlias1.value, HOExtraAlias2.value).\
+        query = model.Session.query(HarvestObject.guid, HarvestObject.package_id, HOExtraAlias1.value, HOExtraAlias2.value).\
                                     join(HOExtraAlias1, HarvestObject.extras).\
                                     join(HOExtraAlias2, HarvestObject.extras).\
                                     filter(HOExtraAlias1.key=='waf_modified_date').\
@@ -759,9 +759,9 @@ class WafHarvester(GeoDataGovHarvester, SingletonPlugin):
                                     filter(HarvestObject.harvest_source_id==harvest_job.source.id)
 
 
-        for guid, modified_date, url in query:
+        for guid, package_id, modified_date, url in query:
             url_to_modified_db[url] = modified_date
-            url_to_guid[url] = guid
+            url_to_ids[url] = (guid, package_id)
 
         ######  Get current list of records from source ######
 
@@ -811,7 +811,8 @@ class WafHarvester(GeoDataGovHarvester, SingletonPlugin):
                                 extras=create_extras(location,
                                                      url_to_modified_harvest[location],
                                                      'change'),
-                                guid=url_to_guid[url]
+                                guid=url_to_ids[url][0],
+                                package_id=url_to_ids[url][1],
                                )
             obj.save()
             ids.append(obj.id)
@@ -819,8 +820,13 @@ class WafHarvester(GeoDataGovHarvester, SingletonPlugin):
         for location in delete:
             obj = HarvestObject(job=harvest_job,
                                 extras=create_extras('','', 'delete'),
-                                guid=url_to_guid[url]
+                                guid=url_to_ids[url][0],
+                                package_id=url_to_ids[url][1],
                                )
+            count = model.Session.query(HarvestObject).\
+                    filter_by(guid=guid).\
+                    update({'current': False}, False)
+
             obj.save()
             ids.append(obj.id)
 
