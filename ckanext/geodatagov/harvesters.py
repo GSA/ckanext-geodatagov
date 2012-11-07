@@ -101,47 +101,41 @@ class GeoDataGovHarvester(SpatialHarvester):
 
         # Save a reference
         self.obj = harvest_object
+        original_document = get_extra(harvest_object, 'original_document')
+        if harvest_object.content is None and not original_document:
+            self._save_object_error('Empty content for object %s' % self.obj.id,self.obj,'Import')
+            return False
 
-        if harvest_object.content is None:
-            # Check if it is a non ISO document
-            original_document = get_extra(harvest_object, 'original_document')
-            original_format = get_extra(harvest_object, 'original_format')
-            if original_document:
-                if original_format == 'fgdc':
+        # Check if it is a non ISO document
+        original_format = get_extra(harvest_object, 'original_format')
+        if original_format and original_format == 'fgdc':
 
-                    # Valiadate against FGDC schema
-                    t = etree.fromstring(original_document)
-                    validator = Validators(profiles=['fgdc'])
-                    is_valid, errors = validator.is_valid(t)
-                    if not is_valid:
-                        log.error('Errors found for object with GUID %s:' % self.obj.guid)
-                        out = errors[0] + ':\n' + '\n'.join(errors[1:])
-                        self._save_object_error(out,self.obj,'Import')
+            # Validate against FGDC schema
+            t = etree.fromstring(original_document)
+            validator = Validators(profiles=['fgdc'])
+            is_valid, errors = validator.is_valid(t)
+            if not is_valid:
+                log.error('Errors found for object with GUID %s:' % self.obj.guid)
+                out = errors[0] + ':\n' + '\n'.join(errors[1:])
+                self._save_object_error(out,self.obj,'Import')
 
-                        # TODO: Provide an option to continue anyway
-                        return False
+                # TODO: Provide an option to continue anyway
+                return False
 
-                    transform_service = config.get('ckanext.geodatagov.fgdc2iso_service')
-                    if transform_service:
-                        response = requests.post(transform_service, data=original_document.strip())
+            transform_service = config.get('ckanext.geodatagov.fgdc2iso_service')
+            if transform_service:
+                response = requests.post(transform_service, data=original_document.strip())
 
-                        if response.status_code == 200:
-                            self.obj.content = response.content
-                            self.obj.save()
-                        else:
-                            self._save_object_error(
-                                    'The transformation service returned an error for object {0}: [{1}] {2}'.format(
-                                        self.obj.id, response.status_code, response.content)
-                                    ,self.obj,'Import')
-                            return False
-
+                if response.status_code == 200:
+                    self.obj.content = response.content
+                    self.obj.save()
                 else:
-                    self._save_object_error('Unsupported metadata format for object {0}'.format(self.obj.id),self.obj,'Import')
+                    self._save_object_error(
+                            'The transformation service returned an error for object {0}: [{1}] {2}'.format(
+                                self.obj.id, response.status_code, response.content)
+                            ,self.obj,'Import')
                     return False
 
-            else:
-                self._save_object_error('Empty content for object %s' % self.obj.id,self.obj,'Import')
-                return False
 
         #TODO: continue from here
 
@@ -804,8 +798,6 @@ class WafHarvester(GeoDataGovHarvester, SingletonPlugin):
             self._save_gather_error(msg,harvest_job)
             return None
 
-
-
         ######  Compare source and db ######
 
         harvest_locations = set(url_to_modified_harvest.keys())
@@ -906,8 +898,10 @@ class WafHarvester(GeoDataGovHarvester, SingletonPlugin):
                     if guid:
                         log.debug('Got GUID %s' % guid)
                         harvest_object.guid = guid
-                        harvest_object.content = document_string
-                        harvest_object.save()
+
+                    # TODO: What to do with the ISO documents without guid
+                    harvest_object.content = document_string
+                    harvest_object.save()
 
                 except Exception,e:
                     msg = 'Could not get GUID for source {0}: {1}'.format(url, e)
