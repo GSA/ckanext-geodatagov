@@ -820,10 +820,12 @@ class WafHarvester(GeoDataGovHarvester, SingletonPlugin):
 
         ids = []
         for location in new:
+            guid=hashlib.md5(location.encode('utf8',errors='ignore')).hexdigest()
             obj = HarvestObject(job=harvest_job,
                                 extras=create_extras(location,
                                                      url_to_modified_harvest[location],
-                                                     'new')
+                                                     'new'),
+                                guid=guid
                                )
             obj.save()
             ids.append(obj.id)
