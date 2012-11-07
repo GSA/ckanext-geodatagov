@@ -828,10 +828,12 @@ class WafHarvester(GeoDataGovHarvester, SingletonPlugin):
 
         ids = []
         for location in new:
+            guid=hashlib.md5(location.encode('utf8',errors='ignore')).hexdigest()
             obj = HarvestObject(job=harvest_job,
                                 extras=create_extras(location,
                                                      url_to_modified_harvest[location],
-                                                     'new')
+                                                     'new'),
+                                guid=guid
                                )
             obj.save()
             ids.append(obj.id)
@@ -901,37 +903,17 @@ class WafHarvester(GeoDataGovHarvester, SingletonPlugin):
             document_format = guess_standard(content)
 
             if document_format == 'iso':
-                try:
-                    document_string, guid = self.get_gemini_string_and_guid(content,url)
-                    if guid:
-                        log.debug('Got GUID %s' % guid)
-                        harvest_object.guid = guid
-                        harvest_object.content = document_string
-                        harvest_object.save()
-
-                except Exception,e:
-                    msg = 'Could not get GUID for source {0}: {1}'.format(url, e)
-                    self._save_object_error(msg,harvest_object)
-                    return False
+                harvest_object.content = content
             else:
-                extra = HOExtra(
-                        object=harvest_object,
-                        key='original_document',
-                        value=content)
-                extra.save()
-
-                extra = HOExtra(
+                harvest_object.extras.append(HOExtra(
+                    object=harvest_object,
+                    key='original_document',
+                    value=content))
+                harvest_object.extras.append(HOExtra(
                         object=harvest_object,
                         key='original_format',
-                        value=document_format)
-                extra.save()
-
-                if status == 'new':
-                    m = hashlib.md5()
-                    m.update(url.encode('utf8',errors='ignore'))
-                    harvest_object.guid = m.hexdigest()
-                    harvest_object.save()
-
+                        value=document_format))
+            harvest_object.save()
             return True
 
 
