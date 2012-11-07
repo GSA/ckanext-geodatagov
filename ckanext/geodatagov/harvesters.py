@@ -567,36 +567,66 @@ class CswHarvester(GeoDataGovHarvester, SingletonPlugin):
             self._save_gather_error('Error contacting the CSW server: %s' % e, harvest_job)
             return None
 
+        query = model.Session.query(HarvestObject.guid, HarvestObject.package_id).\
+                                    filter(HarvestObject.current==True).\
+                                    filter(HarvestObject.harvest_source_id==harvest_job.source.id)
+        guid_to_package_id = {}
+
+        for guid, package_id in query:
+            guid_to_package_id[guid] = package_id
+
+        guids_in_db = set(guid_to_package_id.keys())
 
         log.debug('Starting gathering for %s' % url)
-        used_identifiers = []
-        ids = []
+        guids_in_harvest = set()
         try:
             for identifier in self.csw.getidentifiers(page=10):
                 try:
                     log.info('Got identifier %s from the CSW', identifier)
-                    if identifier in used_identifiers:
-                        log.error('CSW identifier %r already used, skipping...' % identifier)
-                        continue
                     if identifier is None:
                         log.error('CSW returned identifier %r, skipping...' % identifier)
                         ## log an error here? happens with the dutch data
                         continue
 
                     # Create a new HarvestObject for this identifier
-                    obj = HarvestObject(guid=identifier, job=harvest_job)
-                    obj.save()
 
-                    ids.append(obj.id)
-                    used_identifiers.append(identifier)
+                    guids_in_harvest.add(identifier)
                 except Exception, e:
                     self._save_gather_error('Error for the identifier %s [%r]' % (identifier,e), harvest_job)
                     continue
+
 
         except Exception, e:
             log.error('Exception: %s' % text_traceback())
             self._save_gather_error('Error gathering the identifiers from the CSW server [%s]' % str(e), harvest_job)
             return None
+
+        new = guids_in_harvest - guids_in_db
+        delete = guids_in_db - guids_in_harvest
+        change = guids_in_db & guids_in_harvest
+
+        ids = []
+
+        for guid in new:
+            obj = HarvestObject(guid=guid, job=harvest_job,
+                                extras=[HOExtra(key='status', value='new')])
+            obj.save()
+            ids.append(guid)
+        for guid in change:
+            obj = HarvestObject(guid=guid, job=harvest_job,
+                                package_id=guid_to_package_id[guid],
+                                extras=[HOExtra(key='status', value='change')])
+            obj.save()
+            ids.append(guid)
+        for guid in delete:
+            obj = HarvestObject(guid=guid, job=harvest_job,
+                                package_id=guid_to_package_id[guid],
+                                extras=[HOExtra(key='status', value='delete')])
+            ids.append(guid)
+            count = model.Session.query(HarvestObject).\
+                    filter_by(guid=guid).\
+                    update({'current': False}, False)
+            obj.save()
 
         if len(ids) == 0:
             self._save_gather_error('No records received from the CSW server', harvest_job)
