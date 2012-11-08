@@ -1129,8 +1129,8 @@ class WafHarvester(GeoDataGovHarvester, SingletonPlugin):
                                 extras=create_extras(location,
                                                      url_to_modified_harvest[location],
                                                      'change'),
-                                guid=url_to_ids[url][0],
-                                package_id=url_to_ids[url][1],
+                                guid=url_to_ids[location][0],
+                                package_id=url_to_ids[location][1],
                                )
             obj.save()
             ids.append(obj.id)
@@ -1138,8 +1138,8 @@ class WafHarvester(GeoDataGovHarvester, SingletonPlugin):
         for location in delete:
             obj = HarvestObject(job=harvest_job,
                                 extras=create_extras('','', 'delete'),
-                                guid=url_to_ids[url][0],
-                                package_id=url_to_ids[url][1],
+                                guid=url_to_ids[location][0],
+                                package_id=url_to_ids[location][1],
                                )
             count = model.Session.query(HarvestObject).\
                     filter_by(guid=guid).\
