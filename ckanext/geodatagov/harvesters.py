@@ -895,23 +895,22 @@ class CswHarvester(GeoDataGovHarvester, SingletonPlugin):
         change = guids_in_db & guids_in_harvest
 
         ids = []
-
         for guid in new:
             obj = HarvestObject(guid=guid, job=harvest_job,
                                 extras=[HOExtra(key='status', value='new')])
             obj.save()
-            ids.append(guid)
+            ids.append(obj.id)
         for guid in change:
             obj = HarvestObject(guid=guid, job=harvest_job,
                                 package_id=guid_to_package_id[guid],
                                 extras=[HOExtra(key='status', value='change')])
             obj.save()
-            ids.append(guid)
+            ids.append(obj.id)
         for guid in delete:
             obj = HarvestObject(guid=guid, job=harvest_job,
                                 package_id=guid_to_package_id[guid],
                                 extras=[HOExtra(key='status', value='delete')])
-            ids.append(guid)
+            ids.append(obj.id)
             count = model.Session.query(HarvestObject).\
                     filter_by(guid=guid).\
                     update({'current': False}, False)
