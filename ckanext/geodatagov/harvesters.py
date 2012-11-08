@@ -119,6 +119,36 @@ class GeoDataGovHarvester(SpatialHarvester):
 
         #TODO: Big cleanup!
 
+        tags = []
+        for tag in iso_values['tags']:
+            tag = tag[:50] if len(tag) > 50 else tag
+            tags.append({'name':tag})
+
+        package_dict = {
+            'title': iso_values['title'],
+            'notes': iso_values['abstract'],
+            'tags': tags,
+            'resources':[]
+        }
+
+        # TODO: still not clear
+        '''
+        if harvest_object.source.publisher_id:
+            package_dict['groups'] = [{'id': harvest_object.source.publisher_id}]
+        '''
+
+        # Package name
+        package = harvest_object.package
+        if package is None or package.title != iso_values['title']:
+            name = self.gen_new_name(iso_values['title'])
+            if not name:
+                name = self.gen_new_name(str(iso_values['guid']))
+            if not name:
+                raise Exception('Could not generate a unique name from the title or the GUID. Please choose a more unique title.')
+            package_dict['name'] = name
+        else:
+            package_dict['name'] = package.name
+
         extras = {
             'published_by': harvest_object.source.publisher_id or '',
             'UKLP': 'True',
@@ -202,33 +232,6 @@ class GeoDataGovHarvester(SpatialHarvester):
 
         extras['spatial'] = extent_string.strip()
 
-        tags = []
-        for tag in iso_values['tags']:
-            tag = tag[:50] if len(tag) > 50 else tag
-            tags.append({'name':tag})
-
-        package_dict = {
-            'title': iso_values['title'],
-            'notes': iso_values['abstract'],
-            'tags': tags,
-            'resources':[]
-        }
-
-        if harvest_object.source.publisher_id:
-            package_dict['groups'] = [{'id': harvest_object.source.publisher_id}]
-
-        # TODO: package name
-        '''
-        if package is None or package.title != iso_values['title']:
-            name = self.gen_new_name(iso_values['title'])
-            if not name:
-                name = self.gen_new_name(str(gemini_guid))
-            if not name:
-                raise Exception('Could not generate a unique name from the title or the GUID. Please choose a more unique title.')
-            package_dict['name'] = name
-        else:
-            package_dict['name'] = package.name
-        '''
 
         resource_locators = iso_values.get('resource-locator', [])
 
@@ -349,10 +352,8 @@ class GeoDataGovHarvester(SpatialHarvester):
                                     harvest_object,'Import')
             return False
 
-        # Set old objects to current = False
-        model.Session.query(HarvestObject).\
-                    filter_by(guid=harvest_object.guid).\
-                    update({'current': False}, False)
+        # TODO: start transaction
+
 
 
         # Update GUID with the one on the document
@@ -381,7 +382,7 @@ class GeoDataGovHarvester(SpatialHarvester):
             self.obj.save()
 
         # Get document modified date
-        metadata_modified_date = self._parse_iso_date(iso_values['metadata_date'])
+        metadata_modified_date = self._parse_iso_date(iso_values['metadata-date'])
         if not metadata_modified_date:
             self._save_object_error('Could not extract reference date for object {0} ({1})'
                         .format(harvest_object.id, iso_values['metadata-date']))
@@ -390,7 +391,7 @@ class GeoDataGovHarvester(SpatialHarvester):
         harvest_object.save()
 
         # Build the package dict
-        package_dict = self._get_package_dict(iso_values)
+        package_dict = self._get_package_dict(iso_values, harvest_object)
 
         # Create / update the package
 
@@ -405,7 +406,7 @@ class GeoDataGovHarvester(SpatialHarvester):
         tag_schema = logic.schema.default_tags_schema()
         tag_schema['name'] = [not_empty,unicode]
 
-        if status == 'create':
+        if status == 'new':
             package_schema = logic.schema.default_create_package_schema()
             package_schema['tags'] = tag_schema
             context['schema'] = package_schema
@@ -431,10 +432,12 @@ class GeoDataGovHarvester(SpatialHarvester):
             previous_object = Session.query(HarvestObject) \
                               .filter(HarvestObject.guid==harvest_object.guid) \
                               .filter(HarvestObject.current==True) \
-                              .all()
+                              .first()
 
             # Check if the modified date is more recent
             if harvest_object.metadata_modified_date <= previous_object.metadata_modified_date:
+
+                # Delete the previous object to avoid cluttering the object table
                 previous_object.delete()
 
                 log.info('Document with GUID %s unchanged, skipping...' % (harvest_object.guid))
@@ -451,6 +454,14 @@ class GeoDataGovHarvester(SpatialHarvester):
                 except ValidationError,e:
                     raise Exception('Validation Error: %s' % str(e.error_summary))
 
+        # Set old objects to current = False
+        model.Session.query(HarvestObject).\
+                    filter_by(guid=harvest_object.guid).\
+                    update({'current': False}, False)
+
+        # Flag this object as the current one
+        harvest_object.current = True
+        harvest_object.save()
 
 
         return True
