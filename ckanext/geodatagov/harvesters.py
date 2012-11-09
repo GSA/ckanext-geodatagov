@@ -293,27 +293,40 @@ class GeoDataGovHarvester(SpatialHarvester):
 
         self._set_config(harvest_object.source.config)
 
-        # Save a reference
-        self.obj = harvest_object
-
         status = get_extra(harvest_object, 'status')
+
+        # Get the last harvested object (if any)
+        previous_object = Session.query(HarvestObject) \
+                          .filter(HarvestObject.guid==harvest_object.guid) \
+                          .filter(HarvestObject.current==True) \
+                          .first()
 
         if status == 'delete':
             # Delete package
             context = {'model':model, 'session':Session, 'user':'harvest'} #TODO: user
 
             get_action('package_delete')(context, {'id': harvest_object.package_id})
+            log.info('Deleted package {0} with guid {1}'.format(harvest_object.package_id, harvest_object.guid))
+
+            if previous_object:
+                previous_object.current = False
+                previous_object.save()
 
             return True
 
         original_document = get_extra(harvest_object, 'original_document')
         if harvest_object.content is None and not original_document:
-            self._save_object_error('Empty content for object %s' % self.obj.id,self.obj,'Import')
+            self._save_object_error('Empty content for object {0}'.format(harvest_object.id), harvest_object, 'Import')
             return False
 
         # Check if it is a non ISO document
         original_format = get_extra(harvest_object, 'original_format')
         if original_format and original_format == 'fgdc':
+
+            transform_service = config.get('ckanext.geodatagov.fgdc2iso_service')
+            if not transform_service:
+                self._save_object_error('No FGDC to ISO transformation service', harvest_object, 'Import')
+                return False
 
             # Validate against FGDC schema
             is_valid, errors = self._validate_document(original_document, harvest_object,
@@ -322,20 +335,18 @@ class GeoDataGovHarvester(SpatialHarvester):
                 # TODO: Provide an option to continue anyway
                 return False
 
-            transform_service = config.get('ckanext.geodatagov.fgdc2iso_service')
-            if transform_service:
-                response = requests.post(transform_service, data=original_document.strip())
-                if response.status_code == 200:
-                    self.obj.content = response.content
-                    self.obj.save()
-                else:
-                    msg = 'The transformation service returned an error for object {0}'
-                    if response.status_code and response.content:
-                        msg += ': [{0}] {1}'.format(response.status_code, response.content)
-                    elif response.error:
-                        msg += ': {0}'.format(response.error)
-                        self._save_object_error(msg ,self.obj,'Import')
-                    return False
+            response = requests.post(transform_service, data=original_document.strip())
+            if response.status_code == 200:
+                self.obj.content = response.content
+                self.obj.save()
+            else:
+                msg = 'The transformation service returned an error for object {0}'
+                if response.status_code and response.content:
+                    msg += ': [{0}] {1}'.format(response.status_code, response.content)
+                elif response.error:
+                    msg += ': {0}'.format(response.error)
+                self._save_object_error(msg ,self.obj,'Import')
+                return False
 
         else:
             # Document is ISO, validate
@@ -352,9 +363,10 @@ class GeoDataGovHarvester(SpatialHarvester):
                                     harvest_object,'Import')
             return False
 
-        # TODO: start transaction
-
-
+        # Flag previous object as not current anymore
+        if previous_object:
+            previous_object.current = False
+            previous_object.add()
 
         # Update GUID with the one on the document
         iso_guid = iso_values['guid']
@@ -371,15 +383,14 @@ class GeoDataGovHarvester(SpatialHarvester):
                 return False
 
             harvest_object.guid = iso_guid
-            harvest_object.save()
+            harvest_object.add()
 
-        #TODO: do we still need this?
         # Generate GUID if not present (i.e. it's a manual import)
-        if not self.obj.guid:
+        if not harvest_object.guid:
             m = hashlib.md5()
             m.update(self.obj.content.encode('utf8',errors='ignore'))
-            self.obj.guid = m.hexdigest()
-            self.obj.save()
+            harvest_object.guid = m.hexdigest()
+            harvest_object.add()
 
         # Get document modified date
         metadata_modified_date = self._parse_iso_date(iso_values['metadata-date'])
@@ -388,7 +399,7 @@ class GeoDataGovHarvester(SpatialHarvester):
                         .format(harvest_object.id, iso_values['metadata-date']))
             return False
         harvest_object.metadata_modified_date = metadata_modified_date
-        harvest_object.save()
+        harvest_object.add()
 
         # Build the package dict
         package_dict = self._get_package_dict(iso_values, harvest_object)
@@ -404,7 +415,7 @@ class GeoDataGovHarvester(SpatialHarvester):
 
         # The default package schema does not like Upper case tags
         tag_schema = logic.schema.default_tags_schema()
-        tag_schema['name'] = [not_empty,unicode]
+        tag_schema['name'] = [not_empty, unicode]
 
         if status == 'new':
             package_schema = logic.schema.default_create_package_schema()
@@ -420,19 +431,14 @@ class GeoDataGovHarvester(SpatialHarvester):
                 package_id = get_action('package_create')(context, package_dict)
                 log.info('Created new package %s with guid %s', package_id, harvest_object.guid)
             except ValidationError,e:
-                raise Exception('Validation Error: %s' % str(e.error_summary))
+                self._save_object_error('Validation Error: %s' % str(e.error_summary), harvest_object, 'Import')
+                return False
 
             # Save reference to the package on the object
             harvest_object.package_id = package_id
-            harvest_object.save()
+            harvest_object.add()
 
         elif status == 'change':
-
-            # Get the last harvested object
-            previous_object = Session.query(HarvestObject) \
-                              .filter(HarvestObject.guid==harvest_object.guid) \
-                              .filter(HarvestObject.current==True) \
-                              .first()
 
             # Check if the modified date is more recent
             if harvest_object.metadata_modified_date <= previous_object.metadata_modified_date:
@@ -452,16 +458,14 @@ class GeoDataGovHarvester(SpatialHarvester):
                     package_id = get_action('package_update')(context, package_dict)
                     log.info('Updated package %s with guid %s', package_id, harvest_object.guid)
                 except ValidationError,e:
-                    raise Exception('Validation Error: %s' % str(e.error_summary))
-
-        # Set old objects to current = False
-        model.Session.query(HarvestObject).\
-                    filter_by(guid=harvest_object.guid).\
-                    update({'current': False}, False)
+                    self._save_object_error('Validation Error: %s' % str(e.error_summary), harvest_object, 'Import')
+                    return False
 
         # Flag this object as the current one
         harvest_object.current = True
-        harvest_object.save()
+        harvest_object.add()
+
+        model.Session.commit()
 
 
         return True
