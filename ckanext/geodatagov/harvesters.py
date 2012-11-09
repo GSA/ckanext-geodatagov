@@ -308,10 +308,6 @@ class GeoDataGovHarvester(SpatialHarvester):
             get_action('package_delete')(context, {'id': harvest_object.package_id})
             log.info('Deleted package {0} with guid {1}'.format(harvest_object.package_id, harvest_object.guid))
 
-            if previous_object:
-                previous_object.current = False
-                previous_object.save()
-
             return True
 
         original_document = get_extra(harvest_object, 'original_document')
@@ -910,15 +906,6 @@ class CswHarvester(GeoDataGovHarvester, SingletonPlugin):
         change = guids_in_db & guids_in_harvest
 
         ids = []
-        for guid in delete:
-            obj = HarvestObject(guid=guid, job=harvest_job,
-                                package_id=guid_to_package_id[guid],
-                                extras=[HOExtra(key='status', value='delete')])
-            ids.append(obj.id)
-            count = model.Session.query(HarvestObject).\
-                    filter_by(guid=guid).\
-                    update({'current': False}, False)
-            obj.save()
         for guid in new:
             obj = HarvestObject(guid=guid, job=harvest_job,
                                 extras=[HOExtra(key='status', value='new')])
@@ -930,6 +917,15 @@ class CswHarvester(GeoDataGovHarvester, SingletonPlugin):
                                 extras=[HOExtra(key='status', value='change')])
             obj.save()
             ids.append(obj.id)
+        for guid in delete:
+            obj = HarvestObject(guid=guid, job=harvest_job,
+                                package_id=guid_to_package_id[guid],
+                                extras=[HOExtra(key='status', value='delete')])
+            ids.append(obj.id)
+            count = model.Session.query(HarvestObject).\
+                    filter_by(guid=guid).\
+                    update({'current': False}, False)
+            obj.save()
 
         if len(ids) == 0:
             self._save_gather_error('No records received from the CSW server', harvest_job)
@@ -1128,18 +1124,6 @@ class WafHarvester(GeoDataGovHarvester, SingletonPlugin):
                     HOExtra(key='status', value=status)]
 
         ids = []
-        for location in delete:
-            obj = HarvestObject(job=harvest_job,
-                                extras=create_extras('','', 'delete'),
-                                guid=url_to_ids[location][0],
-                                package_id=url_to_ids[location][1],
-                               )
-            count = model.Session.query(HarvestObject).\
-                    filter_by(guid=url_to_ids[location][0]).\
-                    update({'current': False}, False)
-
-            obj.save()
-            ids.append(obj.id)
         for location in new:
             guid=hashlib.md5(location.encode('utf8',errors='ignore')).hexdigest()
             obj = HarvestObject(job=harvest_job,
@@ -1162,7 +1146,18 @@ class WafHarvester(GeoDataGovHarvester, SingletonPlugin):
             obj.save()
             ids.append(obj.id)
 
+        for location in delete:
+            obj = HarvestObject(job=harvest_job,
+                                extras=create_extras('','', 'delete'),
+                                guid=url_to_ids[location][0],
+                                package_id=url_to_ids[location][1],
+                               )
+            count = model.Session.query(HarvestObject).\
+                    filter_by(guid=url_to_ids[location][0]).\
+                    update({'current': False}, False)
 
+            obj.save()
+            ids.append(obj.id)
 
         if len(ids) > 0:
             log.debug('{0} objects sent to the next stage: {1} new, {2} change, {3} delete'.format(
