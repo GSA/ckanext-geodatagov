@@ -1265,7 +1265,10 @@ def _extract_waf(content, base_url, scraper, results = None, depth=0):
     base_url = '/'.join(base_url)
     base_url += '/'
 
-    parsed = scrapers[scraper].parseString(content)
+    try:
+        parsed = scrapers[scraper].parseString(content)
+    except parse.ParseException:
+        parsed = scrapers['other'].parseString(content)
 
     for record in parsed:
         url = record.url
