@@ -340,7 +340,7 @@ class GeoDataGovHarvester(SpatialHarvester):
         try:
             iso_values = GeminiDocument(harvest_object.content).read_values()
         except Exception, e:
-            self._save_object_error('Error parsing ISO document for object {0}'.format(harvest_object.id),
+            self._save_object_error('Error parsing ISO document for object {0}: {1}'.format(harvest_object.id,str(e)),
                                     harvest_object,'Import')
             return False
 
