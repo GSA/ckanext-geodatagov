@@ -215,16 +215,19 @@ class GeoDataGovHarvester(SpatialHarvester):
             extras['provider'] = u''
 
         # Construct a GeoJSON extent so ckanext-spatial can register the extent geometry
-        import pdb; pdb.set_trace()
-        extent_string = self.extent_template.substitute(
-                minx = extras['bbox-east-long'],
-                miny = extras['bbox-south-lat'],
-                maxx = extras['bbox-west-long'],
-                maxy = extras['bbox-north-lat']
-                )
+        if extras['bbox-east-long'] and extras['bbox-south-lat'] \
+           and extras['bbox-west-long'] and extras['bbox-north-lat']:
 
-        extras['spatial'] = extent_string.strip()
+            extent_string = self.extent_template.substitute(
+                    minx = extras['bbox-east-long'],
+                    miny = extras['bbox-south-lat'],
+                    maxx = extras['bbox-west-long'],
+                    maxy = extras['bbox-north-lat']
+                    )
 
+            extras['spatial'] = extent_string.strip()
+        else:
+            log.debug('No spatial extent defined for this object')
 
         resource_locators = iso_values.get('resource-locator', [])
 
