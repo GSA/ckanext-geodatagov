@@ -17,6 +17,7 @@ import uuid
 import os
 import logging
 import hashlib
+import dateutil
 
 import requests
 from lxml import etree
@@ -94,18 +95,6 @@ class GeoDataGovHarvester(SpatialHarvester):
             self._save_object_error(out, harvest_object,'Import')
 
         return valid, messages
-
-
-    def _parse_iso_date(self, date_string):
-        try:
-            date = datetime.strptime(date_string, '%Y-%m-%d')
-        except ValueError:
-            try:
-                date = datetime.strptime(date_string,'%Y-%m-%dT%H:%M:%S')
-            except ValueError:
-                return None
-        return date
-
 
     def _get_package_dict(self, iso_values, harvest_object):
 
@@ -385,11 +374,13 @@ class GeoDataGovHarvester(SpatialHarvester):
             harvest_object.add()
 
         # Get document modified date
-        metadata_modified_date = self._parse_iso_date(iso_values['metadata-date'])
-        if not metadata_modified_date:
+        try:
+            metadata_modified_date = dateutil.parser.parse(iso_values['metadata-date'])
+        except ValueError:
             self._save_object_error('Could not extract reference date for object {0} ({1})'
-                        .format(harvest_object.id, iso_values['metadata-date']))
+                        .format(harvest_object.id, iso_values['metadata-date']), harvest_object, 'Import')
             return False
+
         harvest_object.metadata_modified_date = metadata_modified_date
         harvest_object.add()
 
