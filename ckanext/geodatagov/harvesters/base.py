@@ -18,6 +18,7 @@ import os
 import logging
 import hashlib
 import dateutil
+import re
 
 import requests
 from lxml import etree
@@ -86,6 +87,7 @@ class GeoDataGovHarvester(SpatialHarvester):
         if not validator:
             validator = self._get_validator()
 
+        document_string = re.sub('<\?xml(.*)\?>','',document_string)
         xml = etree.fromstring(document_string)
 
         valid, messages = validator.is_valid(xml)
