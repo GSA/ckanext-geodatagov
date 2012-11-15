@@ -88,7 +88,12 @@ class GeoDataGovHarvester(SpatialHarvester):
             validator = self._get_validator()
 
         document_string = re.sub('<\?xml(.*)\?>','',document_string)
-        xml = etree.fromstring(document_string)
+        try:
+            xml = etree.fromstring(document_string)
+        except etree.XMLSyntaxError, e:
+            self._save_object_error('Could not parse XML file: {0}'.format(str(e)), harvest_object,'Import')
+            return False, []
+
 
         valid, messages = validator.is_valid(xml)
         if not valid:
