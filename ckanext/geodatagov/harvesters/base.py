@@ -95,13 +95,13 @@ class GeoDataGovHarvester(SpatialHarvester):
             return False, []
 
 
-        valid, messages = validator.is_valid(xml)
+        valid, profile, errors = validator.is_valid(xml)
         if not valid:
-            log.error('Errors found for object with GUID %s:' % harvest_object.guid)
-            out = messages[0] + ':\n' + '\n'.join(messages[1:])
-            self._save_object_error(out, harvest_object,'Import')
+            log.error('Validation errors found using profile {0} for object with GUID {1}'.format(profile, harvest_object.guid))
+            for error in errors:
+                self._save_object_error(error[0], harvest_object,'Validation',line=error[1])
 
-        return valid, messages
+        return valid, profile, errors
 
     def _get_package_dict(self, iso_values, harvest_object):
 
@@ -317,7 +317,7 @@ class GeoDataGovHarvester(SpatialHarvester):
                 return False
 
             # Validate against FGDC schema
-            is_valid, errors = self._validate_document(original_document, harvest_object,
+            is_valid, profile, errors = self._validate_document(original_document, harvest_object,
                                                        validator=Validators(profiles=['fgdc']))
             if not is_valid:
                 # TODO: Provide an option to continue anyway
@@ -338,7 +338,7 @@ class GeoDataGovHarvester(SpatialHarvester):
 
         else:
             # Document is ISO, validate
-            is_valid, errors = self._validate_document(harvest_object.content, harvest_object)
+            is_valid, profile, errors = self._validate_document(harvest_object.content, harvest_object)
             if not is_valid:
                 # TODO: Provide an option to continue anyway
                 return False
