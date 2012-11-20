@@ -172,7 +172,7 @@ class WAFHarvester(GeoDataGovHarvester, SingletonPlugin):
 
         # Get contents
         try:
-            content = self._get_content(url)
+            content = self._get_content_as_unicode(url)
         except Exception, e:
             msg = 'Could not harvest WAF link {0}: {1}'.format(url, e)
             self._save_object_error(msg, harvest_object)
@@ -180,26 +180,21 @@ class WAFHarvester(GeoDataGovHarvester, SingletonPlugin):
 
         # Check if it is an ISO document
         document_format = guess_standard(content)
-
         if document_format == 'iso':
             harvest_object.content = content
             harvest_object.save()
         else:
-            try:
-                extra = HOExtra(
-                        object=harvest_object,
-                        key='original_document',
-                        value=content)
-                extra.save()
+            extra = HOExtra(
+                    object=harvest_object,
+                    key='original_document',
+                    value=content)
+            extra.save()
 
-                extra = HOExtra(
-                        object=harvest_object,
-                        key='original_format',
-                        value=document_format)
-                extra.save()
-            except DataError, e:
-                self._save_object_error('Error storing original document: {0}'.format(e.message), harvest_object)
-                return False
+            extra = HOExtra(
+                    object=harvest_object,
+                    key='original_format',
+                    value=document_format)
+            extra.save()
 
         return True
 

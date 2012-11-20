@@ -83,6 +83,30 @@ class GeoDataGovHarvester(SpatialHarvester):
     {"type":"Polygon","coordinates":[[[$minx, $miny],[$minx, $maxy], [$maxx, $maxy], [$maxx, $miny], [$minx, $miny]]]}
     ''')
 
+    def _get_content_as_unicode(self, url):
+        '''
+        Get remote content as unicode.
+
+        We let requests handle the conversion [1] , which will use the content-type
+        header first or chardet if the header is missing (requests uses its own
+        embedded chardet version).
+
+        As we will be storing and serving the contents as unicode, we actually
+        replace the original XML encoding declaration with an UTF-8 one.
+
+
+        [1] http://github.com/kennethreitz/requests/blob/63243b1e3b435c7736acf1e51c0f6fa6666d861d/requests/models.py#L811
+
+        '''
+        url = url.replace(' ','%20')
+        response = requests.get(url)
+
+        content = response.text
+        content = re.sub('<\?xml(.*)\?>','',content)
+        content = '<?xml version="1.0" encoding="UTF-8"?>\n' + content
+
+        return content
+
     def _validate_document(self, document_string, harvest_object, validator=None):
         if not validator:
             validator = self._get_validator()
@@ -325,6 +349,7 @@ class GeoDataGovHarvester(SpatialHarvester):
 
             response = requests.post(transform_service, data=original_document.strip())
             if response.status_code == 200:
+                # XML coming from the conversion tool is already declared and encoded as utf-8
                 harvest_object.content = response.content
                 harvest_object.save()
             else:

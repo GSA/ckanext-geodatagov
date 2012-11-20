@@ -133,6 +133,7 @@ class CSWHarvester(GeoDataGovHarvester, SingletonPlugin):
 
         try:
             # Save the fetch contents in the HarvestObject
+            # Contents come from csw_client already declared and encoded as utf-8
             harvest_object.content = record['xml']
             harvest_object.save()
         except Exception,e:
