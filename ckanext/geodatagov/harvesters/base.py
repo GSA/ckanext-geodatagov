@@ -122,7 +122,7 @@ class GeoDataGovHarvester(SpatialHarvester):
             xml = etree.fromstring(document_string)
         except etree.XMLSyntaxError, e:
             self._save_object_error('Could not parse XML file: {0}'.format(str(e)), harvest_object,'Import')
-            return False, []
+            return False, None, []
 
 
         valid, profile, errors = validator.is_valid(xml)
@@ -469,6 +469,8 @@ class GeoDataGovHarvester(SpatialHarvester):
                 # Delete the previous object to avoid cluttering the object table
                 previous_object.delete()
 
+                #TODO: Update harvest object id extra in package!
+
                 log.info('Document with GUID %s unchanged, skipping...' % (harvest_object.guid))
             else:
                 package_schema = logic.schema.default_update_package_schema()
@@ -476,7 +478,6 @@ class GeoDataGovHarvester(SpatialHarvester):
                 context['schema'] = package_schema
 
                 package_dict['id'] = harvest_object.package_id
-
                 try:
                     package_id = get_action('package_update')(context, package_dict)
                     log.info('Updated package %s with guid %s', package_id, harvest_object.guid)
