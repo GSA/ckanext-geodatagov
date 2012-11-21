@@ -1,11 +1,15 @@
+import hashlib
 import logging
+
+from ckan import model
 
 from ckan.plugins.core import SingletonPlugin, implements
 
 from ckanext.harvest.interfaces import IHarvester
 from ckanext.harvest.model import HarvestObject
+from ckanext.harvest.model import HarvestObjectExtra as HOExtra
 
-from ckanext.geodatagov.harvesters.base import GeoDataGovHarvester, debug_exception_mode
+from ckanext.geodatagov.harvesters.base import GeoDataGovHarvester, guess_standard
 
 class DocHarvester(GeoDataGovHarvester, SingletonPlugin):
     '''
@@ -35,34 +39,59 @@ class DocHarvester(GeoDataGovHarvester, SingletonPlugin):
 
         # Get contents
         try:
-            content = self._get_content(url)
+            content = self._get_content_as_unicode(url)
         except Exception,e:
             self._save_gather_error('Unable to get content for URL: %s: %r' % \
                                         (url, e),harvest_job)
             return None
-        try:
-            # We need to extract the guid to pass it to the next stage
-            gemini_string, gemini_guid = self.get_gemini_string_and_guid(content,url)
 
-            if gemini_guid:
-                # Create a new HarvestObject for this identifier
-                # Generally the content will be set in the fetch stage, but as we alredy
-                # have it, we might as well save a request
-                obj = HarvestObject(guid=gemini_guid,
-                                    job=harvest_job,
-                                    content=gemini_string)
-                obj.save()
+        existing_object = model.Session.query(HarvestObject.guid, HarvestObject.package_id).\
+                                    filter(HarvestObject.current==True).\
+                                    filter(HarvestObject.harvest_source_id==harvest_job.source.id).\
+                                    first()
 
-                log.info('Got GUID %s' % gemini_guid)
-                return [obj.id]
-            else:
-                self._save_gather_error('Could not get the GUID for source %s' % url, harvest_job)
-                return None
-        except Exception, e:
-            self._save_gather_error('Error parsing the document. Is this a valid  document?: %s [%r]'% (url,e),harvest_job)
-            if debug_exception_mode:
-                raise
-            return None
+        def create_extras(url, status):
+            return [HOExtra(key='doc_location', value=url),
+                    HOExtra(key='status', value=status)]
+
+        if not existing_object:
+            guid=hashlib.md5(url.encode('utf8',errors='ignore')).hexdigest()
+            harvest_object = HarvestObject(job=harvest_job,
+                                extras=create_extras(url,
+                                                     'new'),
+                                guid=guid
+                               )
+        else:
+            harvest_object = HarvestObject(job=harvest_job,
+                                extras=create_extras(url,
+                                                     'change'),
+                                guid=existing_object.guid
+                               )
+
+        harvest_object.add()
+
+        # Check if it is an ISO document
+        document_format = guess_standard(content)
+        if document_format == 'iso':
+            harvest_object.content = content
+        else:
+            extra = HOExtra(
+                    object=harvest_object,
+                    key='original_document',
+                    value=content)
+            extra.save()
+
+            extra = HOExtra(
+                    object=harvest_object,
+                    key='original_format',
+                    value=document_format)
+            extra.save()
+
+        harvest_object.save()
+
+        return [harvest_object.id]
+
+
 
 
     def fetch_stage(self,harvest_object):
