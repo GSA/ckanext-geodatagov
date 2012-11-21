@@ -102,8 +102,14 @@ class GeoDataGovHarvester(SpatialHarvester):
         response = requests.get(url)
 
         content = response.text
+
+        # Remove original XML declaration
         content = re.sub('<\?xml(.*)\?>','',content)
-        content = '<?xml version="1.0" encoding="UTF-8"?>\n' + content
+
+        # Get rid of the BOM and other rubbish at the beginning of the file
+        content = re.sub('.*?<', '<', content, 1)
+
+        content = u'<?xml version="1.0" encoding="UTF-8"?>\n' + content
 
         return content
 
@@ -347,7 +353,9 @@ class GeoDataGovHarvester(SpatialHarvester):
                 # TODO: Provide an option to continue anyway
                 return False
 
-            response = requests.post(transform_service, data=original_document.strip())
+            response = requests.post(transform_service,
+                                     data=original_document.encode('utf8'),
+                                     headers={'content-type': 'text/xml; charset=utf-8'})
             if response.status_code == 200:
                 # XML coming from the conversion tool is already declared and encoded as utf-8
                 harvest_object.content = response.content
