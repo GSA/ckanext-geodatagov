@@ -18,6 +18,7 @@ import os
 import logging
 import hashlib
 import dateutil
+import re
 
 import requests
 from lxml import etree
@@ -86,7 +87,13 @@ class GeoDataGovHarvester(SpatialHarvester):
         if not validator:
             validator = self._get_validator()
 
-        xml = etree.fromstring(document_string)
+        document_string = re.sub('<\?xml(.*)\?>','',document_string)
+        try:
+            xml = etree.fromstring(document_string)
+        except etree.XMLSyntaxError, e:
+            self._save_object_error('Could not parse XML file: {0}'.format(str(e)), harvest_object,'Import')
+            return False, []
+
 
         valid, messages = validator.is_valid(xml)
         if not valid:
@@ -318,15 +325,15 @@ class GeoDataGovHarvester(SpatialHarvester):
 
             response = requests.post(transform_service, data=original_document.strip())
             if response.status_code == 200:
-                self.obj.content = response.content
-                self.obj.save()
+                harvest_object.content = response.content
+                harvest_object.save()
             else:
                 msg = 'The transformation service returned an error for object {0}'
                 if response.status_code and response.content:
                     msg += ': [{0}] {1}'.format(response.status_code, response.content)
                 elif response.error:
                     msg += ': {0}'.format(response.error)
-                self._save_object_error(msg ,self.obj,'Import')
+                self._save_object_error(msg ,harvest_object,'Import')
                 return False
 
         else:
@@ -369,7 +376,7 @@ class GeoDataGovHarvester(SpatialHarvester):
         # Generate GUID if not present (i.e. it's a manual import)
         if not harvest_object.guid:
             m = hashlib.md5()
-            m.update(self.obj.content.encode('utf8',errors='ignore'))
+            m.update(harvest_object.content.encode('utf8',errors='ignore'))
             harvest_object.guid = m.hexdigest()
             harvest_object.add()
 

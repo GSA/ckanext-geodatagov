@@ -5,6 +5,7 @@ import dateutil.parser
 import pyparsing as parse
 import requests
 from sqlalchemy.orm import aliased
+from sqlalchemy.exc import DataError
 
 from ckan import model
 
@@ -184,17 +185,21 @@ class WAFHarvester(GeoDataGovHarvester, SingletonPlugin):
             harvest_object.content = content
             harvest_object.save()
         else:
-            extra = HOExtra(
-                    object=harvest_object,
-                    key='original_document',
-                    value=content)
-            extra.save()
+            try:
+                extra = HOExtra(
+                        object=harvest_object,
+                        key='original_document',
+                        value=content)
+                extra.save()
 
-            extra = HOExtra(
-                    object=harvest_object,
-                    key='original_format',
-                    value=document_format)
-            extra.save()
+                extra = HOExtra(
+                        object=harvest_object,
+                        key='original_format',
+                        value=document_format)
+                extra.save()
+            except DataError, e:
+                self._save_object_error('Error storing original document: {0}'.format(e.message), harvest_object)
+                return False
 
         return True
 
