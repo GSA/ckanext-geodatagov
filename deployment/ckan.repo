@@ -1,0 +1,7 @@
+[ckan]
+name=ckan
+baseurl=http://192.169.122.166
+enabled=1
+gpgcheck=0
+protect=0
+

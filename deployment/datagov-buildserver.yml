@@ -1,0 +1,101 @@
+---
+- hosts: build
+  vars_prompt:
+   - name: version
+     prompt: "Ckan Version"
+     private: False
+   - name: iteration
+     prompt: "Iteration"
+     private: False
+  tasks: 
+    - name: install epel
+      action: command creates=/etc/yum.repos.d/epel.repo rpm -Uvh http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-7.noarch.rpm
+    - name: make sure packages are installed 
+      action: yum pkg=$item state=installed
+      with_items:
+        - htop
+        - rubygems
+        - python-virtualenv
+        - python-setuptools
+        - git
+        - python-devel
+        - ruby-devel
+        - postgresql-libs
+        - postgresql-devel
+        - libxml2-devel
+        - libxslt-devel
+        - postgresql
+        - rpmdevtools
+        - gcc 
+        - gcc-c++ 
+        - make
+        - bison
+        - httpd
+        - createrepo
+        - mod_wsgi
+        - supervisor
+        - nginx
+    - name: install fpm
+      action: command gem install fpm creates=/usr/bin/fpm
+    - name: get ckan version
+      action: git repo=https://github.com/okfn/ckan dest=/usr/lib/ckan/src/ckan # version=release-0.22
+    - name: get pip
+      action: easy_install name=pip
+
+    - name: install requirements and make virtualenv
+      action: pip requirements=/usr/lib/ckan/src/ckan/pip-requirements.txt virtualenv=/usr/lib/ckan/
+    - name: run setup.py develop for ckan
+      action: command chdir=/usr/lib/ckan/src/ckan/ ../../bin/python setup.py develop
+
+    - name: get geodatagov
+      action: git repo=https://github.com/okfn/ckanext-geodatagov dest=/usr/lib/ckan/src/ckanext-geodatagov # version=release-0.22
+    - name: install requirements for geodatagov
+      action: pip requirements=/usr/lib/ckan/src/ckanext-geodatagov/pip-requirements.txt virtualenv=/usr/lib/ckan/
+    - name: run setup.py develop for geodatagov
+      action: command chdir=/usr/lib/ckan/src/ckan/ ../../bin/python setup.py develop
+
+    - name: install requirements for spacial 
+      action: pip requirements=/usr/lib/ckan/src/ckanext-spatial/pip-requirements.txt virtualenv=/usr/lib/ckan/
+    - name: install requirements for harvest 
+      action: pip requirements=/usr/lib/ckan/src/ckanext-harvest/pip-requirements.txt virtualenv=/usr/lib/ckan/
+
+    - name: remove old repo
+      action: file path=/var/www/ckan-repo state=absent
+
+    - name: create directories
+      action: file path=$item state=directory
+      with_items:
+        - /etc/ckan
+        - /var/www/ckan-repo
+
+    - name: default apache removed
+      action: file path=/etc/httpd/conf.d/welcome.conf state=absent
+
+    - name: copy all needed files
+      action: copy src=$item dest=/$item
+      with_items:
+        - etc/ckan/who.ini
+        - etc/ckan/apache.wsgi
+        - etc/ckan/production.ini
+        - etc/ckan/ckan.ini
+        - etc/ckan/supervisord.conf
+        - etc/httpd/conf.d/ckan.conf
+        - etc/httpd/conf.d/ckan-repo.conf
+        - etc/nginx/conf.d/ckan.conf
+
+        - etc/cron.daily/remove_old_sessions
+        - usr/bin/ckan
+        - tmp/after_web.sh
+
+
+    - name: restart apache
+      action: service name=httpd state=restarted
+
+    - name: build rpm
+      action: command chdir=/var/www/ckan-repo/ fpm -t rpm -s dir --after-install=/tmp/after_web.sh -n geo.data.gov --iteration $iteration -v $version -d nginx -d httpd -d supervisor -d rabbitmq-server -d mod_wsgi --config-files /etc/ckan/ckan.ini --config-files /etc/httpd/conf.d/ckan.conf /usr/bin/ckan /usr/lib/ckan/ /etc/ckan/ /etc/cron.daily/remove_old_sessions /etc/httpd/conf.d/ckan.conf /etc/nginx/conf.d/ckan.conf
+
+
+    - name: create repo
+      action: command createrepo /var/www/ckan-repo/
+
+
