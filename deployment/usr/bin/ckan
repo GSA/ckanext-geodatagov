@@ -3,8 +3,6 @@ import sys
 import os
 from pkg_resources import load_entry_point
 
-assert os.getuid() in 0, 'need to be root'
-
 paster_commands = ['create', 'help','make-config',
                    'points','post','request',
                    'serve','setup-app']

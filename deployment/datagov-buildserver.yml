@@ -7,10 +7,10 @@
    - name: iteration
      prompt: "Iteration"
      private: False
-  tasks: 
+  tasks:
     - name: install epel
       action: command creates=/etc/yum.repos.d/epel.repo rpm -Uvh http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-7.noarch.rpm
-    - name: make sure packages are installed 
+    - name: make sure packages are installed
       action: yum pkg=$item state=installed
       with_items:
         - htop
@@ -26,14 +26,13 @@
         - libxslt-devel
         - postgresql
         - rpmdevtools
-        - gcc 
-        - gcc-c++ 
+        - gcc
+        - gcc-c++
         - make
         - bison
         - httpd
         - createrepo
         - mod_wsgi
-        - supervisor
         - nginx
     - name: install fpm
       action: command gem install fpm creates=/usr/bin/fpm
@@ -54,10 +53,13 @@
     - name: run setup.py develop for geodatagov
       action: command chdir=/usr/lib/ckan/src/ckan/ ../../bin/python setup.py develop
 
-    - name: install requirements for spacial 
+    - name: install requirements for spacial
       action: pip requirements=/usr/lib/ckan/src/ckanext-spatial/pip-requirements.txt virtualenv=/usr/lib/ckan/
-    - name: install requirements for harvest 
+    - name: install requirements for harvest
       action: pip requirements=/usr/lib/ckan/src/ckanext-harvest/pip-requirements.txt virtualenv=/usr/lib/ckan/
+
+    - name: install supervisor
+      action: pip name=supervisor virtualenv=/usr/lib/ckan/
 
     - name: remove old repo
       action: file path=/var/www/ckan-repo state=absent
@@ -78,22 +80,28 @@
         - etc/ckan/apache.wsgi
         - etc/ckan/production.ini
         - etc/ckan/ckan.ini
-        - etc/ckan/supervisord.conf
+        - etc/supervisord.conf
         - etc/httpd/conf.d/ckan.conf
         - etc/httpd/conf.d/ckan-repo.conf
         - etc/nginx/conf.d/ckan.conf
-
         - etc/cron.daily/remove_old_sessions
+        - etc/init/supervisor.conf
+
+    - name: copy executables
+      action: copy src=$item dest=/$item mode=744
+      with_items:
         - usr/bin/ckan
         - tmp/after_web.sh
+
+    - name: create superviserctl symlink
+      action: file src=/usr/lib/ckan/bin/supervisorctl dest=/usr/bin/supervisorctl state=link
 
 
     - name: restart apache
       action: service name=httpd state=restarted
 
     - name: build rpm
-      action: command chdir=/var/www/ckan-repo/ fpm -t rpm -s dir --after-install=/tmp/after_web.sh -n geo.data.gov --iteration $iteration -v $version -d nginx -d httpd -d supervisor -d rabbitmq-server -d mod_wsgi --config-files /etc/ckan/ckan.ini --config-files /etc/httpd/conf.d/ckan.conf /usr/bin/ckan /usr/lib/ckan/ /etc/ckan/ /etc/cron.daily/remove_old_sessions /etc/httpd/conf.d/ckan.conf /etc/nginx/conf.d/ckan.conf
-
+      action: command chdir=/var/www/ckan-repo/ fpm -t rpm -s dir --after-install=/tmp/after_web.sh -n geo.data.gov --iteration $iteration -v $version -d nginx -d httpd -d rabbitmq-server -d mod_wsgi --config-files /etc/ckan/ckan.ini --config-files /etc/httpd/conf.d/ckan.conf /usr/bin/ckan /usr/lib/ckan/ /etc/ckan/ /etc/cron.daily/remove_old_sessions /etc/httpd/conf.d/ckan.conf /etc/nginx/conf.d/ckan.conf /etc/init/supervisor.conf /etc/supervisord.conf /usr/bin/supervisorctl
 
     - name: create repo
       action: command createrepo /var/www/ckan-repo/
