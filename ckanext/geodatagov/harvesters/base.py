@@ -83,6 +83,36 @@ class GeoDataGovHarvester(SpatialHarvester):
     {"type":"Polygon","coordinates":[[[$minx, $miny],[$minx, $maxy], [$maxx, $maxy], [$maxx, $miny], [$minx, $miny]]]}
     ''')
 
+    def _get_content_as_unicode(self, url):
+        '''
+        Get remote content as unicode.
+
+        We let requests handle the conversion [1] , which will use the content-type
+        header first or chardet if the header is missing (requests uses its own
+        embedded chardet version).
+
+        As we will be storing and serving the contents as unicode, we actually
+        replace the original XML encoding declaration with an UTF-8 one.
+
+
+        [1] http://github.com/kennethreitz/requests/blob/63243b1e3b435c7736acf1e51c0f6fa6666d861d/requests/models.py#L811
+
+        '''
+        url = url.replace(' ','%20')
+        response = requests.get(url)
+
+        content = response.text
+
+        # Remove original XML declaration
+        content = re.sub('<\?xml(.*)\?>','',content)
+
+        # Get rid of the BOM and other rubbish at the beginning of the file
+        content = re.sub('.*?<', '<', content, 1)
+
+        content = u'<?xml version="1.0" encoding="UTF-8"?>\n' + content
+
+        return content
+
     def _validate_document(self, document_string, harvest_object, validator=None):
         if not validator:
             validator = self._get_validator()
@@ -92,16 +122,16 @@ class GeoDataGovHarvester(SpatialHarvester):
             xml = etree.fromstring(document_string)
         except etree.XMLSyntaxError, e:
             self._save_object_error('Could not parse XML file: {0}'.format(str(e)), harvest_object,'Import')
-            return False, []
+            return False, None, []
 
 
-        valid, messages = validator.is_valid(xml)
+        valid, profile, errors = validator.is_valid(xml)
         if not valid:
-            log.error('Errors found for object with GUID %s:' % harvest_object.guid)
-            out = messages[0] + ':\n' + '\n'.join(messages[1:])
-            self._save_object_error(out, harvest_object,'Import')
+            log.error('Validation errors found using profile {0} for object with GUID {1}'.format(profile, harvest_object.guid))
+            for error in errors:
+                self._save_object_error(error[0], harvest_object,'Validation',line=error[1])
 
-        return valid, messages
+        return valid, profile, errors
 
     def _get_package_dict(self, iso_values, harvest_object):
 
@@ -317,14 +347,17 @@ class GeoDataGovHarvester(SpatialHarvester):
                 return False
 
             # Validate against FGDC schema
-            is_valid, errors = self._validate_document(original_document, harvest_object,
+            is_valid, profile, errors = self._validate_document(original_document, harvest_object,
                                                        validator=Validators(profiles=['fgdc']))
             if not is_valid:
                 # TODO: Provide an option to continue anyway
                 return False
 
-            response = requests.post(transform_service, data=original_document.strip())
+            response = requests.post(transform_service,
+                                     data=original_document.encode('utf8'),
+                                     headers={'content-type': 'text/xml; charset=utf-8'})
             if response.status_code == 200:
+                # XML coming from the conversion tool is already declared and encoded as utf-8
                 harvest_object.content = response.content
                 harvest_object.save()
             else:
@@ -338,7 +371,7 @@ class GeoDataGovHarvester(SpatialHarvester):
 
         else:
             # Document is ISO, validate
-            is_valid, errors = self._validate_document(harvest_object.content, harvest_object)
+            is_valid, profile, errors = self._validate_document(harvest_object.content, harvest_object)
             if not is_valid:
                 # TODO: Provide an option to continue anyway
                 return False
@@ -436,6 +469,8 @@ class GeoDataGovHarvester(SpatialHarvester):
                 # Delete the previous object to avoid cluttering the object table
                 previous_object.delete()
 
+                #TODO: Update harvest object id extra in package!
+
                 log.info('Document with GUID %s unchanged, skipping...' % (harvest_object.guid))
             else:
                 package_schema = logic.schema.default_update_package_schema()
@@ -443,7 +478,6 @@ class GeoDataGovHarvester(SpatialHarvester):
                 context['schema'] = package_schema
 
                 package_dict['id'] = harvest_object.package_id
-
                 try:
                     package_id = get_action('package_update')(context, package_dict)
                     log.info('Updated package %s with guid %s', package_id, harvest_object.guid)
