@@ -34,6 +34,7 @@ def transform(xmldoc, xslt=config.defualt_xslt):
 
     if _transform is None:
         tFactory = TransformerFactory.newInstance()
+        tFactory.setAttribute('http://saxon.sf.net/feature/licenseFileLocation', '/etc/saxon-license.lic')
         try:
             _transform = tFactory.newTransformer(StreamSource(JavaFile(xslt)))
         except TransformerConfigurationException, tce:
