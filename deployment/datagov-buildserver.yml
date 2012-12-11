@@ -36,7 +36,7 @@
         - nginx
         - tomcat6
     - name: install fpm
-      action: command gem install fpm creates=/usr/bin/fpm
+      action: command gem install -v 0.4.21 fpm creates=/usr/bin/fpm 
     - name: get ckan version
       action: git repo=https://github.com/okfn/ckan dest=/usr/lib/ckan/src/ckan # version=release-0.22
     - name: get pip
@@ -52,7 +52,7 @@
     - name: install requirements for geodatagov
       action: pip requirements=/usr/lib/ckan/src/ckanext-geodatagov/pip-requirements.txt virtualenv=/usr/lib/ckan/
     - name: run setup.py develop for geodatagov
-      action: command chdir=/usr/lib/ckan/src/ckan/ ../../bin/python setup.py develop
+      action: command chdir=/usr/lib/ckan/src/ckanext-geodatagov/ ../../bin/python setup.py develop
 
     - name: install requirements for spacial
       action: pip requirements=/usr/lib/ckan/src/ckanext-spatial/pip-requirements.txt virtualenv=/usr/lib/ckan/
@@ -80,13 +80,13 @@
         - etc/ckan/who.ini
         - etc/ckan/apache.wsgi
         - etc/ckan/production.ini
-        - etc/ckan/ckan.ini
         - etc/supervisord.conf
         - etc/httpd/conf.d/ckan.conf
         - etc/httpd/conf.d/ckan-repo.conf
         - etc/nginx/conf.d/ckan.conf
         - etc/cron.daily/remove_old_sessions
         - etc/init/supervisor.conf
+        - var/lib/tomcat6/webapps/fgdc2iso.war
 
     - name: copy executables
       action: copy src=$item dest=/$item mode=744
@@ -94,7 +94,6 @@
         - usr/bin/ckan
         - tmp/after_web.sh
         - tmp/after_harvester.sh
-        - var/lib/tomcat6/webapps/fgdc2iso.war
 
     - name: create superviserctl symlink
       action: file src=/usr/lib/ckan/bin/supervisorctl dest=/usr/bin/supervisorctl state=link
@@ -103,10 +102,10 @@
       action: service name=httpd state=restarted
 
     - name: build rpm main 
-      action: command chdir=/var/www/ckan-repo/ fpm -t rpm -s dir --after-install=/tmp/after_web.sh -n geo.data.gov.web --iteration $iteration -v $version -d nginx -d httpd -d mod_wsgi --config-files /etc/ckan/production.ini --config-files /etc/ckan/ckan.ini --config-files /etc/httpd/conf.d/ckan.conf /usr/bin/ckan /usr/lib/ckan/ /etc/ckan/ /etc/httpd/conf.d/ckan.conf /etc/nginx/conf.d/ckan.conf /etc/cron.daily/remove_old_sessions
+      action: command chdir=/var/www/ckan-repo/ fpm -t rpm -s dir --description='geo.data.gov web frontend' --after-install=/tmp/after_web.sh -n geo.data.gov.web --iteration $iteration -v $version -d nginx -d httpd -d mod_wsgi --config-files /etc/ckan/production.ini --config-files /etc/httpd/conf.d/ckan.conf /usr/bin/ckan /usr/lib/ckan/ /etc/ckan/ /etc/httpd/conf.d/ckan.conf /etc/nginx/conf.d/ckan.conf /etc/cron.daily/remove_old_sessions
 
     - name: build rpm harvester 
-      action: command chdir=/var/www/ckan-repo/ fpm -t rpm -s dir --after-install=/tmp/after_harvester.sh -n geo.data.gov.harvester --iteration $iteration -v $version -d rabbitmq-server --config-files /etc/ckan/production.ini --config-files /etc/ckan/ckan.ini /usr/bin/ckan /usr/lib/ckan/ /etc/ckan/ /etc/init/supervisor.conf /etc/supervisord.conf /usr/bin/supervisorctl /var/lib/tomcat6/webapps/fgdc2iso.war
+      action: command chdir=/var/www/ckan-repo/ fpm -t rpm -s dir --description='geo.data.gov harvester frontend' --after-install=/tmp/after_harvester.sh -n geo.data.gov.harvester --iteration $iteration -v $version -d rabbitmq-server --config-files /etc/ckan/production.ini /usr/bin/ckan /usr/lib/ckan/ /etc/ckan/ /etc/init/supervisor.conf /etc/supervisord.conf /usr/bin/supervisorctl /var/lib/tomcat6/webapps/fgdc2iso.war
 
     - name: create repo
       action: command createrepo /var/www/ckan-repo/

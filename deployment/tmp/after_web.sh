@@ -5,7 +5,7 @@ chkconfig --level 2345 nginx on
 chkconfig --level 2345 httpd on
 setsebool -P httpd_can_network_connect 1
 initctl reload-configuration
-rm -f /etc/nginx.conf.d/default.conf
+rm -f /etc/nginx/conf.d/default.conf
 rm -f /etc/httpd/conf.d/welcome.conf
 
 service httpd restart
