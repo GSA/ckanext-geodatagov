@@ -102,12 +102,11 @@
       action: service name=httpd state=restarted
 
     - name: build rpm main 
-      action: command chdir=/var/www/ckan-repo/ fpm -t rpm -s dir --description='geo.data.gov web frontend' --after-install=/tmp/after_web.sh -n geo.data.gov.web --iteration $iteration -v $version -d nginx -d httpd -d mod_wsgi -d geos --config-files /etc/ckan/production.ini --config-files /etc/httpd/conf.d/ckan.conf /usr/bin/ckan /usr/lib/ckan/ /etc/ckan/ /etc/httpd/conf.d/ckan.conf /etc/nginx/conf.d/ckan.conf /etc/cron.daily/remove_old_sessions
+      action: command chdir=/var/www/ckan-repo/ fpm -t rpm -s dir --description='geo.data.gov web frontend' --after-install=/tmp/after_web.sh -n geo.data.gov.web --iteration $iteration -v $version -d postgresql -d nginx -d httpd -d mod_wsgi -d geos --config-files /etc/ckan/production.ini --config-files /etc/httpd/conf.d/ckan.conf /usr/bin/ckan /usr/lib/ckan/ /etc/ckan/ /etc/httpd/conf.d/ckan.conf /etc/nginx/conf.d/ckan.conf /etc/cron.daily/remove_old_sessions
 
     - name: build rpm harvester 
-      action: command chdir=/var/www/ckan-repo/ fpm -t rpm -s dir --description='geo.data.gov harvester frontend' --after-install=/tmp/after_harvester.sh -n geo.data.gov.harvester --iteration $iteration -v $version -d geos -d rabbitmq-server --config-files /etc/ckan/production.ini /usr/bin/ckan /usr/lib/ckan/ /etc/ckan/ /etc/init/supervisor.conf /etc/supervisord.conf /usr/bin/supervisorctl /var/lib/tomcat6/webapps/fgdc2iso.war
+      action: command chdir=/var/www/ckan-repo/ fpm -t rpm -s dir --description='geo.data.gov harvester frontend' --after-install=/tmp/after_harvester.sh -n geo.data.gov.harvester --iteration $iteration -v $version -d geos -d postgresql -d rabbitmq-server -d tomcat6 -d java-openjdk -d libxslt -d libxml2 --config-files /etc/ckan/production.ini /usr/bin/ckan /usr/lib/ckan/ /etc/ckan/ /etc/init/supervisor.conf /etc/supervisord.conf /usr/bin/supervisorctl /var/lib/tomcat6/webapps/fgdc2iso.war
 
     - name: create repo
       action: command createrepo /var/www/ckan-repo/
-
 
