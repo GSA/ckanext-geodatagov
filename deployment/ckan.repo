@@ -1,6 +1,6 @@
 [ckan]
-name=ckan
-baseurl=http://192.169.122.166
+name=geodatagov
+baseurl=http://s084.okserver.org/packages/geodatagov/
 enabled=1
 gpgcheck=0
 protect=0
