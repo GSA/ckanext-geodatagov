@@ -473,6 +473,11 @@ class GeoDataGovHarvester(SpatialHarvester):
             # Check if the modified date is more recent
             if harvest_object.metadata_modified_date <= previous_object.metadata_modified_date:
 
+                # Assign the previous job id to the new object to
+                # avoid losing history
+                harvest_object.harvest_job_id = previous_object.job.id
+                harvest_object.add()
+
                 # Delete the previous object to avoid cluttering the object table
                 previous_object.delete()
 
