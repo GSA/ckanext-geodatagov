@@ -170,7 +170,7 @@ class GeoDataGovHarvester(SpatialHarvester):
         extras = {
             'published_by': harvest_object.source.publisher_id or '',
             'UKLP': 'True',
-            'harvest_object_id': harvest_object.id
+            'guid': harvest_object.guid,
         }
 
         # Just add some of the metadata as extras, not the whole lot
@@ -193,8 +193,6 @@ class GeoDataGovHarvester(SpatialHarvester):
             'spatial-data-service-type',
         ]:
             extras[name] = iso_values[name]
-
-        extras['guid'] = harvest_object.guid
 
         extras['licence'] = iso_values.get('use-constraints', '')
         if len(extras['licence']):
@@ -440,6 +438,10 @@ class GeoDataGovHarvester(SpatialHarvester):
         tag_schema = logic.schema.default_tags_schema()
         tag_schema['name'] = [not_empty, unicode]
 
+        # Flag this object as the current one
+        harvest_object.current = True
+        harvest_object.add()
+
         if status == 'new':
             package_schema = logic.schema.default_create_package_schema()
             package_schema['tags'] = tag_schema
@@ -450,16 +452,21 @@ class GeoDataGovHarvester(SpatialHarvester):
             package_dict['id'] = unicode(uuid.uuid4())
             package_schema['id'] = [unicode]
 
+            # Save reference to the package on the object
+            harvest_object.package_id = package_dict['id']
+            harvest_object.add()
+            # Defer constraints and flush so the dataset can be indexed with
+            # the harvest object id (on the after_show hook from the harvester
+            # plugin)
+            model.Session.execute('SET CONSTRAINTS harvest_object_package_id_fkey DEFERRED')
+            model.Session.flush()
+
             try:
                 package_id = get_action('package_create')(context, package_dict)
                 log.info('Created new package %s with guid %s', package_id, harvest_object.guid)
             except ValidationError,e:
                 self._save_object_error('Validation Error: %s' % str(e.error_summary), harvest_object, 'Import')
                 return False
-
-            # Save reference to the package on the object
-            harvest_object.package_id = package_id
-            harvest_object.add()
 
         elif status == 'change':
 
@@ -468,8 +475,6 @@ class GeoDataGovHarvester(SpatialHarvester):
 
                 # Delete the previous object to avoid cluttering the object table
                 previous_object.delete()
-
-                #TODO: Update harvest object id extra in package!
 
                 log.info('Document with GUID %s unchanged, skipping...' % (harvest_object.guid))
             else:
@@ -485,9 +490,6 @@ class GeoDataGovHarvester(SpatialHarvester):
                     self._save_object_error('Validation Error: %s' % str(e.error_summary), harvest_object, 'Import')
                     return False
 
-        # Flag this object as the current one
-        harvest_object.current = True
-        harvest_object.add()
 
         model.Session.commit()
 
