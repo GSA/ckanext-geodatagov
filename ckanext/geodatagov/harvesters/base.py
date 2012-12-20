@@ -117,6 +117,9 @@ class GeoDataGovHarvester(SpatialHarvester):
         if not validator:
             validator = self._get_validator()
 
+        from ckanext.geodatagov.harvesters.validation import MinimalFGDCValidator
+        validator.add_validator(MinimalFGDCValidator)
+
         document_string = re.sub('<\?xml(.*)\?>','',document_string)
         try:
             xml = etree.fromstring(document_string)
@@ -345,8 +348,13 @@ class GeoDataGovHarvester(SpatialHarvester):
                 return False
 
             # Validate against FGDC schema
+            if self.config.get('validation_profiles'):
+                profiles = self.config.get('validation_profiles').split(',')
+            else:
+                profiles = ['fgdc']
+
             is_valid, profile, errors = self._validate_document(original_document, harvest_object,
-                                                       validator=Validators(profiles=['fgdc']))
+                                                       validator=Validators(profiles=profiles))
             if not is_valid:
                 # TODO: Provide an option to continue anyway
                 return False
