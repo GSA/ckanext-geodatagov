@@ -171,8 +171,6 @@ class GeoDataGovHarvester(SpatialHarvester):
             package_dict['name'] = package.name
 
         extras = {
-            'published_by': harvest_object.source.publisher_id or '',
-            'UKLP': 'True',
             'guid': harvest_object.guid,
         }
 
@@ -351,7 +349,7 @@ class GeoDataGovHarvester(SpatialHarvester):
             if self.config.get('validation_profiles'):
                 profiles = self.config.get('validation_profiles').split(',')
             else:
-                profiles = ['fgdc']
+                profiles = ['fgdc-minimal']
 
             is_valid, profile, errors = self._validate_document(original_document, harvest_object,
                                                        validator=Validators(profiles=profiles))

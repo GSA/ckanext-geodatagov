@@ -30,6 +30,7 @@ setup(
     csw_harvester=ckanext.geodatagov.harvesters:CSWHarvester
     doc_harvester=ckanext.geodatagov.harvesters:DocHarvester
     waf_harvester=ckanext.geodatagov.harvesters:WAFHarvester
+    z3950_harvester=ckanext.geodatagov.harvesters:Z3950Harvester
 
     [paste.paster_command]
     geodatagov=ckanext.geodatagov.commands:GeoGovCommand
