@@ -19,6 +19,7 @@ import logging
 import hashlib
 import dateutil
 import re
+import mimetypes
 
 import requests
 from lxml import etree
@@ -254,7 +255,9 @@ class GeoDataGovHarvester(SpatialHarvester):
         else:
             log.debug('No spatial extent defined for this object')
 
-        resource_locators = iso_values.get('resource-locator', [])
+
+        resource_locators = iso_values.get('resource-locator', []) +\
+                            iso_values.get('resource-locator-identification', [])
 
         if len(resource_locators):
             for resource_locator in resource_locators:
@@ -269,6 +272,9 @@ class GeoDataGovHarvester(SpatialHarvester):
                             resource['verified'] = True
                             resource['verified_date'] = datetime.now().isoformat()
                             resource_format = 'WMS'
+                    if not resource_format:
+                        resource_format, encoding = mimetypes.guess_type(url)
+
                     resource.update(
                         {
                             'url': url,
