@@ -42,16 +42,17 @@ class Z3950Harvester(GeoDataGovHarvester, SingletonPlugin):
         self._set_config(harvest_job.source.config)
 
         # get current objects out of db
-        query = model.Session.query(HarvestObject.guid).filter(HarvestObject.current==True).\
+        query = model.Session.query(HarvestObject.guid, HarvestObject.package_id).filter(HarvestObject.current==True).\
                                     filter(HarvestObject.harvest_source_id==harvest_job.source.id)
 
-        current_guids = set([res[0] for res in query])
+        guid_to_package_id = dict((res[0], res[1]) for res in query)
+        current_guids = set(guid_to_package_id.keys())
         current_guids_in_harvest = set()
 
         # Get contents
         try:
             conn = zoom.Connection(source_url, self.config.get('port', 210))
-            conn.databaseName = self.config.get('database_name', '')
+            conn.databaseName = self.config.get('database', '')
             conn.preferredRecordSyntax = 'XML'
             conn.elementSetName = 'T'
             query = zoom.Query ('CCL', 'metadata')
@@ -62,7 +63,7 @@ class Z3950Harvester(GeoDataGovHarvester, SingletonPlugin):
                 if hash in current_guids:
                     current_guids_in_harvest.add(hash)
                 else:
-                    obj = HarvestObject(job=harvest_job, extras=[
+                    obj = HarvestObject(job=harvest_job, guid=hash, extras=[
                         HOExtra(key='status', value='new'),
                         HOExtra(key='original_document', value=result.data.decode('latin-1')),
                         HOExtra(key='original_format', value='fgdc')
@@ -71,6 +72,8 @@ class Z3950Harvester(GeoDataGovHarvester, SingletonPlugin):
                     ids.append(obj.id)
             for guid in (current_guids - current_guids_in_harvest):
                 obj = HarvestObject(job=harvest_job,
+                                    guid=guid,
+                                    package_id=guid_to_package_id[guid],
                                     extras=[HOExtra(key='status', value='delete')])
                 obj.save()
                 ids.append(obj.id)
