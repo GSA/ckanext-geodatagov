@@ -11,8 +11,8 @@ import ckan.model as model
 import ckan.logic as logic
 import ckan.lib.cli as cli
 import requests
-import forms
 import ckanext.harvest.model as harvest_model
+import xml.etree.ElementTree as ET
 
 
 import logging
@@ -70,7 +70,7 @@ class GeoGovCommand(cli.CkanCommand):
                 row = dict(zip(fields,row))
 
                 ## neeeds some fix
-                if row['PROTOCOL_TYPE'].lower() not in ('waf', 'csw'):
+                if row['PROTOCOL_TYPE'].lower() not in ('waf', 'csw', 'z3950'):
                     continue
 
                 harvest_source = harvest_model.HarvestSource()
@@ -84,14 +84,20 @@ class GeoGovCommand(cli.CkanCommand):
                 harvest_source.frequency = row['FREQUENCY'].upper()
 
                 if harvest_source.frequency not in ('WEEKLY', 'MONTHLY', 'BIWEEKLY'):
-                    harvest_source.frequency = None
+                    harvest_source.frequency = 'MANUAL'
 
-                harvest_source.config = json.dumps(
-                    {'PROTOCAL': row['PROTOCAL'],
-                     'OWNER': row['OWNER'],
-                     'APPROVALSTATUS': row['APPROVALSTATUS'],
-                    }
-                )
+                config = {
+                          'OWNER': row['OWNER'],
+                          'APPROVALSTATUS': row['APPROVALSTATUS'],
+                         }
+
+                root = ET.fromstring(row['PROTOCAL'])
+
+                for child in root:
+                    if child.text:
+                        config[child.tag] = child.text
+
+                harvest_source.config = json.dumps(config)
                 model.Session.add(harvest_source)
 
         finally:
