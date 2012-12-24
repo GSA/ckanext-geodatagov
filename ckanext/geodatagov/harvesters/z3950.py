@@ -51,7 +51,7 @@ class Z3950Harvester(GeoDataGovHarvester, SingletonPlugin):
 
         # Get contents
         try:
-            conn = zoom.Connection(source_url, self.config.get('port', 210))
+            conn = zoom.Connection(source_url, int(self.config.get('port', 210)))
             conn.databaseName = self.config.get('database', '')
             conn.preferredRecordSyntax = 'XML'
             conn.elementSetName = 'T'
