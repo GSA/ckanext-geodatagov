@@ -245,10 +245,10 @@ class GeoDataGovHarvester(SpatialHarvester):
            and extras['bbox-west-long'] and extras['bbox-north-lat']:
 
             extent_string = self.extent_template.substitute(
-                    minx = extras['bbox-east-long'],
-                    miny = extras['bbox-south-lat'],
-                    maxx = extras['bbox-west-long'],
-                    maxy = extras['bbox-north-lat']
+                    minx = extras['bbox-east-long'].lstrip('+'),
+                    miny = extras['bbox-south-lat'].lstrip('+'),
+                    maxx = extras['bbox-west-long'].lstrip('+'),
+                    maxy = extras['bbox-north-lat'].lstrip('+')
                     )
 
             extras['spatial'] = extent_string.strip()
@@ -380,6 +380,9 @@ class GeoDataGovHarvester(SpatialHarvester):
                 return False
 
         else:
+            if harvest_object.content is None:
+                self._save_object_error('Empty content for object {0}'.format(harvest_object.id), harvest_object, 'Import')
+                return False
             # Document is ISO, validate
             is_valid, profile, errors = self._validate_document(harvest_object.content, harvest_object)
             if not is_valid:
