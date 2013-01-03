@@ -1,6 +1,7 @@
 create index on harvest_object(guid);
 create index on harvest_object(package_id);
 create index on harvest_object_extra(harvest_object_id);
+create index on harvest_object_error(harvest_object_id)
 create index on package_extent(package_id);
 
 create index on package_extra_revision(package_id);
@@ -14,6 +15,7 @@ drop index idx_package_resource_pkg_id_resource_id;
 create index on resource(name);
 
 
+create index on resource_group(package_id);
 create index on resource_group_revision(package_id);
 create index on resource_group_revision(revision_id);
 create index on resource_group_revision(id);
