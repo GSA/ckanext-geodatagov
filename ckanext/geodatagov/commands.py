@@ -13,6 +13,7 @@ import ckan.lib.cli as cli
 import requests
 import ckanext.harvest.model as harvest_model
 import xml.etree.ElementTree as ET
+import ckan.lib.munge as munge
 
 
 import logging
@@ -24,7 +25,8 @@ class GeoGovCommand(cli.CkanCommand):
     '''
     Commands:
 
-        paster ecportal import-harvest-source <data> -c <config>
+        paster ecportal import-harvest-source <harvest_source_data> <user_to_org_data> -c <config>
+        paster ecportal import-orgs <data> -c <config>
     '''
     summary = __doc__.split('\n')[0]
     usage = __doc__
@@ -46,24 +48,42 @@ class GeoGovCommand(cli.CkanCommand):
         self.user_name = user['name']
 
         if cmd == 'import-harvest-source':
+            if not len(self.args) in [3]:
+                print GeoGovCommand.__doc__
+                return
+
+            self.import_harvest_source(self.args[1], self.args[2])
+
+        if cmd == 'import-orgs':
             if not len(self.args) in [2, 3]:
                 print GeoGovCommand.__doc__
                 return
 
-            self.import_data(self.args[1])
+            self.import_organizations(self.args[1])
 
-    def import_data(self, location):
+
+    def get_user_org_mapping(self, location):
+        user_org_mapping = open(location)
+        fields = ['user', 'org']
+        csv_reader = csv.reader(user_org_mapping)
+        mapping = {}
+        for row in csv_reader:
+            mapping[row[0].lower()] = row[1]
+        return mapping
+
+
+    def import_harvest_source(self, sources_location, user_org_mapping):
         '''Import data from this mysql command
-        select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, 
-        Protocol, PROTOCOL_TYPE, FREQUENCY 
-        INTO OUTFILE '/tmp/resultall.csv' 
-        from GPT_RESOURCE left join GPT_RESOURCE_DATA using(DOCUUID) 
-        where frequency is not null;'''
+select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE, FREQUENCY, USERNAME into outfile '/tmp/results_with_user.csv' from GPT_RESOURCE join GPT_USER on owner = USERID where frequency is not null;
+'''
+        mapping = self.get_user_org_mapping(user_org_mapping)
 
-        fields = ['DOCUUID', 'TITLE', 'OWNER', 'APPROVALSTATUS', 'HOST_URL', 
-        'PROTOCAL', 'PROTOCOL_TYPE', 'FREQUENCY']
+        fields = ['DOCUUID', 'TITLE', 'OWNER', 'APPROVALSTATUS', 'HOST_URL',
+        'PROTOCAL', 'PROTOCOL_TYPE', 'FREQUENCY', 'USERNAME']
 
-        harvest_sources = open(location)
+        user = logic.get_action('get_site_user')({'model': model, 'ignore_auth': True}, {})
+
+        harvest_sources = open(sources_location)
         try:
             csv_reader = csv.reader(harvest_sources, delimiter='\t')
             for row in csv_reader:
@@ -73,22 +93,13 @@ class GeoGovCommand(cli.CkanCommand):
                 if row['PROTOCOL_TYPE'].lower() not in ('waf', 'csw', 'z3950'):
                     continue
 
-                harvest_source = harvest_model.HarvestSource()
-                harvest_source.id = row['DOCUUID'][1:-1].lower()
-                harvest_source.title = row['TITLE']
-                harvest_source.url = row['HOST_URL']
-
-                ##need some thought on this conversion
-                harvest_source.type = row['PROTOCOL_TYPE'].lower()
-
-                harvest_source.frequency = row['FREQUENCY'].upper()
-
-                if harvest_source.frequency not in ('WEEKLY', 'MONTHLY', 'BIWEEKLY'):
-                    harvest_source.frequency = 'MANUAL'
+                frequency = row['FREQUENCY'].upper()
+                if frequency not in ('WEEKLY', 'MONTHLY', 'BIWEEKLY'):
+                    frequency = 'MANUAL'
 
                 config = {
-                          'OWNER': row['OWNER'],
                           'APPROVALSTATUS': row['APPROVALSTATUS'],
+                          'ORIGINAL_UUID': row['DOCUUID'][1:-1].lower()
                          }
 
                 root = ET.fromstring(row['PROTOCAL'])
@@ -97,13 +108,51 @@ class GeoGovCommand(cli.CkanCommand):
                     if child.text:
                         config[child.tag] = child.text
 
-                harvest_source.config = json.dumps(config)
-                model.Session.add(harvest_source)
+                harvest_source_dict = {
+                    'name': munge.munge_title_to_name(row['TITLE']),
+                    'title': row['TITLE'],
+                    'url': row['HOST_URL'],
+                    'source_type': row['PROTOCOL_TYPE'].lower(),
+                    'frequency': frequency,
+                    'config': json.dumps(config),
+                    'owner_org': mapping[row['USERNAME'].lower()]
+                }
+
+
+                try:
+                    harvest_source = logic.get_action('harvest_source_create')(
+                        {'model': model, 'user': user['name'],
+                         'session': model.Session, 'api_version': 3},
+                        harvest_source_dict
+                    )
+                except ckan.logic.ValidationError, e:
+                    print harvest_source_dict
+                    print e.error_dict
 
         finally:
             model.Session.commit()
             harvest_sources.close()
 
+    def import_organizations(self, location):
+        fields = ['title', 'type', 'name']
 
+        user = logic.get_action('get_site_user')({'model': model, 'ignore_auth': True}, {})
+        organizations = open(location)
 
+        csv_reader = csv.reader(organizations)
 
+        all_rows = set()
+        for row in csv_reader:
+            all_rows.add(tuple(row))
+
+        for num, row in enumerate(all_rows):
+            row = dict(zip(fields,row))
+            org = logic.get_action('organization_create')(
+                {'model': model, 'user': user['name'],
+                 'session': model.Session},
+                {'name': row['name'],
+                 'title': row['title'],
+                 'extras': [{'key': 'organization_type',
+                             'value': json.dumps(row['type'])}]
+                }
+            )
