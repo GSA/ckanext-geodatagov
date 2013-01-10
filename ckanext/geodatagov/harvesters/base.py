@@ -153,11 +153,11 @@ class GeoDataGovHarvester(SpatialHarvester):
             'resources':[]
         }
 
-        # TODO: still not clear
-        '''
-        if harvest_object.source.publisher_id:
-            package_dict['groups'] = [{'id': harvest_object.source.publisher_id}]
-        '''
+        # We need to get the owner organization (if any) from the harvest
+        # source dataset
+        source_dataset = model.Package.get(harvest_object.source.id)
+        if source_dataset.owner_org:
+            package_dict['owner_org'] = source_dataset.owner_org
 
         # Package name
         package = harvest_object.package
