@@ -2,27 +2,6 @@
 
 {% set dataset_extent = h.get_pkg_dict_extra(c.pkg_dict, 'spatial', '') %}
 
-{# FIXME need to add the styles better #}
-{% block styles %}
-  {{ super() }}
-
-  {% if dataset_extent %}
-    {% snippet "spatial/snippets/dataset_map_styles.html" %}
-  {% endif %}
-
-{% endblock %}
-
-
-{# FIXME need to add the scripts better #}
-{% block scripts %}
-  {{ super () }}
-
-  {% if dataset_extent %}
-    {% snippet "spatial/snippets/dataset_map_scripts.html", dataset_extent=dataset_extent %}
-  {% endif %}
-{% endblock %}
-
-
 {% block actions_content %}
   {{ super () }}
   {# <li><a class="btn" href=""><i class="icon-large icon-flag"></i> Report Issue</a></li> #}
@@ -35,8 +14,9 @@
 
   {% snippet "snippets/disqus_trackback.html" %}
 
+  {% set dataset_extent = h.get_pkg_dict_extra(c.pkg_dict, 'spatial', '') %}
   {% if dataset_extent %}
-    {% snippet "spatial/snippets/dataset_map_sidebar.html" %}
+    {% snippet "spatial/snippets/dataset_map_sidebar.html", extent=dataset_extent %}
   {% endif %}
 
 {% endblock %}
