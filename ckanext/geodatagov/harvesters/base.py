@@ -109,6 +109,7 @@ class GeoDataGovHarvester(SpatialHarvester):
 
         # Get rid of the BOM and other rubbish at the beginning of the file
         content = re.sub('.*?<', '<', content, 1)
+        content = content[content.index('<'):]
 
         content = u'<?xml version="1.0" encoding="UTF-8"?>\n' + content
 
@@ -122,6 +123,7 @@ class GeoDataGovHarvester(SpatialHarvester):
         validator.add_validator(MinimalFGDCValidator)
 
         document_string = re.sub('<\?xml(.*)\?>','',document_string)
+
         try:
             xml = etree.fromstring(document_string)
         except etree.XMLSyntaxError, e:
