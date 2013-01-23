@@ -100,7 +100,7 @@ class GeoDataGovHarvester(SpatialHarvester):
 
         '''
         url = url.replace(' ','%20')
-        response = requests.get(url)
+        response = requests.get(url, timeout=10)
 
         content = response.text
 
