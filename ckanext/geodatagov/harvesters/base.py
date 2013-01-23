@@ -177,6 +177,14 @@ class GeoDataGovHarvester(SpatialHarvester):
             'guid': harvest_object.guid,
         }
 
+        collection_package_id = get_extra(harvest_object, 'collection_package_id')
+        if collection_package_id:
+            extras['collection_package_id'] = collection_package_id
+
+        collection_metadata = get_extra(harvest_object, 'collection_metadata')
+        if collection_metadata:
+            extras['collection_metadata'] = collection_metadata
+
         # Just add some of the metadata as extras, not the whole lot
         for name in [
             # Essentials
