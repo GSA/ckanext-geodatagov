@@ -34,6 +34,16 @@ class WAFHarvester(GeoDataGovHarvester, SingletonPlugin):
             'description': 'A Web Accessible Folder (WAF) displaying a list of spatial metadata documents'
             }
 
+
+    def get_original_url(self, harvest_object_id):
+        url = model.Session.query(HOExtra.value).\
+                                    filter(HOExtra.key=='waf_location').\
+                                    filter(HOExtra.harvest_object_id==harvest_object_id).\
+                                    first()
+
+        return url[0] if url else None
+
+
     def gather_stage(self,harvest_job,collection_package_id=None):
         log = logging.getLogger(__name__ + '.WAF.gather')
         log.debug('WafHarvester gather_stage for job: %r', harvest_job)

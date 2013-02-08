@@ -26,6 +26,17 @@ class DocHarvester(GeoDataGovHarvester, SingletonPlugin):
             'description': 'A single spatial metadata document'
             }
 
+
+    def get_original_url(self, harvest_object_id):
+        obj = model.Session.query(HarvestObject).\
+                                    filter(HarvestObject.id==harvest_object_id).\
+                                    first()
+        if not obj:
+            return None
+
+        return obj.source.url
+
+
     def gather_stage(self,harvest_job):
         log = logging.getLogger(__name__ + '.individual.gather')
         log.debug('DocHarvester gather_stage for job: %r', harvest_job)

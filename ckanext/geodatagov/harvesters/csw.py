@@ -1,3 +1,6 @@
+import urllib
+import urlparse
+
 import logging
 
 from ckan import model
@@ -26,6 +29,35 @@ class CSWHarvester(GeoDataGovHarvester, SingletonPlugin):
             'title': 'CSW Server',
             'description': 'A server that implements OGC\'s Catalog Service for the Web (CSW) standard'
             }
+
+
+    def get_original_url(self, harvest_object_id):
+        obj = model.Session.query(HarvestObject).\
+                                    filter(HarvestObject.id==harvest_object_id).\
+                                    first()
+
+        parts = urlparse.urlparse(obj.source.url)
+
+        params = {
+            'SERVICE': 'CSW',
+            'VERSION': '2.0.2',
+            'REQUEST': 'GetRecordById',
+            'OUTPUTSCHEMA': 'http://www.isotc211.org/2005/gmd',
+            'OUTPUTFORMAT':'application/xml' ,
+            'ID': obj.guid
+        }
+
+        url = urlparse.urlunparse((
+            parts.scheme,
+            parts.netloc,
+            parts.path,
+            None,
+            urllib.urlencode(params),
+            None
+        ))
+
+        return url
+
 
     def gather_stage(self, harvest_job):
         log = logging.getLogger(__name__ + '.CSW.gather')
