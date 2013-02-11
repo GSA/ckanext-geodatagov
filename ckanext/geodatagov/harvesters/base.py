@@ -543,34 +543,3 @@ class GeoDataGovHarvester(SpatialHarvester):
             if o.scheme and o.netloc:
                 return licence
         return None
-
-    def get_gemini_string_and_guid(self,content,url=None):
-        xml = etree.fromstring(content)
-
-        # The validator and GeminiDocument don't like the container
-        metadata_tags = ['{http://www.isotc211.org/2005/gmd}MD_Metadata','{http://www.isotc211.org/2005/gmi}MI_Metadata']
-        if xml.tag in metadata_tags:
-            gemini_xml = xml
-        else:
-            for metadata_tag in metadata_tags:
-                gemini_xml = xml.find(metadata_tag)
-                if gemini_xml:
-                    break
-
-        if gemini_xml is None:
-            self._save_gather_error('Content is not a valid Gemini document',self.harvest_job)
-
-        valid, messages = self._get_validator().is_valid(gemini_xml)
-        if not valid:
-            out = messages[0] + ':\n' + '\n'.join(messages[1:])
-            if url:
-                self._save_gather_error('Validation error for %s - %s'% (url,out),self.harvest_job)
-            else:
-                self._save_gather_error('Validation error - %s'%out,self.harvest_job)
-
-        gemini_string = etree.tostring(gemini_xml)
-        gemini_document = GeminiDocument(gemini_string)
-        gemini_values = gemini_document.read_values()
-        gemini_guid = gemini_values['guid']
-
-        return gemini_string, gemini_guid

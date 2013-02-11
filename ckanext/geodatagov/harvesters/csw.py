@@ -91,10 +91,7 @@ class CSWHarvester(GeoDataGovHarvester, SingletonPlugin):
                     log.info('Got identifier %s from the CSW', identifier)
                     if identifier is None:
                         log.error('CSW returned identifier %r, skipping...' % identifier)
-                        ## log an error here? happens with the dutch data
                         continue
-
-                    # Create a new HarvestObject for this identifier
 
                     guids_in_harvest.add(identifier)
                 except Exception, e:
