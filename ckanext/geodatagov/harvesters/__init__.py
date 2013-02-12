@@ -7,10 +7,5 @@ except ImportError:
     __path__ = pkgutil.extend_path(__path__, __name__)
 
 
-from ckanext.geodatagov.harvesters.csw import CSWHarvester
-from ckanext.geodatagov.harvesters.waf import WAFHarvester
-from ckanext.geodatagov.harvesters.waf import WAFCollectionHarvester
-from ckanext.geodatagov.harvesters.doc import DocHarvester
+from ckanext.geodatagov.harvesters.waf_collection import WAFCollectionHarvester
 from ckanext.geodatagov.harvesters.z3950 import Z3950Harvester
-
-
