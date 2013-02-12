@@ -20,13 +20,13 @@ import logging
 log = logging.getLogger()
 
 
-
 class GeoGovCommand(cli.CkanCommand):
     '''
     Commands:
 
         paster ecportal import-harvest-source <harvest_source_data> <user_to_org_data> -c <config>
         paster ecportal import-orgs <data> -c <config>
+        paster ecportal post-install-dbinit -c <config>
     '''
     summary = __doc__.split('\n')[0]
     usage = __doc__
@@ -61,6 +61,15 @@ class GeoGovCommand(cli.CkanCommand):
 
             self.import_organizations(self.args[1])
 
+        if cmd == 'post-install-dbinit':
+            f = open('/usr/lib/ckan/src/ckanext-geodatagov/what_to_alter.sql')
+            print "running what_to_alter.sql"
+            test = model.Session.execute(f.read())
+            f = open('/usr/lib/ckan/src/ckanext-geodatagov/constraints.sql')
+            print "running constraints.sql"
+            test = model.Session.execute(f.read())
+            model.Session.commit()
+            print "Success"
 
     def get_user_org_mapping(self, location):
         user_org_mapping = open(location)

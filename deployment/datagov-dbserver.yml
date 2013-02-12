@@ -2,7 +2,7 @@
 - hosts: datagovdb
   tasks:
     - name: install epel
-      action: command creates=/etc/yum.repos.d/epel.repo rpm -Uvh http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-7.noarch.rpm
+      action: command creates=/etc/yum.repos.d/epel.repo rpm -Uvh http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
     - name: make sure packages are installed
       action: yum pkg=$item state=installed
       with_items:
