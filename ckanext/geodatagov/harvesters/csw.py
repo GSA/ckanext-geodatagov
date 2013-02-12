@@ -12,10 +12,10 @@ from ckanext.harvest.model import HarvestObject
 from ckanext.harvest.model import HarvestObjectExtra as HOExtra
 
 from ckanext.spatial.lib.csw_client import CswService
-from ckanext.geodatagov.harvesters.base import GeoDataGovHarvester, text_traceback
+from ckanext.spatial.harvesters.base import SpatialHarvester, text_traceback
 
 
-class CSWHarvester(GeoDataGovHarvester, SingletonPlugin):
+class CSWHarvester(SpatialHarvester, SingletonPlugin):
     '''
     A Harvester for CSW servers
     '''

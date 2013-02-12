@@ -9,9 +9,10 @@ from ckanext.harvest.interfaces import IHarvester
 from ckanext.harvest.model import HarvestObject
 from ckanext.harvest.model import HarvestObjectExtra as HOExtra
 
-from ckanext.geodatagov.harvesters.base import GeoDataGovHarvester, guess_standard
+from ckanext.spatial.harvesters.base import SpatialHarvester,  guess_standard
 
-class DocHarvester(GeoDataGovHarvester, SingletonPlugin):
+
+class DocHarvester(SpatialHarvester, SingletonPlugin):
     '''
     A Harvester for individual spatial metadata documents
     TODO: Move to new logic

@@ -16,10 +16,9 @@ from ckanext.harvest.model import HarvestObject
 from ckanext.harvest.model import HarvestObjectExtra as HOExtra
 import ckanext.harvest.queue as queue
 
-from ckanext.geodatagov.harvesters.base import GeoDataGovHarvester, get_extra, guess_standard
+from ckanext.spatial.harvesters.base import SpatialHarvester, get_extra, guess_standard
 
-
-class WAFHarvester(GeoDataGovHarvester, SingletonPlugin):
+class WAFHarvester(SpatialHarvester, SingletonPlugin):
     '''
     A Harvester for WAF (Web Accessible Folders) containing spatial metadata documents.
     e.g. Apache serving a directory of ISO 19139 files.
@@ -224,6 +223,21 @@ class WAFCollectionHarvester(WAFHarvester):
             'title': 'Web Accessible Folder (WAF) Collection',
             'description': 'A Web Accessible Folder (WAF) displaying a list of spatial metadata documents with a collection record'
             }
+
+    def _get_package_dict(self, iso_values, harvest_object):
+
+        package_dict = super(WAFCollectionHarvester, self)._get_package_dict(iso_values, harvest_object)
+
+        collection_package_id = get_extra(harvest_object, 'collection_package_id')
+        if collection_package_id:
+            package_dict['extras']['collection_package_id'] = collection_package_id
+
+        collection_metadata = get_extra(harvest_object, 'collection_metadata')
+        if collection_metadata:
+            package_dict['extras']['collection_metadata'] = collection_metadata
+
+        return package_dict
+
 
     def gather_stage(self, harvest_job):
         log = logging.getLogger(__name__ + '.WAF.gather')
