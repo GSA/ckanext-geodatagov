@@ -10,9 +10,9 @@ from ckanext.harvest.interfaces import IHarvester
 from ckanext.harvest.model import HarvestObject
 from ckanext.harvest.model import HarvestObjectExtra as HOExtra
 
-from ckanext.spatial.harvesters.base import SpatialHarvester
+from ckanext.geodatagov.harvesters import GeoDataGovHarvester
 
-class Z3950Harvester(SpatialHarvester, SingletonPlugin):
+class Z3950Harvester(GeoDataGovHarvester, SingletonPlugin):
     '''
     A Harvester for z3950.
     '''

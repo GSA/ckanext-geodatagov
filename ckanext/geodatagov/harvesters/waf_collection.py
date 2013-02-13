@@ -4,16 +4,17 @@ import requests
 
 from ckan import model
 
-from ckan.plugins.core import SingletonPlugin, implements
 
 from ckanext.harvest.model import HarvestObject
 from ckanext.harvest.model import HarvestObjectExtra as HOExtra
 import ckanext.harvest.queue as queue
 
 from ckanext.spatial.harvesters.base import get_extra
-from ckanext.spatial.harvesters.waf import WAFHarvester
 
-class WAFCollectionHarvester(WAFHarvester):
+from ckanext.geodatagov.harvesters import GeoDataGovWAFHarvester
+
+
+class WAFCollectionHarvester(GeoDataGovWAFHarvester):
 
     def info(self):
         return {
@@ -22,9 +23,9 @@ class WAFCollectionHarvester(WAFHarvester):
             'description': 'A Web Accessible Folder (WAF) displaying a list of spatial metadata documents with a collection record'
             }
 
-    def _get_package_dict(self, iso_values, harvest_object):
+    def get_package_dict(self, iso_values, harvest_object):
 
-        package_dict = super(WAFCollectionHarvester, self)._get_package_dict(iso_values, harvest_object)
+        package_dict = super(WAFCollectionHarvester, self).get_package_dict(iso_values, harvest_object)
 
         collection_package_id = get_extra(harvest_object, 'collection_package_id')
         if collection_package_id:
@@ -94,4 +95,4 @@ class WAFCollectionHarvester(WAFHarvester):
             self._save_gather_error('Collection object failed to harvest, not harvesting', harvest_job)
             return None
 
-        return WAFHarvester.gather_stage(self, harvest_job, collection_package_id=obj.package_id)
+        return GeoDataGovWAFHarvester.gather_stage(self, harvest_job, collection_package_id=obj.package_id)
