@@ -9,8 +9,6 @@ from ckanext.harvest.model import HarvestObject
 from ckanext.harvest.model import HarvestObjectExtra as HOExtra
 import ckanext.harvest.queue as queue
 
-from ckanext.spatial.harvesters.base import get_extra
-
 from ckanext.geodatagov.harvesters import GeoDataGovWAFHarvester
 
 
@@ -27,11 +25,11 @@ class WAFCollectionHarvester(GeoDataGovWAFHarvester):
 
         package_dict = super(WAFCollectionHarvester, self).get_package_dict(iso_values, harvest_object)
 
-        collection_package_id = get_extra(harvest_object, 'collection_package_id')
+        collection_package_id = self._get_object_extra(harvest_object, 'collection_package_id')
         if collection_package_id:
             package_dict['extras']['collection_package_id'] = collection_package_id
 
-        collection_metadata = get_extra(harvest_object, 'collection_metadata')
+        collection_metadata = self._get_object_extra(harvest_object, 'collection_metadata')
         if collection_metadata:
             package_dict['extras']['collection_metadata'] = collection_metadata
 
