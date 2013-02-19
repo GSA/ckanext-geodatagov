@@ -11,6 +11,8 @@ class Demo(p.SingletonPlugin):
 
     p.implements(p.IConfigurer)
     p.implements(p.IPackageController, inherit=True)
+    p.implements(p.ITemplateHelpers)
+
 
     def update_config(self, config):
         # add template directory
@@ -52,3 +54,11 @@ class Demo(p.SingletonPlugin):
             pkg_dict['fq'] = pkg_dict.get('fq', '') + ' -collection_package_id:["" TO *]'
 
         return pkg_dict
+
+    ## ITemplateHelpers
+
+    def get_helpers(self):
+        from ckanext.geodatagov import helpers as geodatagov_helpers
+        return {
+                'get_harvest_object_formats': geodatagov_helpers.get_harvest_object_formats,
+                }
