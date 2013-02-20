@@ -1,18 +1,9 @@
-{% ckan_extends 'package/read.html' %}
+{% ckan_extends %}
 
 {% set dataset_extent = h.get_pkg_dict_extra(c.pkg_dict, 'spatial', '') %}
 
-{% block actions_content %}
-  {{ super () }}
-  {# <li><a class="btn" href=""><i class="icon-large icon-flag"></i> Report Issue</a></li> #}
-{% endblock %}
-
 {% block secondary_content %}
   {{ super() }}
-
-  {% snippet "snippets/subscribe.html" %}
-
-  {% snippet "snippets/disqus_trackback.html" %}
 
   {% set dataset_extent = h.get_pkg_dict_extra(c.pkg_dict, 'spatial', '') %}
   {% if dataset_extent %}
@@ -21,70 +12,40 @@
 
 {% endblock %}
 
-{% block primary_content %}
-  {% if c.pkg_revision_id %}
-    <div class="module info">
-      <p class="module-content">
-        {% set timestamp = h.render_datetime(c.pkg_revision_timestamp, with_hours=True) %}
-        {% set url =  h.url(controller='package', action='read', id=pkg.name) %}
 
-        {% if c.pkg_revision_not_latest %}
-          {% trans timestamp=timestamp, url=url %}This is an old revision of this dataset, as edited at {{ timestamp }}. It may differ significantly from the <a href="{{ url }}">current revision</a>.{% endtrans %}
-        {% else %}
-          {% trans timestamp=timestamp %}This is the current revision of this dataset, as edited at {{ timestamp }}.{% endtrans %}
-        {% endif %}
-      </div>
-    </div>
-  {% endif %}
 
-  <article class="module prose">
-    <section class="module-content">
-      <h1>{{ pkg.title or pkg.name }}
-        {% if pkg.state.startswith('draft') %}
-          [{{ _('Draft') }}]
-        {% endif %}
-      </h1>
-      {% if c.pkg_notes_formatted %}
-        <div class="notes embedded-content">
-          {{ c.pkg_notes_formatted }}
-        </div>
-      {% endif %}
-      <span class="insert-comment-thread"></span>
-    </section>
+    {% block package_resources %}
+      {% snippet "package/snippets/resources_list.html", pkg=pkg, resources=pkg.resources %}
 
-    <section id="dataset-resources" class="resources module-content">
-      <h3>Data and Resources</h3>
-      {% if pkg.resources %}
-        <ul class="resource-list">
-          {% for res in pkg.resources %}
-            {% snippet 'package/snippets/resource_item.html', pkg=pkg, res=res %}
-          {% endfor %}
-        </ul>
-      {% else %}
-        <p>
-          {% trans url=h.url_for(controller='package', action='new_resource', id=pkg.name) %}
-          This dataset has no data{#, <a href="{{ url }}">why not add some?</a>#}
-          {% endtrans %}
-      </p>
-      {% endif %}
-    </section>
-
-    {% set harvest_object_id = h.get_pkg_dict_extra(pkg, 'harvest_object_id', None) %}
-    {% if harvest_object_id %}
-    <section id="dataset-metadata-source" class="resources module-content">
+      {% set harvest_object_id = h.get_pkg_dict_extra(pkg, 'harvest_object_id', None) %}
+      {% if harvest_object_id %}
+      <section id="dataset-metadata-source" class="resources module-content">
       <h3>Source Metadata</h3>
-      <div>
-        <span class="format-label" property="dc:format" data-format="xml">ISO-19139</span>
-        <a href="/harvest/object/{{ harvest_object_id }}">XML metadata file</a>
-      </div>
+
+        {% set ho_formats = h.get_harvest_object_formats(harvest_object_id) %}
+        <div>
+          <span class="format-label" property="dc:format" data-format="{{ ho_formats.object_format_type}}">{{ ho_formats.object_format}}</span>
+          <a href="/harvest/object/{{ harvest_object_id }}">Download Metadata</a> ({{ ho_formats.object_format}})
+
+
+          <span class="format-label" property="dc:format" data-format="html">HTML</span>
+          <a href="/harvest/object/{{ harvest_object_id }}/html">View Full Metadata</a>
+        </div>
+
+        {% if ho_formats.original_format %}
+        <div>
+          <span class="format-label" property="dc:format" data-format="{{ ho_formats.original_format_type}}">{{ ho_formats.original_format}}</span>
+          <a href="/harvest/object/{{ harvest_object_id }}/original">Download Original Metadata</a> ({{ ho_formats.original_format}})
+
+
+          <span class="format-label" property="dc:format" data-format="html">HTML</span>
+          <a href="/harvest/object/{{ harvest_object_id }}/html/original">View Original Full Metadata</a>
+        </div>
+
+        {% endif %}
       </section>
-    {% endif %}
-
-    {% snippet "package/snippets/tags.html", tags=pkg.tags %}
-
-    {% snippet "package/snippets/additional_info.html", pkg_dict=pkg %}
-  </article>
-{% endblock %}
 
 
+      {% endif %}
 
+    {% endblock %}

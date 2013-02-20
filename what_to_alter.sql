@@ -1,27 +1,27 @@
-create index on harvest_object(guid);
-create index on harvest_object(package_id);
-create index on harvest_object_extra(harvest_object_id);
-create index on harvest_object_error(harvest_object_id)
-create index on package_extent(package_id);
+create index idx_harvest_object_guid on harvest_object(guid);
+create index idx_harvest_object_pkg_id on harvest_object(package_id);
+create index idx_harvest_object_id on harvest_object_extra(harvest_object_id);
+create index idx_harvest_object_err on harvest_object_error(harvest_object_id);
+create index idx_package_extend_pkg_id on package_extent(package_id);
 
-create index on package_extra_revision(package_id);
-create index on package_extra_revision(id);
+create index idx_package_extra_revision_pkg_id on package_extra_revision(package_id);
+create index idx_package_extra_revision on package_extra_revision(id);
 
 
 --special
-create index on revision(id);
+create index idx_revision_id on revision(id);
 drop index idx_package_resource_pkg_id_resource_id;
 
-create index on resource(name);
+create index idx_resource_name on resource(name);
 
 
-create index on resource_group(package_id);
-create index on resource_group_revision(package_id);
-create index on resource_group_revision(revision_id);
-create index on resource_group_revision(id);
+create index idx_resource_group_pkg_id on resource_group(package_id);
+create index idx_resource_group_revision_pkg_id on resource_group_revision(package_id);
+create index idx_resource_group_revision_rev_id on resource_group_revision(revision_id);
+create index idx_resource_group_revision on resource_group_revision(id);
 
-create index on resource_revision(id);
-create index on resource_revision(resource_group_id);
+create index idx_resource_revision on resource_revision(id);
+create index idx_resource_revision_res_grp_id on resource_revision(resource_group_id);
 
 
 
