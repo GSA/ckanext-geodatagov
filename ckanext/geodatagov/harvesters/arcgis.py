@@ -13,8 +13,7 @@ from ckanext.harvest.model import HarvestObject
 from ckanext.harvest.model import HarvestObjectExtra as HOExtra
 from ckanext.harvest.interfaces import IHarvester
 from ckan.plugins.core import SingletonPlugin, implements
-from ckanext.spatial.harvesters import SpatialHarvester
-from ckanext.geodatagov.harvesters.base import get_extra
+from ckanext.spatial.harvesters.base import SpatialHarvester
 from ckan.logic import get_action, ValidationError
 from ckan.lib.navl.validators import not_empty
 
@@ -39,7 +38,7 @@ def _slugify(value):
     return _slugify_hyphenate_re.sub('-', value)
 
 
-class ArcGisHarvester(SpatialHarvester, SingletonPlugin):
+class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
 
     implements(IHarvester)
 
@@ -70,8 +69,8 @@ class ArcGisHarvester(SpatialHarvester, SingletonPlugin):
         '''
         return {
             'name': 'arcgis',
-            'title': 'Arcgis harvester',
-            'description': 'Rest Arcgis endpoint'
+            'title': 'ArcGIS REST API harvester',
+            'description': 'Harvests ArcGIS REST API endpoints'
             }
 
     def gather_stage(self, harvest_job):
@@ -183,7 +182,7 @@ class ArcGisHarvester(SpatialHarvester, SingletonPlugin):
             log.error('No harvest object received')
             return False
 
-        status = get_extra(harvest_object, 'status')
+        status = self._get_object_extra(harvest_object, 'status')
 
         # Get the last harvested object (if any)
         previous_object = Session.query(HarvestObject) \
