@@ -11,6 +11,13 @@ from ckanext.geodatagov.harvesters.validation import MinimalFGDCValidator
 
 class GeoDataGovHarvester(SpatialHarvester):
 
+    def get_package_dict(self, iso_values, harvest_object):
+
+        tags = iso_values.pop('tags')
+        package_dict = super(GeoDataGovHarvester, self).get_package_dict(iso_values, harvest_object)
+        package_dict['extras'].append({'key': tags, 'value': ', '.join(tags)})
+
+
     def transform_to_iso(self, original_document, original_format, harvest_object):
 
         if original_format is not 'fgdc':
