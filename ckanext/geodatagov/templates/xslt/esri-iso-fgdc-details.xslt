@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
+
+ This file was adapted originally from Esri Geoportal Server source code.
+
+=====================================================
+ESRI Geoportal Server
+Copyright ©2010 Esri. 
+=====================================================
+
+This product was created based on contributions from Esri, Inc for the Geoportal, Ontology Service, CSW clients, Publishing Client, Flex Widget, Silverlight Widget, and OpenLS Connector.
+
+  
+
+This product includes software developed at
+
+Esri. (http://www.esri.com/).
+=====================================================
+
+
  See the NOTICE file distributed with
  this work for additional information regarding copyright ownership.
  Esri Inc. licenses this file to You under the Apache License, Version 2.0
@@ -20,17 +38,22 @@
   <xsl:template match="/">
     <xsl:variable name="fgdc" select="/metadata/idinfo/citation/citeinfo/title"/>
     <xsl:variable name="iso" select="/metadata/dataIdInfo/idCitation/resTitle"/>
-	 <style>
-		.fgdcBody {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10pt; line-height: 16pt; color: #333333}
-		.fgdcBody .toolbarTitle {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14pt; color: #333333; margin:0px;}
-		.fgdcBody .headTitle {  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 11pt; color: #333333; font-weight: bold}
-		.fgdcBody dl {margin-left: 20px;}
-		.fgdcBody em {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10pt; font-weight: bold; color: #333333}
-		.fgdcBody a:link {color: #B66B36; text-decoration: underline}
-		.fgdcBody a:visited {color: #B66B36; text-decoration: underline}
-		.fgdcBody a:hover {color: #4E6816; text-decoration: underline}
-		.fgdcBody li {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10pt; line-height: 14pt; color: #333333}
-	</style>
+    <html>
+      <head>
+         <style>
+            .fgdcBody {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10pt; line-height: 16pt; color: #333333}
+            .fgdcBody .toolbarTitle {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 14pt; color: #333333; margin:0px;}
+            .fgdcBody .headTitle {  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 11pt; color: #333333; font-weight: bold}
+            .fgdcBody dl {margin-left: 20px;}
+            .fgdcBody em {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10pt; font-weight: bold; color: #333333}
+            .fgdcBody a:link {color: #B66B36; text-decoration: underline}
+            .fgdcBody a:visited {color: #B66B36; text-decoration: underline}
+            .fgdcBody a:hover {color: #4E6816; text-decoration: underline}
+            .fgdcBody li {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10pt; line-height: 14pt; color: #333333}
+        </style>
+
+    </head>
+    <body>
       
       <div class="fgdcBody">
         <h1 class="toolbarTitle">
@@ -180,7 +203,8 @@
        
        
      </div>  
-            
+    </body>
+    </html>
   </xsl:template>
   
   
