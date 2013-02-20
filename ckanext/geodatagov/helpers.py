@@ -9,7 +9,7 @@ def get_harvest_object_formats(harvest_object_id):
     except p.toolkit.ObjectNotFound:
         log.info('Harvest object not found {0}:'.format(harvest_object_id))
         return {}
-    
+
     def get_extra(obj, key, default=None):
         for k, v in obj['extras'].iteritems():
             if k == key:
@@ -25,6 +25,9 @@ def get_harvest_object_formats(harvest_object_id):
         return format_titles[format_name] if format_name in format_titles else format_name
 
     def format_type(format_name):
+        if not format_name:
+            return ''
+
         if format_name in ('iso', 'fgdc'):
             format_type = 'xml'
         elif format_name in ('arcgis'):
@@ -43,4 +46,3 @@ def get_harvest_object_formats(harvest_object_id):
             'original_format': format_title(original_format_name),
             'original_format_type': format_type(original_format_name),
             }
-
