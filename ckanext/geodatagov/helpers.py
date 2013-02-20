@@ -1,5 +1,6 @@
 import logging
 from ckan import plugins as p
+from ckan.lib import helpers as h
 
 log = logging.getLogger(__name__)
 
@@ -46,3 +47,15 @@ def get_harvest_object_formats(harvest_object_id):
             'original_format': format_title(original_format_name),
             'original_format_type': format_type(original_format_name),
             }
+
+def get_harvest_source_link(package_dict):
+    harvest_source_id = h.get_pkg_dict_extra(package_dict, 'harvest_source_id', None)
+    harvest_source_title = h.get_pkg_dict_extra(package_dict, 'harvest_source_title', None)
+
+    if harvest_source_id and harvest_source_title:
+       msg = p.toolkit._('Harvested from')
+       url = h.url_for('harvest_source_read', id=harvest_source_id)
+       link = '{msg} <a href="{url}">{title}</a>'.format(url=url, msg=msg, title=harvest_source_title)
+       return p.toolkit.literal(link)
+
+    return ''

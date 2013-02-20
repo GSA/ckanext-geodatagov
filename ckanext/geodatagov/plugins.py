@@ -61,4 +61,5 @@ class Demo(p.SingletonPlugin):
         from ckanext.geodatagov import helpers as geodatagov_helpers
         return {
                 'get_harvest_object_formats': geodatagov_helpers.get_harvest_object_formats,
+                'get_harvest_source_link': geodatagov_helpers.get_harvest_source_link
                 }
