@@ -1,8 +1,14 @@
+import logging
 from ckan import plugins as p
 
-def get_harvest_object_formats(harvest_object_id):
+log = logging.getLogger(__name__)
 
-    obj = p.toolkit.get_action('harvest_object_show')({}, {'id': harvest_object_id})
+def get_harvest_object_formats(harvest_object_id):
+    try:
+        obj = p.toolkit.get_action('harvest_object_show')({}, {'id': harvest_object_id})
+    except p.toolkit.ObjectNotFound:
+        log.info('Harvest object not found {0}:'.format(harvest_object_id))
+        return {}
     
     def get_extra(obj, key, default=None):
         for k, v in obj['extras'].iteritems():
