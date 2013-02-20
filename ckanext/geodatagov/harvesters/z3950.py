@@ -1,7 +1,5 @@
 import logging
 import hashlib
-import requests
-from sqlalchemy.orm import aliased
 from PyZ3950 import zoom
 
 from ckan import model
@@ -12,8 +10,7 @@ from ckanext.harvest.interfaces import IHarvester
 from ckanext.harvest.model import HarvestObject
 from ckanext.harvest.model import HarvestObjectExtra as HOExtra
 
-from ckanext.geodatagov.harvesters.base import GeoDataGovHarvester, get_extra, guess_standard
-
+from ckanext.geodatagov.harvesters import GeoDataGovHarvester
 
 class Z3950Harvester(GeoDataGovHarvester, SingletonPlugin):
     '''
@@ -39,7 +36,7 @@ class Z3950Harvester(GeoDataGovHarvester, SingletonPlugin):
         # Get source URL
         source_url = harvest_job.source.url
 
-        self._set_config(harvest_job.source.config)
+        self._set_source_config(harvest_job.source.config)
 
         # get current objects out of db
         query = model.Session.query(HarvestObject.guid, HarvestObject.package_id).filter(HarvestObject.current==True).\
@@ -51,8 +48,8 @@ class Z3950Harvester(GeoDataGovHarvester, SingletonPlugin):
 
         # Get contents
         try:
-            conn = zoom.Connection(source_url, int(self.config.get('port', 210)))
-            conn.databaseName = self.config.get('database', '')
+            conn = zoom.Connection(source_url, int(self.source_config.get('port', 210)))
+            conn.databaseName = self.source_config.get('database', '')
             conn.preferredRecordSyntax = 'XML'
             conn.elementSetName = 'T'
             query = zoom.Query ('CCL', 'metadata')

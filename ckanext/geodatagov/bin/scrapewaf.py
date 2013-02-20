@@ -6,7 +6,7 @@ import collections
 import pyparsing as parse
 import urlparse
 import dateutil.parser
-from ckanext.geodatagov.harvesters import guess_standard
+from ckanext.spatial.harvesters.base import guess_standard
 
 
 def add_status():

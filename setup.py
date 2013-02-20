@@ -27,11 +27,12 @@ setup(
         [ckan.plugins]
 	# Add plugins here, eg
 	geodatagov=ckanext.geodatagov.plugins:Demo
-    csw_harvester=ckanext.geodatagov.harvesters:CSWHarvester
-    doc_harvester=ckanext.geodatagov.harvesters:DocHarvester
-    waf_harvester=ckanext.geodatagov.harvesters:WAFHarvester
+
+    geodatagov_csw_harvester=ckanext.geodatagov.harvesters:GeoDataGovCSWHarvester
+    geodatagov_waf_harvester=ckanext.geodatagov.harvesters:GeoDataGovWAFHarvester
+    geodatagov_doc_harvester=ckanext.geodatagov.harvesters:GeoDataGovDocHarvester
     waf_harvester_collection=ckanext.geodatagov.harvesters:WAFCollectionHarvester
-    arcgis_harvester=ckanext.geodatagov.harvesters:ArcGisHarvester
+    arcgis_harvester=ckanext.geodatagov.harvesters:ArcGISHarvester
     z3950_harvester=ckanext.geodatagov.harvesters:Z3950Harvester
 
     [paste.paster_command]
