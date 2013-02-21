@@ -1,10 +1,12 @@
-import urlparse 
+import urlparse
 import requests
 import json
 import logging
 import unicodedata
 import re
 import uuid
+from string import Template
+import mimetypes
 
 from ckan import logic
 from ckan import model
@@ -16,6 +18,7 @@ from ckan.plugins.core import SingletonPlugin, implements
 from ckanext.spatial.harvesters.base import SpatialHarvester
 from ckan.logic import get_action, ValidationError
 from ckan.lib.navl.validators import not_empty
+from HTMLParser import HTMLParser
 
 TYPES =  ['Web Map','KML', 'Mobile Application',
           'Web Mapping Application', 'WMS', 'Map Service']
@@ -38,9 +41,29 @@ def _slugify(value):
     return _slugify_hyphenate_re.sub('-', value)
 
 
+## from http://stackoverflow.com/questions/753052/strip-html-from-strings-in-python
+class MLStripper(HTMLParser):
+    def __init__(self):
+        self.reset()
+        self.fed = []
+    def handle_data(self, d):
+        self.fed.append(d)
+    def get_data(self):
+        return ''.join(self.fed)
+
+def strip_tags(html):
+    s = MLStripper()
+    s.feed(html)
+    return s.get_data()
+
+
 class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
 
     implements(IHarvester)
+
+    extent_template = Template('''
+    {"type", "Polygon", "coordinates": [[[$minx, $miny], [$minx, $maxy], [$maxx, $maxy], [$maxx, $miny], [$minx, $miny]]]}
+    ''')
 
     def info(self):
         '''
@@ -134,6 +157,7 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
             obj = HarvestObject(job=harvest_job,
                                 content=json.dumps(new_metadata[guid]),
                                 extras=[HOExtra(key='arcgis_modified_date', value=date),
+                                        HOExtra(key='format', value='arcgis_json'),
                                         HOExtra(key='status', value='new')],
                                 guid=guid
                                )
@@ -154,11 +178,13 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
         changed = set(existing_guids) & set(new_metadata)
 
         for guid in changed:
-            if str(new_metadata[guid]['modified']) == existing_guids[guid]:
+            date = str(new_metadata[guid]['modified'])
+            if date == existing_guids[guid]:
                 continue
             obj = HarvestObject(job=harvest_job,
                                 content=json.dumps(new_metadata[guid]),
                                 extras=[HOExtra(key='arcgis_modified_date', value=date),
+                                        HOExtra(key='format', value='arcgis_json'),
                                         HOExtra(key='status', value='changed')],
                                 guid=guid
                                )
@@ -170,8 +196,7 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
         return harvest_objects
 
     def fetch_stage(self, harvest_object):
-        return
-
+        return True
 
     def import_stage(self, harvest_object):
 
@@ -195,9 +220,11 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
             harvest_object.package_id = previous_object.package_id
             previous_object.add()
 
+        context = {'model':model, 'session':Session, 'user':'harvest',
+                   'api_version': 3, 'extras_as_string': True} #TODO: user
+
         if status == 'delete':
             # Delete package
-            context = {'model':model, 'session':Session, 'user':'harvest'} #TODO: user
             get_action('package_delete')(context, {'id': harvest_object.package_id})
             log.info('Deleted package {0} with guid {1}'.format(harvest_object.package_id, harvest_object.guid))
             previous_object.save()
@@ -213,11 +240,18 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
         if not package_dict:
             return False
 
-        package_schema = logic.schema.default_create_package_schema()
+        if status == 'new':
+            package_schema = logic.schema.default_create_package_schema()
+        else:
+            package_schema = logic.schema.default_update_package_schema()
+
         tag_schema = logic.schema.default_tags_schema()
         tag_schema['name'] = [not_empty, unicode]
         package_schema['tags'] = tag_schema
+        context['schema'] = package_schema #TODO: user
 
+        harvest_object.current = True
+        harvest_object.add()
 
         if status == 'new':
             # We need to explicitly provide a package ID, otherwise ckanext-spatial
@@ -241,8 +275,10 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
                 self._save_object_error('Validation Error: %s' % str(e.error_summary), harvest_object, 'Import')
                 return False
         elif status == 'changed':
+            if previous_object:
+                previous_object.current = False
+                previous_object.add()
             package_schema = logic.schema.default_update_package_schema()
-            harvest_object.add()
             package_dict['id'] = harvest_object.package_id
             try:
                 package_id = get_action('package_update')(context, package_dict)
@@ -264,9 +300,26 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
         if existing_pkg and existing_pkg.id <> harvest_object.package_id:
             name = name + '_' + content['id']
         title = content.get('title')
-        tags = [dict(key='name', value=tag) for tag in content.get('tags', [])]
+        tags = ','.join(content.get('tags', []))
 
-        extras = [dict(key='arcgis',value='true')]
+        notes = strip_tags(content.get('description') or '')
+        if not notes:
+            notes = strip_tags(content.get('snippet') or '')
+
+        extras = [dict(key='guid',value=harvest_object.guid),
+                  dict(key='metadata_source',value='arcgis'),
+                  dict(key='arcgis_type',value=content['type']),
+                  dict(key='tags',value=tags)]
+
+        extent = content.get('extent')
+        if extent:
+            extent_string = self.extent_template.substitute(
+                minx=extent[0][0],
+                miny=extent[0][1],
+                maxx=extent[1][0],
+                maxy=extent[1][1],
+            )
+            extras.append(dict(key='spatial',value=extent_string.strip()))
 
         if content['type'] in ['Web Map', 'WMS', 'Map Service']:
             source_url = harvest_object.source.url
@@ -281,7 +334,10 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
             self._save_object_error('Validation Error: url not in record')
             return False
 
-        resource = {'url': resource_url, 'name': name}
+        format = mimetypes.guess_type(urlparse.urlparse(resource_url).path)[0]
+
+        resource = {'url': resource_url, 'name': name,
+                    'format': format}
 
         pkg = model.Package.get(harvest_object.package_id)
         if pkg:
@@ -290,7 +346,7 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
         package_dict = dict(
             name=name,
             title=title,
-            tags=tags,
+            notes=notes,
             extras=extras,
             resources=[resource]
         )
@@ -298,4 +354,6 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
         source_dataset = model.Package.get(harvest_object.source.id)
         if source_dataset.owner_org:
             package_dict['owner_org'] = source_dataset.owner_org
+
+        return package_dict
 

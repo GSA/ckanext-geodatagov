@@ -21,7 +21,7 @@ def get_harvest_object_formats(harvest_object_id):
         format_titles = {
             'iso': 'ISO-10139',
             'fgdc': 'FGDC',
-            'arcgis': 'ArcGIS Rest'
+            'arcgis_json': 'ArcGIS JSON'
         }
         return format_titles[format_name] if format_name in format_titles else format_name
 
