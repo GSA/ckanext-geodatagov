@@ -31,7 +31,7 @@ def _slugify(value):
     """
     Normalizes string, converts to lowercase, removes non-alpha characters,
     and converts spaces to hyphens.
-    
+
     From Django's "django/template/defaultfilters.py".
     """
     if not isinstance(value, unicode):
@@ -321,14 +321,17 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
             )
             extras.append(dict(key='spatial',value=extent_string.strip()))
 
+        source_url = harvest_object.source.url
         if content['type'] in ['Web Map', 'WMS', 'Map Service']:
-            source_url = harvest_object.source.url
             resource_url = urlparse.urljoin(
                 source_url,
                 '/home/webmap/viewer.html?webmap=' + content['id']
             )
         else:
             resource_url = content.get('url')
+            if not resource_url.startswith('http'):
+                resource_url = urlparse.urljoin(
+                    source_url, resource_url)
 
         if not resource_url:
             self._save_object_error('Validation Error: url not in record')
