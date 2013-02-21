@@ -293,14 +293,16 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
     def make_package_dict(self, harvest_object, content):
 
         #try hard to get unique name
-        name = _slugify(content.get('name', content.get('item', '')))
-        if not name:
+        name = _slugify(content.get('title') or content.get('item', ''))
+        if not name or len(name) < 5:
             name = content['id']
         existing_pkg = model.Package.get(name)
+        name = name[:80]
         if existing_pkg and existing_pkg.id <> harvest_object.package_id:
             name = name + '_' + content['id']
         title = content.get('title')
-        tags = ','.join(content.get('tags', []))
+        tag_list = [tag.strip('"').strip() for tag in content.get('tags', [])]
+        tags = ','.join(tag_list)
 
         notes = strip_tags(content.get('description') or '')
         if not notes:
@@ -322,22 +324,27 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
             extras.append(dict(key='spatial',value=extent_string.strip()))
 
         source_url = harvest_object.source.url
-        if content['type'] in ['Web Map', 'WMS', 'Map Service']:
+
+        resource_url = content.get('url') 
+
+        if not resource_url and content['type'] in ['Web Map']:
             resource_url = urlparse.urljoin(
                 source_url,
                 '/home/webmap/viewer.html?webmap=' + content['id']
             )
-        else:
-            resource_url = content.get('url')
-            if not resource_url.startswith('http'):
-                resource_url = urlparse.urljoin(
-                    source_url, resource_url)
 
         if not resource_url:
             self._save_object_error('Validation Error: url not in record')
             return False
 
-        format = mimetypes.guess_type(urlparse.urlparse(resource_url).path)[0]
+        if not resource_url.startswith('http'):
+            resource_url = urlparse.urljoin(
+                source_url, resource_url)
+
+        if content['type'] in ['WMS']:
+            format = 'WMS'
+        else:
+            format = mimetypes.guess_type(urlparse.urlparse(resource_url).path)[0]
 
         resource = {'url': resource_url, 'name': name,
                     'format': format}
@@ -347,7 +354,7 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
             resource['id'] = pkg.resources[0].id
 
         package_dict = dict(
-            name=name,
+            name=name.lower(),
             title=title,
             notes=notes,
             extras=extras,
