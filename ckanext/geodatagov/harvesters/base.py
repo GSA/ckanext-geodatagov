@@ -30,7 +30,7 @@ class GeoDataGovHarvester(SpatialHarvester):
 
         # Validate against FGDC schema
         if self.source_config.get('validation_profiles'):
-            profiles = self.source_config.get('validation_profiles').split(',')
+            profiles = self.source_config.get('validator_profiles')
         else:
             profiles = ['fgdc-minimal']
        
