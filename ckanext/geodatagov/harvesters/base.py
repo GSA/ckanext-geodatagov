@@ -1,6 +1,7 @@
 import requests
 from pylons import config
 
+from ckan.lib.navl.validators import ignore_empty
 
 from ckanext.spatial.validation import Validators
 
@@ -8,15 +9,28 @@ from ckanext.spatial.harvesters.base import SpatialHarvester
 from ckanext.spatial.harvesters import CSWHarvester, WAFHarvester, DocHarvester
 
 from ckanext.geodatagov.harvesters.validation import MinimalFGDCValidator
+from ckan.lib.navl.dictization_functions import Invalid
+
+
+VALIDATION_PROFILES = {'': 'Autodetect',
+                       'fgdc-minimal': 'fgdc Minimal',
+                       'iso' : 'ISO'}
+
+def validate_profiles(profile):
+    if profile not in VALIDATION_PROFILES.keys():
+        raise Invalid('Validation Profile not found')
+    return profile
 
 class GeoDataGovHarvester(SpatialHarvester):
 
     def get_package_dict(self, iso_values, harvest_object):
-
         tags = iso_values.pop('tags')
         package_dict = super(GeoDataGovHarvester, self).get_package_dict(iso_values, harvest_object)
         package_dict['extras'].append({'key': tags, 'value': ', '.join(tags)})
         return package_dict
+
+    def extra_schema(self):
+        return {'validator_profiles': [unicode, ignore_empty, validate_profiles, lambda value: [value]]}
 
     def transform_to_iso(self, original_document, original_format, harvest_object):
 
@@ -29,8 +43,8 @@ class GeoDataGovHarvester(SpatialHarvester):
             return None
 
         # Validate against FGDC schema
-        if self.source_config.get('validation_profiles'):
-            profiles = self.source_config.get('validation_profiles').split(',')
+        if self.source_config.get('validator_profiles'):
+            profiles = self.source_config.get('validator_profiles')
         else:
             profiles = ['fgdc-minimal']
        

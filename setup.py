@@ -27,6 +27,7 @@ setup(
         [ckan.plugins]
 	# Add plugins here, eg
 	geodatagov=ckanext.geodatagov.plugins:Demo
+	datagov_harvest=ckanext.geodatagov.plugins:DataGovHarvest
 
     geodatagov_csw_harvester=ckanext.geodatagov.harvesters:GeoDataGovCSWHarvester
     geodatagov_waf_harvester=ckanext.geodatagov.harvesters:GeoDataGovWAFHarvester

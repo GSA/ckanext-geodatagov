@@ -12,6 +12,8 @@ from ckanext.harvest.model import HarvestObjectExtra as HOExtra
 
 from ckanext.geodatagov.harvesters import GeoDataGovHarvester
 
+from ckan.lib.navl.validators import not_empty, convert_int
+
 class Z3950Harvester(GeoDataGovHarvester, SingletonPlugin):
     '''
     A Harvester for z3950.
@@ -25,6 +27,9 @@ class Z3950Harvester(GeoDataGovHarvester, SingletonPlugin):
             'title': 'z3950',
             'description': 'z3950 database'
             }
+    def extra_schema(self):
+        return {'database': [not_empty, unicode],
+                'port': [not_empty, convert_int]}
 
     def gather_stage(self,harvest_job):
 

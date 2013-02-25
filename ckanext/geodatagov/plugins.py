@@ -1,11 +1,41 @@
 import ckan.plugins as p
 import ckan.model as model
+import ckanext.harvest.plugin
+import json
+from ckanext.harvest.logic.schema import harvest_source_db_to_form_schema
+from ckan.logic.converters import convert_from_extras
+from ckan.lib.navl.validators import ignore_missing
 
 def split_tags(tag):
     tags = []
     for tag in tag.split(','):
         tags.extend(tag.split('>'))
     return [tag.strip() for tag in tags]
+
+##copied from harvest but deals withe single item list keys like validation
+def harvest_source_convert_from_config(key,data,errors,context):
+    config = data[key]
+    if config:
+        config_dict = json.loads(config)
+        for key, value in config_dict.iteritems():
+            if isinstance(value, list):
+                data[(key,)] = value[0]
+            else:
+                data[(key,)] = value
+
+class DataGovHarvest(ckanext.harvest.plugin.Harvest):
+
+    def package_form(self):
+        return 'source/geodatagov_source_form.html'
+
+    def db_to_form_schema(self):
+        '''
+        Returns the schema for mapping package data from the database into a
+        format suitable for the form
+        '''
+        schema = harvest_source_db_to_form_schema()
+        schema['config'] = [convert_from_extras, harvest_source_convert_from_config, ignore_missing]
+        return schema
 
 class Demo(p.SingletonPlugin):
 
@@ -61,5 +91,6 @@ class Demo(p.SingletonPlugin):
         from ckanext.geodatagov import helpers as geodatagov_helpers
         return {
                 'get_harvest_object_formats': geodatagov_helpers.get_harvest_object_formats,
-                'get_harvest_source_link': geodatagov_helpers.get_harvest_source_link
+                'get_harvest_source_link': geodatagov_helpers.get_harvest_source_link,
+                'get_validation_profiles': geodatagov_helpers.get_validation_profiles,
                 }

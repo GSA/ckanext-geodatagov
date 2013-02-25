@@ -1,8 +1,12 @@
 import logging
 from ckan import plugins as p
 from ckan.lib import helpers as h
+from ckanext.geodatagov.harvesters.base import VALIDATION_PROFILES
 
 log = logging.getLogger(__name__)
+
+def get_validation_profiles():
+    return VALIDATION_PROFILES
 
 def get_harvest_object_formats(harvest_object_id):
     try:
