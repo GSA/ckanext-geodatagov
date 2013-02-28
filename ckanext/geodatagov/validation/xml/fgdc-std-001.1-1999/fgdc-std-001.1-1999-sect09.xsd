@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 sp1 (http://www.altova.com) by Systems Administrator (NCDDC) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" blockDefault="#all">
+	<xs:element name="timeinfo" type="timeinfoType">
+		<xs:annotation>
+			<xs:documentation>Information about the date and time of an event.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Time Period Information"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([sngdate,mdattim,rngdates])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="timeinfoType">
+		<xs:choice>
+			<xs:element ref="sngdate"/>
+			<xs:element ref="mdattim"/>
+			<xs:element ref="rngdates"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:element name="sngdate" type="sngdateType">
+		<xs:annotation>
+			<xs:documentation>Means of encoding a single date and time.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Single Date/Time"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="sngdateType">
+		<xs:choice>
+			<xs:sequence>
+				<xs:element ref="caldate"/>
+				<xs:element ref="time" minOccurs="0"/>
+			</xs:sequence>
+			<xs:element ref="geolage"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:element name="caldate" type="caldateType">
+		<xs:annotation>
+			<xs:documentation>The year (and optionally month, or month and day).</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Calendar Date"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="YYYY|YYYYMM|YYYYMMDD|bcYYYY|bcYYYYMM|bcYYYYMMDD|ccYYYYY...|cdYYYYY..."/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="caldateType">
+		<xs:union memberTypes="FGDCdate">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="Unknown"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="time" type="timeType">
+		<xs:annotation>
+			<xs:documentation>The hour (and optionally minute, or minute and second) of the day.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Time of Day"/>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="string-input-format" fixed="HH|HHMM|HHMMSS|HHMMSSSS|HHMMSSSSZ|HHMMSSSSshhmm|Values must follow the 24-hour timekeeping system"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="timeType">
+		<xs:union memberTypes="FGDCtime">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="Unknown"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="mdattim" type="mdattimType">
+		<xs:annotation>
+			<xs:documentation>Means of encoding multiple individual dates and times.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Multiple Dates/Times"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="mdattimType">
+		<xs:sequence>
+			<xs:element ref="sngdate" minOccurs="2" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="rngdates" type="rngdatesType">
+		<xs:annotation>
+			<xs:documentation>Means of encoding a range of dates and times.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Range of Dates/Times"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkChron([begdate,enddate])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="rngdatesType">
+		<xs:choice>
+			<xs:sequence>
+				<xs:element ref="begdate"/>
+				<xs:element ref="begtime" minOccurs="0"/>
+				<xs:element ref="enddate"/>
+				<xs:element ref="endtime" minOccurs="0"/>
+			</xs:sequence>
+			<xs:sequence>
+				<xs:element ref="beggeol"/>
+				<xs:element ref="endgeol"/>
+			</xs:sequence>
+		</xs:choice>
+	</xs:complexType>
+	<xs:element name="begdate" type="begdateType">
+		<xs:annotation>
+			<xs:documentation>The first year (and optionally month, or month and day) of the event.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Beginning Date"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="YYYY|YYYYMM|YYYYMMDD|bcYYYY|bcYYYYMM|bcYYYYMMDD|ccYYYYY...|cdYYYYY...|Beginning Date &lt; Ending Date"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="begdateType">
+		<xs:union memberTypes="FGDCdate">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="Unknown"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="begtime" type="begtimeType">
+		<xs:annotation>
+			<xs:documentation>The first hour (and optionally minute, or minute and second) of the day for the event.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Beginning Time"/>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="string-input-format" fixed="HH|HHMM|HHMMSS|HHMMSSSS|HHMMSSSSZ|HHMMSSSSshhmm|Values must follow the 24-hour timekeeping system"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="begtimeType">
+		<xs:union memberTypes="FGDCtime">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="Unknown"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="enddate" type="enddateType">
+		<xs:annotation>
+			<xs:documentation>The last year (and optionally month, or month and day) for the event.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Ending Date"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="YYYY|YYYYMM|YYYYMMDD|bcYYYY|bcYYYYMM|bcYYYYMMDD|ccYYYYY...|cdYYYYY..."/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="enddateType">
+		<xs:union memberTypes="FGDCdate">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="Unknown"/>
+					<xs:enumeration value="Present"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="endtime" type="endtimeType">
+		<xs:annotation>
+			<xs:documentation>The last hour (and optionally minute, or minute and  second) of the day for the event.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Ending Time"/>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="string-input-format" fixed="HH|HHMM|HHMMSS|HHMMSSSS|HHMMSSSSZ|HHMMSSSSshhmm|Values must follow the 24-hour timekeeping system"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="endtimeType">
+		<xs:union memberTypes="FGDCtime">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="Unknown"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="geolage" type="T_geolage">
+		<xs:annotation>
+			<xs:documentation>A name, code, or date describing an event or period in geologic time, expressed either as an absolute date calculated using a named dating method, or as a relative date that is drawn from stratigraphy or biostratigraphy.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Geologic Age"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="T_geolage">
+		<xs:sequence>
+			<xs:element ref="geolscal"/>
+			<xs:element ref="geolest"/>
+			<xs:element ref="geolun" minOccurs="0"/>
+			<xs:element ref="geolexpl" minOccurs="0"/>
+			<xs:element ref="geolcit" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="geolscal" type="geolscalType">
+		<xs:annotation>
+			<xs:documentation>Name of a recognized geologic time scale.  This includes 'Absolute' as the name of the time scale for measuring geologic dates before the present and names of geologic dating systems that are arrangements of symbols or names in order of relative geologic time.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Geologic Time Scale"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="geolscalType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="Absolute"/>
+					<xs:enumeration value="Geomagnetic Polarity Time Scale"/>
+					<xs:enumeration value="International Geological Time Scale"/>
+					<xs:enumeration value="Oxygen-Isotope"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="geolest" type="geolestType">
+		<xs:annotation>
+			<xs:documentation>Either an absolute geologic date or a relative geologic age name describing an event or period in geologic time based on the Geologic Time Scale.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Geologic Age Estimate"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="geolestType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="geolun" type="geolunType">
+		<xs:annotation>
+			<xs:documentation>The error estimate for the geologic time.  This should include the units of measure, a description of what the error estimate represents and how it was calculated.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Geologic Age Uncertainty"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="geolunType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="geolexpl" type="geolexplType">
+		<xs:annotation>
+			<xs:documentation>The name and/or description of the method used to calculate the Geologic Age Estimate.  Detailed information about the method may be provided through references contained in the Geologic Citation.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Geologic Age Explanation"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="geolexplType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="geolcit" type="T_geolcit">
+		<xs:annotation>
+			<xs:documentation>Citation for works providing detailed information about any element of the Geologic Age.  For example, a publication describing the methodology used for carbon dating or describing the basic geologic time scale in more detail could be cited here.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Geologic Citation"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="T_geolcit">
+		<xs:sequence>
+			<xs:element ref="citeinfo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="beggeol" type="T_beggeol">
+		<xs:annotation>
+			<xs:documentation>A name, code, or date for the beginning of an event or period in geologic time.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Beginning Geologic Age"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="T_beggeol">
+		<xs:sequence>
+			<xs:element ref="geolage"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="endgeol" type="T_endgeol">
+		<xs:annotation>
+			<xs:documentation>A name, code, or date for the end of an event or period in geologic dates relevant to a data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Ending Geologic Age"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="T_endgeol">
+		<xs:sequence>
+			<xs:element ref="geolage"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

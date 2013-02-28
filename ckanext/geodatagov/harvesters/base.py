@@ -8,18 +8,27 @@ from ckanext.spatial.validation import Validators
 from ckanext.spatial.harvesters.base import SpatialHarvester
 from ckanext.spatial.harvesters import CSWHarvester, WAFHarvester, DocHarvester
 
-from ckanext.geodatagov.harvesters.validation import MinimalFGDCValidator
+from ckanext.geodatagov.validation import (MinimalFGDCValidator,
+        FGDC1998Schema, FGDC1999Schema, FGDC2001Schema, FGDC2002Schema)
 from ckan.lib.navl.dictization_functions import Invalid
 
 
+custom_validators = [MinimalFGDCValidator, FGDC1998Schema, FGDC1999Schema,
+        FGDC2001Schema, FGDC2002Schema]
+
+
 VALIDATION_PROFILES = {'': 'Autodetect',
-                       'fgdc-minimal': 'fgdc Minimal',
-                       'iso' : 'ISO'}
+                       'iso19139ngdc' : 'ISO19139 XSD Schema (NGDC)',
+                       }
+for custom_validator in custom_validators:
+    VALIDATION_PROFILES[custom_validator.name] = custom_validator.title
+
 
 def validate_profiles(profile):
     if profile not in VALIDATION_PROFILES.keys():
-        raise Invalid('Validation Profile not found')
+        raise Invalid('Unknown validation profile: {0}'.format(profile))
     return profile
+
 
 class GeoDataGovHarvester(SpatialHarvester):
 
@@ -46,10 +55,11 @@ class GeoDataGovHarvester(SpatialHarvester):
         if self.source_config.get('validator_profiles'):
             profiles = self.source_config.get('validator_profiles')
         else:
-            profiles = ['fgdc-minimal']
+            profiles = ['fgdc_minimal']
        
         validator = Validators(profiles=profiles)
-        validator.add_validator(MinimalFGDCValidator)
+        for custom_validator in custom_validators:
+            validator.add_validator(custom_validator)
 
         is_valid, profile, errors = self._validate_document(original_document, harvest_object,
                                                    validator=validator)

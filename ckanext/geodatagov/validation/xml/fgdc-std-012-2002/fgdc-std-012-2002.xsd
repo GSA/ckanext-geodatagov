@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 sp1 (http://www.altova.com) by Systems Administrator (NCDDC) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" blockDefault="#all">
+	<!--
+	======================================================================
+	 FGDC-STD-012-2002 XML Schema. 1.0.0 2009XXXX
+
+	 This is the XML schema for metadata conforming to the Federal Geographic Data Committee (FGDC) Content Standard for Digital Geospatial Metadata: Extensions 
+	 for Remote Sensing Metadata (CSDGM) version FGDC-STD-012-2002. 
+
+	 This file is the primary XML schema and loads the definitions for each section of the base standard from the FGDC Metadata XML Schema 1.0.0 2009XXXX. Extended elements of the 
+	 standard are also loaded in the primary XML schema from separate schema modules. There are no changes between the FGDC CSDGM and the FGDC RSE for sections 6,7,8,9,10.
+
+	 Element names:
+	     Element names are a maximum of 8-characters long, to coincide with the Reference Concrete Syntax.
+
+	 Element ordering:
+	     Generally the order of elements is now significant.  XML makes it difficult to write a DTD that allows elements to be in any order.  Although XML Schemas do 
+		 not have this restriction, it was decided to keep the significance of element order in order not to break the DTD validity of XML-encoded metadata files.
+
+	 Authors:
+	     Original: 
+			 Richard E. Rathmann (PSGS/NOAA Coastal Services Center, Charleston, SC) with assistance from Mike Moeller (PSGS/NOAA CSC) and Doug Nebert (Federal Geographic Data 
+			 Committee).
+		 Revisions: 
+			 Jacqueline Mize (Radiance Technologies, Inc./NOAA's National Coastal Data Development Center (NCDDC))
+
+	 Distribution liability:
+		 NOAA makes no warranty regarding these data, expressed or implied, nor does the fact of distribution constitute such a warranty. NOAA, NESDIS, 
+		 NODC and NCDDC cannot assume liability for any damages caused by any errors or omissions in these data, nor as a result of the failure of these data 
+		 to function on a particular system.
+
+	 Revisions:
+	     20020826 (RER) Locally scoped the definition of "onlink" in
+	                      Section 7 (7.11.1) within "metextns" (7.11)
+	                      rather than referencing "onlink" definition in
+	                      Section 8 (8.10).
+	     20030801 (RER) Removed 'xml:space="preserve"' from all
+	                      'xs:documentation' elements.  I originally put
+	                      this in to say "whitespace is significant", but
+	                      both XML Spy and IBM's  Schema Quality Checker
+	                      complain about them.
+	     20030801 (RER) Corrected the second regular expression pattern
+	                      for the "FGDCtime" simple type in this schema
+	                      module.  The "-" in the "[+-]" character class
+	                      for the sign character needed to be escaped, as
+	                      in "[+\-]".
+	     20030801 (RER) Changed types of "srcused" (2.5.2.2) and "srcprod"
+	                      (2.5.2.5) in Section 2 to reference the type
+	                      defined for "srccitea" (2.5.1.5) to comply with
+	                      XML Schema constraint that key/keyref field
+	                      value pairs be of the same type.
+		 2009XXXX (RER) Base types were added to the primary XML schema. 
+						 Annotation information was added  to every compound 
+						 and element within the standard. Several missisng RSE
+						 elements were added to the schemas. Corrections to 
+						 conditionality and domains were made in many sections.
+						 Platform and Mission sections were merged into one plmiinfo 
+						 section.
+
+	======================================================================
+-->
+	<xs:include schemaLocation="fgdc-std-001-1998-sect01.xsd"/>
+	<xs:include schemaLocation="fgdc-std-001-1998-sect02.xsd"/>
+	<xs:include schemaLocation="fgdc-std-001-1998-sect03.xsd"/>
+	<xs:include schemaLocation="fgdc-std-001-1998-sect04.xsd"/>
+	<xs:include schemaLocation="fgdc-std-001-1998-sect05.xsd"/>
+	<xs:include schemaLocation="fgdc-std-012-2002-sect01.xsd"/>
+	<xs:include schemaLocation="fgdc-std-012-2002-sect02.xsd"/>
+	<xs:include schemaLocation="fgdc-std-012-2002-sect03.xsd"/>
+	<xs:include schemaLocation="fgdc-std-012-2002-sect04.xsd"/>
+	<xs:include schemaLocation="fgdc-std-012-2002-sect05.xsd"/>
+	<xs:include schemaLocation="fgdc-std-001-1998-sect06.xsd"/>
+	<xs:include schemaLocation="fgdc-std-001-1998-sect07.xsd"/>
+	<xs:include schemaLocation="fgdc-std-001-1998-sect08.xsd"/>
+	<xs:include schemaLocation="fgdc-std-001-1998-sect09.xsd"/>
+	<xs:include schemaLocation="fgdc-std-001-1998-sect10.xsd"/>
+	<xs:include schemaLocation="fgdc-std-012-2002-plmiinfo.xsd"/>
+	<xs:include schemaLocation="fgdc-std-012-2002-instinfo.xsd"/>
+	<xs:include schemaLocation="fgdc-std-012-2002-locainfo.xsd"/>
+	<xs:element name="metadata" type="rseMetadataType">
+		<xs:annotation>
+			<xs:documentation>Content Standard for Digital Geospatial Metadata: Extensions for Remote Sensing Metadata, FGDC-STD-012-2002. Federal Geographic Data Committee, 2002.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="FGDC Remote Sensing Extensions"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="rseMetadataType">
+		<xs:sequence>
+			<xs:element name="idinfo" type="rseIdinfoType"/>
+			<xs:element name="dataqual" type="rseDataqualType" minOccurs="0"/>
+			<xs:element name="spdoinfo" type="rseSpdoinfoType" minOccurs="0"/>
+			<xs:element name="spref" type="rseSprefType" minOccurs="0"/>
+			<xs:element name="eainfo" type="rseEainfo" minOccurs="0"/>
+			<xs:element ref="distinfo" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="metainfo"/>
+			<xs:element ref="plmiinfo" minOccurs="0"/>
+			<xs:element ref="instinfo" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="FGDCdate">
+		<xs:restriction base="xs:token">
+			<xs:pattern value="\d{4}(\d{2}(\d{2})?)?"/>
+			<xs:pattern value="bc\d{4}(\d{2}(\d{2})?)?"/>
+			<xs:pattern value="cc\d{5,}"/>
+			<xs:pattern value="cd\d{5,}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="FGDCtime">
+		<xs:restriction base="xs:token">
+			<xs:pattern value="\d{2}(\d{2}(\d{2,})?)?"/>
+			<xs:pattern value="\d{2}(\d{2}(\d{2,})?)?[+\-]\d{4}"/>
+			<xs:pattern value="\d{2}(\d{2}(\d{2,})?)?Z"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="FGDCstring">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="\s*\S(.|\n|\r)*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="FGDClatitude">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="-90.0"/>
+			<xs:maxInclusive value="90.0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="FGDClongitude">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="-180.0"/>
+			<xs:maxInclusive value="180.0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="positiveIntegerType">
+		<xs:restriction base="xs:integer">
+			<xs:minExclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="nonNegativeIntegerType">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="positiveDoubleType">
+		<xs:restriction base="xs:double">
+			<xs:minExclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="nonNegativeDoubleType">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="positiveNegativeType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="positive"/>
+			<xs:enumeration value="negative"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

@@ -1,0 +1,2460 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 sp1 (http://www.altova.com) by Systems Administrator (NCDDC) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" blockDefault="#all">
+	<xs:element name="instinfo" type="instinfoType">
+		<xs:annotation>
+			<xs:documentation>Instrument properties and behavior.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="mdname" fixed="Instrument Information"/>
+				<xs:attribute name="other-validation-rules" fixed="checkAndOr([instref,instdesc])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="instinfoType">
+		<xs:sequence maxOccurs="unbounded">
+			<xs:element ref="instdesc" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="instref" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="instdesc" type="instdescType">
+		<xs:annotation>
+			<xs:documentation>Characteristics and behavior of instrument.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Instrument Description"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([frame,scan,othcolde])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="instdescType">
+		<xs:sequence>
+			<xs:element ref="insttyp"/>
+			<xs:element ref="opmode" minOccurs="0"/>
+			<xs:element ref="colltype"/>
+			<xs:element ref="orininfo" minOccurs="0"/>
+			<xs:choice>
+				<xs:element ref="frame"/>
+				<xs:element ref="scan"/>
+				<xs:element ref="othcolde"/>
+			</xs:choice>
+			<xs:element ref="instpdes" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="insttyp" type="insttypType">
+		<xs:annotation>
+			<xs:documentation>Class of data measuring instrument.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Instrument Type"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="insttypType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="imager"/>
+					<xs:enumeration value="sounder"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="opmode" type="opmodeType">
+		<xs:annotation>
+			<xs:documentation>The way in which the instrument is functioning.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="mdname" fixed="Operational Mode"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="opmodeType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="launch"/>
+					<xs:enumeration value="survival"/>
+					<xs:enumeration value="initialization"/>
+					<xs:enumeration value="safe"/>
+					<xs:enumeration value="diagnostic"/>
+					<xs:enumeration value="standby"/>
+					<xs:enumeration value="crosstrack"/>
+					<xs:enumeration value="biaxial"/>
+					<xs:enumeration value="solar calibration"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="colltype" type="colltypeType">
+		<xs:annotation>
+			<xs:documentation>The way in which the instrument gathers data from the scene observed.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Collection Type"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="colltypeType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="frame"/>
+					<xs:enumeration value="pushbroom"/>
+					<xs:enumeration value="whiskbroom"/>
+					<xs:enumeration value="panoramic"/>
+					<xs:enumeration value="radar"/>
+					<xs:enumeration value="laser"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="orininfo" type="orininfoType">
+		<xs:annotation>
+			<xs:documentation>Positioning and direction of instrument components on platform.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Sensor Orientation"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="orininfoType">
+		<xs:sequence>
+			<xs:element ref="axes"/>
+			<xs:element ref="rotdesc" minOccurs="0"/>
+			<xs:element ref="trandesc" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="axes" type="axesType">
+		<xs:annotation>
+			<xs:documentation>Orientation of instrument axes.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Axes"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="axesType">
+		<xs:sequence>
+			<xs:element ref="xaxisdef"/>
+			<xs:element ref="yaxisdef"/>
+			<xs:element ref="zaxisdef"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="xaxisdef" type="axisdefType">
+		<xs:annotation>
+			<xs:documentation>Direction of instrument x-axis.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="X Axis Definition"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="axisdefType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="up"/>
+					<xs:enumeration value="down"/>
+					<xs:enumeration value="forward"/>
+					<xs:enumeration value="backward"/>
+					<xs:enumeration value="left"/>
+					<xs:enumeration value="right"/>
+					<xs:enumeration value="north"/>
+					<xs:enumeration value="south"/>
+					<xs:enumeration value="east"/>
+					<xs:enumeration value="west"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="yaxisdef" type="axisdefType">
+		<xs:annotation>
+			<xs:documentation>Direction of instrument y-axis.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Y Axis Definition"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="zaxisdef" type="axisdefType">
+		<xs:annotation>
+			<xs:documentation>Direction of instrument z-axis.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Z Axis Definition"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="rotdesc" type="FGDCstring">
+		<xs:annotation>
+			<xs:documentation>Description of direction of instrument components relative to platform axes.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Rotation Description"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="trandesc" type="FGDCstring">
+		<xs:annotation>
+			<xs:documentation>Description of position of instrument components relative to platform axes.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Translation Description"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="frame" type="frameType">
+		<xs:annotation>
+			<xs:documentation>Description of photographic system using a central perspective projection, with the detector, normally film, pressed against a calibrated frame during the exposure.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Frame Camera"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="frameType">
+		<xs:sequence>
+			<xs:element ref="fcamhwar" minOccurs="0"/>
+			<xs:element ref="fcamoptc"/>
+			<xs:element ref="framegeo"/>
+			<xs:element ref="fcoper" minOccurs="0"/>
+			<xs:element ref="fradprop" minOccurs="0"/>
+			<xs:element ref="fcspecpr" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="fcamhwar" type="fcamhwarType">
+		<xs:annotation>
+			<xs:documentation>Physical description of camera and film.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Frame Hardware"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMin([afspeed,0.0]);checkRangeExcludeMin([eafspeed,0.0]);checkProperties([camtype,camident,lens,magident,filmtype,afspeed,eafspeed,develop])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="fcamhwarType">
+		<xs:sequence>
+			<xs:element ref="camtype" minOccurs="0"/>
+			<xs:element ref="camident" minOccurs="0"/>
+			<xs:element ref="lens" minOccurs="0"/>
+			<xs:element ref="magident" minOccurs="0"/>
+			<xs:element ref="filmtype" minOccurs="0"/>
+			<xs:element ref="afspeed" minOccurs="0"/>
+			<xs:element ref="eafspeed" minOccurs="0"/>
+			<xs:element ref="develop" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="camtype" type="camtypeType">
+		<xs:annotation>
+			<xs:documentation>Model of camera as defined by manufacturer.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Camera Type"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="camtypeType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="RMK 60/25"/>
+					<xs:enumeration value="RMK 30/23"/>
+					<xs:enumeration value="RMK 15/23"/>
+					<xs:enumeration value="RMK 11.5/18"/>
+					<xs:enumeration value="RMK 15/23"/>
+					<xs:enumeration value="RMK 8.5/23"/>
+					<xs:enumeration value="RMK TOP 15"/>
+					<xs:enumeration value="RMK TOP 30"/>
+					<xs:enumeration value="MRB 30/2323"/>
+					<xs:enumeration value="MRB 21"/>
+					<xs:enumeration value="MRB 15/2323"/>
+					<xs:enumeration value="MRB 9/2323"/>
+					<xs:enumeration value="LMK"/>
+					<xs:enumeration value="LMK1000"/>
+					<xs:enumeration value="LMK1009"/>
+					<xs:enumeration value="LMK1015"/>
+					<xs:enumeration value="LMK1021"/>
+					<xs:enumeration value="LMK1030"/>
+					<xs:enumeration value="LMK2000"/>
+					<xs:enumeration value="LMK2009"/>
+					<xs:enumeration value="LMK2015"/>
+					<xs:enumeration value="LMK2021"/>
+					<xs:enumeration value="LMK2030"/>
+					<xs:enumeration value="RC 8"/>
+					<xs:enumeration value="RC 9"/>
+					<xs:enumeration value="RC 10"/>
+					<xs:enumeration value="RC 10A"/>
+					<xs:enumeration value="RC 20"/>
+					<xs:enumeration value="RC 30"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="camident" type="FGDCstring">
+		<xs:annotation>
+			<xs:documentation>Manufacturer's unique alphanumeric code specifying the camera body.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Camera Identifier"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="lens" type="lensTypes">
+		<xs:annotation>
+			<xs:documentation>Optical component that uses refraction to focus light on the image plane.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Lens"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="lensTypes">
+		<xs:sequence>
+			<xs:element ref="lenstype"/>
+			<xs:element ref="lensidnt"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="lenstype" type="lenstypeType">
+		<xs:annotation>
+			<xs:documentation>Manufacturer's name specifying design of lens.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Lens Type"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="lenstypeType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="Topogon"/>
+					<xs:enumeration value="Telikon"/>
+					<xs:enumeration value="Topar"/>
+					<xs:enumeration value="Pleogon"/>
+					<xs:enumeration value="S-Pleogon"/>
+					<xs:enumeration value="Aviogon"/>
+					<xs:enumeration value="Wide Angle 15AG"/>
+					<xs:enumeration value="Orbigon"/>
+					<xs:enumeration value="Normal Aviogon"/>
+					<xs:enumeration value="Semi-wide-angle 21 NAG"/>
+					<xs:enumeration value="Semi-wideangle 21 NAG II"/>
+					<xs:enumeration value="Semi-wide-angle 21-4 NAGA"/>
+					<xs:enumeration value="Semi-wide-angle NAGA-F"/>
+					<xs:enumeration value="Super Aviogon"/>
+					<xs:enumeration value="Super-wide-angle 8.8 SAG"/>
+					<xs:enumeration value="Super-wide-angle 8.8 SAG II"/>
+					<xs:enumeration value="Super-wide-angle 8.8/4 SAG-A"/>
+					<xs:enumeration value="Super-wide-angle 8.8/4 SAGA-F"/>
+					<xs:enumeration value="Aviotar 30At"/>
+					<xs:enumeration value="Aviotar 30AtI"/>
+					<xs:enumeration value="Aviotar 30/4 NAT"/>
+					<xs:enumeration value="Aviotar 30/4 NAT-A"/>
+					<xs:enumeration value="Aviotar 30/4 NATA-F"/>
+					<xs:enumeration value="Aviotar 30/4 NAT-S"/>
+					<xs:enumeration value="Universal Aviogon 15 UAG"/>
+					<xs:enumeration value="Universal Aviogon 15 UAGI"/>
+					<xs:enumeration value="Universal Aviogon 15 UAGII"/>
+					<xs:enumeration value="Universal Aviogon 15/4 UAG"/>
+					<xs:enumeration value="Universal Aviogon 15/4 UAG-A"/>
+					<xs:enumeration value="Universal Aviogon 15/4 UAGA-F"/>
+					<xs:enumeration value="Universal Aviogon 15/4 UAG-S"/>
+					<xs:enumeration value="Lamegor PI 5.6/300(A).B"/>
+					<xs:enumeration value="Lamegoron PI 5.6/210A"/>
+					<xs:enumeration value="Lamegon PI 4/150(A,B,C),D"/>
+					<xs:enumeration value="Superlamegon PI 5.6/90 (A,B),C"/>
+					<xs:enumeration value="Metrogon"/>
+					<xs:enumeration value="Geocon"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="lensidnt" type="FGDCstring">
+		<xs:annotation>
+			<xs:documentation>Unique alphanumeric identifier assigned by camera manufacturer to individual lens.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Lens Identifier"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="magident" type="FGDCstring">
+		<xs:annotation>
+			<xs:documentation>Unique alphanumeric identifier of individual magazine as assigned by manufacturer.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Magazine Identifier"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="filmtype" type="FGDCstring">
+		<xs:annotation>
+			<xs:documentation>Manufacturer's name and specification of film.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Film Type"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="afspeed" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>Two-thirds of the exposure in lux seconds at the point on the characteristic curve where the density is 0.3 above fog density, under processing conditions.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Aerial Film Speed"/>
+				<xs:attribute name="string-input-format" fixed="Aerial Film Speed &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="eafspeed" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>Two-thirds of the exposure in lux seconds at the point on the characteristic curve where the density is 0.3 above fog density, under processing conditions other than those defined in ANSI PH2.34-1969 or determined empirically for color and infrared-sensitive films not covered by ANSI Standard PH 2.34-1969.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Effective Aerial Film Speed"/>
+				<xs:attribute name="string-input-format" fixed="Effective Aerial Film Speed &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="develop" type="developType">
+		<xs:annotation>
+			<xs:documentation>Institution where the film was developed.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Developing Institution"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="developType">
+		<xs:sequence>
+			<xs:element ref="cntinfo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="fcamoptc" type="fcamoptcType">
+		<xs:annotation>
+			<xs:documentation>Physical description of the photographic system.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Frame Optics"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMin([relaper,0.0]);checkRangeExcludeMin([expotime,0.0]);checkRangeExcludeMin([calfocl,0.0]);checkRangeExcludeMin([quafocl,0.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="fcamoptcType">
+		<xs:sequence>
+			<xs:element ref="phorespo" minOccurs="0"/>
+			<xs:element ref="relaper" minOccurs="0"/>
+			<xs:element ref="expotime" minOccurs="0"/>
+			<xs:element ref="calfocl"/>
+			<xs:element ref="quafocl" minOccurs="0"/>
+			<xs:element ref="lastcali" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="phorespo" type="phorespoType">
+		<xs:annotation>
+			<xs:documentation>Resolving power of the camera at different field angles.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Photographic Resolving Power"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMin([awar,0.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="phorespoType">
+		<xs:sequence>
+			<xs:element ref="nresval"/>
+			<xs:element ref="phoreset" maxOccurs="unbounded"/>
+			<xs:element ref="awar" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="phoreset" type="phoresetType">
+		<xs:annotation>
+			<xs:documentation>Resolving power of the camera at different field angles.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Resolution Value Set"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMin([resrad,0.0]);checkRangeExcludeMin([restang,0.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="phoresetType">
+		<xs:sequence>
+			<xs:element ref="resangle"/>
+			<xs:element ref="resrad"/>
+			<xs:element ref="restang"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="nresval" type="positiveIntegerType">
+		<xs:annotation>
+			<xs:documentation>Number of angles at which values of resolving power are available.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Number of Resolution Values"/>
+				<xs:attribute name="string-input-format" fixed="Number of Resolution Values &gt;= 1"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="resangle" type="nonNegativeDoubleType">
+		<xs:annotation>
+			<xs:documentation>A field angle at which values of the resolving power are available.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Resolving Angle"/>
+				<xs:attribute name="string-input-format" fixed="Resolving Angle &gt;= 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="resrad" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>Resolving power in radial direction, given in line pairs per millimeter.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Resolving Value Radial"/>
+				<xs:attribute name="string-input-format" fixed="Resolving Value Radial &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="restang" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>Resolving power in tangential direction, given in line pairs per millimeter.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Resolving Value Tangential"/>
+				<xs:attribute name="string-input-format" fixed="Resolving Value Tangential &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="awar" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>Area weighted average resolution, given in line pairs per millimeter.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Area Weighted Average Resolution"/>
+				<xs:attribute name="string-input-format" fixed="Area Weighted Average Resolution &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="relaper" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>Ratio of focal length of camera to diameter of opening through which camera gathers light.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Relative Aperture"/>
+				<xs:attribute name="string-input-format" fixed="Relative Aperture &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="expotime" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>Length of exposure, in seconds.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Exposure Time"/>
+				<xs:attribute name="string-input-format" fixed="Exposure Time &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="calfocl" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>Approximate distance between the projection center and the image plane in millimeters, measured in the laboratory before launch.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Calibrated Focal Length"/>
+				<xs:attribute name="string-input-format" fixed="Calibrated Focal Length &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="quafocl" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>The standard deviation in millimeters of the calibrated focal length.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Quality of Focal Length"/>
+				<xs:attribute name="string-input-format" fixed="Quality of Focal Length &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="lastcali" type="lastcaliType">
+		<xs:annotation>
+			<xs:documentation>Description of most recent camera calibration.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Last Calibration"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="lastcaliType">
+		<xs:sequence>
+			<xs:element ref="datlcali"/>
+			<xs:element ref="metlcali" minOccurs="0"/>
+			<xs:element ref="inslcali" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="datlcali" type="FGDCdate">
+		<xs:annotation>
+			<xs:documentation>Date of most recent camera calibration.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Date of Last Calibration"/>
+				<xs:attribute name="string-input-format" fixed="YYYY|YYYYMM|YYYYMMDD|bcYYYY|bcYYYYMM|bcYYYYMMDD|ccYYYYY...|cdYYYYY..."/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="metlcali" type="metlcaliType">
+		<xs:annotation>
+			<xs:documentation>Method of most recent camera calibration.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Method of Last Calibration"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="metlcaliType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="optical"/>
+			<xs:enumeration value="photographic"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="inslcali" type="FGDCstring">
+		<xs:annotation>
+			<xs:documentation>Institution that performed the camera calibration that occurred at Date of Last Calibration.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Institution of Last Calibration"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<!-- framegeo type -->
+	<xs:element name="framegeo" type="framegeoType">
+		<xs:annotation>
+			<xs:documentation>Geometric characteristics of instrument used to derive single frame images.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Frame Geometric Properties"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([fcfid,fcres,fcss])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="framegeoType">
+		<xs:sequence>
+			<xs:element ref="imsize" minOccurs="0"/>
+			<xs:choice>
+				<xs:element ref="fcfid"/>
+				<xs:element ref="fcres"/>
+				<xs:element ref="fcss"/>
+			</xs:choice>
+			<xs:element ref="pripoaut" minOccurs="0"/>
+			<xs:element ref="quappa" minOccurs="0"/>
+			<xs:element ref="priposym" minOccurs="0"/>
+			<xs:element ref="quapps" minOccurs="0"/>
+			<xs:element ref="fidcent" minOccurs="0"/>
+			<xs:element ref="sensello" minOccurs="0"/>
+			<xs:element ref="distort" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="imsize" type="imsizeType">
+		<xs:annotation>
+			<xs:documentation>Metric length and width of the image.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Image Size"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMin([imsizex,0.0]);checkRangeExcludeMin([imsizey,0.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="imsizeType">
+		<xs:sequence>
+			<xs:element ref="imsizex"/>
+			<xs:element ref="imsizey"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="imsizex" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>Image size, in millimeters, in the direction of the x-axis.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Image Size x Value"/>
+				<xs:attribute name="string-input-format" fixed="Image Size x Value &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="imsizey" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>Image size, in millimeters, in the direction of the y-axis.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Image Size y Value"/>
+				<xs:attribute name="string-input-format" fixed="Image Size y Value &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="fcfid" type="fcfidType">
+		<xs:annotation>
+			<xs:documentation>Calibrated coordinates for four or more marks attached to the frame of the camera, in millimeters in the image coordinate system.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Fiducial"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="fcfidType">
+		<xs:sequence>
+			<xs:element ref="locainfo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="fcres" type="fcresType">
+		<xs:annotation>
+			<xs:documentation>Calibrated positions of engraved reseau-crosses that are pressed against the film during exposure, given in millimeters in the image coordinate system.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Reseau"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="fcresType">
+		<xs:sequence>
+			<xs:element ref="locainfo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="fcss" type="fcssType">
+		<xs:annotation>
+			<xs:documentation>Image coordinate system defined by the pixels of the scanner.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Sensor System"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="fcssType">
+		<xs:sequence>
+			<xs:element ref="fcssgrid"/>
+			<xs:element ref="fcsscapo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="fcssgrid" type="fcssgridType">
+		<xs:annotation>
+			<xs:documentation>Number of cells along axes of sensor grid.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Sensor Grid"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="fcssgridType">
+		<xs:sequence>
+			<xs:element ref="rasttype"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="fcsscapo" type="fcsscapoType">
+		<xs:annotation>
+			<xs:documentation>Position of detectors in sensor grid coordinate system.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Calibrated Detector Positions"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="fcsscapoType">
+		<xs:sequence>
+			<xs:element ref="locainfo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="pripoaut" type="pripoautType">
+		<xs:annotation>
+			<xs:documentation>The point (x&lt;span class=&quot;subscript&quot;&gt;0&lt;/span&gt;&#884;, y&lt;span class=&quot;subscript&quot;&gt;0&lt;/span&gt;&#884;) where the plumb line coming from the projection center crosses the image plane, given in millimeters in the image coordinate system, determined by projecting an illuminated object to infinity, reflecting its image from a flat mirror surface, and adjusting the instrument until both the object and image are in focus at the same plane.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="mdname" fixed="Principal Point of Autocollimation"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="pripoautType">
+		<xs:sequence>
+			<xs:element ref="locainfo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="quappa" type="quappaType">
+		<xs:annotation>
+			<xs:documentation>Uncertainty in the location of the principal point of autocollimation.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Quality of Principal Point of Autocollimation"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="quappaType">
+		<xs:sequence>
+			<xs:element ref="quappax"/>
+			<xs:element ref="quappay"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="quappax" type="nonNegativeDoubleType">
+		<xs:annotation>
+			<xs:documentation>Standard deviation, in millimeters, of the x-position of the principal point of autocollimation.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Quality of Autocollimation Principal Point x Value"/>
+				<xs:attribute name="string-input-format" fixed="Quality of Autocollimation Principal Point x Value &gt;= 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="quappay" type="nonNegativeDoubleType">
+		<xs:annotation>
+			<xs:documentation>Standard deviation, in millimeters, of the y-position of the principal point of autocollimation.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Quality of Autocollimation Principal Point y Value"/>
+				<xs:attribute name="string-input-format" fixed="Quality of Autocollimation Principal Point y Value &gt;= 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="priposym" type="priposymType">
+		<xs:annotation>
+			<xs:documentation>The coordinate of the center of the circles of equal distortion of the lens (x&lt;span class=&quot;subscript&quot;&gt;s&lt;/span&gt;&#884;, y&lt;span class=&quot;subscript&quot;&gt;s&lt;/span&gt;&#884;) in millimeters in the image coordinate system.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Principal Point of Symmetry"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="priposymType">
+		<xs:sequence>
+			<xs:element ref="locainfo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="quapps" type="quappsType">
+		<xs:annotation>
+			<xs:documentation>Uncertainty in the location of the principal point of symmetry.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Quality of Principal Point of Symmetry"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMin([quappsy,0.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="quappsType">
+		<xs:sequence>
+			<xs:element ref="quappsx"/>
+			<xs:element ref="quappsy"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="quappsx" type="nonNegativeDoubleType">
+		<xs:annotation>
+			<xs:documentation>Standard deviation, in millimeters, of the x-position of the principal point of symmetry.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Quality of Symmetry Principal Point x Value"/>
+				<xs:attribute name="string-input-format" fixed="Quality of Symmetry Principal Point x Value &gt;= 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="quappsy" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>Standard deviation, in millimeters, of the y-position of the principal point of symmetry.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Quality of Symmetry Principal Point y Value"/>
+				<xs:attribute name="string-input-format" fixed="Quality of Symmetry Principal Point y Value &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="fidcent" type="fidcentType">
+		<xs:annotation>
+			<xs:documentation>Coordinates in millimeters, in the image coordinate system, of center point where lines between the four or more fiducial marks meet.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Fiducial Center"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="fidcentType">
+		<xs:sequence>
+			<xs:element ref="locainfo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="sensello" type="senselloType">
+		<xs:annotation>
+			<xs:documentation>Physical position of individual scanner pixels, in the image coordinate system.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Sensor Element Location"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="senselloType">
+		<xs:sequence>
+			<xs:element ref="senselav"/>
+			<xs:element ref="senselso" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="senselav" type="senselavType">
+		<xs:annotation>
+			<xs:documentation>Whether or not a reference providing sensor element location exists.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Availability of Element Locations"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="senselavType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="available"/>
+			<xs:enumeration value="not available"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="senselso" type="senselsoType">
+		<xs:annotation>
+			<xs:documentation>Citation for reference providing sensor element location information.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Source of Element Locations"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="senselsoType">
+		<xs:sequence>
+			<xs:element ref="citeinfo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="distort" type="distortType">
+		<xs:annotation>
+			<xs:documentation>Departure of positions in image from those in scene imaged.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="mdname" fixed="Distortion"/>
+				<xs:attribute name="other-validation-rules" fixed="checkProperties([dsttrs,dsttrasy,dsttaf])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="distortType">
+		<xs:sequence>
+			<xs:element ref="dsttrs" minOccurs="0"/>
+			<xs:element ref="dsttrasy" minOccurs="0"/>
+			<xs:element ref="dsttaf" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="dsttrs" type="dsttrsType">
+		<xs:annotation>
+			<xs:documentation>The shift of an image point towards the center (negative values) or border (positive values) of the image.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="mdname" fixed="Distortion Type Radial Symmetrical"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([rsdisdis,rsaddist,rsdispol])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="dsttrsType">
+		<xs:choice>
+			<xs:element ref="rsdisdis"/>
+			<xs:element ref="rsaddist"/>
+			<xs:element ref="rsdispol"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:element name="rsdisdis" type="rsdisdisType">
+		<xs:annotation>
+			<xs:documentation>Lens distortion values provided as a function of linear distance to the principal point of best symmetry.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Distance Dependent Distortion"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMin([rsdmdist,0.0]);checkRangeExcludeMin([rsdnumv,0]);minDefinedByDataElement([rsdnumv,rsddval])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="rsdisdisType">
+		<xs:sequence>
+			<xs:element ref="rsdmdist"/>
+			<xs:element ref="rsdnumv"/>
+			<xs:element ref="rsddval" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="rsdmdist" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>Radial intervals at which distortion values are available, given in millimeters.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Radial Symmetrical Distance Interval"/>
+				<xs:attribute name="string-input-format" fixed="Radial Symmetrical Distance Interval &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="rsdnumv" type="positiveIntegerType">
+		<xs:annotation>
+			<xs:documentation>Number of radial points at which distance-dependent distortion values are provided.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Number of Distance Distortion Values"/>
+				<xs:attribute name="string-input-format" fixed="Number of Distance Distortion Values &gt; 0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="rsddval" type="xs:double">
+		<xs:annotation>
+			<xs:documentation>Value of distortion at one of the radial distances specified by Radial Distance Interval, in micrometers.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Distance Distortion Value"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="rsaddist" type="rsaddistType">
+		<xs:annotation>
+			<xs:documentation>Lens distortion values provided as a function of the angle from the optical axis.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Angle Dependent Distortion"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMin([rsangint,0.0]);checkRangeExcludeMin([rsanumv,0]);minDefinedByDataElement([rsanumv,rsadval])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="rsaddistType">
+		<xs:sequence>
+			<xs:element ref="rsangint"/>
+			<xs:element ref="rsanumv"/>
+			<xs:element ref="rsadval" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="rsangint" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>Interval in angle at which distortion values are available, given in degrees.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Radial Symmetrical Angle Interval"/>
+				<xs:attribute name="string-input-format" fixed="Radial Symmetrical Angle Interval &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="rsanumv" type="positiveIntegerType">
+		<xs:annotation>
+			<xs:documentation>Number of distortion values supplied as a function of angle.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Number of Angle Distortion Values"/>
+				<xs:attribute name="string-input-format" fixed="Number of Angle Distortion Values &gt; 0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="rsadval" type="xs:double">
+		<xs:annotation>
+			<xs:documentation>Value of distortion at one of the angular distances specified by Radial Symmetrical Measurement Angle, given in micrometers.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Angle Distortion Value"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="rsdispol" type="rsdispolType">
+		<xs:annotation>
+			<xs:documentation>Lens distortion in micrometers that is a function of the distance to the principal point of best symmetry, presented in the form of an odd-power polynomial:&lt;br&gt;Δrʹ = K&lt;span class=&quot;subscript&quot;&gt;0&lt;/span&gt; * rʹ + K&lt;span class=&quot;subscript&quot;&gt;1&lt;/span&gt; * r&#884;&lt;span class=&quot;superscript&quot;&gt;3&lt;/span&gt;+ K&lt;span class=&quot;subscript&quot;&gt;2&lt;/span&gt; * r&#884;&lt;span class=&quot;superscript&quot;&gt;5&lt;/span&gt; + K&lt;span class=&quot;subscript&quot;&gt;3&lt;/span&gt; * r&#884;&lt;span class=&quot;superscript&quot;&gt;7&lt;/span&gt; . . .</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Radial Symmetrical Distortion Polynomial"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="rsdispolType">
+		<xs:sequence>
+			<xs:element ref="polyfunc"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="dsttrasy" type="dsttrasyType">
+		<xs:annotation>
+			<xs:documentation>Distortion that can be expressed in the form&lt;br&gt;Δxʹ = B&lt;span class=&quot;subscript&quot;&gt;1&lt;/span&gt; (r&#884;&lt;span class=&quot;superscript&quot;&gt;2&lt;/span&gt; + 2xʹ&lt;span class=&quot;superscript&quot;&gt;2&lt;/span&gt;) + 2B&lt;span class=&quot;subscript&quot;&gt;2&lt;/span&gt; * xʹ * yʹ&lt;br&gt;Δyʹ = B&lt;span class=&quot;subscript&quot;&gt;2&lt;/span&gt; (r&#884;&lt;span class=&quot;superscript&quot;&gt;2&lt;/span&gt; + 2x&#884;&lt;span class=&quot;superscript&quot;&gt;2&lt;/span&gt;) + 2B&lt;span class=&quot;subscript&quot;&gt;1&lt;/span&gt; * x&#884; * y&#884;</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Distortion Type Radial Asymmetrical"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="dsttrasyType">
+		<xs:sequence>
+			<xs:element ref="rab1"/>
+			<xs:element ref="rab2"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="rab1" type="xs:double">
+		<xs:annotation>
+			<xs:documentation>Value for B&lt;span class=&quot;subscript&quot;&gt;1&lt;/span&gt; to be used in the formula given in the definition of Distortion Type Radial Asymmetrical.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Radial Asymmetrical Coefficient B1"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="rab2" type="xs:double">
+		<xs:annotation>
+			<xs:documentation>Value to be used for B&lt;span class=&quot;subscript&quot;&gt;2&lt;/span&gt; in the formula given in the definition of Distortion Type Radial Asymmetrical.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Radial Asymmetrical Coefficient B2"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="dsttaf" type="dsttafType">
+		<xs:annotation>
+			<xs:documentation>Errors of the image coordinate system that can be described with an affine transformation of the following form:&lt;br&gt;&#916;x&#884; = C&lt;span class=&quot;subscript&quot;&gt;1&lt;/span&gt; * x&#884; + C&lt;span class=&quot;subscript&quot;&gt;2&lt;/span&gt; * y&#884;&lt;br&gt;
+&#916;y&#884; = 0</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Distortion Type Affine"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="dsttafType">
+		<xs:sequence>
+			<xs:element ref="affc1"/>
+			<xs:element ref="affc2"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="affc1" type="xs:double">
+		<xs:annotation>
+			<xs:documentation>Coefficient of x&#884; term in the formula given in the definition of Distortion Type Affine.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Affine Distortion X Prime Coefficient"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="affc2" type="xs:double">
+		<xs:annotation>
+			<xs:documentation>Coefficient of y&#884; term in the formula given in the definition of Distortion Type Affine.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Affine Distortion Y Prime Coefficient"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="fcoper" type="fcoperType">
+		<xs:annotation>
+			<xs:documentation>Information describing the configuration or motion of the camera mounting.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Frame Operation"/>
+				<xs:attribute name="other-validation-rules" fixed="checkProperties([stabmnt,fmc])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="fcoperType">
+		<xs:sequence>
+			<xs:element ref="stabmnt" minOccurs="0"/>
+			<xs:element ref="fmc" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="stabmnt" type="stabmntType">
+		<xs:annotation>
+			<xs:documentation>Type of stabilized mount used during the photo flight.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Stabilized Mount"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="stabmntType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="T_AS"/>
+					<xs:enumeration value="CCNS4"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="fmc" type="fmcType">
+		<xs:annotation>
+			<xs:documentation>Whether or not image is moved in flying direction during exposure in order to compensate image motion for ground speed.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Forward Motion Compensation"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="fmcType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="yes"/>
+			<xs:enumeration value="no"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="fradprop" type="fradpropType">
+		<xs:annotation>
+			<xs:documentation>Information on the relation between radiation received and measured by a detector system.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Frame Radiometric Properties"/>
+				<xs:attribute name="other-validation-rules" fixed="checkProperties([fcradcal,lightdrp])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="fradpropType">
+		<xs:sequence>
+			<xs:element ref="fcradcal" minOccurs="0"/>
+			<xs:element ref="lightdrp" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="fcradcal" type="fcradcalType">
+		<xs:annotation>
+			<xs:documentation>Transformation from units in which electronic detector measures to physical units.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="mdname" fixed="Frame Radiometric Calibration"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="fcradcalType">
+		<xs:sequence>
+			<xs:element ref="datascal"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="lightdrp" type="lightdrpType">
+		<xs:annotation>
+			<xs:documentation>The ratio of the light at the border of the image to that at the center, given as a percentage.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Light Drop"/>
+				<xs:attribute name="string-input-format" fixed="0.0 &lt;= Light Drop &lt;= 100.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="lightdrpType">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="100"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="fcspecpr" type="fcspecprType">
+		<xs:annotation>
+			<xs:documentation>Wavelength-dependent characteristics of system.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Frame Spectral Properties"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMin([spectlim,0.0]);checkProperties([fcspecin,filtonca,spectlim])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="fcspecprType">
+		<xs:sequence>
+			<xs:element ref="fcspecin" minOccurs="0"/>
+			<xs:element ref="filtonca" minOccurs="0"/>
+			<xs:element ref="spectlim" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="fcspecin" type="fcspecinType">
+		<xs:annotation>
+			<xs:documentation>Information about wavelength sensitivity of detector.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Frame Spectral Information"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="fcspecinType">
+		<xs:sequence>
+			<xs:element ref="specinfo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="filtonca" type="filtoncaType">
+		<xs:annotation>
+			<xs:documentation>Device placed in front of camera lens limiting the range of wavelengths that can pass through.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Filter on Camera"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="filtoncaType">
+		<xs:sequence>
+			<xs:element ref="filtcain"/>
+			<xs:element ref="ftrtyp" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="filtcain" type="filtcainType">
+		<xs:annotation>
+			<xs:documentation>Indicator as to whether or not there is a filter in front of the camera.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Filter on Camera Indicator"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="filtcainType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="yes"/>
+			<xs:enumeration value="no"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="ftrtyp" type="ftrtypType">
+		<xs:annotation>
+			<xs:documentation>Manufacturers name for and/or description of filter used. (Note: CTO-1 and L filters are all manufactured by AGFA Gevaert, HF-3 to 89 by Kodak Wratten, Sandwich Color to Infrared by Wild, and A2 to K by Carl Zeiss.)</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="mdname" fixed="Filter Type"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="ftrtypType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="CTO 1"/>
+					<xs:enumeration value="L453"/>
+					<xs:enumeration value="L477"/>
+					<xs:enumeration value="L510"/>
+					<xs:enumeration value="L599"/>
+					<xs:enumeration value="L731"/>
+					<xs:enumeration value="HF-3 (2B)"/>
+					<xs:enumeration value="No. 3(Aero 1)"/>
+					<xs:enumeration value="No. 8 (K2)"/>
+					<xs:enumeration value="No. 12 (Minus Blue)"/>
+					<xs:enumeration value="No. 15 (G)"/>
+					<xs:enumeration value="No. 25 (A)"/>
+					<xs:enumeration value="No. 89 B (IR)"/>
+					<xs:enumeration value="Sandwich Color"/>
+					<xs:enumeration value="Haze Filter"/>
+					<xs:enumeration value="Sandwich False Color"/>
+					<xs:enumeration value="Dark Yellow"/>
+					<xs:enumeration value="Light Red"/>
+					<xs:enumeration value="Infrared"/>
+					<xs:enumeration value="A2"/>
+					<xs:enumeration value="B"/>
+					<xs:enumeration value="D"/>
+					<xs:enumeration value="F"/>
+					<xs:enumeration value="H"/>
+					<xs:enumeration value="I"/>
+					<xs:enumeration value="K"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="spectlim" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>Maximum wavelength, in nanometers, at which focus of lens is judged accurate, errors due to chromatic aberration being too large at longer wavelengths.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Spectral Limit"/>
+				<xs:attribute name="string-input-format" fixed="Spectral Limit &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="scan" type="scanType">
+		<xs:annotation>
+			<xs:documentation>Properties of sensor whose detector view moves over the ground in a direction roughly perpendicular to the track of a moving point.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Scan"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="scanType">
+		<xs:sequence>
+			<xs:element ref="scangeom" maxOccurs="unbounded"/>
+			<xs:element ref="sampprop"/>
+			<xs:element ref="sradprop"/>
+			<xs:element ref="scspprop" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="scangeom" type="scangeomType">
+		<xs:annotation>
+			<xs:documentation>Spatial and temporal description of scan.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Scan Geometric Properties"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="scangeomType">
+		<xs:sequence>
+			<xs:element ref="scanangu"/>
+			<xs:element ref="scantimu"/>
+			<xs:element ref="scandisu"/>
+			<xs:element ref="xtrkprop" minOccurs="0"/>
+			<xs:element ref="elevprop" minOccurs="0"/>
+			<xs:element ref="profprop" minOccurs="0"/>
+			<xs:element ref="scantime" minOccurs="0"/>
+			<xs:element ref="ifov"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="scanangu" type="scananguType">
+		<xs:annotation>
+			<xs:documentation>Units in which angles are measured in scan description.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Scan Angle Units"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="scananguType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="degrees"/>
+					<xs:enumeration value="radians"/>
+					<xs:enumeration value="arcminutes"/>
+					<xs:enumeration value="arcseconds"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="scantimu" type="scantimuType">
+		<xs:annotation>
+			<xs:documentation>Units in which time is measured in scan description.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Scan Time Units"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="scantimuType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="seconds"/>
+					<xs:enumeration value="minutes"/>
+					<xs:enumeration value="microseconds"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="scandisu" type="scandisuType">
+		<xs:annotation>
+			<xs:documentation>Units in which distance is measured in scan description.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Scan Distance Units"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="scandisuType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="meters"/>
+					<xs:enumeration value="kilometers"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="xtrkprop" type="xtrkpropType">
+		<xs:annotation>
+			<xs:documentation>Description of data sampling in direction approximately perpendicular to track in horizontal direction.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="mdname" fixed="Scan Cross Track Properties"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([xtkswp,xtfixang])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="xtrkpropType">
+		<xs:sequence>
+			<xs:element ref="xtkzero"/>
+			<xs:choice>
+				<xs:element ref="xtkswp"/>
+				<xs:element ref="xtfixang"/>
+			</xs:choice>
+			<xs:element ref="xtrkdesc" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="xtkzero" type="xtkzeroType">
+		<xs:annotation>
+			<xs:documentation>Direction relative to which cross-track angles are measured.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Cross Track Zero"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="xtkzeroType">
+		<xs:sequence>
+			<xs:element ref="xtkaxis"/>
+			<!-- Suggested Values 'x' 'y' 'z' -->
+			<xs:element ref="xtkdir"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="xtkaxis" type="xtkaxisType">
+		<xs:annotation>
+			<xs:documentation>Axis about which cross-track angles are measured.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Cross Track Axis"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="xtkaxisType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="x"/>
+					<xs:enumeration value="y"/>
+					<xs:enumeration value="z"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="xtkdir" type="positiveNegativeType">
+		<xs:annotation>
+			<xs:documentation>Direction on Cross Track Axis relative to which cross-track angles are measured.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Cross Track Direction"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="xtkswp" type="xtkswpType">
+		<xs:annotation>
+			<xs:documentation>Description of angular properties of cross-track sweep.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Cross Track Sweep"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([xtkexang,xtstpang]);checkRangeExcludeMin([xtksamp,0]);checkRangeExcludeMin([xtkexang,0.0]);checkRangeExcludeMin([xtstpang,0.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="xtkswpType">
+		<xs:sequence>
+			<xs:element ref="xtksamp"/>
+			<xs:element ref="xtkstang"/>
+			<xs:choice>
+				<xs:element ref="xtkexang"/>
+				<xs:element ref="xtstpang"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="xtksamp" type="positiveIntegerType">
+		<xs:annotation>
+			<xs:documentation>Number of measurements in direction across the track in each scan.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Number of Cross Track Samples"/>
+				<xs:attribute name="string-input-format" fixed="Number of Cross Track Samples &gt; 0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="xtkstang" type="xs:double">
+		<xs:annotation>
+			<xs:documentation>Angle of start of cross-track measurement from Cross Track Axis, in Scan Angle Units.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Cross Track Start Angle"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="xtkexang" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>Angle between end and start of cross-track range.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Cross Track Extent Angle"/>
+				<xs:attribute name="string-input-format" fixed="Cross Track Extent Angle &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="xtstpang" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>Angle between cross-track steps, in Scan Angle Units.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Cross Track Step Angle"/>
+				<xs:attribute name="string-input-format" fixed="Cross Track Step Angle &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="xtfixang" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>Constant angle relative to cross-track axis at which scanner is held while it scans in another direction.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Cross Track Fixed Angle"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="xtrkdesc" type="FGDCstring">
+		<xs:annotation>
+			<xs:documentation>Additional information about cross-track measurements, in text form.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Cross Track Description"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="elevprop" type="elevpropType">
+		<xs:annotation>
+			<xs:documentation>Description of data sampling in direction approximately perpendicular to track and cross-track sweep direction.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="mdname" fixed="Scan Elevation Properties"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([elevswp,elfixang])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="elevpropType">
+		<xs:sequence>
+			<xs:element ref="elevzero"/>
+			<xs:choice>
+				<xs:element ref="elevswp"/>
+				<xs:element ref="elfixang"/>
+			</xs:choice>
+			<xs:element ref="elevdesc" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="elevzero" type="elevzeroType">
+		<xs:annotation>
+			<xs:documentation>Direction relative to which elevation angles are measured.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Elevation Zero"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="elevzeroType">
+		<xs:sequence>
+			<xs:element ref="elevaxis"/>
+			<xs:element ref="elevdir"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="elevaxis" type="elevaxisType">
+		<xs:annotation>
+			<xs:documentation>Axis about which elevation angles are measured.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Elevation Axis"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="elevaxisType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="x"/>
+					<xs:enumeration value="y"/>
+					<xs:enumeration value="z"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="elevdir" type="positiveNegativeType">
+		<xs:annotation>
+			<xs:documentation>Direction on Elevation Axis relative to which elevation angles are measured.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Elevation Direction"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="elevswp" type="elevswpType">
+		<xs:annotation>
+			<xs:documentation>Description of angular properties of elevation sweep.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Elevation Sweep"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMin([elevsamp,0]);checkOr([eleexang,elstpang]);checkRangeExcludeMin([eleexang,0.0]);checkRangeExcludeMin([elstpang,0.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="elevswpType">
+		<xs:sequence>
+			<xs:element ref="elevsamp"/>
+			<xs:element ref="elestang"/>
+			<xs:choice>
+				<xs:element ref="eleexang"/>
+				<xs:element ref="elstpang"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="elevsamp" type="positiveIntegerType">
+		<xs:annotation>
+			<xs:documentation>Number of measurements in direction across the track in each scan.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Number of Elevation Samples"/>
+				<xs:attribute name="string-input-format" fixed="Number of Elevation Samples &gt; 0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="elestang" type="xs:double">
+		<xs:annotation>
+			<xs:documentation>Angle of start of elevation measurement from Elevation Axis, in Scan Angle Units.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Elevation Start Angle"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="eleexang" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>Angle between end and start of elevation range.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Elevation Extent Angle"/>
+				<xs:attribute name="string-input-format" fixed="Elevation Extent Angle &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="elstpang" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>Angle between elevation steps, in Scan Angle Units.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Elevation Step Angle"/>
+				<xs:attribute name="string-input-format" fixed="Elevation Step Angle &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="elfixang" type="xs:double">
+		<xs:annotation>
+			<xs:documentation>Constant angle relative to elevation axis at which scanner is held while it scans in another direction.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Elevation Fixed Angle"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="elevdesc" type="FGDCstring">
+		<xs:annotation>
+			<xs:documentation>Additional information about elevation measurements, in text form.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Elevation Description"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="profprop" type="profpropType">
+		<xs:annotation>
+			<xs:documentation>Description of data sampling in vertical direction.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="mdname" fixed="Profile Properties"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([profsond,proffix]);checkRangeExcludeMin([proffix,0.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="profpropType">
+		<xs:sequence>
+			<xs:choice>
+				<xs:element ref="profsond"/>
+				<xs:element ref="proffix"/>
+			</xs:choice>
+			<xs:element ref="profdesc" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="profsond" type="profsondType">
+		<xs:annotation>
+			<xs:documentation>Description of process of profile sampling.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Profile Sounding"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMin([profsamp,0]);checkRangeExcludeMin([profext,0.0]);checkRangeExcludeMin([profstep,0.0]);checkRangeExcludeMin([profst,0]);checkOr([profext,profstep])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="profsondType">
+		<xs:sequence>
+			<xs:element ref="profsamp"/>
+			<xs:element ref="profdir"/>
+			<xs:element ref="profst"/>
+			<xs:choice>
+				<xs:element ref="profext"/>
+				<xs:element ref="profstep"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="profsamp" type="positiveIntegerType">
+		<xs:annotation>
+			<xs:documentation>Number of heights at which measurements are made.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Number of Profile Samples"/>
+				<xs:attribute name="string-input-format" fixed="Number of Profile Samples &gt; 0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="profdir" type="profdirType">
+		<xs:annotation>
+			<xs:documentation>Direction of sequence of heights at which profile measurements are made.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Profiling Direction"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="profdirType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="upward"/>
+			<xs:enumeration value="downward"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="profst" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>Height of start of profile measurements.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Profile Start"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="profext" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>Distance between end and start of profile range, in Scan Distance Units.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Profile Extent"/>
+				<xs:attribute name="string-input-format" fixed="Profile Extent &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="profstep" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>Distance between profile steps, in Scan Distance Units.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Profile Step"/>
+				<xs:attribute name="string-input-format" fixed="Profile Step &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="proffix" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>Fixed profile level at which scanning is taking place.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Profile Fixed"/>
+				<xs:attribute name="string-input-format" fixed="Profile Fixed &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="profdesc" type="FGDCstring">
+		<xs:annotation>
+			<xs:documentation>Additional information about profile measurements, in text form.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Profile Description"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="scantime" type="scantimeType">
+		<xs:annotation>
+			<xs:documentation>Schedule for scans.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Scan Timing"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([scandur,scanstept]);checkRangeExcludeMin([scandur,0.0]);checkRangeExcludeMin([scanstept,0.0]);checkRangeExcludeMin([scanrptt,0.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="scantimeType">
+		<xs:sequence>
+			<xs:element ref="scanstart"/>
+			<xs:choice>
+				<xs:element ref="scandur"/>
+				<xs:element ref="scanstept"/>
+			</xs:choice>
+			<xs:element ref="scanrptt"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="scanstart" type="scanstartType">
+		<xs:annotation>
+			<xs:documentation>Time at start of scan.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Scan Start Time"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="scanstartType">
+		<xs:sequence>
+			<xs:element name="sngdate" type="sngdateType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="scandur" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>Duration of a single scan, in Scan Time Units.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Scan Duration"/>
+				<xs:attribute name="string-input-format" fixed="Scan Duration &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="scanstept" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>Time for one step in scan, in Scan Time Units.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Scan Step Time"/>
+				<xs:attribute name="string-input-format" fixed="Scan Step Time &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="scanrptt" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>Time between the start of one scan and the next, in Scan Time Units.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Scan Repeat Time"/>
+				<xs:attribute name="string-input-format" fixed="Scan Repeat Time &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="ifov" type="ifovType">
+		<xs:annotation>
+			<xs:documentation>Ground or target area viewed by a sensor at a given time.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Instantaneous Field of View"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMin([ifovxval,0.0]);checkRangeExcludeMin([ifovyval,0.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="ifovType">
+		<xs:sequence>
+			<xs:element ref="ifovunit"/>
+			<xs:element ref="ifovxdef"/>
+			<xs:element ref="ifovxval"/>
+			<xs:element ref="ifovydef"/>
+			<xs:element ref="ifovyval"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="ifovunit" type="ifovunitType">
+		<xs:annotation>
+			<xs:documentation>Units in which value of instantaneous field of view is expressed.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="IFOV Units"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="ifovunitType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="meters"/>
+					<xs:enumeration value="degrees"/>
+					<xs:enumeration value="milliradians"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="ifovxdef" type="ifovxdefType">
+		<xs:annotation>
+			<xs:documentation>Definition of x direction in instantaneous field of view.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="IFOV x Definition"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="ifovxdefType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="cross track"/>
+					<xs:enumeration value="along scan"/>
+					<xs:enumeration value="frame"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="ifovxval" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>Size of instantaneous field of view, in direction defined by IFOV x Definition, in units given by IFOV Units.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="IFOV x Value"/>
+				<xs:attribute name="string-input-format" fixed="IFOV x Value &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="ifovydef" type="ifovydefType">
+		<xs:annotation>
+			<xs:documentation>Definition of y direction in instantaneous field of view.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="IFOV y Definition"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="ifovydefType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="cross scan"/>
+					<xs:enumeration value="along track"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="ifovyval" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>Size of instantaneous field of view, in direction defined by IFOV y Definition, in units given by IFOV Units.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="IFOV y Value"/>
+				<xs:attribute name="string-input-format" fixed="IFOV y Value &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="sampprop" type="samppropType">
+		<xs:annotation>
+			<xs:documentation>Description of sensor pixel properties.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Sample Properties"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="samppropType">
+		<xs:sequence>
+			<xs:element ref="sampdesu"/>
+			<xs:element ref="pixldesc" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="sampdesu" type="sampdesuType">
+		<xs:annotation>
+			<xs:documentation>Units in which pixel properties are provided.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Sample Description Units"/>
+				<xs:attribute name="other-validation-rules" fixed="checkProperties([sampangu,samprofu])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="sampdesuType">
+		<xs:sequence>
+			<xs:element ref="sampangu" minOccurs="0"/>
+			<xs:element ref="samprofu" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="sampangu" type="sampanguType">
+		<xs:annotation>
+			<xs:documentation>Units in which angles are measured in pixel description.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="mdname" fixed="Sample Angle Units"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="sampanguType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="degrees"/>
+					<xs:enumeration value="arcminutes"/>
+					<xs:enumeration value="arcseconds"/>
+					<xs:enumeration value="radians"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="samprofu" type="samprofuType">
+		<xs:annotation>
+			<xs:documentation>Units used to measure profile heights and distances.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="mdname" fixed="Sample Profile Units"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="samprofuType" mixed="true">
+		<xs:sequence>
+			<xs:element ref="altunits"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="pixldesc" type="pixldescType">
+		<xs:annotation>
+			<xs:documentation>Description of angular dimensions and location of scanner picture cell.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Pixel Description"/>
+				<xs:attribute name="other-validation-rules" fixed="checkProperties([pixxtksz,pixelvsz,pixprfsz,pixelhgt,pixelpsf]);checkRangeExcludeMin([pixxtksz,0.0]);checkRangeExcludeMin([pixelvsz,0.0]);checkRangeExcludeMin([pixelhgt,0.0]);checkRangeExcludeMin([pixprfsz,0.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="pixldescType">
+		<xs:sequence>
+			<xs:element ref="pixxtksz" minOccurs="0"/>
+			<xs:element ref="pixelvsz" minOccurs="0"/>
+			<xs:element ref="pixprfsz" minOccurs="0"/>
+			<xs:element ref="pixelhgt" minOccurs="0"/>
+			<xs:element ref="pixelpsf" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="pixxtksz" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>Angular extent of pixel in cross-track direction, in units specified in Sample Angle Units.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="mdname" fixed="Pixel Cross Track Size"/>
+				<xs:attribute name="string-input-format" fixed="Pixel Cross Track Size &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="pixelvsz" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>Size of pixel in elevation direction, in units specified in Sample Angle Units.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="mdname" fixed="Pixel Elevation Size"/>
+				<xs:attribute name="string-input-format" fixed="Pixel Elevation Size &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="pixprfsz" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>Size of pixel in profile direction, in units specified in Sample Profile Units.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="mdname" fixed="Pixel Profile Size"/>
+				<xs:attribute name="string-input-format" fixed="Pixel Profile Size &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="pixelhgt" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>Height of pixel above ellipsoid defined as part of spatial representation information, in units specified in Sample Profile Units.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Pixel Height Above Ellipsoid"/>
+				<xs:attribute name="string-input-format" fixed="Pixel Height Above Ellipsoid &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="pixelpsf" type="FGDCstring">
+		<xs:annotation>
+			<xs:documentation>Pixel image distribution that would be produced by a single point.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Pixel Point Spread Function"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="sradprop" type="sradpropType">
+		<xs:annotation>
+			<xs:documentation>Function used to convert quantity in detector units to physical units.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Scan Radiometric Properties"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="sradpropType">
+		<xs:sequence>
+			<xs:element ref="datascal"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="scspprop" type="scsppropType">
+		<xs:annotation>
+			<xs:documentation>Design specifications for wavelength-dependent scanner properties.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="mdname" fixed="Scan Spectral Properties"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="scsppropType">
+		<xs:sequence>
+			<xs:element ref="specinfo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="specinfo" type="specinfoType">
+		<xs:annotation>
+			<xs:documentation>Wavelength-dependent properties of optical systems.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Spectral Information"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="specinfoType" mixed="true">
+		<xs:sequence>
+			<xs:element ref="nowvband"/>
+			<xs:element ref="wvbandpr" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="nowvband" type="nowvbandType">
+		<xs:annotation>
+			<xs:documentation>Number of separate wavelength ranges at which system measures.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Number of Wavelength Bands"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMin([numbands,0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="nowvbandType">
+		<xs:sequence>
+			<xs:element ref="numbands"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="wvbandpr" type="wvbandprType">
+		<xs:annotation>
+			<xs:documentation>Design specifications for properties of an individual wavelength range.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Wavelength Band Properties"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMin([lambdmin,0.0]);checkGreaterOrEqual([lambdmax,lambdmin]);checkSpecialRange([pkwavlen,lambdmin,lambdmax])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="wvbandprType">
+		<xs:sequence>
+			<xs:element ref="waveunit"/>
+			<xs:element ref="bbnddef" minOccurs="0"/>
+			<xs:element ref="lambdmin"/>
+			<!-- TODO: the following should actually be greater than the previous -->
+			<xs:element ref="lambdmax"/>
+			<!-- TODO: the rules of the following should be
+                            lambdmin <= pkwavlen <= lambdmax -->
+			<xs:element ref="pkwavlen" minOccurs="0"/>
+			<xs:element ref="wavlreg" minOccurs="0"/>
+			<xs:element ref="nomspres" minOccurs="0"/>
+			<xs:element ref="bandqual" minOccurs="0"/>
+			<xs:element ref="polrzcha" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="banddesc" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="waveunit" type="waveunitType">
+		<xs:annotation>
+			<xs:documentation>Units in which band wavelengths are expressed.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Wavelength Units"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="waveunitType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="m"/>
+					<xs:enumeration value="cm"/>
+					<xs:enumeration value="mm"/>
+					<xs:enumeration value="&#181;m"/>
+					<xs:enumeration value="nm"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="bbnddef" type="bbnddefType">
+		<xs:annotation>
+			<xs:documentation>Designation of criterion for defining maximum and minimum wavelengths for a spectral band.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Band Boundary Definition"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="bbnddefType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="3db"/>
+					<xs:enumeration value="half maximum"/>
+					<xs:enumeration value="50 %"/>
+					<xs:enumeration value="1/e"/>
+					<xs:enumeration value="equivalent width "/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="lambdmin" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>Minimum wavelength boundary of the spectral range of the band using the criterion in Band Boundary Definition, in units specified by Wavelength Units.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Minimum Wavelength"/>
+				<xs:attribute name="string-input-format" fixed="Minimum Wavelength &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="lambdmax" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>Maximum wavelength boundary of the spectral range of the band using the criterion in Band Boundary Definition, in units specified by Wavelength Units.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Maximum Wavelength"/>
+				<xs:attribute name="string-input-format" fixed="Maximum Wavelength &gt;= Minimum Wavelength"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="pkwavlen" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>Wavelength of maximum sensitivity within the band, in units specified by Wavelength Units.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Peak Wavelength"/>
+				<xs:attribute name="string-input-format" fixed="Minimum Wavelength &lt;= Peak Wavelength &lt;= Maximum Wavelength"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="wavlreg" type="wavlregType">
+		<xs:annotation>
+			<xs:documentation>Wavelength of maximum sensitivity within the band, in units specified by Wavelength Units.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Wavelength Region"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="wavlregType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="ultraviolet"/>
+					<xs:enumeration value="visible"/>
+					<xs:enumeration value="infrared"/>
+					<xs:enumeration value="microwave"/>
+					<xs:enumeration value="radio"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="nomspres" type="nomspresType">
+		<xs:annotation>
+			<xs:documentation>Smallest distance between which separate points can be distinguished, as specified in instrument design.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Nominal Spatial Resolution"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMin([spatresv,0.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="nomspresType">
+		<xs:sequence>
+			<xs:element ref="spatresu"/>
+			<xs:element ref="spatresv"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="spatresu" type="spatresuType">
+		<xs:annotation>
+			<xs:documentation>Units in which spatial resolution is expressed.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Spatial Resolution Units"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="spatresuType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="meters"/>
+					<xs:enumeration value="kilometers"/>
+					<xs:enumeration value="degrees"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="spatresv" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>Quantitative measure of designed instrument spatial resolution, in units given by Spatial Resolution Units.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Spatial Resolution Value"/>
+				<xs:attribute name="string-input-format" fixed="Spatial Resolution Value &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="bandqual" type="FGDCstring">
+		<xs:annotation>
+			<xs:documentation>Description of state of band, including degree of degradation and impact on resolution and measurement accuracy.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Band Quality"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="polrzcha" type="polrzchaType">
+		<xs:annotation>
+			<xs:documentation>Degree of polarization of band.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="mdname" fixed="Polarization Characteristics"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="polrzchaType">
+		<xs:sequence>
+			<xs:element ref="revrpolr"/>
+			<xs:element ref="sendpolr" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="revrpolr" type="revrpolrType">
+		<xs:annotation>
+			<xs:documentation>Polarization direction that a receiver is designed to accept.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Receiver Polarization"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="revrpolrType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="horizontal"/>
+					<xs:enumeration value="vertical"/>
+					<xs:enumeration value="left circular"/>
+					<xs:enumeration value="right circular"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="sendpolr" type="sendpolrType">
+		<xs:annotation>
+			<xs:documentation>Polarization of radiation emitted as part of a measurement system.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="mdname" fixed="Sender Polarization"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="sendpolrType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="horizontal"/>
+					<xs:enumeration value="vertical"/>
+					<xs:enumeration value="left circular"/>
+					<xs:enumeration value="right circular"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="banddesc" type="FGDCstring">
+		<xs:annotation>
+			<xs:documentation>Additional descriptive material about band properties.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Band Description"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="othcolde" type="FGDCstring">
+		<xs:annotation>
+			<xs:documentation>Description of properties of data collection system other than frame camera or whiskbroom scanner.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Other Collector Description"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="instpdes" type="FGDCstring">
+		<xs:annotation>
+			<xs:documentation>Textual information on instrument properties, in areas not otherwise specified in this standard.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="mdname" fixed="Instrument Properties Description"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="instref" type="instrefType">
+		<xs:annotation>
+			<xs:documentation>Reference providing description of instrument properties and behavior.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Instrument Reference"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="instrefType">
+		<xs:sequence>
+			<xs:element name="citeinfo" type="citeinfoType"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

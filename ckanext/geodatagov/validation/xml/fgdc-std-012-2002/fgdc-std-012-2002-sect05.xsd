@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 sp1 (http://www.altova.com) by Systems Administrator (NCDDC) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" blockDefault="#all">
+	<xs:complexType name="rseEainfo">
+		<xs:choice>
+			<xs:sequence>
+				<xs:element ref="detailed" maxOccurs="unbounded"/>
+				<xs:element ref="overview" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:element ref="overview" maxOccurs="unbounded"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="rseDetailedType">
+		<xs:sequence>
+			<xs:element ref="enttyp"/>
+			<xs:element ref="attr" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="rseAttrType">
+		<xs:sequence>
+			<xs:element ref="attrlabl"/>
+			<xs:element ref="attrdef"/>
+			<xs:element ref="attrdefs"/>
+			<xs:element ref="attrdomv" maxOccurs="unbounded"/>
+			<xs:sequence minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="begdatea"/>
+				<xs:element ref="enddatea" minOccurs="0"/>
+			</xs:sequence>
+			<xs:element ref="attrvai" minOccurs="0"/>
+			<xs:element ref="attrmfrq" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="rseAttrdomvType">
+		<xs:sequence>
+			<xs:choice>
+				<xs:element ref="edom" maxOccurs="unbounded"/>
+				<xs:element ref="rdom"/>
+				<xs:element ref="codesetd"/>
+				<xs:element ref="udom"/>
+			</xs:choice>
+			<xs:element ref="datascal" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="datascal" type="datascalType">
+		<xs:annotation>
+			<xs:documentation>Function converting set of values on one scale to another.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Data Scaling Information"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="other-conditionalities" fixed="['Scan Radiometric Properties','Frame Radiometric Calibration']:Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([polyfunc,npolscal])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="datascalType" mixed="true">
+		<xs:choice>
+			<xs:element ref="polyfunc"/>
+			<xs:element ref="npolscal"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:element name="polyfunc" type="polyfuncType">
+		<xs:annotation>
+			<xs:documentation>A function in successive powers of the independent variable, or the ratio of such functions, used in a transformation, one example of which is scaling, derivation of a set of values on one scale or coordinate system from the value in another, in the sense derived value = polynomial (initial value).</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Polynomial Function"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="polyfuncType">
+		<xs:sequence>
+			<xs:element ref="polynume"/>
+			<xs:element ref="polydeno" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="polynume" type="polynumeType">
+		<xs:annotation>
+			<xs:documentation>The polynomial function when not a ratio, and the dividend of the ratio when it is.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Polynomial Numerator"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="minDefinedByDataElement([nnumterm,polycoef])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="polynumeType">
+		<xs:sequence>
+			<xs:element ref="nnumterm"/>
+			<xs:element ref="polycoef" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="nnumterm" type="positiveIntegerType">
+		<xs:annotation>
+			<xs:documentation>The number of nonzero terms in the numerator of the polynomial.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Number of Numerator Terms"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="Number of Numerator Terms &gt;=1"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="polydeno" type="polydenoType">
+		<xs:annotation>
+			<xs:documentation>The divisor of a polynomial function that is a ratio. (&lt;i&gt;Note:  if absent, assumed equal to 1.&lt;/i&gt;)</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Polynomial Denominator"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="other-validation-rules" fixed="minDefinedByDataElement([ndenterm,polycoef])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="polydenoType">
+		<xs:sequence>
+			<xs:element ref="ndentern"/>
+			<xs:element ref="polycoef" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="ndentern" type="positiveIntegerType">
+		<xs:annotation>
+			<xs:documentation>The number of nonzero terms in the denominator of the polynomial.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Number of Denominator Terms"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="Number of Denominator Terms &gt;=1"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="polycoef" type="xs:double">
+		<xs:annotation>
+			<xs:documentation>The coefficient of one term in the numerator or denominator of a polynomial function.(&lt;i&gt;Note: For a polynomial numerator or denominator of order m, there will be m+1 coefficients. Any of these coefficients, except that of the m power term, may be zero. When the function is linear, the coefficient of the zero-power term is the offset and the coefficient of the first power term is the scale factor.&lt;/i&gt;)</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Polynomial Coefficient"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="npolscal" type="FGDCstring">
+		<xs:annotation>
+			<xs:documentation>Text description of the function used to derive a set of values on one scale from their value in another, using a function that is not a polynomial.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Non-Polynomial Scaling"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+</xs:schema>

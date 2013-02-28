@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 sp1 (http://www.altova.com) by Systems Administrator (NCDDC) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" blockDefault="#all">
+	<xs:element name="eainfo" type="eainfoType">
+		<xs:annotation>
+			<xs:documentation>Details about the information content of the data set, including the entity types, their attributes, and the domains from which attribute values may be assigned.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Entity and Attribute Information"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="other-validation-rules" fixed="checkAndOr([detailed,overview])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="eainfoType">
+		<xs:choice>
+			<xs:sequence>
+				<xs:element ref="detailed" maxOccurs="unbounded"/>
+				<xs:element ref="overview" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:element ref="overview" maxOccurs="unbounded"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:element name="detailed" type="detailedType">
+		<xs:annotation>
+			<xs:documentation>Description of the entities, attributes, attribute values, and related characteristics encoded in the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Detailed Description"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="detailedType">
+		<xs:sequence>
+			<xs:element ref="enttyp"/>
+			<xs:element ref="attr" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="enttyp" type="enttypType">
+		<xs:annotation>
+			<xs:documentation>The definition and description of a set into which similar entity instances are classified.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Entity Type"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="enttypType">
+		<xs:sequence>
+			<xs:element ref="enttypl"/>
+			<xs:element ref="enttypd"/>
+			<xs:element ref="enttypds"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="enttypl" type="enttyplType">
+		<xs:annotation>
+			<xs:documentation>The name of the entity type.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Entity Type Label"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="enttyplType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="enttypd" type="enttypdType">
+		<xs:annotation>
+			<xs:documentation>The description of the entity type.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Entity Type Definition"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="enttypdType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="enttypds" type="enttypdsType">
+		<xs:annotation>
+			<xs:documentation>The authority of the definition.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Entity Type Definition Source"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="enttypdsType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="attr" type="attrType">
+		<xs:annotation>
+			<xs:documentation>A defined characteristic of an entity.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Attribute"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="is-recursive" fixed="false"/>
+				<xs:attribute name="other-validation-rules" fixed="checkChron([begdatea,enddatea])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="attrType">
+		<xs:sequence>
+			<xs:element ref="attrlabl"/>
+			<xs:element ref="attrdef"/>
+			<xs:element ref="attrdefs"/>
+			<xs:element ref="attrdomv" maxOccurs="unbounded"/>
+			<xs:sequence minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="begdatea"/>
+				<xs:element ref="enddatea" minOccurs="0"/>
+			</xs:sequence>
+			<xs:element ref="attrvai" minOccurs="0"/>
+			<xs:element ref="attrmfrq" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="attrlabl" type="attrlablType">
+		<xs:annotation>
+			<xs:documentation>The name of the attribute.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Attribute Label"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="attrlablType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="attrdef" type="attrdefType">
+		<xs:annotation>
+			<xs:documentation>The description of the attribute.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Attribute Definition"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="attrdefType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="attrdefs" type="attrdefsType">
+		<xs:annotation>
+			<xs:documentation>The authority of the definition.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Attribute Definition Source"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="attrdefsType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="attrdomv" type="attrdomvType">
+		<xs:annotation>
+			<xs:documentation>The valid values that can be assigned for an attribute.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Attribute Domain Values"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([edom,rdom,udom,codesetd])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="attrdomvType">
+		<xs:choice>
+			<xs:element ref="edom"/>
+			<xs:element ref="rdom"/>
+			<xs:element ref="codesetd"/>
+			<xs:element ref="udom"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:element name="edom" type="edomType">
+		<xs:annotation>
+			<xs:documentation>The members of an established set of valid values.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Enumerated Domain"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="is-recursive" fixed="true"/>
+				<xs:attribute name="recursive-class-name" fixed="attr"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="edomType">
+		<xs:sequence maxOccurs="unbounded">
+			<xs:element ref="edomv"/>
+			<xs:element ref="edomvd"/>
+			<xs:element ref="edomvds"/>
+			<xs:element ref="attr" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="edomv" type="edomvType">
+		<xs:annotation>
+			<xs:documentation>The name or label of a member of the set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Enumerated Domain Value"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="edomvType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="edomvd" type="edomvdType">
+		<xs:annotation>
+			<xs:documentation>The description of the value.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Enumerated Domain Value Definition"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="edomvdType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="edomvds" type="edomvdsType">
+		<xs:annotation>
+			<xs:documentation>The authority of the definition.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Enumerated Domain Value Definition Source"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="edomvdsType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="rdom" type="rdomType">
+		<xs:annotation>
+			<xs:documentation>The minimum and maximum values of a continuum of valid  values.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Range Domain"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="is-recursive" fixed="true"/>
+				<xs:attribute name="recursive-class-name" fixed="attr"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMin([attrmres,0.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="rdomType">
+		<xs:sequence>
+			<xs:element ref="rdommin"/>
+			<xs:element ref="rdommax"/>
+			<xs:element ref="attrunit" minOccurs="0"/>
+			<xs:element ref="attrmres" minOccurs="0"/>
+			<xs:element ref="attr" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="rdommin" type="rdomminType">
+		<xs:annotation>
+			<xs:documentation>The least value that the attribute can be assigned.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Range Domain Minimum"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="rdomminType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="rdommax" type="rdommaxType">
+		<xs:annotation>
+			<xs:documentation>The greatest value that the attribute can be assigned.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Range Domain Maximum"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="rdommaxType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="attrunit" type="attrunitType">
+		<xs:annotation>
+			<xs:documentation>The standard of measurement for an attribute value.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Attribute Units of Measure"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="attrunitType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="attrmres" type="attrmresType">
+		<xs:annotation>
+			<xs:documentation>The smallest unit increment to which an attribute value is measured.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Attribute Measurement Resolution"/>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="string-input-format" fixed="Attribute Measurement Resolution &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="attrmresType">
+		<xs:restriction base="xs:double">
+			<xs:minExclusive value="0.0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="codesetd" type="codesetdType">
+		<xs:annotation>
+			<xs:documentation>Reference to a standard or list which contains the members of an established set of valid values.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Codeset Domain"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="codesetdType">
+		<xs:sequence>
+			<xs:element ref="codesetn"/>
+			<xs:element ref="codesets"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="codesetn" type="codesetnType">
+		<xs:annotation>
+			<xs:documentation>The title of the codeset.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Codeset Name"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="codesetnType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="codesets" type="codesetsType">
+		<xs:annotation>
+			<xs:documentation>The authority for the codeset.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Codeset Source"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="codesetsType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="udom" type="udomType">
+		<xs:annotation>
+			<xs:documentation>Description of the values and reasons why they cannot be represented.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Unrepresentable Domain"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="udomType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="begdatea" type="begdateaType">
+		<xs:annotation>
+			<xs:documentation>Earliest or only date for which the attribute values are current.  In cases when a range of dates are provided, this is the earliest date for which the information is valid.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Beginning Date of Attribute Values"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="YYYY|YYYYMM|YYYYMMDD|bcYYYY|bcYYYYMM|bcYYYYMMDD|ccYYYYY...|cdYYYYY..."/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="begdateaType">
+		<xs:restriction base="FGDCdate"/>
+	</xs:simpleType>
+	<xs:element name="enddatea" type="enddateaType">
+		<xs:annotation>
+			<xs:documentation>Latest date for which the information is current.  Used in cases when a range of dates are provided.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Ending Date of Attribute Values"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="string-input-format" fixed="YYYY|YYYYMM|YYYYMMDD|bcYYYY|bcYYYYMM|bcYYYYMMDD|ccYYYYY...|cdYYYYY..."/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="enddateaType">
+		<xs:restriction base="FGDCdate"/>
+	</xs:simpleType>
+	<xs:element name="attrvai" type="attrvaiType">
+		<xs:annotation>
+			<xs:documentation>An assessment of the accuracy of the assignment of attribute values.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Attribute Value Accuracy Information"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="attrvaiType">
+		<xs:sequence>
+			<xs:element ref="attrva"/>
+			<xs:element ref="attrvae"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="attrva" type="attrvaType">
+		<xs:annotation>
+			<xs:documentation>An estimate of the accuracy of the assignment of attribute values.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Attribute Value Accuracy"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="attrvaType">
+		<xs:restriction base="xs:double"/>
+	</xs:simpleType>
+	<xs:element name="attrvae" type="attrvaeType">
+		<xs:annotation>
+			<xs:documentation>The definition of the Attribute Value Accuracy measure and units, and a description of how the estimate was derived.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Attribute Value Accuracy Explanation"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="attrvaeType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="attrmfrq" type="attrmfrqType">
+		<xs:annotation>
+			<xs:documentation>The frequency with which attribute values are added.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Attribute Measurement Frequency"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="attrmfrqType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="Unknown"/>
+					<xs:enumeration value="As needed"/>
+					<xs:enumeration value="Irregular"/>
+					<xs:enumeration value="None planned"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="overview" type="overviewType">
+		<xs:annotation>
+			<xs:documentation>Summary of, and citation to detailed description of, the information content of the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Overview Description"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="is-recursive" fixed="false"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="overviewType">
+		<xs:sequence>
+			<xs:element ref="eaover"/>
+			<xs:element ref="eadetcit" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="eaover" type="eaoverType">
+		<xs:annotation>
+			<xs:documentation>Detailed summary of the information contained in a data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Entity and Attribute Overview"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="eaoverType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="eadetcit" type="eadetcitType">
+		<xs:annotation>
+			<xs:documentation>Reference to the complete description of the entity types, attributes, and attribute values for the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Entity and Attribute Detail Citation"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="eadetcitType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+</xs:schema>

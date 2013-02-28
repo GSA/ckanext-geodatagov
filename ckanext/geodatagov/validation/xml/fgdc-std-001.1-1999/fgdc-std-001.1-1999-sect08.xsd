@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 sp1 (http://www.altova.com) by Systems Administrator (NCDDC) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" blockDefault="#all">
+	<xs:element name="citeinfo" type="citeinfoType">
+		<xs:annotation>
+			<xs:documentation>The recommended reference to be used for the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Citation Information"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="citeinfoType">
+		<xs:sequence>
+			<xs:element ref="origin" maxOccurs="unbounded"/>
+			<xs:element ref="pubdate"/>
+			<xs:element ref="pubtime" minOccurs="0"/>
+			<xs:element ref="title"/>
+			<xs:element ref="edition" minOccurs="0"/>
+			<xs:element ref="geoform"/>
+			<xs:element ref="serinfo" minOccurs="0"/>
+			<xs:element ref="pubinfo" minOccurs="0"/>
+			<xs:element ref="othercit" minOccurs="0"/>
+			<xs:element ref="onlink" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="lworkcit" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="origin" type="originType">
+		<xs:annotation>
+			<xs:documentation>The name of an organization or individual that developed the data set.  If the name of editors or compilers are provided, the name must be followed by '(ed.)' or '(comp.)' respectively.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Originator"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="originType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="Unknown"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="pubdate" type="pubdateType">
+		<xs:annotation>
+			<xs:documentation>The date when the data set is published or otherwise made available for release.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Publication Date"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="YYYY|YYYYMM|YYYYMMDD|bcYYYY|bcYYYYMM|bcYYYYMMDD|ccYYYYY...|cdYYYYY..."/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="pubdateType">
+		<xs:union memberTypes="FGDCdate">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="Unknown"/>
+					<xs:enumeration value="Unpublished material"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="pubtime" type="pubtimeType">
+		<xs:annotation>
+			<xs:documentation>The time of day when the data set is published or otherwise made available for release.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Publication Time"/>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="string-input-format" fixed="HH|HHMM|HHMMSS|HHMMSSSS|HHMMSSSSZ|HHMMSSSSshhmm|Values must follow the 24-hour timekeeping system"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="pubtimeType">
+		<xs:union memberTypes="FGDCtime">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="Unknown"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="title" type="titleType">
+		<xs:annotation>
+			<xs:documentation>The name by which the data set is known.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Title"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="titleType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="edition" type="editionType">
+		<xs:annotation>
+			<xs:documentation>The version of the title.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Edition"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="editionType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="geoform" type="geoformType">
+		<xs:annotation>
+			<xs:documentation>The mode in which the geospatial data are represented.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Geospatial Data Presentation Form"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="geoformType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="atlas"/>
+					<xs:enumeration value="audio"/>
+					<xs:enumeration value="diagram"/>
+					<xs:enumeration value="document"/>
+					<xs:enumeration value="globe"/>
+					<xs:enumeration value="map"/>
+					<xs:enumeration value="model"/>
+					<xs:enumeration value="multimedia presentation"/>
+					<xs:enumeration value="profile"/>
+					<xs:enumeration value="raster digital data"/>
+					<xs:enumeration value="remote-sensing image"/>
+					<xs:enumeration value="section"/>
+					<xs:enumeration value="spreadsheet"/>
+					<xs:enumeration value="tabular digital data"/>
+					<xs:enumeration value="vector digital data"/>
+					<xs:enumeration value="view"/>
+					<xs:enumeration value="video"/>
+					<xs:enumeration value="book chapter"/>
+					<xs:enumeration value="CAD data"/>
+					<xs:enumeration value="conference proceedings"/>
+					<xs:enumeration value="database"/>
+					<xs:enumeration value="figure"/>
+					<xs:enumeration value="hologram"/>
+					<xs:enumeration value="journal article"/>
+					<xs:enumeration value="pamphlet"/>
+					<xs:enumeration value="table (non-digital)"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="serinfo" type="serinfoType">
+		<xs:annotation>
+			<xs:documentation>The identification of the series publication of which the data set is a part.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Series Information"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="serinfoType">
+		<xs:sequence>
+			<xs:element ref="sername"/>
+			<xs:element ref="issue"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="sername" type="sernameType">
+		<xs:annotation>
+			<xs:documentation>The name of the series publication of which the data set is a part.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Series Name"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="sernameType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="issue" type="issueType">
+		<xs:annotation>
+			<xs:documentation>Information identifying the issue of the series publication of which the data set is a part.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Issue Identification"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="issueType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="pubinfo" type="pubinfoType">
+		<xs:annotation>
+			<xs:documentation>Publication details for published data sets.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Publication Information"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="pubinfoType">
+		<xs:sequence>
+			<xs:element ref="pubplace"/>
+			<xs:element ref="publish"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="pubplace" type="pubplaceType">
+		<xs:annotation>
+			<xs:documentation>The name of the city (and state or province, and country, if needed to identify the city) where the data set  as published or released.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Publication Place"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="pubplaceType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="publish" type="publishType">
+		<xs:annotation>
+			<xs:documentation>The name of the individual or organization that published the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Publisher"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="publishType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="othercit" type="othercitType">
+		<xs:annotation>
+			<xs:documentation>Other information required to complete the citation.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Other Citation Details"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="othercitType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="onlink" type="onlinkType">
+		<xs:annotation>
+			<xs:documentation>The name of an online computer resource that contains the data set.  Entries should follow the Uniform Resource Locator convention of the Internet.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Online Linkage"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="onlinkType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="lworkcit" type="lworkcitType">
+		<xs:annotation>
+			<xs:documentation>The information identifying a larger work in which the data set is included.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Larger Work Citation"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="is-recursive" fixed="true"/>
+				<xs:attribute name="recursive-class-name" fixed="Citeinfo"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="lworkcitType">
+		<xs:sequence>
+			<xs:element ref="citeinfo"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

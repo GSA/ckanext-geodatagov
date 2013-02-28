@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 sp1 (http://www.altova.com) by Systems Administrator (NCDDC) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" blockDefault="#all">
+	<xs:element name="metainfo" type="metainfoType">
+		<xs:annotation>
+			<xs:documentation>Information on the currentness of the metadata information, and the responsible party.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Metadata Reference Information"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkChron([metd,metrd]);checkChron([metrd,metfrd])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="metainfoType">
+		<xs:sequence>
+			<xs:element ref="metd"/>
+			<xs:element ref="metrd" minOccurs="0"/>
+			<xs:element ref="metfrd" minOccurs="0"/>
+			<xs:element ref="metc"/>
+			<xs:element ref="metstdn"/>
+			<xs:element ref="metstdv"/>
+			<xs:element ref="mettc" minOccurs="0"/>
+			<xs:element ref="metac" minOccurs="0"/>
+			<xs:element ref="metuc" minOccurs="0"/>
+			<xs:element ref="metsi" minOccurs="0"/>
+			<xs:element ref="metextns" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="metd" type="metdType">
+		<xs:annotation>
+			<xs:documentation>The date that the metadata were created or last updated.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Metadata Date"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="YYYY|YYYYMM|YYYYMMDD|bcYYYY|bcYYYYMM|bcYYYYMMDD|ccYYYYY...|cdYYYYY..."/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="metdType">
+		<xs:restriction base="FGDCdate"/>
+	</xs:simpleType>
+	<xs:element name="metrd" type="metrdType">
+		<xs:annotation>
+			<xs:documentation>The date of the latest review of the metadata entry.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Metadata Review Date"/>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="string-input-format" fixed="YYYY|YYYYMM|YYYYMMDD|bcYYYY|bcYYYYMM|bcYYYYMMDD|ccYYYYY...|cdYYYYY...|Metadata Review Date later than Metadata Date"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="metrdType">
+		<xs:restriction base="FGDCdate"/>
+	</xs:simpleType>
+	<xs:element name="metfrd" type="metfrdType">
+		<xs:annotation>
+			<xs:documentation>The date by which the metadata entry should be reviewed.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Metadata Future Review Date"/>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="string-input-format" fixed="YYYY|YYYYMM|YYYYMMDD|bcYYYY|bcYYYYMM|bcYYYYMMDD|ccYYYYY...|cdYYYYY...|Metadata Future Review Date later than Metadata Review Date"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="metfrdType">
+		<xs:restriction base="FGDCdate"/>
+	</xs:simpleType>
+	<xs:element name="metc" type="metcType">
+		<xs:annotation>
+			<xs:documentation>The party responsible for the metadata information.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Metadata Contact"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="metcType">
+		<xs:sequence>
+			<xs:element ref="cntinfo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="metstdn" type="metstdnType">
+		<xs:annotation>
+			<xs:documentation>The name of the metadata standard used to document the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Metadata Standard Name"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="metstdnType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="FGDC Content Standard for Digital Geospatial Metadata"/>
+					<xs:enumeration value="Content Standard for National Biological Information Infrastructure Metadata"/>
+					<xs:enumeration value="FGDC Biological Data Profile of the Content Standard for Digital Geospatial Metadata"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="metstdv" type="metstdvType">
+		<xs:annotation>
+			<xs:documentation>Identification of the version of the metadata standard used to document the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Metadata Standard Version"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="metstdvType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="mettc" type="mettcType">
+		<xs:annotation>
+			<xs:documentation>Form used to convey time of day information in the metadata entry.  Used if time of day information is included in the metadata for a data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Metadata Time Convention"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="mettcType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="local time"/>
+			<xs:enumeration value="local time with time differential factor"/>
+			<xs:enumeration value="universal time"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="metac" type="metacType">
+		<xs:annotation>
+			<xs:documentation>Restrictions and legal prerequisites for accessing the metadata.  These include any access constraints applied to assure the protection of privacy or intellectual property, and any special restrictions or limitations on obtaining the metadata.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Metadata Access Constraints"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="metacType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="metuc" type="metucType">
+		<xs:annotation>
+			<xs:documentation>Restrictions and legal prerequisites for using the metadata after access is granted.  These include any metadata use constraints applied to assure the protection of privacy or intellectual property, and any special restrictions or limitations on using the metadata.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Metadata Use Constraints"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="metucType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="metsi" type="metsiType">
+		<xs:annotation>
+			<xs:documentation>Handling restrictions imposed on the metadata because of national security,  privacy, or other concerns.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Metadata Security Information"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="metsiType">
+		<xs:sequence>
+			<xs:element ref="metscs"/>
+			<xs:element ref="metsc"/>
+			<xs:element ref="metshd"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="metscs" type="FGDCstring">
+		<xs:annotation>
+			<xs:documentation>Name of the classification system for the metadata.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Metadata Security Classification System"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="metsc" type="metscType">
+		<xs:annotation>
+			<xs:documentation>Name of the handling restrictions on the metadata.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Metadata Security Classification"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="metscType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="Confidential"/>
+					<xs:enumeration value="Restricted"/>
+					<xs:enumeration value="Secret"/>
+					<xs:enumeration value="Sensitive"/>
+					<xs:enumeration value="Top Secret"/>
+					<xs:enumeration value="Unclassified"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="metshd" type="metshdType">
+		<xs:annotation>
+			<xs:documentation>"Additional information about the restrictions on handling the metadata.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Metadata Security Handling Description"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="metshdType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="metextns" type="metextnsType">
+		<xs:annotation>
+			<xs:documentation>A reference to extended elements to the standard which may be defined by a metadata producer or a user community.  Extended elements are elements outside the Standard, but needed by the metadata producer.  If extended elements are created, they must follow the guidelines in Appendix D, Guidelines for Creating Extended Elements to the Content Standard for Digital Geospatial Metadata.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Metadata Extensions"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="other-validation-rules" fixed="checkProperties([onlink,metprof])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="metextnsType">
+		<xs:sequence>
+			<xs:element name="onlink" minOccurs="0" maxOccurs="unbounded">
+				<xs:simpleType>
+					<xs:restriction base="FGDCstring"/>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element ref="metprof" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="metprof" type="metprofType">
+		<xs:annotation>
+			<xs:documentation>The name given to a document that describes the application of the Standard to a specific user community.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Profile Name"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="metprofType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+</xs:schema>

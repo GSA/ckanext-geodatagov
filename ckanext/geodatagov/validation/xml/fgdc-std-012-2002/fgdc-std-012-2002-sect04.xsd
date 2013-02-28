@@ -1,0 +1,833 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 sp1 (http://www.altova.com) by Systems Administrator (NCDDC) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" blockDefault="#all">
+	<xs:complexType name="rseSprefType">
+		<xs:sequence>
+			<xs:element ref="horizsys" minOccurs="0"/>
+			<xs:element ref="vertdef" minOccurs="0"/>
+			<xs:element ref="georefin" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="rseVertdefType">
+		<xs:sequence>
+			<xs:element ref="altsys" minOccurs="0"/>
+			<xs:element ref="depthsys" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="rseAltsysType">
+		<xs:sequence>
+			<xs:element ref="altdatum"/>
+			<xs:element ref="altres" maxOccurs="unbounded"/>
+			<xs:choice>
+				<xs:element ref="altunits"/>
+				<xs:element ref="altlayer"/>
+			</xs:choice>
+			<xs:element ref="altenc"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="altlayer" type="altlayerType">
+		<xs:annotation>
+			<xs:documentation>System of atmospheric levels in which altitudes are recorded.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Altitude Distance Layer"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="altlayerType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="millibars"/>
+					<xs:enumeration value="theta value"/>
+					<xs:enumeration value="cloud layer"/>
+					<xs:enumeration value="atmosphere layer"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="georefin" type="georefinType">
+		<xs:annotation>
+			<xs:documentation>Information that will allow determination of geographical location of raster points.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Georeferencing Information"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([georecra,georbler])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="georefinType">
+		<xs:choice>
+			<xs:element ref="georecra"/>
+			<xs:element ref="georbler"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:element name="georecra" type="georecraType">
+		<xs:annotation>
+			<xs:documentation>Raster whose cells are regularly spaced in a geographic or map coordinate system defined in some Spatial Referencing System, such that any cell can be geolocated given its raster coordinate and the raster origin, cell spacing, and orientation, possibly including a terrain model. (&lt;i&gt;Note: Let a&lt;span class=&quot;subscript&quot;&gt;mn&lt;/span&gt; be the pixel grid point in the m&lt;span class=&quot;superscript&quot;&gt;th&lt;/span&gt; row and the n&lt;span class=&quot;superscript&quot;&gt;th&lt;/span&gt; column, with (x,y) the position of that grid point in map coordinates. Let the map position corresponding to the first element of the grid a&lt;span class=&quot;subscript&quot;&gt;11&lt;/span&gt; be (x&lt;span class=&quot;subscript&quot;&gt;0&lt;/span&gt;,y&lt;span class=&quot;subscript&quot;&gt;0&lt;/span&gt;). Then x = x&lt;span class=&quot;subscript&quot;&gt;0&lt;/span&gt; + (m-1)Δx&lt;span class=&quot;subscript&quot;&gt;m&lt;/span&gt; + (n-1)Δy&lt;span class=&quot;subscript&quot;&gt;m&lt;/span&gt; and y= y&lt;span class=&quot;subscript&quot;&gt;0&lt;/span&gt; + (m-1)&#916;x&lt;span class=&quot;subscript&quot;&gt;n&lt;/span&gt; + (n-1)&#916;y&lt;span class=&quot;subscript&quot;&gt;n&lt;/span&gt;, where the &#916; terms are defined in the elements below. The overlay is shown in Figure 3, with definitions of the individual pixels.&lt;/i&gt;)</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Georectified Raster"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="georecraType">
+		<xs:sequence>
+			<xs:element ref="pixlreso"/>
+			<xs:element ref="gridinit"/>
+			<xs:element ref="gridori"/>
+			<xs:element ref="ptpos"/>
+			<xs:element ref="storord"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="pixlreso" type="pixlresoType">
+		<xs:annotation>
+			<xs:documentation>Geographic dimensions corresponding to one raster pixel of processed data.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Pixel Resolution"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="pixlresoType">
+		<xs:sequence>
+			<xs:element ref="coordrep"/>
+			<xs:element ref="plandu"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="gridinit" type="gridinitType">
+		<xs:annotation>
+			<xs:documentation>Point on map (x&lt;span class=&quot;subscript&quot;&gt;0&lt;/span&gt;,y&lt;span class=&quot;subscript&quot;&gt;0&lt;/span&gt;) corresponding to first element of the pixel array.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Grid First Element"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="gridinitType">
+		<xs:sequence>
+			<xs:element ref="grinitx"/>
+			<xs:element ref="grinity"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="grinitx" type="xs:double">
+		<xs:annotation>
+			<xs:documentation>Value x&lt;span class=&quot;subscript&quot;&gt;0&lt;/span&gt; of x-coordinate on map at point corresponding to first element of pixel system.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Grid First Element Map X Coordinate"/>				
+				xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="grinity" type="xs:double">
+		<xs:annotation>
+			<xs:documentation>Value y&lt;span class=&quot;subscript&quot;&gt;0&lt;/span&gt; of y-coordinate on map at point corresponding to first element of pixel system.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Grid First Element Map Y Coordinate"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="gridori" type="gridoriType">
+		<xs:annotation>
+			<xs:documentation>Orientation of image pixel grid relative to map on which it is overlaid.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Grid Orientation"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="gridoriType">
+		<xs:sequence>
+			<xs:element ref="rowdeltx"/>
+			<xs:element ref="rowdelty"/>
+			<xs:element ref="coldeltx"/>
+			<xs:element ref="coldelty"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="rowdeltx" type="xs:double">
+		<xs:annotation>
+			<xs:documentation>Increment &#916;x&lt;span class=&quot;subscript&quot;&gt;m&lt;/span&gt; in map x-coordinates corresponding to increment of one grid row; a negative value means that map x-coordinate decreases with increasing row number.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Row Delta X"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="rowdelty" type="xs:double">
+		<xs:annotation>
+			<xs:documentation>Increment &#916;y&lt;span class=&quot;subscript&quot;&gt;m&lt;/span&gt; in map y-coordinates corresponding to increment of one grid row; a negative value means that map y-coordinate decreases with increasing row number.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Row Delta Y"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="coldeltx" type="xs:double">
+		<xs:annotation>
+			<xs:documentation>Increment &#916;x&lt;span class=&quot;subscript&quot;&gt;n&lt;/span&gt; in map x-coordinates corresponding to increment of one grid column; a negative value means that map x-coordinate decreases with increasing column number.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Column Delta X"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="coldelty" type="xs:double">
+		<xs:annotation>
+			<xs:documentation>Increment &#916;y&lt;span class=&quot;subscript&quot;&gt;n&lt;/span&gt; in map y-coordinates corresponding to increment of one grid column; a negative value means that map y-coordinate decreases with increasing column number.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Column Delta Y"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="ptpos" type="ptposType">
+		<xs:annotation>
+			<xs:documentation>The point in the pixel corresponding to the earth location of the pixel.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Point Position In Pixel"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="ptposType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="center"/>
+					<xs:enumeration value="lower left corner"/>
+					<xs:enumeration value="lower right corner"/>
+					<xs:enumeration value="upper left corner"/>
+					<xs:enumeration value="upper right corner"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="storord" type="storordType">
+		<xs:annotation>
+			<xs:documentation>Description of which index varies most rapidly in the sequential storage of raster elements: row index (row major) or column index (column major).</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Storage Order"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="storordType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="row major"/>
+					<xs:enumeration value="column major"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="georbler" type="georblerType">
+		<xs:annotation>
+			<xs:documentation>Raster whose cells may be irregularly spaced in any geographic or map projection coordinate system, whose cells can be geolocated using geolocation information supplied with the data but not from the raster properties alone.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Georeferenceable Raster"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="georblerType">
+		<xs:sequence>
+			<xs:element ref="georefde" maxOccurs="unbounded"/>
+			<xs:element ref="aerotref" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="swtrkinf" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="georefde" type="georefdeType">
+		<xs:annotation>
+			<xs:documentation>Description of information provided in metadata that allows the geographic or map location of raster points to be located.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Georeferencing Description"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([gcptinfo,insspgeo,refrpoly,othrefde])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="georefdeType">
+		<xs:choice>
+			<xs:element ref="gcptinfo"/>
+			<xs:element ref="insspgeo"/>
+			<xs:element ref="refrpoly"/>
+			<xs:element ref="othrefde"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:element name="gcptinfo" type="gcptinfoType">
+		<xs:annotation>
+			<xs:documentation>Information describing data points for which both raster and geographic locations are available that can be used to relate raster and geographic coordinates at other points.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Ground Control Point Information"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkCompoundNumber([gcptdesc,gcptpos]);checkObjRelation([gcporg,location [Control Point Earth Location] library [Control Point Identification]])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="gcptinfoType">
+		<xs:sequence>
+			<xs:element ref="gcporg"/>
+			<xs:sequence maxOccurs="unbounded">
+				<xs:element ref="gcptdesc"/>
+				<xs:element ref="gcptpos" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="gcporg" type="gcporgType">
+		<xs:annotation>
+			<xs:documentation>Specification as to whether geographic locations of control points are supplied together with raster points or are in separate library.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Ground Control Point Organization"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="gcporgType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="location"/>
+			<xs:enumeration value="library"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="gcptdesc" type="gcptdescType">
+		<xs:annotation>
+			<xs:documentation>Lineage and applicability of ground control points.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Ground Control Point Description"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="gcptdescType">
+		<xs:sequence>
+			<xs:element ref="gcptype"/>
+			<xs:element ref="gcpori" minOccurs="0"/>
+			<xs:element ref="gcpusefl" minOccurs="0"/>
+			<xs:element ref="gcpxaccu" minOccurs="0"/>
+			<xs:element ref="gcpyaccu" minOccurs="0"/>
+			<xs:element ref="gcpzaccu" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="gcptype" type="gcptypeType">
+		<xs:annotation>
+			<xs:documentation>Direction or directions for which control point provides georeference information.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Control Point Type"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="gcptypeType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="full"/>
+			<xs:enumeration value="horizontal"/>
+			<xs:enumeration value="vertical"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="gcpori" type="gcporiType">
+		<xs:annotation>
+			<xs:documentation>The source of the ground control point measurement.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Control Point Origin"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="gcporiType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="terrestrial"/>
+					<xs:enumeration value="global positioning system"/>
+					<xs:enumeration value="aerotriangulation"/>
+					<xs:enumeration value="tie point"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="gcpusefl" type="gcpuseflType">
+		<xs:annotation>
+			<xs:documentation>Whether the ground control point has previously been used and verified.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Control Point Use Flag"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="gcpuseflType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="new"/>
+					<xs:enumeration value="used"/>
+					<xs:enumeration value="verified"/>
+					<xs:enumeration value="not verified"/>
+					<xs:enumeration value="used and verified"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="gcpxaccu" type="nonNegativeDoubleType">
+		<xs:annotation>
+			<xs:documentation>&lt;i&gt;A priori&lt;/i&gt; standard deviation of the horizontal coordinates of the ground control point, in coordinate units specified under Horizontal Coordinate System Definition.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Control Point Horizontal X Accuracy"/>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="string-input-format" fixed="Control Point Horizontal X Accuracy &gt;= 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="gcpyaccu" type="nonNegativeDoubleType">
+		<xs:annotation>
+			<xs:documentation>&lt;i&gt;A priori&lt;/i&gt; standard deviation of the horizontal coordinates of the ground control point, in coordinate units specified under Horizontal Coordinate System Definition.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Control Point Horizontal Y Accuracy"/>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="string-input-format" fixed="Control Point Horizontal Y Accuracy &gt;= 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="gcpzaccu" type="nonNegativeDoubleType">
+		<xs:annotation>
+			<xs:documentation>&lt;i&gt;A priori&lt;/i&gt; standard deviation of the vertical coordinate of the ground control point, in units specified by Altitude Distance Units.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Control Point Vertical Accuracy"/>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="string-input-format" fixed="Control Point Vertical Accuracy &gt;= 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="gcptpos" type="gcptposType">
+		<xs:annotation>
+			<xs:documentation>Location of individual control points, defined separately for every point, in both raster and geographic or map coordinate systems.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Ground Control Point Position"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([gcpidnt,gcpearlc])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="gcptposType">
+		<xs:sequence>
+			<xs:element ref="conptrpo"/>
+			<!-- TODO the following should have the following validation:
+                        present and mandatory if value of Ground Control Point Organization is 'location' -->
+			<!-- TODO the following should have the following validation:
+                        present and mandatory if value of Ground Control Point Organization is 'library' -->
+			<xs:choice>
+				<xs:element ref="gcpearlc"/>
+				<xs:element ref="gcpidnt"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="conptrpo" type="conptrpoType">
+		<xs:annotation>
+			<xs:documentation>Position in raster array of individual ground control point used in geolocating data.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Control Point Raster Position"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="conptrpoType">
+		<xs:sequence>
+			<xs:element ref="gcprow"/>
+			<xs:element ref="gcpcolum"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="gcprow" type="nonNegativeDoubleType">
+		<xs:annotation>
+			<xs:documentation>Value of row coordinate at ground control point position in raster grid.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Control Point Row"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="Control Point Row &gt;= 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="gcpcolum" type="nonNegativeDoubleType">
+		<xs:annotation>
+			<xs:documentation>Value of column coordinate at ground control point position in raster grid.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Control Point Column"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="Control Point Column &gt;= 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="gcpearlc" type="gcpearlcType">
+		<xs:annotation>
+			<xs:documentation>Geographic or map location of ground control point.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Control Point Earth Location"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="gcpearlcType">
+		<xs:sequence>
+			<xs:element ref="gcpxval"/>
+			<xs:element ref="gcpyval"/>
+			<xs:element ref="gcpzval" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="gcpxval" type="xs:double">
+		<xs:annotation>
+			<xs:documentation>Value of map x-coordinate at control point location.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Control Point x Value"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="gcpyval" type="xs:double">
+		<xs:annotation>
+			<xs:documentation>Value of map y-coordinate at control point location.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Control Point y Value"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="gcpzval" type="xs:double">
+		<xs:annotation>
+			<xs:documentation>Value of vertical coordinate at control point location.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Control Point z Value"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="gcpidnt" type="gcpidntType">
+		<xs:annotation>
+			<xs:documentation>Information allowing the user to find the location of a control point from a catalogue.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Control Point Identification"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="gcpidntType">
+		<xs:sequence>
+			<xs:element ref="gcpid"/>
+			<xs:element ref="gcpauth"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="gcpid" type="FGDCstring">
+		<xs:annotation>
+			<xs:documentation>Identifier assigned to control point in library.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Control Point ID"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="gcpauth" type="gcpauthType">
+		<xs:annotation>
+			<xs:documentation>Contact who can supply ground control point coordinates given identifier.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Control Point Authority"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="gcpauthType">
+		<xs:sequence>
+			<xs:element ref="citeinfo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="insspgeo" type="insspgeoType">
+		<xs:annotation>
+			<xs:documentation>Information relating coordinate system of a particular instrument to ground coordinate system.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Instrument Specific Georeferencing"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="insspgeoType">
+		<xs:sequence>
+			<xs:element ref="posiinfo" maxOccurs="unbounded"/>
+			<xs:element ref="accexori" minOccurs="0"/>
+			<xs:element ref="pcrotseq"/>
+			<xs:element ref="axrotcon"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="posiinfo" type="posiinfoType">
+		<xs:annotation>
+			<xs:documentation>Orientation of instrument and detector projection.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Positional Information"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="posiinfoType">
+		<xs:sequence>
+			<xs:element ref="prjcxpos"/>
+			<xs:element ref="prjcypos"/>
+			<xs:element ref="prjczpos"/>
+			<xs:element ref="omegarll"/>
+			<xs:element ref="phipitch"/>
+			<xs:element ref="kappayaw"/>
+			<xs:element ref="attanglu"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="prjcxpos" type="xs:double">
+		<xs:annotation>
+			<xs:documentation>X-component of the position of the projection center in the ground coordinate system defined under Horizontal Coordinate System Definition.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Projection Center X Position"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="prjcypos" type="xs:double">
+		<xs:annotation>
+			<xs:documentation>Y-component of the position of the projection center in the ground coordinate system defined under Horizontal Coordinate System Definition.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Projection Center Y Position"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="prjczpos" type="xs:double">
+		<xs:annotation>
+			<xs:documentation>Z-component of the position of the projection center in the ground coordinate system defined under Vertical Coordinate System Definition.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Projection Center Z Position"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="omegarll" type="xs:double">
+		<xs:annotation>
+			<xs:documentation>Roll angle omega of image coordinate system relative to ground coordinate system, in units defined by Attitude Angular Units, measured clockwise around the positive x-axis (the direction of motion).</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Roll"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="phipitch" type="xs:double">
+		<xs:annotation>
+			<xs:documentation>Pitch angle phi of image coordinate system relative to ground coordinate system, in units defined by Attitude Angular Units, measured clockwise around the positive y-axis (&lt;i&gt;z&lt;/i&gt; X &lt;i&gt;x&lt;/i&gt;).</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Pitch"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="kappayaw" type="xs:double">
+		<xs:annotation>
+			<xs:documentation>Yaw angle kappa of image coordinate system relative to ground coordinate system, in units defined by Attitude Angular Units, measured clockwise around the positive z-axis (vertical).</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Yaw"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="attanglu" type="attangluType">
+		<xs:annotation>
+			<xs:documentation>Units of angular measure in which Roll, Pitch, and Yaw are expressed.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Attitude Angular Units"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="attangluType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="degrees"/>
+					<xs:enumeration value="radians"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="accexori" type="accexoriType">
+		<xs:annotation>
+			<xs:documentation>Uncertainties in the parameters of exterior orientation.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Exterior Orientation Accuracy"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="accexoriType">
+		<xs:sequence>
+			<xs:element ref="accxpos"/>
+			<xs:element ref="accypos"/>
+			<xs:element ref="acczpos"/>
+			<xs:element ref="accomega"/>
+			<xs:element ref="accphi"/>
+			<xs:element ref="acckappa"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="accxpos" type="nonNegativeDoubleType">
+		<xs:annotation>
+			<xs:documentation>Standard deviation of x coordinate of projection center.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="X Position Accuracy"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="X Position Accuracy &gt;= 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="accypos" type="nonNegativeDoubleType">
+		<xs:annotation>
+			<xs:documentation>Standard deviation of y coordinate of projection center.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Y Position Accuracy"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="Y Position Accuracy &gt;= 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="acczpos" type="nonNegativeDoubleType">
+		<xs:annotation>
+			<xs:documentation>Standard deviation of z coordinate of projection center.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Z Position Accuracy"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="Z Position Accuracy &gt;= 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="accomega" type="nonNegativeDoubleType">
+		<xs:annotation>
+			<xs:documentation>Standard deviation of roll angle, omega, in same units as angle.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Roll Accuracy"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="Roll Accuracy &gt;= 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="accphi" type="nonNegativeDoubleType">
+		<xs:annotation>
+			<xs:documentation>Standard deviation of pitch angle, phi, in same units as angle.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Pitch Accuracy"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="Pitch Accuracy &gt;= 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="acckappa" type="nonNegativeDoubleType">
+		<xs:annotation>
+			<xs:documentation>Standard deviation of yaw angle, kappa, in same units as angle.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Yaw Accuracy"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="Yaw Accuracy &gt;= 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="pcrotseq" type="pcrotseqType">
+		<xs:annotation>
+			<xs:documentation>Sequence of rotations in roll, pitch and yaw</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Rotation Sequence"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="pcrotseqType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="123"/>
+			<xs:enumeration value="132"/>
+			<xs:enumeration value="213"/>
+			<xs:enumeration value="231"/>
+			<xs:enumeration value="312"/>
+			<xs:enumeration value="321"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="axrotcon" type="axrotconType">
+		<xs:annotation>
+			<xs:documentation>Description of whether the coordinate system axes are rotated or remain fixed with each step of application of the rotation matrix.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Axis Rotation Convention"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="axrotconType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="rotated"/>
+			<xs:enumeration value="fixed"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="refrpoly" type="refrpolyType">
+		<xs:annotation>
+			<xs:documentation>Polynomial function used to relate image and ground positions.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Referencing Polynomial"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="refrpolyType">
+		<xs:sequence>
+			<xs:element ref="polyfunc"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="othrefde" type="FGDCstring">
+		<xs:annotation>
+			<xs:documentation>Text description of other method for georeferencing.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Other Georeferencing Description"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="aerotref" type="aerotrefType">
+		<xs:annotation>
+			<xs:documentation>Reference containing information describing photogrammetric triangulation using aerial images.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Aerotriangulation Reference"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="aerotrefType">
+		<xs:sequence>
+			<xs:element ref="citeinfo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="swtrkinf" type="swtrkinfType">
+		<xs:annotation>
+			<xs:documentation>Properties of the swath track on the ground.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Swath Track Information"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="swtrkinfType">
+		<xs:sequence>
+			<xs:element ref="grndshpe"/>
+			<xs:element ref="xtrckmot"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="grndshpe" type="FGDCstring">
+		<xs:annotation>
+			<xs:documentation>Shape of pixel on ground.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Ground Shape"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="xtrckmot" type="FGDCstring">
+		<xs:annotation>
+			<xs:documentation>Direction and pattern of measurements relative to track.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Cross Track Motion"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+</xs:schema>

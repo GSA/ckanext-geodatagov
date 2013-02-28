@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 sp1 (http://www.altova.com) by Systems Administrator (NCDDC) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" blockDefault="#all">
+	<xs:element name="timeinfo" type="timeinfoType">
+		<xs:annotation>
+			<xs:documentation>Information about the date and time of an event.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Time Period Information"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([sngdate,mdattim,rngdates])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="timeinfoType">
+		<xs:choice>
+			<xs:element ref="sngdate"/>
+			<xs:element ref="mdattim"/>
+			<xs:element ref="rngdates"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:element name="sngdate" type="sngdateType">
+		<xs:annotation>
+			<xs:documentation>Means of encoding a single date and time.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Single Date/Time"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="sngdateType">
+		<xs:sequence>
+			<xs:element ref="caldate"/>
+			<xs:element ref="time"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="caldate" type="caldateType">
+		<xs:annotation>
+			<xs:documentation>The year (and optionally month, or month and day).</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Calendar Date"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="YYYY|YYYYMM|YYYYMMDD|bcYYYY|bcYYYYMM|bcYYYYMMDD|ccYYYYY...|cdYYYYY..."/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="caldateType">
+		<xs:union memberTypes="FGDCdate">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="Unknown"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="time" type="timeType">
+		<xs:annotation>
+			<xs:documentation>The hour and minute, and (optionally second) of the day.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Time of Day"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="HH|HHMM|HHMMSS|HHMMSSSS|HHMMSSSSZ|HHMMSSSSshhmm|Values must follow the 24-hour timekeeping system"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="timeType">
+		<xs:union memberTypes="FGDCtime">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="Unknown"/>
+					<xs:enumeration value="Local time"/>
+					<xs:enumeration value="Local time to the minute"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="mdattim" type="mdattimType">
+		<xs:annotation>
+			<xs:documentation>Means of encoding multiple individual dates and times.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Multiple Dates/Times"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="mdattimType">
+		<xs:sequence>
+			<xs:element ref="sngdate" minOccurs="2" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="rngdates" type="rngdatesType">
+		<xs:annotation>
+			<xs:documentation>Means of encoding a range of dates and times.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Range of Dates/Times"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkChron([begdate,enddate])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="rngdatesType">
+		<xs:sequence>
+			<xs:element ref="begdate"/>
+			<xs:element ref="begtime"/>
+			<xs:element ref="enddate"/>
+			<xs:element ref="endtime"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="begdate" type="begdateType">
+		<xs:annotation>
+			<xs:documentation>The first year (and optionally month, or month and day) of the event.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Beginning Date"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="YYYY|YYYYMM|YYYYMMDD|bcYYYY|bcYYYYMM|bcYYYYMMDD|ccYYYYY...|cdYYYYY...|Beginning Date &lt; Ending Date"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="begdateType">
+		<xs:union memberTypes="FGDCdate">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="Unknown"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="begtime" type="begtimeType">
+		<xs:annotation>
+			<xs:documentation>The first hour and minute, or (optionally second) of the day for the event.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Beginning Time"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="HH|HHMM|HHMMSS|HHMMSSSS|HHMMSSSSZ|HHMMSSSSshhmm|Values must follow the 24-hour timekeeping system"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="begtimeType">
+		<xs:union memberTypes="FGDCtime">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="Unknown"/>
+					<xs:enumeration value="Local time"/>
+					<xs:enumeration value="Local time to the minute"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="enddate" type="enddateType">
+		<xs:annotation>
+			<xs:documentation>The last year (and optionally month, or month and day) for the event.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Ending Date"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="YYYY|YYYYMM|YYYYMMDD|bcYYYY|bcYYYYMM|bcYYYYMMDD|ccYYYYY...|cdYYYYY..."/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="enddateType">
+		<xs:union memberTypes="FGDCdate">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="Unknown"/>
+					<xs:enumeration value="Present"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="endtime" type="endtimeType">
+		<xs:annotation>
+			<xs:documentation>The last hour and minute, or (optionally second) of the day for the event.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Ending Time"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="HH|HHMM|HHMMSS|HHMMSSSS|HHMMSSSSZ|HHMMSSSSshhmm|Values must follow the 24-hour timekeeping system"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="endtimeType">
+		<xs:union memberTypes="FGDCtime">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="Unknown"/>
+					<xs:enumeration value="Local time"/>
+					<xs:enumeration value="Local time to the minute"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+</xs:schema>

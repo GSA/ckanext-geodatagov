@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 sp1 (http://www.altova.com) by Systems Administrator (NCDDC) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" blockDefault="#all">
+	<xs:complexType name="rseSpdoinfoType">
+		<xs:sequence>
+			<xs:element ref="indspref" minOccurs="0"/>
+			<xs:sequence minOccurs="0">
+				<xs:element ref="direct"/>
+				<xs:choice minOccurs="0">
+					<xs:element ref="ptvctinf"/>
+					<xs:element ref="rastinfo"/>
+				</xs:choice>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="rseRastinfoType">
+		<xs:sequence>
+			<xs:element ref="cvaltype"/>
+			<xs:choice>
+				<xs:sequence>
+					<xs:element ref="rasttype"/>
+					<xs:sequence minOccurs="0">
+						<xs:element ref="rowcount"/>
+						<xs:element ref="colcount"/>
+						<xs:element ref="vrtcount" minOccurs="0"/>
+					</xs:sequence>
+				</xs:sequence>
+				<xs:element ref="dimdesc"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="cvaltype" type="cvaltypeType">
+		<xs:annotation>
+			<xs:documentation>Bit representation of data value in raster cell.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Cell Value Type"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="cvaltypeType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="unsigned eight-bit integer"/>
+					<xs:enumeration value="signed eight-bit integer"/>
+					<xs:enumeration value="big endian unsigned sixteen-bit integer"/>
+					<xs:enumeration value="big endian signed sixteen-bit integer"/>
+					<xs:enumeration value="little endian unsigned sixteen-bit integer"/>
+					<xs:enumeration value="little endian signed sixteen-bit integer"/>
+					<xs:enumeration value="big endian unsigned thirty-two bit integer"/>
+					<xs:enumeration value="big endian signed thirty-two bit integer"/>
+					<xs:enumeration value="little-endian unsigned thirty-two bit integer"/>
+					<xs:enumeration value="little endian signed thirty-two bit integer"/>
+					<xs:enumeration value="big endian single precision IEEE floating point"/>
+					<xs:enumeration value="big endian double precision IEEE floating point"/>
+					<xs:enumeration value="little endian single precision IEEE floating point"/>
+					<xs:enumeration value="little endian double precision IEEE floating point"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="dimdesc" type="dimdescType">
+		<xs:annotation>
+			<xs:documentation>Specification for the independent axes in the coordinate system in which spatial data are located.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Dimension Description"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMin([nodatdim,0]);minDefinedByDataElement([nodatdim,dimprops])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="dimdescType">
+		<xs:sequence>
+			<xs:element ref="nodatdim"/>
+			<xs:element ref="dimprops" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="nodatdim" type="wholeNumber">
+		<xs:annotation>
+			<xs:documentation>Number of axes used in spatial data matrix.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Number of Data Dimensions"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="Number of Data Dimensions &gt; 0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="wholeNumber">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="dimprops" type="dimpropType">
+		<xs:annotation>
+			<xs:documentation>Description of individual axis in spatial data matrix.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Dimension Properties"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="dimpropType">
+		<xs:sequence>
+			<xs:element ref="namedim"/>
+			<xs:element ref="dimcount"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="namedim" type="namedimType">
+		<xs:annotation>
+			<xs:documentation>Designation assigned to an axis.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Name of Dimension"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="namedimType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="row"/>
+					<xs:enumeration value="column"/>
+					<xs:enumeration value="vertical"/>
+					<xs:enumeration value="band"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="dimcount" type="dimcountType">
+		<xs:annotation>
+			<xs:documentation>The maximum number of data points along the corresponding axis.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Dimension Count"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="Dimension Count &gt;= 1"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="dimcountType">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

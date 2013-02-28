@@ -1,0 +1,688 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 sp1 (http://www.altova.com) by Systems Administrator (NCDDC) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" blockDefault="#all">
+	<!-- redefined for RSE -->
+	<xs:complexType name="rseDataqualType">
+		<xs:sequence>
+			<xs:element ref="attracc" minOccurs="0"/>
+			<xs:element ref="logic"/>
+			<xs:element ref="complete"/>
+			<xs:element ref="posacc" minOccurs="0"/>
+			<xs:element ref="lineage"/>
+			<xs:element ref="imagqual" minOccurs="0"/>
+			<xs:element ref="acqinfo" minOccurs="0"/>
+			<xs:element ref="cloud" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="rseLineageType">
+		<xs:sequence>
+			<xs:element ref="srcinfo" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="procstep" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="rseProcstepType">
+		<xs:sequence>
+			<xs:element ref="procdesc"/>
+			<xs:element ref="srcused" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="procdate"/>
+			<xs:element ref="proctime" minOccurs="0"/>
+			<xs:element ref="srcprod" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="proccont" minOccurs="0"/>
+			<xs:element ref="algoinfo" minOccurs="0"/>
+			<xs:element ref="procinfo" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="algoinfo" type="algoinfoType">
+		<xs:annotation>
+			<xs:documentation>Details of the methodology by which geographic information was derived from the instrument readings.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Algorithm Information"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="algoinfoType">
+		<xs:sequence>
+			<xs:element ref="algoid"/>
+			<xs:element ref="algodesc"/>
+			<xs:element ref="algochhi" maxOccurs="unbounded"/>
+			<xs:element ref="algprevi" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="algoid" type="algoidType">
+		<xs:annotation>
+			<xs:documentation>Information identifying the algorithm and version or date.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Algorithm Identifiers"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="algoidType">
+		<xs:sequence>
+			<xs:element ref="citeinfo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="algodesc" type="algodescType">
+		<xs:annotation>
+			<xs:documentation>Kinds of material providing a description of the algorithm used to generate the data.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Algorithm Description"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([algotexd,algoref])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="algodescType">
+		<xs:choice>
+			<xs:element ref="algotexd"/>
+			<xs:element ref="algoref"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:element name="algotexd" type="algotexdType">
+		<xs:annotation>
+			<xs:documentation>Text description of algorithm used to generate the data.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Algorithm Text Description"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="algotexdType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="algoref" type="algorefType">
+		<xs:annotation>
+			<xs:documentation>Reference to document containing description of algorithm.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Algorithm Reference"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="algorefType">
+		<xs:sequence>
+			<xs:element ref="citeinfo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="algochhi" type="algochhiType">
+		<xs:annotation>
+			<xs:documentation>Description of the modifications of the algorithm in its development from version to version.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Algorithm Change History"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([algochde,algochrf])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="algochhiType">
+		<xs:choice>
+			<xs:element ref="algochde"/>
+			<xs:element ref="algochrf"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:element name="algochde" type="algochdeType">
+		<xs:annotation>
+			<xs:documentation>Information included with dataset describing modifications of the algorithm in its development from version to version.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Algorithm Change Description"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="is-recursive" fixed="true"/>
+				<xs:attribute name="recursive-class-name" fixed="Procstep"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="algochdeType">
+		<xs:sequence>
+			<xs:element ref="procstep" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="algochrf" type="algochrfType">
+		<xs:annotation>
+			<xs:documentation>Reference to document describing modifications of the algorithm in its development from version to version.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Algorithm Change Reference"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="algochrfType">
+		<xs:sequence>
+			<xs:element ref="citeinfo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="algprevi" type="algpreviType">
+		<xs:annotation>
+			<xs:documentation>Description, including dates, of peer review of the algorithm for purposes of ensuring its quality.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Algorithm Peer Review Information"/>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([algprevd,algprevr])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="algpreviType">
+		<xs:choice>
+			<xs:element ref="algprevd"/>
+			<xs:element ref="algprevr"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:element name="algprevd" type="algprevdType">
+		<xs:annotation>
+			<xs:documentation>Description accompanying dataset, including dates, of peer review of the algorithm for purposes of ensuring its quality.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Algorithm Peer Review Description"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="is-recursive" fixed="true"/>
+				<xs:attribute name="recursive-class-name" fixed="Procstep"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="algprevdType">
+		<xs:sequence>
+			<xs:element ref="procstep" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="algprevr" type="algprevrType">
+		<xs:annotation>
+			<xs:documentation>Reference to document describing peer review of the algorithm for purposes of ensuring its quality, including dates.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Algorithm Peer Review Reference"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="algprevrType">
+		<xs:sequence>
+			<xs:element ref="citeinfo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="procinfo" type="procinfoType">
+		<xs:annotation>
+			<xs:documentation>Comprehensive information about the procedure by which the algorithm was applied to derive geographic data from the raw instrument measurements, such as datasets, software used, and the processing environment.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Processing Information"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="procinfoType">
+		<xs:sequence>
+			<xs:element ref="procidfs"/>
+			<xs:element ref="procinp" maxOccurs="unbounded"/>
+			<xs:element ref="ancdata" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="procsoft"/>
+			<xs:element ref="procprcd"/>
+			<xs:element ref="procchhi" minOccurs="0"/>
+			<xs:element ref="procdoc" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- procidsfs hierarchy -->
+	<xs:element name="procidfs" type="procidfsType">
+		<xs:annotation>
+			<xs:documentation>Information to identify processing package that produced the data.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Processing Identifiers"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="procidfsType">
+		<xs:sequence>
+			<xs:element ref="citeinfo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- procinp hierarchy -->
+	<xs:element name="procinp" type="procinpType">
+		<xs:annotation>
+			<xs:documentation>The data used as input to single or multistage processing used to derive product.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Processing Input Dataset"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([prindesc,prinref])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="procinpType">
+		<xs:sequence>
+			<xs:element ref="inpdatid"/>
+			<xs:choice>
+				<xs:element ref="prindesc"/>
+				<xs:element ref="prinref"/>
+			</xs:choice>
+			<xs:element ref="prinlevl" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="inpdatid" type="inpdatidType">
+		<xs:annotation>
+			<xs:documentation>Unique identifier for input dataset.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Input Dataset Identifier"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="inpdatidType">
+		<xs:sequence>
+			<xs:element ref="datsetid"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="prindesc" type="prindescType">
+		<xs:annotation>
+			<xs:documentation>Description of input datasets for processing.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Input Description"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="prindescType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="prinref" type="prinrefType">
+		<xs:annotation>
+			<xs:documentation>Reference to document describing input to processing.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Input Reference"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="prinrefType">
+		<xs:sequence>
+			<xs:element ref="citeinfo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="prinlevl" type="prinlevlType">
+		<xs:annotation>
+			<xs:documentation>Data distributor's code that identifies the degree of radiometric and geometric processing applied to the data defined in Processing Input Dataset.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Input Level"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="prinlevlType">
+		<xs:sequence>
+			<xs:element ref="proclevl"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ancdata hierarchy -->
+	<xs:element name="ancdata" type="ancdataType">
+		<xs:annotation>
+			<xs:documentation>Data other than input required to process the input data.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Ancillary Dataset"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([ancdesc,ancref])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="ancdataType">
+		<xs:sequence>
+			<xs:element ref="ancdatid" minOccurs="0"/>
+			<xs:choice>
+				<xs:element ref="ancdesc"/>
+				<xs:element ref="ancref"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="ancdatid" type="ancdatidType">
+		<xs:annotation>
+			<xs:documentation>Unique identifier for ancillary dataset.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Ancillary Dataset Identifier"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="ancdatidType">
+		<xs:sequence>
+			<xs:element ref="datsetid"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="ancdesc" type="ancdescType">
+		<xs:annotation>
+			<xs:documentation>Description of ancillary data and descriptive parameters used in processing step.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Ancillary Description"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="ancdescType">
+		<xs:sequence>
+			<xs:element ref="ancdsdes"/>
+			<xs:element ref="procpmcl" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="ancdsdes" type="ancdsdesType">
+		<xs:annotation>
+			<xs:documentation>Description of ancillary datasets for processing.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Ancillary Dataset Description"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="ancdsdesType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="procpmcl" type="procpmclType">
+		<xs:annotation>
+			<xs:documentation>Parameters to control processing operations, entered at run time.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Command Line Processing Parameter"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="procpmclType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="ancref" type="ancrefType">
+		<xs:annotation>
+			<xs:documentation>Reference to document describing ancillary data.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Ancillary Reference"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="ancrefType">
+		<xs:sequence>
+			<xs:element ref="citeinfo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- procsoft hierarchy -->
+	<xs:element name="procsoft" type="procsoftType">
+		<xs:annotation>
+			<xs:documentation>The computer programs used to process data from one level to another.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Processing Software"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([prsodesc,prsoref])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="procsoftType">
+		<xs:choice>
+			<xs:element ref="prsodesc"/>
+			<xs:element ref="prsoref"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:element name="prsodesc" type="prsodescType">
+		<xs:annotation>
+			<xs:documentation>Text description of processing software.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Processing Software Description"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="prsodescType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="prsoref" type="prsorefType">
+		<xs:annotation>
+			<xs:documentation>Reference to document describing processing software.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Processing Software Reference"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="prsorefType">
+		<xs:sequence>
+			<xs:element ref="citeinfo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- procprcd hierarch -->
+	<xs:element name="procprcd" type="procprcdType">
+		<xs:annotation>
+			<xs:documentation>Description of decision parameters in and circumstances and methods of processing.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Processing Procedure"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="procprcdType">
+		<xs:sequence>
+			<xs:element ref="prunhist"/>
+			<xs:element ref="procenv"/>
+			<xs:element ref="procpdes" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="prunhist" type="prunhistType">
+		<xs:annotation>
+			<xs:documentation>History of processing runs that create data set described by metadata.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Processing Run History"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="is-recursive" fixed="true"/>
+				<xs:attribute name="recursive-class-name" fixed="Procstep"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="prunhistType">
+		<xs:sequence>
+			<xs:element ref="procstep" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="procenv" type="procenvType">
+		<xs:annotation>
+			<xs:documentation>The environment in which the processing was carried out, including, but not limited to, the platform, the operating system name and version, and other configuration control information.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Processing Environment"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="procenvType">
+		<xs:sequence>
+			<xs:element ref="native"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="procpdes" type="procpdesType">
+		<xs:annotation>
+			<xs:documentation>Additional details about the processing procedure.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Processing Procedure Description"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="procpdesType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<!-- procchhi hierarchy -->
+	<xs:element name="procchhi" type="procchhiType">
+		<xs:annotation>
+			<xs:documentation>Description of the changes in processing procedure from version to version.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Processing Change History"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="is-recursive" fixed="true"/>
+				<xs:attribute name="recursive-class-name" fixed="Procstep"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="procchhiType">
+		<xs:sequence>
+			<xs:element ref="procstep" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- procdoc hierarch -->
+	<xs:element name="procdoc" type="procdocType">
+		<xs:annotation>
+			<xs:documentation>Reference to documentation describing the processing.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Processing Documentation"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="procdocType">
+		<xs:sequence>
+			<xs:element ref="citeinfo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="imagqual" type="imagqualType">
+		<xs:annotation>
+			<xs:documentation>Qualitative description of image quality.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Image Quality"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="imagqualType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="acqinfo" type="acqinfoType">
+		<xs:annotation>
+			<xs:documentation>Information describing configuration under which data were acquired, including satellite and solar position and time correction.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Acquisition Information"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="acqinfoType">
+		<xs:sequence>
+			<xs:element ref="satlocza"/>
+			<xs:element ref="satlocaa"/>
+			<xs:element ref="solarzea"/>
+			<xs:element ref="solaraza"/>
+			<xs:element ref="relazi" minOccurs="0"/>
+			<xs:element ref="clocdrft"/>
+			<xs:element ref="ascdscin"/>
+			<xs:element ref="nadir" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="satlocza" type="FGDClongitude">
+		<xs:annotation>
+			<xs:documentation>The angle at the viewed point between the zenith at the viewed point and the satellite, in degrees.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Satellite/Local Zenith Angle"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="-180.0 &lt;= Satellite/Local Zenith Angle &lt;= 180.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="satlocaa" type="FGDClongitude">
+		<xs:annotation>
+			<xs:documentation>The angle at the viewed point, measured in the horizontal plane at the viewed point, between the north direction and the direction to the satellite, measured in degrees eastward from north.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Satellite/Local Azimuth Angle"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="-180.0 &lt;= Satellite/Local Azimuth Angle &lt;= 180.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="solarzea" type="FGDClongitude">
+		<xs:annotation>
+			<xs:documentation>The angle at the viewed point between the zenith at the viewed point and the Sun, in degrees.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Solar Zenith Angle"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="-180.0 &lt;= Solar Zenith Angle &lt;= 180.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="solaraza" type="FGDClongitude">
+		<xs:annotation>
+			<xs:documentation>The angle at the viewed point, measured in the horizontal plane at the viewed point, between the north direction and the direction to the Sun, measured in degrees eastward from north.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Solar Azimuth Angle"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="-180.0 &lt;= Solar Azimuth Angle &lt;= 180.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="relazi" type="FGDClongitude">
+		<xs:annotation>
+			<xs:documentation>The angle at the viewed point, measured in the horizontal plane at the viewed point, clockwise in degrees from the azimuth of the Sun to the azimuth of the satellite.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Relative Azimuth"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="string-input-format" fixed="-180.0 &lt;= Relative Azimuth &lt;= 180.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="acqinfoAngle">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="-90.0"/>
+			<xs:maxInclusive value="90.0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="clocdrft" type="clocdrfType">
+		<xs:annotation>
+			<xs:documentation>Error from GMT, needed to correct the time tag for scan data, in milliseconds.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Clock Time/Drift"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="-75.0 &lt;= Clock Time/Drift &lt;= 75.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="clocdrfType">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="-75.0"/>
+			<xs:maxInclusive value="75.0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="ascdscin" type="asdscinType">
+		<xs:annotation>
+			<xs:documentation>Flag indicating whether satellite is moving northward or southward. (&lt;i&gt;Note:
+0 represents ascending or northward; 1 represents descending or southward.&lt;/i&gt;)</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Ascending/Descending Indicator"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="asdscinType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="0"/>
+			<xs:enumeration value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="nadir" type="nadirType">
+		<xs:annotation>
+			<xs:documentation>Location of point directly underneath platform.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Nadir"/>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMax([nadirlon,-180.0,180.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="nadirType">
+		<xs:sequence>
+			<xs:element name="nadirlat" type="FGDClatitude"/>
+			<xs:element name="nadirlon" type="FGDClongitude"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="nadirlat" type="FGDClatitude">
+		<xs:annotation>
+			<xs:documentation>Latitude of nadir.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Nadir Latitude"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="-90.0 &lt;= Nadir Latitude &lt;= 90.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="nadirlon" type="FGDClongitude">
+		<xs:annotation>
+			<xs:documentation>Longitude of nadir.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Nadir Longitude"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="-180.0 &lt;= Nadir Longitude &lt; 180.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+</xs:schema>

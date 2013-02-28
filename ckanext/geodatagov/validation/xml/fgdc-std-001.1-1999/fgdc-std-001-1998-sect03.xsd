@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 sp1 (http://www.altova.com) by Systems Administrator (NCDDC) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" blockDefault="#all">
+	<xs:element name="spdoinfo" type="spdoinfoType">
+		<xs:annotation>
+			<xs:documentation>The mechanism used to represent spatial information in the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Spatial Data Organization Information"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="other-validation-rules" fixed="checkObjRelation([direct,point vector [Point and Vector Object Information] raster [Raster Object Information]]);checkForcedMandatory([direct,ptvctinf,rastinfo]);checkOr([ptvctinf,rastinfo]);checkProperties([indspref,direct])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="spdoinfoType">
+		<xs:sequence>
+			<xs:element ref="indspref" minOccurs="0"/>
+			<xs:sequence minOccurs="0">
+				<xs:element ref="direct"/>
+				<xs:choice minOccurs="0">
+					<xs:element ref="ptvctinf"/>
+					<xs:element ref="rastinfo"/>
+				</xs:choice>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="indspref" type="indsprefType">
+		<xs:annotation>
+			<xs:documentation>Name of types of geographic features, addressing schemes, or other means through which locations are referenced in the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="use" fixed="Indirect Spatial Reference"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="indsprefType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="direct" type="directType">
+		<xs:annotation>
+			<xs:documentation>The system of objects used to represent space in the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Direct Spatial Reference Method"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="directType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="Point"/>
+			<xs:enumeration value="Vector"/>
+			<xs:enumeration value="Raster"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="ptvctinf" type="ptvctinfType">
+		<xs:annotation>
+			<xs:documentation>The types and numbers of vector or nongridded point spatial objects in the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Point and Vector Object Information"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([sdtsterm,vpfterm])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="ptvctinfType">
+		<xs:choice>
+			<xs:element ref="sdtsterm" maxOccurs="unbounded"/>
+			<xs:element ref="vpfterm"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:element name="sdtsterm" type="sdtstermType">
+		<xs:annotation>
+			<xs:documentation>"Point and vector object information using the terminology and concepts from 'Spatial Data Concepts,' which is Chapter 2 of Part 1 in Department of Commerce, 1992, Spatial Data Transfer Standard (SDTS) (Federal Information Processing Standard 173):  Washington, Department of Commerce, National Institute of Standards and  Technology.  (Note that this reference to the SDTS is used ONLY to provide a set of terminology for the point and vector objects.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="SDTS Terms Description"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMin([ptvctcnt,0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="sdtstermType">
+		<xs:sequence>
+			<xs:element ref="sdtstype"/>
+			<xs:element ref="ptvctcnt" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="sdtstype" type="sdtstypeType">
+		<xs:annotation>
+			<xs:documentation>Name of point and vector spatial objects used to locate zero-, one-, and two-dimensional spatial locations in the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="SDTS Point and Vector Object Type"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="sdtstypeType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="Point"/>
+			<xs:enumeration value="Entity point"/>
+			<xs:enumeration value="Label point"/>
+			<xs:enumeration value="Area point"/>
+			<xs:enumeration value="Node, planar graph"/>
+			<xs:enumeration value="Node, network"/>
+			<xs:enumeration value="String"/>
+			<xs:enumeration value="Link"/>
+			<xs:enumeration value="Complete chain"/>
+			<xs:enumeration value="Area chain"/>
+			<xs:enumeration value="Network chain, planar graph"/>
+			<xs:enumeration value="Network chain, nonplanar graph"/>
+			<xs:enumeration value="Circular arc, three point center"/>
+			<xs:enumeration value="Elliptical arc"/>
+			<xs:enumeration value="Uniform B-spline"/>
+			<xs:enumeration value="Piecewise Bezier"/>
+			<xs:enumeration value="Ring with mixed composition"/>
+			<xs:enumeration value="Ring composed of strings"/>
+			<xs:enumeration value="Ring composed of chains"/>
+			<xs:enumeration value="Ring composed of arcs"/>
+			<xs:enumeration value="G-polygon"/>
+			<xs:enumeration value="GT-polygon composed of rings"/>
+			<xs:enumeration value="GT-polygon composed of chains"/>
+			<xs:enumeration value="Universe polygon composed of rings"/>
+			<xs:enumeration value="Universe polygon composed of chains"/>
+			<xs:enumeration value="Void polygon composed of rings"/>
+			<xs:enumeration value="Void polygon composed of chains"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="ptvctcnt" type="ptvctcntType">
+		<xs:annotation>
+			<xs:documentation>"The total number of the point or vector object type occurring in the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Point and Vector Object Count"/>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="string-input-format" fixed="Point and Vector Object Count &gt; 0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="ptvctcntType">
+		<xs:restriction base="xs:integer">
+			<xs:minExclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="vpfterm" type="vpftermType">
+		<xs:annotation>
+			<xs:documentation>Point and vector object information using the terminology and concepts from Department of Defense, 1992, Vector Product Format (MIL-STD-600006): Philadelphia, Department of Defense, Defense Printing Service Detachment Office.  (Note that this reference to the VPF is used ONLY to provide a set of terminology for the point and vector objects.)</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="VPF Terms Description"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="vpftermType">
+		<xs:sequence>
+			<xs:element ref="vpflevel"/>
+			<xs:element ref="vpfinfo" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="vpflevel" type="vpflevelType">
+		<xs:annotation>
+			<xs:documentation>"The completeness of the topology carried by the data set.  The levels of completeness are defined in Department of Defense, 1992, Vector Product Format (MIL-STD-600006):  Philadelphia, Department of Defense, Defense Printing Service Detachment Office.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="VPF Topology Level"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="0 &lt;= VPF Topology Level &lt;= 3"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="vpflevelType">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="3"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="vpfinfo" type="vpfinfoType">
+		<xs:annotation>
+			<xs:documentation>Information about VPF point and vector objects.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="VPF Point and Vector Object Information"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMin([ptvctcnt,0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="vpfinfoType">
+		<xs:sequence>
+			<xs:element ref="vpftype"/>
+			<xs:element ref="ptvctcnt" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="vpftype" type="vpftypeType">
+		<xs:annotation>
+			<xs:documentation>Name of point and vector spatial objects used to locate zero-, one- and two-dimensional spatial locations in the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="VPF Point and Vector Object Type"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="vpftypeType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="Node"/>
+			<xs:enumeration value="Edge"/>
+			<xs:enumeration value="Face"/>
+			<xs:enumeration value="Text"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="rastinfo" type="rastinfoType">
+		<xs:annotation>
+			<xs:documentation>The types and numbers of raster spatial objects in the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Raster Object Information"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMin([rowcount,0]);checkRangeExcludeMin([colcount,0]);checkRangeExcludeMin([vrtcount,0]);checkForcedMandatory([rowcount,colcount,vrtcount])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="rastinfoType">
+		<xs:sequence>
+			<xs:element ref="rasttype"/>
+			<xs:sequence minOccurs="0">
+				<xs:element ref="rowcount"/>
+				<xs:element ref="colcount"/>
+				<xs:element ref="vrtcount" minOccurs="0"/>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="rasttype" type="rasttypeType">
+		<xs:annotation>
+			<xs:documentation>Raster spatial objects used to locate zero-, two-, or three-dimensional locations in the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Raster Object Type"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="rasttypeType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="Point"/>
+			<xs:enumeration value="Pixel"/>
+			<xs:enumeration value="Grid Cell"/>
+			<xs:enumeration value="Voxel"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="rowcount" type="rowcountType">
+		<xs:annotation>
+			<xs:documentation>The maximum number of raster objects along the ordinate (y) axis.  For use with rectangular raster objects.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Row Count"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="Row Count &gt; 0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="rowcountType">
+		<xs:restriction base="xs:positiveInteger"/>
+	</xs:simpleType>
+	<xs:element name="colcount" type="colcountType">
+		<xs:annotation>
+			<xs:documentation>The maximum number of raster objects along the abscissa (x) axis. For use with rectangular raster objects.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Column Count"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="Column Count &gt; 0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="colcountType">
+		<xs:restriction base="xs:positiveInteger"/>
+	</xs:simpleType>
+	<xs:element name="vrtcount" type="vrtcountType">
+		<xs:annotation>
+			<xs:documentation>"The maximum number of raster objects along the vertical (z) axis.  For use with rectangular volumetric raster objects (voxels).</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Vertical Count"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="string-input-format" fixed="Vertical Count &gt; 0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="vrtcountType">
+		<xs:restriction base="xs:positiveInteger"/>
+	</xs:simpleType>
+</xs:schema>

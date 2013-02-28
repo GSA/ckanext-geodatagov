@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 sp1 (http://www.altova.com) by Systems Administrator (NCDDC) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" blockDefault="#all">
+	<xs:element name="locainfo" type="locainfoType">
+		<xs:annotation>
+			<xs:documentation>Information about the location of a set of one or more points.(&lt;i&gt;Note: this section provides a means of describing position in a coordinate system relevant to the calling element and is used by other sections of the metadata extensions. This section is never used alone. It differs from the Spatial Reference Information in that it provides positions in a coordinate system relevant to metadata elements, whereas the Spatial Reference Information refers only to positions at which the data are located.&lt;/i&gt;)</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Location Information"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMin([numpoint,0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="locainfoType" mixed="true">
+		<xs:sequence>
+			<xs:element ref="numpoint"/>
+			<xs:element ref="coordsys" minOccurs="0"/>
+			<xs:element ref="coordxyu" minOccurs="0"/>
+			<xs:element ref="coordzu" minOccurs="0"/>
+			<xs:element ref="coordpt" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="numpoint" type="positiveIntegerType">
+		<xs:annotation>
+			<xs:documentation>Number of coordinate positions.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Number of Points"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="Number of Points &gt; 0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="coordsys" type="coordsysType">
+		<xs:annotation>
+			<xs:documentation>Definition of axes of coordinate system in which location of positions is provided.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Coordinate System"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([unrefsys,refsys])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="coordsysType">
+		<xs:choice>
+			<xs:element ref="unrefsys"/>
+			<xs:element ref="refsys"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:element name="unrefsys" type="FGDCstring">
+		<xs:annotation>
+			<xs:documentation>Coordinate system which is not georeferenced and for which georeferencing information is unavailable or irrelevant.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Unreferenced Coordinate System"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="refsys" type="refsysType">
+		<xs:annotation>
+			<xs:documentation>Coordinate system that can be georeferenced.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Referenced Coordinate System"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="refsysType">
+		<xs:sequence>
+			<xs:element ref="spref"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="coordxyu" type="coordxyuType">
+		<xs:annotation>
+			<xs:documentation>Physical dimension corresponding to value of unity in x and y coordinate directions as defined in Coordinate System or referencing element, where the coordinates correspond to physical dimensions.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Coordinate XY Units"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="coordxyuType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="micrometers"/>
+					<xs:enumeration value="millimeters"/>
+					<xs:enumeration value="meters"/>
+					<xs:enumeration value="kilometers"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="coordzu" type="coordzuType">
+		<xs:annotation>
+			<xs:documentation>Physical dimension corresponding to value of unity in z coordinate directions Coordinate System or referencing element, where the coordinates correspond to physical dimensions.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Coordinate Z Units"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="coordzuType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="feet"/>
+					<xs:enumeration value="meters"/>
+					<xs:enumeration value="millibars"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="coordpt" type="coordptType">
+		<xs:annotation>
+			<xs:documentation>Location of a coordinate point described by the referencing element.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Coordinate Point"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="coordptType">
+		<xs:sequence>
+			<xs:element ref="coorxval"/>
+			<xs:element ref="cooryval"/>
+			<xs:element ref="coorzval" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="coorxval" type="xs:double">
+		<xs:annotation>
+			<xs:documentation>Location of point along x-axis.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Coordinate x Value"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="cooryval" type="xs:double">
+		<xs:annotation>
+			<xs:documentation>Location of point along y-axis.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="mdname" fixed="Coordinate y Value"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="coorzval" type="xs:double">
+		<xs:annotation>
+			<xs:documentation>Location of point along z-axis.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Coordinate z Value"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+</xs:schema>

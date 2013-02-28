@@ -1,0 +1,590 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 sp1 (http://www.altova.com) by Systems Administrator (NCDDC) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" blockDefault="#all">
+	<!-- redefined for RSE -->
+	<xs:complexType name="rseIdinfoType">
+		<xs:sequence>
+			<xs:element ref="datsetid"/>
+			<!-- ext -->
+			<xs:element ref="citation"/>
+			<xs:element name="descript" type="rseDescriptType"/>
+			<xs:element ref="timeperd"/>
+			<xs:element ref="status"/>
+			<xs:element ref="spdom"/>
+			<xs:element ref="proclevl" minOccurs="0" maxOccurs="unbounded"/>
+			<!-- ext -->
+			<xs:element ref="keywords"/>
+			<xs:element ref="plainsid" minOccurs="0" maxOccurs="unbounded"/>
+			<!-- ext -->
+			<xs:choice>
+				<xs:element ref="bandidnt"/>
+				<!-- ext -->
+				<xs:element ref="thelayid"/>
+				<!-- ext -->
+			</xs:choice>
+			<xs:element ref="accconst"/>
+			<xs:element ref="useconst"/>
+			<xs:element ref="ptcontac" minOccurs="0"/>
+			<xs:element ref="browse" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="datacred" minOccurs="0"/>
+			<xs:element ref="secinfo" minOccurs="0"/>
+			<xs:element ref="native" minOccurs="0"/>
+			<xs:element ref="crossref" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="agginfo" minOccurs="0" maxOccurs="unbounded"/>
+			<!-- ext -->
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="datsetid" type="datsetidType">
+		<xs:annotation>
+			<xs:documentation>Unique string to identify a dataset.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Dataset Identifier"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="datsetidType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:complexType name="rseDescriptType">
+		<xs:sequence>
+			<xs:element ref="abstract"/>
+			<xs:element ref="purpose"/>
+			<xs:element ref="documnts" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="supplinf" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="documnts" type="documntsType">
+		<xs:annotation>
+			<xs:documentation>Information about or relevant to the dataset.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Documentation"/>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="other-validation-rules" fixed="checkProperties([datdicrf,userguid,scipap])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="documntsType">
+		<xs:sequence>
+			<xs:element ref="datdicrf" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="userguid" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="scipap" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="datdicrf" type="datdicrfType">
+		<xs:annotation>
+			<xs:documentation>Reference to a list of terms and their definitions, used in describing the dataset.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Data Dictionary Reference"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="datdicrfType">
+		<xs:sequence>
+			<xs:element ref="citeinfo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="userguid" type="userguidType">
+		<xs:annotation>
+			<xs:documentation>Reference information for User's Guides.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Users Guide"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="userguidType">
+		<xs:sequence>
+			<xs:element ref="citeinfo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="scipap" type="scipapType">
+		<xs:annotation>
+			<xs:documentation>Reference information for scientific papers relevant to the dataset.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Science Paper"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="scipapType">
+		<xs:sequence>
+			<xs:element ref="citeinfo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="rseSpdomType">
+		<xs:sequence>
+			<xs:element ref="bounding"/>
+			<xs:element ref="dsgpoly" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="frarea" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="multimal" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="wwrefsys" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="frarea" type="frareaType">
+		<xs:annotation>
+			<xs:documentation>Geographical area covered by individual frame.</xs:documentation>
+			<xs:appinfo>
+				<xs:atrribute name="mdname" fixed="Frame Area"/>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMin([frareavl,0.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="frareaType">
+		<xs:sequence>
+			<xs:element ref="frareavl"/>
+			<xs:element ref="frareaun"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="frareavl" type="positiveDoubleType">
+		<xs:annotation>
+			<xs:documentation>Area covered by frame, in units given by Frame Area Units.</xs:documentation>
+			<xs:appinfo>
+				<xs:atrribute name="mdname" fixed="Frame Area Value"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="Frame Area Value &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="frareaun" type="frareaunType">
+		<xs:annotation>
+			<xs:documentation>Units in which value given by Frame Area Value is expressed.</xs:documentation>
+			<xs:appinfo>
+				<xs:atrribute name="mdname" fixed="Frame Area Units"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="frareaunType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="square meters"/>
+					<xs:enumeration value="square miles"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="multimal" type="multimalType">
+		<xs:annotation>
+			<xs:documentation>Positioning of other frame imaging some areas in common.</xs:documentation>
+			<xs:appinfo>
+				<xs:atrribute name="mdname" fixed="Multiple Image Alignment"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="multimalType">
+		<xs:sequence>
+			<xs:element ref="ovlpdtid"/>
+			<xs:element ref="ovlptype"/>
+			<xs:element ref="ovlppct"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="ovlpdtid" type="ovlpdtidType">
+		<xs:annotation>
+			<xs:documentation>Identifier for external frame imaging some areas in common.</xs:documentation>
+			<xs:appinfo>
+				<xs:atrribute name="mdname" fixed="ID Overlapping Dataset"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="ovlpdtidType">
+		<xs:sequence>
+			<xs:element ref="datsetid"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="ovlptype" type="ovlpType">
+		<xs:annotation>
+			<xs:documentation>Information as to whether external frame is along same (overlap) or parallel (sidelap) flight line.</xs:documentation>
+			<xs:appinfo>
+				<xs:atrribute name="mdname" fixed="Type of Overlap"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="ovlpType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="overlap"/>
+					<xs:enumeration value="sidelap"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="ovlppct" type="ovlppctType">
+		<xs:annotation>
+			<xs:documentation>Area common to two successive photos along the same flight strip, expressed as a percentage of photo area.</xs:documentation>
+			<xs:appinfo>
+				<xs:atrribute name="mdname" fixed="Percentage of Overlap"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="0.0 &lt;= Percentage of Overlap &lt;= 100.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="ovlppctType">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0.0"/>
+			<xs:maxInclusive value="100.0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="wwrefsys" type="wwrefsysType">
+		<xs:annotation>
+			<xs:documentation>Global notation system for Landsat data.</xs:documentation>
+			<xs:appinfo>
+				<xs:atrribute name="mdname" fixed="Worldwide Reference System"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="wwrefsysType">
+		<xs:sequence>
+			<xs:element ref="wwrefpat"/>
+			<xs:element ref="wwrefrow"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="wwrefpat" type="wwrefpatType">
+		<xs:annotation>
+			<xs:documentation>Sequential number, increasing east to west, assigned to satellite orbital track.</xs:documentation>
+			<xs:appinfo>
+				<xs:atrribute name="mdname" fixed="Path"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="1 &lt;= Path &lt;= 251"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="wwrefpatType">
+		<xs:restriction base="xs:integer">
+			<xs:minExclusive value="0"/>
+			<xs:maxInclusive value="251"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="wwrefrow" type="wwrefrowType">
+		<xs:annotation>
+			<xs:documentation>Sequential number assigned to frame latitudinal center line along a path.</xs:documentation>
+			<xs:appinfo>
+				<xs:atrribute name="mdname" fixed="Row"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="1 &lt;= Row &lt;= 248"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="wwrefrowType">
+		<xs:restriction base="xs:integer">
+			<xs:minExclusive value="0"/>
+			<xs:maxInclusive value="248"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="proclevl" type="proclevlType">
+		<xs:annotation>
+			<xs:documentation>Degree of data processing applied to the measurements, as exemplified in Appendixes A-C.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Processing Level"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="proclevlType">
+		<xs:sequence>
+			<xs:element ref="prolevid"/>
+			<xs:element ref="prolevau"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="prolevid" type="prolevidType">
+		<xs:annotation>
+			<xs:documentation>Data distributor's code that identifies the level of data processing applied to the measurements, as defined in Processing Level Authority. Appendixes A-C show examples.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Processing Level Identifier"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="prolevidType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="prolevau" type="prolevauType">
+		<xs:annotation>
+			<xs:documentation>Reference for the definition of the product level designations used.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Processing Level Authority"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="prolevauType">
+		<xs:sequence>
+			<xs:element ref="citeinfo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="plainsid" type="plainsidType">
+		<xs:annotation>
+			<xs:documentation>Designations for the measuring instruments and their bands, the platform carrying them, and the mission to which the data contribute.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Platform and Instrument Identification"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="plainsidType">
+		<xs:sequence>
+			<xs:element ref="missname" minOccurs="0"/>
+			<xs:element ref="platflnm"/>
+			<xs:element ref="platfsnm" minOccurs="0"/>
+			<xs:element ref="platfser" minOccurs="0"/>
+			<xs:element ref="instflnm"/>
+			<xs:element ref="instshnm" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="missname" type="missnameType">
+		<xs:annotation>
+			<xs:documentation>The character string by which the mission is known.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Mission Name"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="missnameType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="platflnm" type="platflnmType">
+		<xs:annotation>
+			<xs:documentation>The complete name of the platform.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Platform Full Name"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="platflnmType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="platfsnm" type="platfsnmType">
+		<xs:annotation>
+			<xs:documentation>An acronym or shorter form of the platform name, used to identify the platform.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Platform Short Name"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="platfsnmType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="platfser" type="platfserType">
+		<xs:annotation>
+			<xs:documentation>The serial letters and/or numbers applied to the platform.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Platform Serial Identifier"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="platfserType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="instflnm" type="instflnmType">
+		<xs:annotation>
+			<xs:documentation>The complete name of the instrument.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Instrument Full Name"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="instflnmType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="instshnm" type="instshnmType">
+		<xs:annotation>
+			<xs:documentation>The short name, acronym, or other identifier by which the instrument is known.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Instrument Short Name"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="instshnmType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="bandidnt" type="bandidntType">
+		<xs:annotation>
+			<xs:documentation>Complete information to identify instrument wavelengths or other channels.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Band Identification"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMin([numbands,0]);minDefinedByDataElement([numbands,inbident])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="bandidntType">
+		<xs:sequence>
+			<xs:element ref="numbands"/>
+			<xs:element ref="inbident" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="numbands" type="positiveIntegerType">
+		<xs:annotation>
+			<xs:documentation>The number of instrument bands.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Number of Bands"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="Number of Bands &gt; 0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="inbident" type="inbidentType">
+		<xs:annotation>
+			<xs:documentation>Complete information to identify a single instrument band.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Individual Band Identification"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="inbidentType">
+		<xs:sequence>
+			<xs:element ref="bandid"/>
+			<xs:element ref="bmmodid"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="bandid" type="bandidType">
+		<xs:annotation>
+			<xs:documentation>Designation for individual measurement band.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Band ID"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="bandidType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="bmmodid" type="bmmodidType">
+		<xs:annotation>
+			<xs:documentation>Identifier designating channel, wavelength, and/or field of view of measurement.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Band Measurement Mode ID"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="bmmodidType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="thelayid" type="thelayidType">
+		<xs:annotation>
+			<xs:documentation>Listing of the kinds of geospatial information represented by the dataset.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Thematic Layer Identification"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMin([numthlay,0]);minDefinedByDataElement([numthlay,layrname])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="thelayidType">
+		<xs:sequence>
+			<xs:element ref="numthlay"/>
+			<xs:element ref="layrname" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="numthlay" type="positiveIntegerType">
+		<xs:annotation>
+			<xs:documentation>Number of kinds of geospatial information represented by the dataset.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Number of Thematic Layers"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="Number of Thematic Layers &gt; 0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="layrname" type="layrnameType">
+		<xs:annotation>
+			<xs:documentation>Description of one kind of geospatial information represented by the dataset.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Layer Name"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="layrnameType">
+		<xs:sequence>
+			<xs:element ref="theme"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="agginfo" type="agginfoType">
+		<xs:annotation>
+			<xs:documentation>Information relating a dataset to collections of which it is a component or relating a collection dataset or its components, as described in the section on Data Aggregation Technology.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Aggregation Information"/>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="other-validation-rules" fixed="checkProperties([conpckid,compinfo])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="agginfoType">
+		<xs:sequence>
+			<xs:element ref="conpckid" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="compinfo" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="conpckid" type="conpckidType">
+		<xs:annotation>
+			<xs:documentation>Identifier of an aggregation of which the dataset is a member.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Container Packet ID"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="conpckidType">
+		<xs:sequence>
+			<xs:element ref="datsetid"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="compinfo" type="compinfoType">
+		<xs:annotation>
+			<xs:documentation>Information about components aggregated into the dataset.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Component Information"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="compinfoType">
+		<xs:sequence>
+			<xs:element ref="aggmemid" maxOccurs="unbounded"/>
+			<xs:element ref="aggcrit" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="aggmemid" type="aggmemidType">
+		<xs:annotation>
+			<xs:documentation>Identifier of component of a dataset.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Aggregation Member ID"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="aggmemidType">
+		<xs:sequence>
+			<xs:element ref="datsetid"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="aggcrit" type="aggcritType">
+		<xs:annotation>
+			<xs:documentation>Criteria by which components of a dataset are chosen for inclusion.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Aggregation Criteria"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="aggcritType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+</xs:schema>

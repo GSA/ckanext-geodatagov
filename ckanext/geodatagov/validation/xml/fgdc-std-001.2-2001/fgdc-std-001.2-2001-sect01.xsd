@@ -1,0 +1,806 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 sp1 (http://www.altova.com) by Systems Administrator (NCDDC) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" blockDefault="#all">
+	<xs:element name="idinfo" type="idinfoType">
+		<xs:annotation>
+			<xs:documentation>Basic information about the data set</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Identification Information"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="idinfoType">
+		<xs:sequence>
+			<xs:element ref="citation"/>
+			<xs:element ref="descript"/>
+			<xs:element ref="timeperd"/>
+			<xs:element ref="status"/>
+			<xs:element ref="spdom"/>
+			<xs:element ref="keywords"/>
+			<xs:element ref="accconst"/>
+			<xs:element ref="useconst"/>
+			<xs:element ref="ptcontac" minOccurs="0"/>
+			<xs:element ref="browse" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="datacred" minOccurs="0"/>
+			<xs:element ref="secinfo" minOccurs="0"/>
+			<xs:element ref="native" minOccurs="0"/>
+			<xs:element ref="crossref" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="citation" type="citationType">
+		<xs:annotation>
+			<xs:documentation>Information to be used to reference the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Citation"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="citationType">
+		<xs:sequence>
+			<xs:element ref="citeinfo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="descript" type="descriptType">
+		<xs:annotation>
+			<xs:documentation>A characterization of the data set, including its intended use and limitations.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Description"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="descriptType">
+		<xs:sequence>
+			<xs:element ref="abstract"/>
+			<xs:element ref="purpose"/>
+			<xs:element ref="supplinf" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="abstract" type="abstractType">
+		<xs:annotation>
+			<xs:documentation>A brief narrative summary of the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Abstract"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="abstractType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="purpose" type="purposeType">
+		<xs:annotation>
+			<xs:documentation>A summary of the intentions with which the data set was developed.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Purpose"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="purposeType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="supplinf" type="supplinfType">
+		<xs:annotation>
+			<xs:documentation>Other descriptive information about the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Supplemental Information"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="supplinfType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="timeperd" type="timeperdType">
+		<xs:annotation>
+			<xs:documentation>Time period(s) for which the data set corresponds to the currentness reference.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Time Period of Content"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="timeperdType">
+		<xs:sequence>
+			<xs:element ref="timeinfo"/>
+			<xs:element ref="current"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="current" type="currentType">
+		<xs:annotation>
+			<xs:documentation>The basis on which the time period of content information is determined.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Currentness Reference"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="currentType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="ground condition"/>
+					<xs:enumeration value="publication date"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="status" type="statusType">
+		<xs:annotation>
+			<xs:documentation>The state of and maintenance information for the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Status"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="statusType">
+		<xs:sequence>
+			<xs:element ref="progress"/>
+			<xs:element ref="update"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="progress" type="progressType">
+		<xs:annotation>
+			<xs:documentation>The state of the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Progress"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="progressType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="Complete"/>
+			<xs:enumeration value="In work"/>
+			<xs:enumeration value="Planned"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="update" type="updateType">
+		<xs:annotation>
+			<xs:documentation>The frequency with which changes and additions are made to the data set after the initial data set is completed.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Maintenance and Update Frequency"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="updateType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="Annually"/>
+					<xs:enumeration value="As needed"/>
+					<xs:enumeration value="Continually"/>
+					<xs:enumeration value="Daily"/>
+					<xs:enumeration value="Irregular"/>
+					<xs:enumeration value="Monthly"/>
+					<xs:enumeration value="None Planned"/>
+					<xs:enumeration value="Unknown"/>
+					<xs:enumeration value="Weekly"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="spdom" type="spdomType">
+		<xs:annotation>
+			<xs:documentation>The geographic areal domain of the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Spatial Domain"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="spdomType">
+		<xs:sequence>
+			<xs:element ref="bounding"/>
+			<xs:element ref="dsgpoly" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="descgeog" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="bounding" type="boundingType">
+		<xs:annotation>
+			<xs:documentation>The limits of coverage of a data set expressed by latitude and longitude values in the order western-most, eastern-most, northern-most, and southern-most. For data sets that include a complete band of latitude around the earth, the West Bounding Coordinate shall be assigned the value -180.0, and the East Bounding Coordinate shall be assigned the value 180.0.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Bounding Coordinates"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkBoundingCoordinates([westbc,eastbc]);checkBoundingCoordinates([northbc,southbc]);checkRangeExcludeMax([westbc,-180.0,180.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="boundingType">
+		<xs:sequence>
+			<xs:element ref="westbc"/>
+			<xs:element ref="eastbc"/>
+			<xs:element ref="northbc"/>
+			<xs:element ref="southbc"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="westbc" type="westbcType">
+		<xs:annotation>
+			<xs:documentation>Western-most coordinate of the limit of coverage expressed in longitude.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="West Bounding Coordinate"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="-180.0 &lt;= West Bounding Coordinate &lt; 180.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="westbcType">
+		<xs:restriction base="FGDClongitude">
+			<xs:maxExclusive value="180.0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="eastbc" type="eastbcType">
+		<xs:annotation>
+			<xs:documentation>Eastern-most coordinate of the limit of coverage expressed in longitude.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="East Bounding Coordinate"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="-180.0 &lt;= East Bounding Coordinate &lt;= 180.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="eastbcType">
+		<xs:restriction base="FGDClongitude"/>
+	</xs:simpleType>
+	<xs:element name="northbc" type="northbcType">
+		<xs:annotation>
+			<xs:documentation>Northern-most coordinate of the limit of coverage expressed in latitude.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="North Bounding Coordinate"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="-90.0 &lt;= North Bounding Coordinate &lt; 90.0|North Bounding Coordinate &gt;= South Bounding Coordinate"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="northbcType">
+		<xs:restriction base="FGDClatitude"/>
+	</xs:simpleType>
+	<xs:element name="southbc" type="southbcType">
+		<xs:annotation>
+			<xs:documentation>Southern-most coordinate of the limit of coverage expressed in latitude.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="South Bounding Coordinate"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="-90.0 &lt;= South Bounding Coordinate &lt; 90.0|South Bounding Coordinate &lt;= North Bounding Coordinate"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="southbcType">
+		<xs:restriction base="FGDClatitude"/>
+	</xs:simpleType>
+	<xs:element name="dsgpoly" type="dsgpolyType">
+		<xs:annotation>
+			<xs:documentation>Coordinates defining the outline of an area covered by a data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Data Set G-Ring Polygon"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="dsgpolyType">
+		<xs:sequence>
+			<xs:element ref="dsgpolyo"/>
+			<xs:element ref="dsgpolyx" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="dsgpolyo" type="dsgpolyoType">
+		<xs:annotation>
+			<xs:documentation>The closed nonintersecting boundary of an interior area.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Data Set G-Polygon Outer G-Ring"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkLatLonList([gring,4]);checkOr([grngpoin,gring]);checkFirstLastValuesEqual([gring]);checkFirstLastValuesEqual([grngpoin])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="dsgpolyoType">
+		<xs:choice>
+			<xs:element ref="grngpoin" minOccurs="4" maxOccurs="unbounded"/>
+			<xs:element ref="gring"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:element name="grngpoin" type="grngpoinType">
+		<xs:annotation>
+			<xs:documentation>A single geographic location.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="G-Ring Point"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMax([gringlon,-180.0,180.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="grngpoinType">
+		<xs:sequence>
+			<xs:element ref="gringlat"/>
+			<xs:element ref="gringlon"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="gringlat" type="gringlatType">
+		<xs:annotation>
+			<xs:documentation>The latitude of a point of the G-ring.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="G-Ring Latitude"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="-90.0 &lt;= G-Ring Latitude &lt;= 90.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="gringlatType">
+		<xs:restriction base="FGDClatitude"/>
+	</xs:simpleType>
+	<xs:element name="gringlon" type="gringlonType">
+		<xs:annotation>
+			<xs:documentation>The longitude of a point of the G-ring.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="G-Ring Longitude"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="-180.0 &lt;= G-Ring Longitude &lt; 180.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="gringlonType">
+		<xs:restriction base="FGDClongitude">
+			<xs:maxExclusive value="180.0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="gring" type="gringType">
+		<xs:annotation>
+			<xs:documentation>A set of ordered pairs of floating-point numbers, separated by commas, in which the first number in each pair is the longitude of a point and the second is the latitude of the point.  Longitude and latitude are specified in decimal degrees with north latitudes positive and south negative, east longitude positive and west negative.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="G-Ring"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="-90.0 &lt;= Latitude elements &lt;= 90.0|-180.0 &lt;= Longitude elements &lt;= 180.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="gringType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="dsgpolyx" type="dsgpolyxType">
+		<xs:annotation>
+			<xs:documentation>The closed nonintersecting boundary of a void area (or 'hole' in an interior area).</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Data Set G-Polygon Exclusion G-Ring"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="other-validation-rules" fixed="checkLatLonList([gring,4]);checkOr([grngpoin,gring]);checkFirstLastValuesEqual([gring]);checkFirstLastValuesEqual([grngpoin])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="dsgpolyxType">
+		<xs:choice>
+			<xs:element ref="grngpoin" minOccurs="4" maxOccurs="unbounded"/>
+			<xs:element ref="gring"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:element name="descgeog" type="FGDCstring">
+		<xs:annotation>
+			<xs:documentation>Short description of the aerial domain of the data set. This is especially important when the extent of the data set is not well described by the “Bounding Rectangle Coordinates.”</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Description of Geographic Extent"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="keywords" type="keywordsType">
+		<xs:annotation>
+			<xs:documentation>Words or phrases summarizing an aspect of the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Keywords"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="keywordsType">
+		<xs:sequence>
+			<xs:element ref="theme" maxOccurs="unbounded"/>
+			<xs:element ref="place" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="stratum" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="temporal" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="theme" type="themeType">
+		<xs:annotation>
+			<xs:documentation>Subjects covered by the data set (for a list of some commonly-used thesauri, see Part IV:  Subject/index term sources in Network Development and MARC Standards Office, 1988, USMARC code list for relators, sources, and description conventions:  Washington, Library of Congress).</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Theme Keywords"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="themeType">
+		<xs:sequence>
+			<xs:element ref="themekt"/>
+			<xs:element ref="themekey" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="themekt" type="themektType">
+		<xs:annotation>
+			<xs:documentation>Reference to a formally registered thesaurus or a similar authoritative source of theme keywords.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Theme Keyword Thesaurus"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="themektType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="Shoreline Glossary in Support of a National Shoreline Data Content Standard"/>
+					<xs:enumeration value="none"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="themekey" type="themekeyType">
+		<xs:annotation>
+			<xs:documentation>Common-use word or phrase used to describe the subject of the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Theme Keyword"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="themekeyType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="place" type="placeType">
+		<xs:annotation>
+			<xs:documentation>Geographic locations characterized by the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Place Keywords"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="placeType">
+		<xs:sequence>
+			<xs:element ref="placekt"/>
+			<xs:element ref="placekey" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="placekt" type="placektType">
+		<xs:annotation>
+			<xs:documentation>Reference to a formally registered thesaurus or a similar authoritative source of place keywords.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Place Keyword Thesaurus"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="placektType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="None"/>
+					<xs:enumeration value="Geographic Names Information System"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="placekey" type="placekeyType">
+		<xs:annotation>
+			<xs:documentation>The geographic name of a location covered by a data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Place Keyword"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="placekeyType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="stratum" type="stratumType">
+		<xs:annotation>
+			<xs:documentation>Layered, vertical locations characterized by the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Stratum Keywords"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="stratumType">
+		<xs:sequence>
+			<xs:element ref="stratkt"/>
+			<xs:element ref="stratkey" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="stratkt" type="stratktType">
+		<xs:annotation>
+			<xs:documentation>Reference to a formally registered thesaurus or a similar authoritative source of stratum keywords.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Stratum Keyword Thesaurus"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="stratktType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="None"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="stratkey" type="stratkeyType">
+		<xs:annotation>
+			<xs:documentation>The name of a vertical location used to describe the locations covered by a data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Stratum Keyword"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="stratkeyType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="temporal" type="temporalType">
+		<xs:annotation>
+			<xs:documentation>Time period(s) characterized by the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Temporal Keywords"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="temporalType">
+		<xs:sequence>
+			<xs:element ref="tempkt"/>
+			<xs:element ref="tempkey" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="tempkt" type="tempktType">
+		<xs:annotation>
+			<xs:documentation>Reference to a formally registered thesaurus or a similar authoritative source of temporal keywords.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Temporal Keyword Thesaurus"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="tempktType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="None"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="tempkey" type="tempkeyType">
+		<xs:annotation>
+			<xs:documentation>The name of a time period covered by a data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Temporal Keyword"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="tempkeyType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="accconst" type="accconstType">
+		<xs:annotation>
+			<xs:documentation>Restrictions and legal prerequisites for accessing the data set. These include any access constraints applied to assure the protection of privacy or intellectual property, and any special restrictions or limitations on obtaining the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Access Constraints"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="accconstType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="None"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="useconst" type="useconstType">
+		<xs:annotation>
+			<xs:documentation>Restrictions and legal prerequisites for using the data set after access is granted. These include any use constraints applied to assure the protection of privacy or intellectual property, and any special restrictions or limitations on using the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Use Constraints"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="useconstType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="None"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="ptcontac" type="ptcontacType">
+		<xs:annotation>
+			<xs:documentation>Contact information for an individual or organization that is knowledgeable about the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Point of Contact"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="ptcontacType">
+		<xs:sequence>
+			<xs:element ref="cntinfo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="browse" type="browseType">
+		<xs:annotation>
+			<xs:documentation>A graphic that provides an illustration of the data set. The graphic should include a legend for interpreting the graphic.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Browse Graphic"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="browseType">
+		<xs:sequence>
+			<xs:element ref="browsen"/>
+			<xs:element ref="browsed"/>
+			<xs:element ref="browset"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="browsen" type="browsenType">
+		<xs:annotation>
+			<xs:documentation>Name of a related graphic file that provides an illustration of the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Browse Graphic File Name"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="browsenType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="browsed" type="browsedType">
+		<xs:annotation>
+			<xs:documentation>A text description of the illustration.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Browse Graphic File Description"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="browsedType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="browset" type="browsetType">
+		<xs:annotation>
+			<xs:documentation>Graphic file type of a related graphic file.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Browse Graphic File Type"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="browsetType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="FGDCstring">
+					<xs:enumeration value="CGM"/>
+					<xs:enumeration value="EPS"/>
+					<xs:enumeration value="EMF"/>
+					<xs:enumeration value="GIF"/>
+					<xs:enumeration value="JPEG"/>
+					<xs:enumeration value="PBM"/>
+					<xs:enumeration value="PS"/>
+					<xs:enumeration value="TIFF"/>
+					<xs:enumeration value="WMF"/>
+					<xs:enumeration value="XWD"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="datacred" type="datacredType">
+		<xs:annotation>
+			<xs:documentation>Recognition of those who contributed to the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Data Set Credit"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="datacredType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="secinfo" type="secinfoType">
+		<xs:annotation>
+			<xs:documentation>Handling restrictions imposed on the data set because of national security, privacy, or other concerns</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Security Information"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="secinfoType">
+		<xs:sequence>
+			<xs:element ref="secsys"/>
+			<xs:element ref="secclass"/>
+			<xs:element ref="sechandl"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="secsys" type="secsysType">
+		<xs:annotation>
+			<xs:documentation>Name of the classification system.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Security Classification System"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="secsysType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="secclass" type="secclassType">
+		<xs:annotation>
+			<xs:documentation>Name of the handling restrictions on the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Security Classification"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="secclassType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="FGDCstring">
+					<xs:enumeration value="Confidential"/>
+					<xs:enumeration value="Restricted"/>
+					<xs:enumeration value="Secret"/>
+					<xs:enumeration value="Sensitive"/>
+					<xs:enumeration value="Top Secret"/>
+					<xs:enumeration value="Unclassified"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="sechandl" type="sechandlType">
+		<xs:annotation>
+			<xs:documentation>Additional information about the restrictions on handling the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Security Handling Description"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="sechandlType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="native" type="nativeType">
+		<xs:annotation>
+			<xs:documentation>A description of the data set in the producer's processing environment, including items such as: name of the software (including version), computer operating system, file name (including host-, path-, and filenames), data set size.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Native Data Set Environment"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="nativeType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="crossref" type="crossrefType">
+		<xs:annotation>
+			<xs:documentation>Information about other, related data sets that are likely to be of interest.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Cross Reference"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="crossrefType">
+		<xs:sequence>
+			<xs:element ref="citeinfo"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

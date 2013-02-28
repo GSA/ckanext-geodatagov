@@ -1,0 +1,817 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 sp1 (http://www.altova.com) by Systems Administrator (NCDDC) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" blockDefault="#all">
+	<xs:element name="dataqual" type="dataqualType">
+		<xs:annotation>
+			<xs:documentation>A general assessment of the quality of the data set.  (Recommendations on information to be reported and tests to be performed are found in 'Spatial Data Quality,' which is Chapter 3 of Part 1 in Department of Commerce, 1992, Spatial Data Transfer Standard (SDTS) (Federal Information Processing Standard 173):  Washington, Department of Commerce, National Institute of Standards and Technology.)</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Data Quality Information"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="dataqualType">
+		<xs:sequence>
+			<xs:element ref="attracc" minOccurs="0"/>
+			<xs:element ref="logic"/>
+			<xs:element ref="complete"/>
+			<xs:element ref="posacc" minOccurs="0"/>
+			<xs:element ref="lineage"/>
+			<xs:element ref="cloud" minOccurs="0"/>
+			<xs:element ref="tidinfo" minOccurs="0"/>
+			<xs:element ref="marweat" minOccurs="0"/>
+			<xs:element ref="event" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="attracc" type="attraccType">
+		<xs:annotation>
+			<xs:documentation>An assessment of the accuracy of the identification of entities and assignment of attribute values in the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Attribute Accuracy"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="attraccType">
+		<xs:sequence>
+			<xs:element ref="attraccr"/>
+			<xs:element ref="qattracc" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="attraccr" type="attraccrType">
+		<xs:annotation>
+			<xs:documentation>An explanation of the accuracy of the identification of the entities and assignments of values in the data set and a description of the tests used.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Attribute Accuracy Report"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="attraccrType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="qattracc" type="qattraccType">
+		<xs:annotation>
+			<xs:documentation>A value assigned to summarize the accuracy of the identification of the entities and assignments of values in the data set and the identification of the test that yielded the value.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Quantitative Attribute Accuracy Assessment"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="qattraccType">
+		<xs:sequence>
+			<xs:element ref="attraccv"/>
+			<xs:element ref="attracce"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="attraccv" type="attraccvType">
+		<xs:annotation>
+			<xs:documentation>An estimate of the accuracy of the identification of the entities and assignments of attribute values in the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Attribute Accuracy Value"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="attraccvType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="Unknown"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="attracce" type="attracceType">
+		<xs:annotation>
+			<xs:documentation>The identification of the test that yielded the Attribute Accuracy Value.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Attribute Accuracy Explanation"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="attracceType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="logic" type="logicType">
+		<xs:annotation>
+			<xs:documentation>An explanation of the fidelity of relationships in the data set and tests used.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Logical Consistency Report"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="logicType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="complete" type="completeType">
+		<xs:annotation>
+			<xs:documentation>Information about omissions, selection criteria, generalization, definitions used, and other rules used to derive the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Completeness Report"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="completeType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="posacc" type="posaccType">
+		<xs:annotation>
+			<xs:documentation>An assessment of the accuracy of the positions of spatial objects.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Positional Accuracy"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicabl"/>
+				<xs:attribute name="other-validation-rules" fixed="checkProperties([horizpa,vertacc])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="posaccType">
+		<xs:sequence>
+			<xs:element ref="horizpa" minOccurs="0"/>
+			<xs:element ref="vertacc" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="horizpa" type="horizpaType">
+		<xs:annotation>
+			<xs:documentation>Estimate of accuracy of the horizontal positions of the spatial objects.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Horizontal Positional Accuracy"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="horizpaType">
+		<xs:sequence>
+			<xs:element ref="horizpar"/>
+			<xs:element ref="qhorizpa" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="horizpar" type="horizparType">
+		<xs:annotation>
+			<xs:documentation>An assessment of the accuracy of the positions of spatial objects. This assessment should be made in compliance with the steps outlined in the “National Standard for Spatial Data Accuracy (NSSDA).”</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Horizontal Positional Accuracy Report"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="horizparType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="Use of the accuracy assessment methodology provided by the NSSDA"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="qhorizpa" type="qhorizpaType">
+		<xs:annotation>
+			<xs:documentation>Numeric value assigned to summarize the accuracy of the horizontal coordinate measurements and the identification of the test that yielded the value.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Quantitative Horizontal Positional Accuracy Assessment"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="qhorizpaType">
+		<xs:sequence>
+			<xs:element ref="horizpav"/>
+			<xs:element ref="horizpae"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="horizpav" type="horizpavType">
+		<xs:annotation>
+			<xs:documentation>An estimate of the accuracy of the horizontal coordinate measurements in the data set expressed in (ground) meters.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Horizontal Positional Accuracy Value"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="horizpavType">
+		<xs:restriction base="xs:double"/>
+	</xs:simpleType>
+	<xs:element name="horizpae" type="horizpaeType">
+		<xs:annotation>
+			<xs:documentation>An estimate of the accuracy of the horizontal coordinate measurements in the data set expressed in (ground) meters.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Horizontal Positional Accuracy Explanation"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="horizpaeType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="Use of the accuracy assessment methodology provided by the NSSDA"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="vertacc" type="vertaccType">
+		<xs:annotation>
+			<xs:documentation>An estimate of accuracy of the vertical positions in the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Vertical Positional Accuracy"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="vertaccType">
+		<xs:sequence>
+			<xs:element ref="vertaccr"/>
+			<xs:element ref="qvertpa" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="vertaccr" type="vertaccrType">
+		<xs:annotation>
+			<xs:documentation>An explanation of the accuracy of the vertical coordinate measurements and a description of the tests used.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Vertical Positional Accuracy Report"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="vertaccrType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="Use of the accuracy assessment methodology provided by the NSSDA"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="qvertpa" type="qvertpaType">
+		<xs:annotation>
+			<xs:documentation>Numeric value assigned to summarize the accuracy of vertical coordinate measurements and the identification of the test that yielded the value.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Quantitative Vertical Positional Accuracy Assessment"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="qvertpaType">
+		<xs:sequence>
+			<xs:element ref="vertaccv"/>
+			<xs:element ref="vertacce"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="vertaccv" type="vertaccvType">
+		<xs:annotation>
+			<xs:documentation>An estimate of the accuracy of the vertical coordinate measurements in the data set expressed in (ground) meters.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Vertical Positional Accuracy Value"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="vertaccvType">
+		<xs:restriction base="xs:double"/>
+	</xs:simpleType>
+	<xs:element name="vertacce" type="vertacceType">
+		<xs:annotation>
+			<xs:documentation>An estimate of the accuracy of the vertical coordinate measurements in the data set expressed in (ground) meters.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Vertical Positional Accuracy Explanation"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="vertacceType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="Use of the accuracy assessment methodology provided by the NSSDA."/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="lineage" type="lineageType">
+		<xs:annotation>
+			<xs:documentation>Information about the events, parameters, and source data which constructed the data set,  and information about the responsible parties.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Lineage"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:key name="srcciteaKey">
+			<xs:selector xpath="srcinfo"/>
+			<xs:field xpath="srccitea"/>
+		</xs:key>
+		<xs:keyref name="srcusedKeyRef" refer="srcciteaKey">
+			<xs:selector xpath="procstep/srcused"/>
+			<xs:field xpath="."/>
+		</xs:keyref>
+		<xs:keyref name="srcprodKeyRef" refer="srcciteaKey">
+			<xs:selector xpath="procstep/srcprod"/>
+			<xs:field xpath="."/>
+		</xs:keyref>
+	</xs:element>
+	<xs:complexType name="lineageType">
+		<xs:sequence>
+			<xs:element ref="srcinfo" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="procstep" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="srcinfo" type="srcinfoType">
+		<xs:annotation>
+			<xs:documentation>List of sources and a short discussion of the information contributed by each.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Source Information"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMin([srcscale,1])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="srcinfoType">
+		<xs:sequence>
+			<xs:element ref="srccite"/>
+			<xs:element ref="srcscale" minOccurs="0"/>
+			<xs:element ref="typesrc"/>
+			<xs:element ref="srctime"/>
+			<xs:element ref="srccitea"/>
+			<xs:element ref="srccontr"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="srccite" type="srcciteType">
+		<xs:annotation>
+			<xs:documentation>Reference for a source data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Source Citation"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="srcciteType">
+		<xs:sequence>
+			<xs:element ref="citeinfo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="srcscale" type="srcscaleType">
+		<xs:annotation>
+			<xs:documentation>The denominator of the representative fraction on a map scale (for example, on a 1:24,000-scale map, the Source Scale Denominator is 24000).</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Source Scale Denominator"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="string-input-format" fixed="Source Scale Denominator &gt; 1"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="srcscaleType">
+		<xs:restriction base="xs:integer">
+			<xs:minExclusive value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="typesrc" type="typesrcType">
+		<xs:annotation>
+			<xs:documentation>The medium of the source data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Type of Source Media"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="typesrcType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="audiocassette"/>
+					<xs:enumeration value="cartridge tape"/>
+					<xs:enumeration value="CD-ROM"/>
+					<xs:enumeration value="chart"/>
+					<xs:enumeration value="computer program"/>
+					<xs:enumeration value="disc"/>
+					<xs:enumeration value="electronic bulletin board"/>
+					<xs:enumeration value="electronic mail system"/>
+					<xs:enumeration value="filmstrip"/>
+					<xs:enumeration value="magnetic tape"/>
+					<xs:enumeration value="microfiche"/>
+					<xs:enumeration value="microfilm"/>
+					<xs:enumeration value="online"/>
+					<xs:enumeration value="paper"/>
+					<xs:enumeration value="physical model"/>
+					<xs:enumeration value="stable-base material"/>
+					<xs:enumeration value="transparency"/>
+					<xs:enumeration value="videocassette"/>
+					<xs:enumeration value="videodisc"/>
+					<xs:enumeration value="videotape"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="srctime" type="srctimeType">
+		<xs:annotation>
+			<xs:documentation>Time period(s) for which the source data set corresponds to the ground.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Source Time Period of Content"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="srctimeType">
+		<xs:sequence>
+			<xs:element ref="timeinfo"/>
+			<xs:element ref="srccurr"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="srccurr" type="srccurrType">
+		<xs:annotation>
+			<xs:documentation>The basis on which the source time period of content information of the source data set is determined.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Source Currentness Reference"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="srccurrType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="ground condition"/>
+					<xs:enumeration value="publication date"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="srccitea" type="srcciteaType">
+		<xs:annotation>
+			<xs:documentation>Short-form alias for the source citation.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Source Citation Abbreviation"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="srcciteaType">
+		<xs:restriction base="xs:token"/>
+	</xs:simpleType>
+	<xs:element name="srccontr" type="srccontrType">
+		<xs:annotation>
+			<xs:documentation>Brief statement identifying the information contributed by the source to the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Source Contribution"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="srccontrType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="procstep" type="procstepType">
+		<xs:annotation>
+			<xs:documentation>Information about a single event.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Process Step"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="procstepType">
+		<xs:sequence>
+			<xs:element ref="procdesc"/>
+			<xs:element ref="srcused" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="procdate"/>
+			<xs:element ref="proctime" minOccurs="0"/>
+			<xs:element ref="srcprod" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="proccont" minOccurs="0"/>
+			<xs:element name="procite" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="procdesc" type="procdescType">
+		<xs:annotation>
+			<xs:documentation>An explanation of the event and related parameters or tolerances.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Process Description"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="procdescType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="Reference to published protocol if available"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="srcused" type="srcciteaType">
+		<xs:annotation>
+			<xs:documentation>The Source Citation Abbreviation of a data set used in the processing step.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Source Used Citation Abbreviation"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="string-input-format" fixed="Source Citation Abbreviations from the Source Information entries for the data set."/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<!--
+<xs:simpleType name="srcusedType">
+	<xs:restriction base="xs:token"/>
+</xs:simpleType>
+-->
+	<xs:element name="procdate" type="procdateType">
+		<xs:annotation>
+			<xs:documentation>The date when the event was completed.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Process Date"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="YYYY|YYYYMM|YYYYMMDD|bcYYYY|bcYYYYMM|bcYYYYMMDD|ccYYYYY...|cdYYYYY..."/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="procdateType">
+		<xs:union memberTypes="FGDCdate">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="Unknown"/>
+					<xs:enumeration value="Not complete"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="proctime" type="proctimeType">
+		<xs:annotation>
+			<xs:documentation>The time when the event was completed.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Process Time"/>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="string-input-format" fixed="HH|HHMM|HHMMSS|HHMMSSSS|HHMMSSSSZ|HHMMSSSSshhmm|Values must follow the 24-hour timekeeping system"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="proctimeType">
+		<xs:restriction base="FGDCtime"/>
+	</xs:simpleType>
+	<xs:element name="srcprod" type="srcciteaType">
+		<xs:annotation>
+			<xs:documentation>The Source Citation Abbreviation of an intermediate data set that (1) is significant in the opinion of the data producer, (2) is generated in the processing step, and (3) is used in later processing steps.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Source Produced Citation Abbreviation"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="string-input-format" fixed="Source Citation Abbreviations from the Source Information entries for the data set."/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<!--
+<xs:simpleType name="srcprodType">
+	<xs:restriction base="xs:token"/>
+</xs:simpleType>
+-->
+	<xs:element name="proccont" type="proccontType">
+		<xs:annotation>
+			<xs:documentation>The party responsible for the processing step information.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Process Contact"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="proccontType">
+		<xs:sequence>
+			<xs:element ref="cntinfo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="procite" type="FGDCstring">
+		<xs:annotation>
+			<xs:documentation>Reference to a published protocol.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Process Step Citation"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="cloud" type="cloudType">
+		<xs:annotation>
+			<xs:documentation>Area of a data set obstructed by clouds, expressed as a percentage of the spatial extent.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Cloud Cover"/>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="string-input-format" fixed="0 &lt;= Cloud Cover &lt;= 100"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="cloudType">
+		<xs:union>
+			<xs:simpleType>
+				<xs:restriction base="xs:integer">
+					<xs:minInclusive value="0"/>
+					<xs:maxInclusive value="100"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="Unknown"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="tidinfo" type="tidinfoType">
+		<xs:annotation>
+			<xs:documentation>Means of encoding tidal information.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Tidal Information"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="tidinfoType">
+		<xs:sequence>
+			<xs:element ref="tidtype" minOccurs="0"/>
+			<xs:element ref="tidtime" minOccurs="0"/>
+			<xs:element ref="tideref" minOccurs="0"/>
+			<xs:element ref="tidesup" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="tidtype" type="tidtypeType">
+		<xs:annotation>
+			<xs:documentation>A classification based on characteristic forms of a tide curve.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Type of Tide"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="tidtypeType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="semidiurnal"/>
+			<xs:enumeration value="mainly semidiurnal”"/>
+			<xs:enumeration value="mainly diurnal"/>
+			<xs:enumeration value="diurnal"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="tidtime" type="tidtimeType">
+		<xs:annotation>
+			<xs:documentation>Time of “low” and time of “high” tides the day(s) the data were collected.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Time of Tide"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="tidtimeType">
+		<xs:sequence>
+			<xs:element ref="lowtime" minOccurs="0"/>
+			<xs:element ref="hightime" minOccurs="0"/>
+			<xs:element ref="tidedat" minOccurs="0"/>
+			<xs:element ref="tidrang" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="lowtime" type="FGDCtime">
+		<xs:annotation>
+			<xs:documentation>The time of low tide on the day (s) the data were collected. Local time should
+be used.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Time of Low Tide"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="hightime" type="FGDCtime">
+		<xs:annotation>
+			<xs:documentation>The time of high tide on the day(s) the data were collected. Local time should
+be used.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Time of High Tide"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="tidedat" type="FGDCstring">
+		<xs:annotation>
+			<xs:documentation>The base elevation defined by a certain tidal phase.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Tidal Datum"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="tidrang" type="FGDCstring">
+		<xs:annotation>
+			<xs:documentation>The difference in height (in feet) between consecutive high and low waters.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Range of Tide"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="tideref" type="FGDCstring">
+		<xs:annotation>
+			<xs:documentation>Tables which give daily predictions of the times and heights of the tide.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Tide Table Reference"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="tidesup" type="FGDCstring">
+		<xs:annotation>
+			<xs:documentation>Additional information that is necessary for the completion of this
+section. If data were collected through tidal cycles, it should be noted here.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Supplemental Tidal Information"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="marweat" type="marweatType">
+		<xs:annotation>
+			<xs:documentation>Wind and wave conditions existing over an ocean or lake during the
+time of data collection.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Marine Weather Condition"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="marweatType">
+		<xs:sequence>
+			<xs:element ref="windsp" minOccurs="0"/>
+			<xs:element ref="windir" minOccurs="0"/>
+			<xs:element ref="wavhite" minOccurs="0"/>
+			<xs:element ref="barpres" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="windsp" type="windspType">
+		<xs:annotation>
+			<xs:documentation>The velocity of wind expressed in mph.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Wind Speed"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="windspType">
+		<xs:restriction base="xs:integer">
+			<xs:minExclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="windir" type="windirType">
+		<xs:annotation>
+			<xs:documentation>The direction of wind expressed in degrees.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Wind Direction"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="windirType">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="360"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="wavhite" type="wavhiteType">
+		<xs:annotation>
+			<xs:documentation>The height of waves or swells expressed in feet.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Wave Height"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="wavhiteType">
+		<xs:restriction base="xs:integer">
+			<xs:minExclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="barpres" type="barpresType">
+		<xs:annotation>
+			<xs:documentation>The level of the barometric pressure expressed in inches.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Barometric Pressure"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="barpresType">
+		<xs:restriction base="xs:double">
+			<xs:minExclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="event" type="eventType">
+		<xs:annotation>
+			<xs:documentation>Any environmental event occuring shortly before or after the data were
+collected that would affect the current state of the data.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Environmental Event"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="eventType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="none"/>
+					<xs:enumeration value="unknown"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+</xs:schema>

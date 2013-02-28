@@ -1,0 +1,709 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 sp1 (http://www.altova.com) by Systems Administrator (NCDDC) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" blockDefault="#all">
+	<xs:element name="distinfo" type="distinfoType">
+		<xs:annotation>
+			<xs:documentation>Information about the distributor of and options for obtaining the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Distribution Information"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="distinfoType">
+		<xs:sequence>
+			<xs:element ref="distrib"/>
+			<xs:element ref="resdesc" minOccurs="0"/>
+			<xs:element ref="distliab"/>
+			<xs:element ref="stdorder" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="custom" minOccurs="0"/>
+			<xs:element ref="techpreq" minOccurs="0"/>
+			<xs:element ref="availabl" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="distrib" type="distribType">
+		<xs:annotation>
+			<xs:documentation>The party from whom the data set may be obtained.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Distributor"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="distribType">
+		<xs:sequence>
+			<xs:element ref="cntinfo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="resdesc" type="resdescType">
+		<xs:annotation>
+			<xs:documentation>The identifier by which the distributor knows the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Resource Description"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="resdescType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="distliab" type="distliabType">
+		<xs:annotation>
+			<xs:documentation>Statement of the liability assumed by the distributor.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Distribution Liability"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="distliabType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="stdorder" type="stdorderType">
+		<xs:annotation>
+			<xs:documentation>The common ways in which the data set may be obtained or received, and related instructions and fee information.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Standard Order Process"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([nondig,digform])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="stdorderType">
+		<xs:sequence>
+			<xs:choice>
+				<xs:element ref="nondig"/>
+				<xs:element ref="digform" maxOccurs="unbounded"/>
+			</xs:choice>
+			<xs:element ref="fees"/>
+			<xs:element ref="ordering" minOccurs="0"/>
+			<xs:element ref="turnarnd" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="nondig" type="nondigType">
+		<xs:annotation>
+			<xs:documentation>The description of options for obtaining the data set on non-computer-compatible media.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Non-digital Form"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="nondigType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="digform" type="digformType">
+		<xs:annotation>
+			<xs:documentation>The description of options for obtaining the data set on computer-compatible media.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Digital Form"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="digformType">
+		<xs:sequence>
+			<xs:element ref="digtinfo"/>
+			<xs:element ref="digtopt"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="digtinfo" type="digtinfoType">
+		<xs:annotation>
+			<xs:documentation>Description of the form of the data to be distributed.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Digital Transfer Information"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([formverd,formvern]);checkRangeExcludeMin([transize,0.0]);checkForcedMandatory([formvern,formverd,formspec])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="digtinfoType">
+		<xs:sequence>
+			<xs:element ref="formname"/>
+			<xs:sequence minOccurs="0">
+				<xs:choice>
+					<xs:element ref="formvern"/>
+					<xs:element ref="formverd"/>
+				</xs:choice>
+				<xs:element ref="formspec" minOccurs="0"/>
+			</xs:sequence>
+			<xs:element ref="formcont" minOccurs="0"/>
+			<xs:element ref="filedec" minOccurs="0"/>
+			<xs:element ref="transize" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="formname" type="formnameType">
+		<xs:annotation>
+			<xs:documentation>The name of the data transfer format.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Format Name"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="formnameType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="ARCE"/>
+					<xs:enumeration value="ARCG"/>
+					<xs:enumeration value="ASCII"/>
+					<xs:enumeration value="BIL"/>
+					<xs:enumeration value="BIP"/>
+					<xs:enumeration value="BSQ"/>
+					<xs:enumeration value="CDF"/>
+					<xs:enumeration value="CFF"/>
+					<xs:enumeration value="COORD"/>
+					<xs:enumeration value="DEM"/>
+					<xs:enumeration value="DFAD"/>
+					<xs:enumeration value="DGN"/>
+					<xs:enumeration value="DIGEST"/>
+					<xs:enumeration value="DLG"/>
+					<xs:enumeration value="DTED"/>
+					<xs:enumeration value="DWG"/>
+					<xs:enumeration value="DX90"/>
+					<xs:enumeration value="DXF"/>
+					<xs:enumeration value="ERDAS"/>
+					<xs:enumeration value="GRASS"/>
+					<xs:enumeration value="HDF"/>
+					<xs:enumeration value="IGDS"/>
+					<xs:enumeration value="IGES"/>
+					<xs:enumeration value="MOSS"/>
+					<xs:enumeration value="netCDF"/>
+					<xs:enumeration value="NITF"/>
+					<xs:enumeration value="RPF"/>
+					<xs:enumeration value="RVC"/>
+					<xs:enumeration value="RVF"/>
+					<xs:enumeration value="SDTS"/>
+					<xs:enumeration value="SIF"/>
+					<xs:enumeration value="SLF"/>
+					<xs:enumeration value="TIFF"/>
+					<xs:enumeration value="TGRLN"/>
+					<xs:enumeration value="VPF"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="formvern" type="formvernType">
+		<xs:annotation>
+			<xs:documentation>Version number of the format.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Format Version Number"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="formvernType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="formverd" type="formverdType">
+		<xs:annotation>
+			<xs:documentation>Date of the version of the format.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Format Version Date"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="YYYY|YYYYMM|YYYYMMDD|bcYYYY|bcYYYYMM|bcYYYYMMDD|ccYYYYY...|cdYYYYY..."/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="formverdType">
+		<xs:restriction base="FGDCdate"/>
+	</xs:simpleType>
+	<xs:element name="formspec" type="formspecType">
+		<xs:annotation>
+			<xs:documentation>Name of a subset, profile, or product specification of the format.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Format Specification"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="formspecType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="formcont" type="formcontType">
+		<xs:annotation>
+			<xs:documentation>Description of the content of the data encoded in a format.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Format Information Content"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="formcontType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="filedec" type="filedecType">
+		<xs:annotation>
+			<xs:documentation>Recommendations of algorithms or processes (including means of obtaining these algorithms or processes) that can be applied to read or expand data sets to which data compression techniques have been applied.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="File Decompression Technique"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="filedecType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="No compression applied"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="transize" type="transizeType">
+		<xs:annotation>
+			<xs:documentation>The size, or estimated size, of the transferred data set in megabytes.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Transfer Size"/>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="string-input-format" fixed="Transfer Size &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="transizeType">
+		<xs:restriction base="xs:double">
+			<xs:minExclusive value="0.0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="digtopt" type="digtoptType">
+		<xs:annotation>
+			<xs:documentation>The means and media by which a data set is obtained from the distributor.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Digital Transfer Option"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkForcedMandatory([offoptn,onlinopt])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="digtoptType">
+		<xs:choice maxOccurs="unbounded">
+			<xs:element ref="onlinopt"/>
+			<xs:element ref="offoptn"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:element name="onlinopt" type="onlinoptType">
+		<xs:annotation>
+			<xs:documentation>Information required to directly obtain the data set electronically.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Online Option"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="onlinoptType">
+		<xs:sequence>
+			<xs:element ref="computer" maxOccurs="unbounded"/>
+			<xs:element ref="accinstr" minOccurs="0"/>
+			<xs:element ref="oncomp" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="computer" type="computerType">
+		<xs:annotation>
+			<xs:documentation>Instructions for establishing communications with the distribution computer.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Computer Contact Information"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([networka,dialinst])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="computerType">
+		<xs:choice>
+			<xs:element ref="networka"/>
+			<xs:element ref="dialinst"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:element name="networka" type="networkaType">
+		<xs:annotation>
+			<xs:documentation>The electronic address from which the data set can be obtained from the distribution computer.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Network Address"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="networkaType">
+		<xs:sequence>
+			<xs:element ref="networkr" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="networkr" type="networkrType">
+		<xs:annotation>
+			<xs:documentation>The name of the file or service from which the data set can be obtained.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Network Resource Name"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="networkrType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="dialinst" type="dialinstType">
+		<xs:annotation>
+			<xs:documentation>Information required to access the distribution computer remotely through telephone lines.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Dialup Instructions"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkGreaterThan([highbps,lowbps])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="dialinstType">
+		<xs:sequence>
+			<xs:element ref="lowbps"/>
+			<xs:element ref="highbps" minOccurs="0"/>
+			<xs:element ref="numdata"/>
+			<xs:element ref="numstop"/>
+			<xs:element ref="parity"/>
+			<xs:element ref="compress" minOccurs="0"/>
+			<xs:element ref="dialtel" maxOccurs="unbounded"/>
+			<xs:element ref="dialfile" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="bpsType">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="110"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="lowbps" type="lowbpsType">
+		<xs:annotation>
+			<xs:documentation>Lowest or only speed for the connection's communication, expressed in bits per second.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Lowest BPS"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="Lowest BPS &gt;= 110"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="lowbpsType">
+		<xs:restriction base="bpsType"/>
+	</xs:simpleType>
+	<xs:element name="highbps" type="highbpsType">
+		<xs:annotation>
+			<xs:documentation>Highest speed for the connection's communication, expressed in bits per second.  Used in cases when a range of rates are provided.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Highest BPS"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="string-input-format" fixed="Highest BPS &gt; Lowest BPS"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="highbpsType">
+		<xs:restriction base="bpsType"/>
+	</xs:simpleType>
+	<xs:element name="numdata" type="numdataType">
+		<xs:annotation>
+			<xs:documentation>Number of data bits in each character exchanged in the communication.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Number DataBits"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="7 &lt;= Number DataBits &lt;= 8"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="numdataType">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="7"/>
+			<xs:maxInclusive value="8"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="numstop" type="numstopType">
+		<xs:annotation>
+			<xs:documentation>Number of stop bits in each character exchanged in the communication.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Number StopBits"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="1 &lt;= Number StopBits &lt;= 2"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="numstopType">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="parity" type="parityType">
+		<xs:annotation>
+			<xs:documentation>Parity error checking used in each character exchanged in the communication.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Parity"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="parityType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="None"/>
+			<xs:enumeration value="Odd"/>
+			<xs:enumeration value="Even"/>
+			<xs:enumeration value="Mark"/>
+			<xs:enumeration value="Space"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="compress" type="compressType">
+		<xs:annotation>
+			<xs:documentation>Data compression available through the modem service to speed data transfer.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Compression Support"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="compressType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="V.32"/>
+					<xs:enumeration value="V.32bis"/>
+					<xs:enumeration value="V.42"/>
+					<xs:enumeration value="V.42bis"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="dialtel" type="dialtelType">
+		<xs:annotation>
+			<xs:documentation>The telephone number of the distribution computer.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Dialup Telephone"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="dialtelType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="dialfile" type="dialfileType">
+		<xs:annotation>
+			<xs:documentation>The name of a file containing the data set on the distribution computer.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Dialup File Name"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="dialfileType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="accinstr" type="accinstrType">
+		<xs:annotation>
+			<xs:documentation>Instructions on the steps required to access the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Access Instructions"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="accinstrType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="oncomp" type="oncompType">
+		<xs:annotation>
+			<xs:documentation>The brand of distribution computer and its operating system.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Online Computer and Operating System"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="oncompType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="offoptn" type="offoptnType">
+		<xs:annotation>
+			<xs:documentation>Information about media-specific options for receiving the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Offline Option"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="offoptnType">
+		<xs:sequence>
+			<xs:element ref="offmedia"/>
+			<xs:element ref="reccap" minOccurs="0"/>
+			<xs:element ref="recfmt" maxOccurs="unbounded"/>
+			<xs:element ref="compat" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="offmedia" type="offmediaType">
+		<xs:annotation>
+			<xs:documentation>Name of the media on which the data set can be received.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Offline Media"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="offmediaType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="CD-ROM"/>
+					<xs:enumeration value="3.5-inch floppy disk"/>
+					<xs:enumeration value="5.25-inch floppy disk"/>
+					<xs:enumeration value="9-track tape"/>
+					<xs:enumeration value="4mm cartridge tape"/>
+					<xs:enumeration value="8mm cartridge tape"/>
+					<xs:enumeration value=".25-inch cartridge tape"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="reccap" type="reccapType">
+		<xs:annotation>
+			<xs:documentation>The density of information to which data are written.  Used in cases where different recording capacities are possible.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Recording Capacity"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMin([recden,0.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="reccapType">
+		<xs:sequence>
+			<xs:element ref="recden" maxOccurs="unbounded"/>
+			<xs:element ref="recdenu"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="recden" type="recdenType">
+		<xs:annotation>
+			<xs:documentation>The density in which the data set can be recorded.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Recording Density"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="Recording Density &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="recdenType">
+		<xs:restriction base="xs:double">
+			<xs:minExclusive value="0.0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="recdenu" type="recdenuType">
+		<xs:annotation>
+			<xs:documentation>The units of measure for the recording density.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Recording Density Units"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="recdenuType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="recfmt" type="recfmtType">
+		<xs:annotation>
+			<xs:documentation>The options available or method used to write the data set to the medium.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Recording Format"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="is-multiple-selection" fixed="true"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="recfmtType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="cpio"/>
+					<xs:enumeration value="High Sierra"/>
+					<xs:enumeration value="ISO 9960"/>
+					<xs:enumeration value="ISO 9960 with Rock Ridge extensions"/>
+					<xs:enumeration value="ISO 9660 with Apple HFS extensions"/>
+					<xs:enumeration value="tar"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="compat" type="compatType">
+		<xs:annotation>
+			<xs:documentation>Description of other limitations or requirements for using the medium.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Compatibility Information"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="compatType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="fees" type="feesType">
+		<xs:annotation>
+			<xs:documentation>The fees and terms for retrieving the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Fees"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="feesType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="ordering" type="orderingType">
+		<xs:annotation>
+			<xs:documentation>General instructions and advice about, and special terms and services provided for, the data set by the distributor.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Ordering Instructions"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="orderingType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="turnarnd" type="turnarndType">
+		<xs:annotation>
+			<xs:documentation>Typical turnaround time for the filling of an order.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Turnaround"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="turnarndType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="custom" type="customType">
+		<xs:annotation>
+			<xs:documentation>Description of custom distribution services available, and the terms and conditions for obtaining these services.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Custom Order Process"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="customType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="techpreq" type="techpreqType">
+		<xs:annotation>
+			<xs:documentation>Description of any technical capabilities that the consumer must have to use the data set in the form(s) provided by the distributor.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Technical Prerequisites"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="techpreqType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="availabl" type="availablType">
+		<xs:annotation>
+			<xs:documentation>The time period when the data set will be available from the distributor.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Available Time Period"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="availablType">
+		<xs:sequence>
+			<xs:element ref="timeinfo"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

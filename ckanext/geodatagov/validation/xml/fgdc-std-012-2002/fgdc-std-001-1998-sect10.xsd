@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 sp1 (http://www.altova.com) by Systems Administrator (NCDDC) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" blockDefault="#all">
+	<xs:element name="cntinfo" type="cntinfoType">
+		<xs:annotation>
+			<xs:documentation>Contact information for an individual or organization that is knowledgeable about the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Contact Information"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([cntperp,cntorgp])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="cntinfoType">
+		<xs:sequence>
+			<xs:choice>
+				<xs:element ref="cntperp"/>
+				<xs:element ref="cntorgp"/>
+			</xs:choice>
+			<xs:element ref="cntpos" minOccurs="0"/>
+			<xs:element ref="cntaddr" maxOccurs="unbounded"/>
+			<xs:element ref="cntvoice" maxOccurs="unbounded"/>
+			<xs:element ref="cnttdd" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="cntfax" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="cntemail" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="hours" minOccurs="0"/>
+			<xs:element ref="cntinst" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="cntperp" type="cntperpType">
+		<xs:annotation>
+			<xs:documentation>The person, and the affiliation of the person, associated with the data set. Used in cases where the association of the person to the data set is more significant than the association of the organization to the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Contact Person Primary"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="cntperpType">
+		<xs:sequence>
+			<xs:element ref="cntper"/>
+			<xs:element ref="cntorg" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="cntper" type="cntperType">
+		<xs:annotation>
+			<xs:documentation>The name of the individual to which the contact type applies.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Contact Person"/>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="other-conditionalities" fixed="['Contact Person Primary']:Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="cntperType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="cntorg" type="cntorgType">
+		<xs:annotation>
+			<xs:documentation>The name of the organization to which the contact type applies.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Contact Organization"/>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="other-conditionalities" fixed="['Contact Organization Primary']:Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="cntorgType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="cntorgp" type="cntorgpType">
+		<xs:annotation>
+			<xs:documentation>The organization, and the member of the organization, associated with the data set.  Used in cases where the association of the organization to the data set is more significant than the association of the person to the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Contact Organization Primary"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="cntorgpType">
+		<xs:sequence>
+			<xs:element ref="cntorg"/>
+			<xs:element ref="cntper" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="cntpos" type="cntposType">
+		<xs:annotation>
+			<xs:documentation>The title of individual.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Contact Position"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="cntposType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="cntaddr" type="cntaddrType">
+		<xs:annotation>
+			<xs:documentation>The address for the organization or individual.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Contact Address"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="cntaddrType">
+		<xs:sequence>
+			<xs:element ref="addrtype"/>
+			<xs:element ref="address" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="city"/>
+			<xs:element ref="state"/>
+			<xs:element ref="postal"/>
+			<xs:element ref="country" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="addrtype" type="addrtypeType">
+		<xs:annotation>
+			<xs:documentation>The information provided by the address.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Address Type"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="addrtypeType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="mailing"/>
+					<xs:enumeration value="physical"/>
+					<xs:enumeration value="mailing and physical"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="address" type="addressType">
+		<xs:annotation>
+			<xs:documentation>An address line for the address.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Address"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="addressType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="city" type="cityType">
+		<xs:annotation>
+			<xs:documentation>"The city of the address.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="City"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="cityType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="state" type="stateType">
+		<xs:annotation>
+			<xs:documentation>The state or province of the address.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="State or Province"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="stateType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="postal" type="postalType">
+		<xs:annotation>
+			<xs:documentation>The ZIP or other postal code of the address.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Postal Code"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="postalType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="country" type="countryType">
+		<xs:annotation>
+			<xs:documentation>The country of the address.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Country"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="countryType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="cntvoice" type="cntvoiceType">
+		<xs:annotation>
+			<xs:documentation>The telephone number by which individuals can speak to the organization or individual</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Contact Voice Telephone"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="cntvoiceType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="cnttdd" type="cnttddType">
+		<xs:annotation>
+			<xs:documentation>The telephone number by which hearing-impaired individuals can contact the organization or individual.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Contact TTD/TTY Telephone"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="cnttddType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="cntfax" type="cntfaxType">
+		<xs:annotation>
+			<xs:documentation>The telephone number of a facsimile machine of the organization or individual.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Contact Facsimile Telephone"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="cntfaxType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="cntemail" type="cntemailType">
+		<xs:annotation>
+			<xs:documentation>The address of the electronic mailbox of the organization or individual.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Contact Electronic Mail Address"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="cntemailType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="hours" type="hoursType">
+		<xs:annotation>
+			<xs:documentation>Time period when individuals can speak to the organization or individual.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Hours of Service"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="hoursType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="cntinst" type="cntinstType">
+		<xs:annotation>
+			<xs:documentation>Supplemental instructions on how or when to contact the individual or organization.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Contact Instructions"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="cntinstType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+</xs:schema>

@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 sp1 (http://www.altova.com) by Systems Administrator (NCDDC) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" blockDefault="#all">
+	<xs:element name="plmiinfo" type="plmiinfoType">
+		<xs:annotation>
+			<xs:documentation>Descriptive information about the platform from which the measurements that produced the data and about the program of which the data collection was a part.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Platform and Mission Information"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="other-validation-rules" fixed="checkProperties([missinfo,platinfo])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="plmiinfoType">
+		<xs:sequence>
+			<xs:element ref="missinfo" minOccurs="0"/>
+			<xs:element ref="platinfo" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="missinfo" type="missinfoType">
+		<xs:annotation>
+			<xs:documentation>General information about the overall data gathering program to which the data contribute.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Mission Information"/>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="other-validation-rules" fixed="checkProperties([missdesc,misshist])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="missinfoType">
+		<xs:sequence>
+			<xs:element ref="missdesc" minOccurs="0"/>
+			<xs:element ref="misshist" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="missdesc" type="FGDCstring">
+		<xs:annotation>
+			<xs:documentation>Description of the mission of which the platform observations are part and the objectives of that mission.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Mission Description"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="misshist" type="misshistType">
+		<xs:annotation>
+			<xs:documentation>Significant events and dates over the history of the mission.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Mission History"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="misshistType">
+		<xs:sequence>
+			<xs:element ref="missstdt"/>
+			<xs:element ref="misssige" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="misscomp" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="missstdt" type="missstdtType">
+		<xs:annotation>
+			<xs:documentation>Date that mission during which data were taken began.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Mission Start Date"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="missstdtType">
+		<xs:sequence>
+			<xs:element ref="sngdate"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="misssige" type="missigeType">
+		<xs:annotation>
+			<xs:documentation>Date and description of a major occurrence during mission.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Mission Significant Event"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="missigeType">
+		<xs:sequence>
+			<xs:element ref="procstep" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="misscomp" type="misscompType">
+		<xs:annotation>
+			<xs:documentation>Scheduled or actual end date of mission during which data were taken.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Mission Completion"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="misscompType">
+		<xs:sequence>
+			<xs:element ref="sngdate"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="platinfo" type="platinfoType">
+		<xs:annotation>
+			<xs:documentation>General information about the platform from which the data were taken.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Platform Information"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="platinfoType">
+		<xs:sequence>
+			<xs:element ref="platstdt"/>
+			<xs:element ref="platspon" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="platdesc" minOccurs="0"/>
+			<xs:element ref="platforb" minOccurs="0"/>
+			<xs:element ref="fltprot" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="platstdt" type="platstdtType">
+		<xs:annotation>
+			<xs:documentation>Start date of platform operation.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Platform Start Date"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="platstdtType">
+		<xs:sequence>
+			<xs:element ref="sngdate"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="platspon" type="FGDCstring">
+		<xs:annotation>
+			<xs:documentation>An organization responsible for building, launch, or operation of the platform, and its role.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Platform Sponsor"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="platdesc" type="FGDCstring">
+		<xs:annotation>
+			<xs:documentation>Narrative description of the platform from which the data were taken.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Platform Description"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="platforb" type="platforbType">
+		<xs:annotation>
+			<xs:documentation>Orbital parameters of instrument platform.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Platform Orbit"/>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([kepleror,ngeopos])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="platforbType">
+		<xs:sequence>
+			<xs:element ref="ephem"/>
+			<xs:choice>
+				<xs:element ref="kepleror"/>
+				<xs:element ref="ngeopos"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="ephem" type="ephemerisType">
+		<xs:annotation>
+			<xs:documentation>Time at which nominal platform orbit or geostationary position is valid.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Ephemeris"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="ephemerisType">
+		<xs:sequence>
+			<xs:element ref="sngdate"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--kepleror-->
+	<xs:element name="kepleror" type="keplerorType">
+		<xs:annotation>
+			<xs:documentation>Nominal Keplerian elements of platform orbit.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Keplerian Orbit"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMax([eccentry,0.0,1.0]);checkRangeExcludeMax([raascnod,0.0,360.0]);checkRangeExcludeMax([argupgee,0.0,360.0]);checkAndOr([semimaax,orbitpd]);checkRangeExclusion([semimaax,6378.2,261000.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="keplerorType">
+		<xs:sequence>
+			<xs:sequence>
+				<xs:element ref="semimaax" minOccurs="0"/>
+				<xs:element ref="orbitpd" minOccurs="0"/>
+			</xs:sequence>
+			<xs:element ref="eccentry"/>
+			<xs:element ref="orbangun"/>
+			<xs:element ref="inclinat"/>
+			<xs:element ref="raascnod"/>
+			<xs:element ref="argupgee"/>
+			<xs:element ref="peripass"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="semimaax" type="semimaaxType">
+		<xs:annotation>
+			<xs:documentation>Semimajor axis of platform orbit, in kilometers.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Semimajor Axis"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="6378.2 &lt; Semimajor axis &lt; 261000.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="semimaaxType">
+		<xs:restriction base="xs:double">
+			<xs:minExclusive value="6378.2"/>
+			<xs:maxExclusive value="261000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="orbitpd" type="orbitpdType">
+		<xs:annotation>
+			<xs:documentation>Time from one perigee to the next. (&lt;i&gt;Note: The orbit period is related to the
+semimajor axis of the orbit by P&lt;span class=&quot;superscript&quot;&gt;2&lt;/span&gt;=4&#960;&lt;span class=&quot;superscript&quot;&gt;2&lt;/span&gt;a&lt;span class=&quot;superscript&quot;&gt;3&lt;/span&gt;/[G(M+m)], where P is the orbit period, a is the semimajor axis, G the universal gravitational constant, M the mass of the Earth, and m the mass of the satellite. In practice, because the product GM is easier to obtain than G or M, and because m &#706;&#706; M, the form P&lt;span class=&quot;superscript&quot;&gt;2&lt;/span&gt;=4&#960;&lt;span class=&quot;superscript&quot;&gt;2&lt;/span&gt;a&lt;span class=&quot;superscript&quot;&gt;3&lt;/span&gt;/GM is often used.&lt;/i&gt;)</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Orbit Period"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMin([orpdval,0.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="orbitpdType">
+		<xs:sequence>
+			<xs:element ref="orpdunit"/>
+			<xs:element ref="orpdval"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="orpdunit" type="orpdunitType">
+		<xs:annotation>
+			<xs:documentation>Unit of measure used to express orbit period.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Orbit Period Units"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="orpdunitType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="seconds"/>
+					<xs:enumeration value="minutes"/>
+					<xs:enumeration value="hours"/>
+					<xs:enumeration value="days"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="orpdval" type="orpdvalType">
+		<xs:annotation>
+			<xs:documentation>Time required for one platform orbit, in units given by Orbit Period Units.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Orbit Period Value"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="Orbit Period Value &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="orpdvalType">
+		<xs:restriction base="xs:double">
+			<xs:minExclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="eccentry" type="eccentryType">
+		<xs:annotation>
+			<xs:documentation>Eccentricity of orbit, equal to (1-&lt;i&gt;b/a&lt;/i&gt;)&lt;span class=&quot;superscript&quot;&gt;1/2&lt;/span&gt;, where &lt;i&gt;a&lt;/i&gt; is the length of the major axis and &lt;i&gt;b&lt;/i&gt; is the length of the minor axis of the orbit.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Eccentricity"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="0.0 &lt;= Eccentricity &lt; 1.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="eccentryType">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+			<xs:maxExclusive value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="orbangun" type="orbanfunType">
+		<xs:annotation>
+			<xs:documentation>Unit of measure used to express orbital angles.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Orbit Angle Units"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="orbanfunType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="degrees"/>
+					<xs:enumeration value="radians"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="inclinat" type="inclinatType">
+		<xs:annotation>
+			<xs:documentation>Angle between orbit and equator, in units given by Orbit Angle Units.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Inclination"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="0.0 &lt;= Inclination &lt;= 180.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="inclinatType">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="180"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="raascnod" type="raascnodType">
+		<xs:annotation>
+			<xs:documentation>The right ascension (angle eastward from the vernal equinox) where the satellite orbit crosses the equator, moving northward, in units given by Orbit Angle Units.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Right Ascension of Ascending Node"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="0.0 &lt;= Right Ascension of Ascending Node &lt; 360.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="raascnodType">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+			<xs:maxExclusive value="360"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="argupgee" type="argupgeeType">
+		<xs:annotation>
+			<xs:documentation>The angle between the ascending node and perigee, measured from the ascending node in the direction of the platform's motion along the plane of the orbit, in units given by Orbit Angle Units.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Argument of Perigee"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="0.0 &lt;= Argument of Perigee &lt; 360.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="argupgeeType">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+			<xs:maxExclusive value="360"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="peripass" type="peripassType">
+		<xs:annotation>
+			<xs:documentation>One date and time where platform was at closest point to earth in its orbit.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Perigee Passage Time"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="peripassType">
+		<xs:sequence>
+			<xs:element ref="sngdate"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ngeopos -->
+	<xs:element name="ngeopos" type="ngeoposType">
+		<xs:annotation>
+			<xs:documentation>Nominal location of platform designed to remain stationary over one point on earth.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Nominal Geostationary Position"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMin([pnomlong,-180.0,180.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="ngeoposType">
+		<xs:sequence>
+			<xs:element ref="pnomlong"/>
+			<xs:element ref="gpnalti"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="pnomlong" type="FGDClongitude">
+		<xs:annotation>
+			<xs:documentation>Nominal value for longitude of subsatellite point for geostationary satellite.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Platform Nominal Longitude"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="-180.0 &lt; Platform Nominal Longitude &lt;= 180.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="gpnalti" type="gpnaltiType">
+		<xs:annotation>
+			<xs:documentation>Nominal altitude of geostationary satellite above the surface given by Altitude Datum Name defined in base standard.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Platform Nominal Altitude"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="gpnaltiType">
+		<xs:sequence>
+			<xs:element ref="gpnaltun"/>
+			<xs:element ref="gpnaltva"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="gpnaltun" type="gpnaltunType">
+		<xs:annotation>
+			<xs:documentation>Units of measure in which nominal altitude for platform is expressed.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Platform Nominal Altitude Units"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="gpnaltunType">
+		<xs:sequence>
+			<xs:element ref="altunits"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="gpnaltva" type="positiveIntegerType">
+		<xs:annotation>
+			<xs:documentation>Value for nominal altitude of platform, in units given by Platform Nominal Altitude Units.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Platform Nominal Altitude Value"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="fltprot" type="fltprotType">
+		<xs:annotation>
+			<xs:documentation>Description of circumstances and properties of the flight track relevant to use of the images and data.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Flight Protocol"/>
+				<xs:attribute name="use" fixed="Optional"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMin([flyhite,0.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="fltprotType">
+		<xs:sequence>
+			<xs:element ref="flyhite"/>
+			<xs:element ref="gspavail" minOccurs="0"/>
+			<xs:element ref="insavail" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="flyhite" type="flyhiteType">
+		<xs:annotation>
+			<xs:documentation>Height of platform above ground in meters, with an uncertainty of 10-100 meters.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Flying Height"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="Flying Height &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="flyhiteType">
+		<xs:restriction base="xs:double">
+			<xs:minExclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="gspavail" type="gspavailType">
+		<xs:annotation>
+			<xs:documentation>Availability of three-dimensional Global Positioning System (GPS) positions.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="GPS Information System Availability"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="gspavailType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="available"/>
+			<xs:enumeration value="not available"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="insavail" type="insavailType">
+		<xs:annotation>
+			<xs:documentation>Availability of Inertial Navigation System (INS) readings along the flight line.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="INS Reading Availability"/>
+				<xs:attribute name="use" fixed="Optional"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="insavailType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="available"/>
+			<xs:enumeration value="not available"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

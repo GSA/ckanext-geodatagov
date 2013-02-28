@@ -1,0 +1,1722 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 sp1 (http://www.altova.com) by Systems Administrator (NCDDC) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" blockDefault="#all">
+	<xs:element name="spref" type="sprefType">
+		<xs:annotation>
+			<xs:documentation>The description of the reference frame for, and the means to encode, coordinates in the data set.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Spatial Reference Information"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="other-validation-rules" fixed="checkProperties([horizsys,vertdef])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="sprefType">
+		<xs:sequence>
+			<xs:element ref="horizsys" minOccurs="0"/>
+			<xs:element ref="vertdef" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="horizsys" type="horizsysType">
+		<xs:annotation>
+			<xs:documentation>The reference frame or system from which linear or angular quantities are measured and assigned to the position that a point occupies.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Horizontal Coordinate System Definition"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([geograph,planar,local])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="horizsysType">
+		<xs:sequence>
+			<xs:choice>
+				<xs:element ref="geograph"/>
+				<xs:element ref="planar" maxOccurs="unbounded"/>
+				<xs:element ref="local"/>
+			</xs:choice>
+			<xs:element ref="geodetic" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="geograph" type="geographType">
+		<xs:annotation>
+			<xs:documentation>The quantities of latitude and longitude which define the position of a point on the Earth's surface with respect to a reference spheroid.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Geographic"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMin([latres,0.0]);checkRangeExcludeMin([longres,0.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="geographType">
+		<xs:sequence>
+			<xs:element ref="latres"/>
+			<xs:element ref="longres"/>
+			<xs:element ref="geogunit"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="latres" type="latresType">
+		<xs:annotation>
+			<xs:documentation>The minimum difference between two adjacent latitude values expressed in Geographic Coordinate Units of measure.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Latitude Resolution"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="Latitude Resolution &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="latresType">
+		<xs:restriction base="xs:double">
+			<xs:minExclusive value="0.0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="longres" type="longresType">
+		<xs:annotation>
+			<xs:documentation>The minimum difference between two adjacent longitude values expressed in Geographic Coordinate Units of measure.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Longitude Resolution"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="Longitude Resolution &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="longresType">
+		<xs:restriction base="xs:double">
+			<xs:minExclusive value="0.0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="geogunit" type="geogunitType">
+		<xs:annotation>
+			<xs:documentation>Units of measure used for the latitude and longitude values.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Geographic Coordinate Units"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="geogunitType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="Decimal degrees"/>
+			<xs:enumeration value="Decimal minutes"/>
+			<xs:enumeration value="Decimal seconds"/>
+			<xs:enumeration value="Degrees and decimal minutes"/>
+			<xs:enumeration value="Degrees, minutes, and decimal seconds"/>
+			<xs:enumeration value="Radians"/>
+			<xs:enumeration value="Grads"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="planar" type="planarType">
+		<xs:annotation>
+			<xs:documentation>The quantities of distances, or distances and angles, which define the position of a point on a reference plane to which the surface of the Earth has been projected.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Planar"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([mapproj,gridsys,localp])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="planarType">
+		<xs:sequence>
+			<xs:choice>
+				<xs:element ref="mapproj"/>
+				<xs:element ref="gridsys"/>
+				<xs:element ref="localp"/>
+			</xs:choice>
+			<xs:element ref="planci"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="mapproj" type="mapprojType">
+		<xs:annotation>
+			<xs:documentation>The systematic representation of all or part of the surface of the Earth on a plane or developable surface.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Map Projection"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([albers,azimequi,equicon,equirect,gnomonic,gvnsp,lamberta,lambertc,mercator,miller,modsak,obqmerc,orthogr,polarst,polycon,robinson,sinusoid,spaceobq,stereo,transmer,vdgrin,otherprj,mapprojp])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="mapprojType">
+		<xs:sequence>
+			<xs:element ref="mapprojn"/>
+			<xs:choice>
+				<xs:element ref="albers"/>
+				<xs:element ref="azimequi"/>
+				<xs:element ref="equicon"/>
+				<xs:element ref="equirect"/>
+				<xs:element ref="gvnsp"/>
+				<xs:element ref="gnomonic"/>
+				<xs:element ref="lamberta"/>
+				<xs:element ref="lambertc"/>
+				<xs:element ref="mercator"/>
+				<xs:element ref="modsak"/>
+				<xs:element ref="miller"/>
+				<xs:element ref="obqmerc"/>
+				<xs:element ref="orthogr"/>
+				<xs:element ref="polarst"/>
+				<xs:element ref="polycon"/>
+				<xs:element ref="robinson"/>
+				<xs:element ref="sinusoid"/>
+				<xs:element ref="spaceobq"/>
+				<xs:element ref="stereo"/>
+				<xs:element ref="transmer"/>
+				<xs:element ref="vdgrin"/>
+				<xs:element ref="mapprojp"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="mapprojn" type="mapprojnType">
+		<xs:annotation>
+			<xs:documentation>Name of the map projection.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Map Projection Name"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="mapprojnType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="Albers Conical Equal Area"/>
+					<xs:enumeration value="Azimuthal Equidistant"/>
+					<xs:enumeration value="Equidistant Conic"/>
+					<xs:enumeration value="Equirectangular"/>
+					<xs:enumeration value="General Vertical Near-sided Perspective"/>
+					<xs:enumeration value="Gnomonic"/>
+					<xs:enumeration value="Lambert Azimuthal Equal Area"/>
+					<xs:enumeration value="Lambert Conformal Conic"/>
+					<xs:enumeration value="Mercator"/>
+					<xs:enumeration value="Modified Stereographic for Alaska"/>
+					<xs:enumeration value="Miller Cylindrical"/>
+					<xs:enumeration value="Oblique Mercator"/>
+					<xs:enumeration value="Orthographic"/>
+					<xs:enumeration value="Polar Stereographic"/>
+					<xs:enumeration value="Polyconic"/>
+					<xs:enumeration value="Robinson"/>
+					<xs:enumeration value="Sinusoidal"/>
+					<xs:enumeration value="Space Oblique Mercator"/>
+					<xs:enumeration value="Stereographic"/>
+					<xs:enumeration value="Transverse Mercator"/>
+					<xs:enumeration value="van der Grinten"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="albers" type="albersType">
+		<xs:annotation>
+			<xs:documentation>Contains parameters for the Albers Conical Equal Area projection.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Albers Conical Equal Area"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMax([longcm,-180.0,180.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="albersType">
+		<xs:sequence>
+			<xs:element ref="stdparll" maxOccurs="2"/>
+			<xs:element ref="longcm"/>
+			<xs:element ref="latprjo"/>
+			<xs:element ref="feast"/>
+			<xs:element ref="fnorth"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="azimequi" type="azimequiType">
+		<xs:annotation>
+			<xs:documentation>Contains parameters for the Azimuthal Equidistant projection.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Azimuthal Equidistant"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMax([longcm,-180.0,180.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="azimequiType">
+		<xs:sequence>
+			<xs:element ref="longcm"/>
+			<xs:element ref="latprjo"/>
+			<xs:element ref="feast"/>
+			<xs:element ref="fnorth"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="equicon" type="equiconType">
+		<xs:annotation>
+			<xs:documentation>Contains parameters for the  Equidistant Conic projection.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Equidistant Conic"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMax([longcm,-180.0,180.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="equiconType">
+		<xs:sequence>
+			<xs:element ref="stdparll" maxOccurs="2"/>
+			<xs:element ref="longcm"/>
+			<xs:element ref="latprjo"/>
+			<xs:element ref="feast"/>
+			<xs:element ref="fnorth"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="equirect" type="equirectType">
+		<xs:annotation>
+			<xs:documentation>Contains parameters for the  Equirectangular projection.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Equirectangular"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMax([longcm,-180.0,180.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="equirectType">
+		<xs:sequence>
+			<xs:element ref="stdparll"/>
+			<xs:element ref="longcm"/>
+			<xs:element ref="feast"/>
+			<xs:element ref="fnorth"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="gvnsp" type="gvnspType">
+		<xs:annotation>
+			<xs:documentation>Contains parameters for the  General Vertical Near-sided Perspective projection.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="General Vertical Near-sided Perspective"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMin([heightpt,0.0]);checkRangeExcludeMax([longpc,-180.0,180.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="gvnspType">
+		<xs:sequence>
+			<xs:element ref="heightpt"/>
+			<xs:element ref="longpc"/>
+			<xs:element ref="latprjc"/>
+			<xs:element ref="feast"/>
+			<xs:element ref="fnorth"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="gnomonic" type="gnomonicType">
+		<xs:annotation>
+			<xs:documentation>Contains parameters for the  Gnomonic projection.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Gnomonic"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMax([longpc,-180.0,180.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="gnomonicType">
+		<xs:sequence>
+			<xs:element ref="longpc"/>
+			<xs:element ref="latprjc"/>
+			<xs:element ref="feast"/>
+			<xs:element ref="fnorth"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="lamberta" type="lambertaType">
+		<xs:annotation>
+			<xs:documentation>Contains parameters for the  Lambert Azimuthal Equal Area projection.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Lambert Azimuthal Equal Area"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMax([longpc,-180.0,180.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="lambertaType">
+		<xs:sequence>
+			<xs:element ref="longpc"/>
+			<xs:element ref="latprjc"/>
+			<xs:element ref="feast"/>
+			<xs:element ref="fnorth"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="lambertc" type="lambertcType">
+		<xs:annotation>
+			<xs:documentation>Contains parameters for the  Lambert Conformal Conic projection.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Lambert Conformal Conic"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMax([longcm,-180.0,180.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="lambertcType">
+		<xs:sequence>
+			<xs:element ref="stdparll" maxOccurs="2"/>
+			<xs:element ref="longcm"/>
+			<xs:element ref="latprjo"/>
+			<xs:element ref="feast"/>
+			<xs:element ref="fnorth"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="mercator" type="mercatorType">
+		<xs:annotation>
+			<xs:documentation>Contains parameters for the  Mercator projection.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Mercator"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([stdparll,sfequat]);checkRangeExcludeMin([sfequat,0.0]);checkRangeExcludeMax([longcm,-180.0,180.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="mercatorType">
+		<xs:sequence>
+			<xs:choice>
+				<xs:element ref="stdparll"/>
+				<xs:element ref="sfequat"/>
+			</xs:choice>
+			<xs:element ref="longcm"/>
+			<xs:element ref="feast"/>
+			<xs:element ref="fnorth"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="modsak" type="modsakType">
+		<xs:annotation>
+			<xs:documentation>Contains parameters for the  Modified Stereographic for Alaska projection.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Modified Stereographic for Alaska"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="modsakType">
+		<xs:sequence>
+			<xs:element ref="feast"/>
+			<xs:element ref="fnorth"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="miller" type="millerType">
+		<xs:annotation>
+			<xs:documentation>Contains parameters for the Miller Cylindrical projection.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Miller Cylindrical"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMax([longcm,-180.0,180.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="millerType">
+		<xs:sequence>
+			<xs:element ref="longcm"/>
+			<xs:element ref="feast"/>
+			<xs:element ref="fnorth"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="obqmerc" type="obqmercType">
+		<xs:annotation>
+			<xs:documentation>Contains parameters for the  Oblique Mercator projection.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Oblique Mercator"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([obqlazim,obqlpt]);checkRangeExcludeMin([sfctrlin,0.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="obqmercType">
+		<xs:sequence>
+			<xs:element ref="sfctrlin"/>
+			<xs:choice>
+				<xs:element ref="obqlazim"/>
+				<xs:element ref="obqlpt"/>
+			</xs:choice>
+			<xs:element ref="latprjo"/>
+			<xs:element ref="feast"/>
+			<xs:element ref="fnorth"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="orthogr" type="orthogrType">
+		<xs:annotation>
+			<xs:documentation>Contains parameters for the  Orthographic projection.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Orthographic"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMax([longpc,-180.0,180.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="orthogrType">
+		<xs:sequence>
+			<xs:element ref="longpc"/>
+			<xs:element ref="latprjc"/>
+			<xs:element ref="feast"/>
+			<xs:element ref="fnorth"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="polarst" type="polarstType">
+		<xs:annotation>
+			<xs:documentation>"Contains parameters for the  Polar Stereographic projection.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Polar Stereographic"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([stdparll,sfprjorg]);checkRangeExcludeMin([sfprjorg,0.0]);checkRangeExcludeMax([svlong,-180.0,180.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="polarstType">
+		<xs:sequence>
+			<xs:element ref="svlong"/>
+			<xs:choice>
+				<xs:element ref="stdparll"/>
+				<xs:element ref="sfprjorg"/>
+			</xs:choice>
+			<xs:element ref="feast"/>
+			<xs:element ref="fnorth"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="polycon" type="polyconType">
+		<xs:annotation>
+			<xs:documentation>Contains parameters for the  Polyconic projection.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Polyconic"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMax([longcm,-180.0,180.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="polyconType">
+		<xs:sequence>
+			<xs:element ref="longcm"/>
+			<xs:element ref="latprjo"/>
+			<xs:element ref="feast"/>
+			<xs:element ref="fnorth"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="robinson" type="robinsonType">
+		<xs:annotation>
+			<xs:documentation>Contains parameters for the  Robinson projection.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Robinson"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMax([longpc,-180.0,180.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="robinsonType">
+		<xs:sequence>
+			<xs:element ref="longpc"/>
+			<xs:element ref="feast"/>
+			<xs:element ref="fnorth"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="sinusoid" type="sinusoidType">
+		<xs:annotation>
+			<xs:documentation>Contains parameters for the  Sinusoidal projection.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Sinusoidal"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMax([longcm,-180.0,180.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="sinusoidType">
+		<xs:sequence>
+			<xs:element ref="longcm"/>
+			<xs:element ref="feast"/>
+			<xs:element ref="fnorth"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="spaceobq" type="spaceobqType">
+		<xs:annotation>
+			<xs:documentation>Contains parameters for the  Space Oblique Mercator (Landsat) projection.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Space Oblique Mercator (Landsat)"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkPathNum([pathnum])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="spaceobqType">
+		<xs:sequence>
+			<xs:element ref="landsat"/>
+			<xs:element ref="pathnum"/>
+			<xs:element ref="feast"/>
+			<xs:element ref="fnorth"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="stereo" type="stereoType">
+		<xs:annotation>
+			<xs:documentation>Contains parameters for the  Stereographic projection.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Stereographic"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMax([longpc,-180.0,180.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="stereoType">
+		<xs:sequence>
+			<xs:element ref="longpc"/>
+			<xs:element ref="latprjc"/>
+			<xs:element ref="feast"/>
+			<xs:element ref="fnorth"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="transmer" type="transmerType">
+		<xs:annotation>
+			<xs:documentation>Contains parameters for the  Transverse Mercator projection.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Transverse Mercator"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMax([longcm,-180.0,180.0]);checkRangeExcludeMin([sfctrmer,0.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="transmerType">
+		<xs:sequence>
+			<xs:element ref="sfctrmer"/>
+			<xs:element ref="longcm"/>
+			<xs:element ref="latprjo"/>
+			<xs:element ref="feast"/>
+			<xs:element ref="fnorth"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="vdgrin" type="vdgrinType">
+		<xs:annotation>
+			<xs:documentation>Contains parameters for the  van der Grinten projection.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="van der Grinten"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMax([longcm,-180.0,180.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="vdgrinType">
+		<xs:sequence>
+			<xs:element ref="longcm"/>
+			<xs:element ref="feast"/>
+			<xs:element ref="fnorth"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="mapprojp" type="mapprojpType">
+		<xs:annotation>
+			<xs:documentation>A complete parameter set of the projection that was used for the data set.  The information provided shall include the names of the parameters and values used for the data set that describe the mathematical relationship between the earth and the plane or developable surface for the projection.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Map Projection Parameters"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMax([longpc,-180.0,180.0]);checkRangeExcludeMax([longcm,-180.0,180.0]);checkRangeExcludeMax([svlong,-180.0,180.0]);checkPathNum([pathnum]);checkRangeExcludeMin([heightpt,0.0]);checkRangeExcludeMin([sfctrlin,0.0]);checkRangeExcludeMin([sfequat,0.0]);checkRangeExcludeMin([sfprjorg,0.0]);checkRangeExcludeMin([sfctrmer,0.0]);checkAndOr([feast,fnorth,heightpt,landsat,latprjc,latprjo,longcm,longpc,obqlazim,obqlpt,pathnum,sfctrlin,sfctrmer,sfequat,sfprjorg,stdparll,svlong])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="mapprojpType">
+		<xs:choice maxOccurs="unbounded">
+			<xs:element ref="stdparll"/>
+			<xs:element ref="longcm"/>
+			<xs:element ref="latprjo"/>
+			<xs:element ref="feast"/>
+			<xs:element ref="fnorth"/>
+			<xs:element ref="sfequat"/>
+			<xs:element ref="heightpt"/>
+			<xs:element ref="longpc"/>
+			<xs:element ref="latprjc"/>
+			<xs:element ref="sfctrlin"/>
+			<xs:element ref="obqlazim"/>
+			<xs:element ref="obqlpt"/>
+			<xs:element ref="svlong"/>
+			<xs:element ref="sfprjorg"/>
+			<xs:element ref="landsat"/>
+			<xs:element ref="pathnum"/>
+			<xs:element ref="sfctrmer"/>
+			<xs:element ref="otherprj"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:element name="stdparll" type="stdparllType">
+		<xs:annotation>
+			<xs:documentation>Line of constant latitude at which the surface of the Earth and the plane or developable surface intersect.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Standard Parallel"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="-90.0 &lt;= Standard Parallel &lt;= 90.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="stdparllType">
+		<xs:restriction base="FGDClatitude"/>
+	</xs:simpleType>
+	<xs:element name="longcm" type="longcmType">
+		<xs:annotation>
+			<xs:documentation>The line of longitude at the center of a map projection generally used as the basis for constructing the projection.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Longitude of Central Meridian"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="-180.0 &lt;= Longitude of Central Meridian &lt; 180.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="longcmType">
+		<xs:restriction base="FGDClongitude">
+			<xs:maxExclusive value="180.0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="latprjo" type="latprjoType">
+		<xs:annotation>
+			<xs:documentation>Latitude chosen as the origin of rectangular coordinates for a map projection.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Latitude of Projection Origin"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="-90.0 &lt;= Latitude of Projection Origin &lt;= 90.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="latprjoType">
+		<xs:restriction base="FGDClatitude"/>
+	</xs:simpleType>
+	<xs:element name="feast" type="feastType">
+		<xs:annotation>
+			<xs:documentation>The value added to all 'x' values in the rectangular coordinates for a map projection.  This value frequently is assigned to eliminate negative numbers.  Expressed in the unit of measure identified in Planar Coordinate Units.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="False Easting"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="feastType">
+		<xs:restriction base="xs:double"/>
+	</xs:simpleType>
+	<xs:element name="fnorth" type="fnorthType">
+		<xs:annotation>
+			<xs:documentation>The value added to all 'y' values in the rectangular coordinates for a map projection.  This value frequently is assigned to eliminate negative numbers.  Expressed in the unit of measure identified in Planar Coordinate Units.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="False Northing"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="fnorthType">
+		<xs:restriction base="xs:double"/>
+	</xs:simpleType>
+	<xs:element name="sfequat" type="sfequatType">
+		<xs:annotation>
+			<xs:documentation>A multiplier for reducing a distance obtained from a map by computation or scaling to the actual distance along the equator.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Scale Factor at Equator"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="Scale Factor at Equator &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="sfequatType">
+		<xs:restriction base="xs:double">
+			<xs:minExclusive value="0.0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="heightpt" type="heightptType">
+		<xs:annotation>
+			<xs:documentation>Height of viewpoint above the Earth, expressed in meters.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Height of Perspective Point Above Surface"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="Height of Perspective Point Above Surface &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="heightptType">
+		<xs:restriction base="xs:double">
+			<xs:minExclusive value="0.0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="longpc" type="longpcType">
+		<xs:annotation>
+			<xs:documentation>Longitude of the point of projection for azimuthal projections.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Longitude of Projection Center"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="-180.0 &lt;= Longitude of Projection Center &lt; 180.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="longpcType">
+		<xs:restriction base="FGDClongitude">
+			<xs:maxExclusive value="180.0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="latprjc" type="latprjcType">
+		<xs:annotation>
+			<xs:documentation>Latitude of the point of projection for azimuthal projections.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Latitude of Projection Center"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="-90.0 &lt;= Latitude of Projection Center &lt;= 90.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="latprjcType">
+		<xs:restriction base="FGDClatitude"/>
+	</xs:simpleType>
+	<xs:element name="sfctrlin" type="sfctrlinType">
+		<xs:annotation>
+			<xs:documentation>A multiplier for reducing a distance obtained from a map by computation or scaling to the actual distance along the center line.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Scale Factor at Center Line"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="Scale Factor at Center Line &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="sfctrlinType">
+		<xs:restriction base="xs:double">
+			<xs:minExclusive value="0.0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="obqlazim" type="obqlazimType">
+		<xs:annotation>
+			<xs:documentation>Method used to describe the line along which an oblique mercator map projection is centered using the map projection origin and an azimuth.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Oblique Line Azimuth"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMax([azimangl,0.0,360.0]);checkRangeExcludeMax([azimptl,-180.0,180.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="obqlazimType">
+		<xs:sequence>
+			<xs:element ref="azimangl"/>
+			<xs:element ref="azimptl"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="azimangl" type="azimanglType">
+		<xs:annotation>
+			<xs:documentation>Angle measured clockwise from north, and expressed in degrees.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Azimuthal Angle"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="0.0 &lt;= Azimuthal Angle &lt; 360.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="azimanglType">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0.0"/>
+			<xs:maxExclusive value="360.0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="azimptl" type="azimptlType">
+		<xs:annotation>
+			<xs:documentation>Longitude of the map projection origin.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Azimuth Measure Point Longitude"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="-180.0 &lt;= Azimuthal Measure Point Longitude &lt; 180.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="azimptlType">
+		<xs:restriction base="FGDClongitude">
+			<xs:maxExclusive value="180.0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="obqlpt" type="obqlptType">
+		<xs:annotation>
+			<xs:documentation>Method used to describe the line along which an oblique mercator map projection is centered using two points near the limits of the mapped region that define the center line.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Oblique Line Point"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMax([obqllong,-180.0,180.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="obqlptType">
+		<xs:sequence minOccurs="2" maxOccurs="2">
+			<xs:element ref="obqllat"/>
+			<xs:element ref="obqllong"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="obqllat" type="obqllatType">
+		<xs:annotation>
+			<xs:documentation>Latitude of a point defining the oblique line.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Oblique Line Latitude"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="-90.0 &lt;= Oblique Line Latitude &lt;= 90.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="obqllatType">
+		<xs:restriction base="FGDClatitude"/>
+	</xs:simpleType>
+	<xs:element name="obqllong" type="obqllongType">
+		<xs:annotation>
+			<xs:documentation>Longitude of a point defining the oblique line.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Oblique Line Longitude"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="-180.0 &lt;= Oblique Line Longitude &lt; 180.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="obqllongType">
+		<xs:restriction base="FGDClongitude">
+			<xs:maxExclusive value="180.0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="svlong" type="svlongType">
+		<xs:annotation>
+			<xs:documentation>Longitude to be oriented straight up from the North or South Pole.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Straight Vertical Longitude from Pole"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="-180.0 &lt;= Straight Vertical Longitude from Pole &lt; 180.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="svlongType">
+		<xs:restriction base="FGDClongitude">
+			<xs:maxExclusive value="180.0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="sfprjorg" type="sfprjorgType">
+		<xs:annotation>
+			<xs:documentation>A multiplier for reducing a distance obtained from a map by computation or scaling to the actual distance at the projection origin.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Scale Factor at Projection Origin"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="Scale Factor at Projection Origin &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="sfprjorgType">
+		<xs:restriction base="xs:double">
+			<xs:minExclusive value="0.0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="landsat" type="landsatType">
+		<xs:annotation>
+			<xs:documentation>Number of the Landsat satellite.  (Note:  This data element exists solely to provide a parameter needed to define the space oblique mercator projection.  It is not used to identify data originating from a remote sensing vehicle.)</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Landsat Number"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="landsatType">
+		<xs:restriction base="xs:positiveInteger"/>
+	</xs:simpleType>
+	<xs:element name="pathnum" type="pathnumType">
+		<xs:annotation>
+			<xs:documentation>Number of the orbit of the Landsat satellite. (Note: This data element exists solely to provide a parameter needed to define the space oblique mercator projection.  It is not used to identify data originating from a remote sensing vehicle.)</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Path Number"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="0 &lt; Path Number &lt; 251 for Landsats 1,2, or 3|0 &lt; Path Number &lt; 233 for Landsats 4 or 5|free integer"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="pathnumType">
+		<xs:restriction base="xs:positiveInteger"/>
+	</xs:simpleType>
+	<xs:element name="sfctrmer" type="sfctrmerType">
+		<xs:annotation>
+			<xs:documentation>A multiplier for reducing a distance obtained from a map by computation or scaling to the actual distance along the central meridian.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Scale Factor at Central Meridian"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="Scale Factor at Central Meridian &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="sfctrmerType">
+		<xs:restriction base="xs:double">
+			<xs:minExclusive value="0.0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="otherprj" type="otherprjType">
+		<xs:annotation>
+			<xs:documentation>A description of a projection, not defined elsewhere in the standard, that was used for the data set. The information provided shall include the name of the projection, names of parameters and values used for the data set, and the citation of the specification for the algorithms that describe the mathematical relationship between Earth and plane or developable surface for the projection.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Other Projection Definition"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="otherprjType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="gridsys" type="gridsysType">
+		<xs:annotation>
+			<xs:documentation>A plane-rectangular coordinate system usually based on, and mathematically adjusted to, a map projection so that geographic positions can be  readily transformed to and from plane coordinates.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Grid Coordinate System"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([utm,ups,spcs,arcsys,othergrd]);checkObjRelation([gridsysn,Universal_Transverse_Mercator [Universal Transverse Mercator] Universal_Polar_Stereographic [Universal Polar Stereographic] State_Plane_Coordinate_System_1927 State_Plane_Coordinate_System_1983 [State Plane Coordinate System] ARC_Coordinate_System [ARC Coordinate System] Other_grid_system [Other Grid System Definition]])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="gridsysType">
+		<xs:sequence>
+			<xs:element ref="gridsysn"/>
+			<xs:choice>
+				<xs:element ref="utm"/>
+				<xs:element ref="ups"/>
+				<xs:element ref="spcs"/>
+				<xs:element ref="arcsys"/>
+				<xs:element ref="othergrd"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="gridsysn" type="gridsysnType">
+		<xs:annotation>
+			<xs:documentation>Name of the grid coordinate system.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Grid Coordinate System Name"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="gridsysnType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="Universal Transverse Mercator"/>
+			<xs:enumeration value="Universal Polar Stereographic"/>
+			<xs:enumeration value="State Plane Coordinate System 1927"/>
+			<xs:enumeration value="State Plane Coordinate System 1983"/>
+			<xs:enumeration value="ARC Coordinate System"/>
+			<xs:enumeration value="other grid system"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="utm" type="utmType">
+		<xs:annotation>
+			<xs:documentation>A grid system based on the transverse mercator projection, applied between latitudes 84 degrees north and 80 degrees south on the Earth's surface.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Universal Transverse Mercator"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkExclusionRange([utmzone,-60,-1,1,60])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="utmType">
+		<xs:sequence>
+			<xs:element ref="utmzone"/>
+			<xs:element ref="transmer"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="utmzone" type="utmzoneType">
+		<xs:annotation>
+			<xs:documentation>Identifier for the UTM zone.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="UTM Zone Number"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="1 &lt;= UTM Zone Number &lt;= 60 for the northern hemisphere|-60 &lt;= UTM Zone Number &lt;= -1 for the southern hemisphere"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="utmzoneType">
+		<xs:union>
+			<xs:simpleType>
+				<xs:restriction base="xs:integer">
+					<xs:minInclusive value="-60"/>
+					<xs:maxInclusive value="-1"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:simpleType>
+				<xs:restriction base="xs:integer">
+					<xs:minInclusive value="1"/>
+					<xs:maxInclusive value="60"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="ups" type="upsType">
+		<xs:annotation>
+			<xs:documentation>A grid system based on the polar stereographic projection, applied to the Earth's polar regions north of 84 degrees north and south of 80 degrees south.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Universal Polar Stereographic"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="upsType">
+		<xs:sequence>
+			<xs:element ref="upszone"/>
+			<xs:element ref="polarst"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="upszone" type="upszoneType">
+		<xs:annotation>
+			<xs:documentation>Identifier for the UPS zone.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="UPS Zone Identifier"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="upszoneType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="A"/>
+			<xs:enumeration value="B"/>
+			<xs:enumeration value="Y"/>
+			<xs:enumeration value="Z"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="spcs" type="spcsType">
+		<xs:annotation>
+			<xs:documentation>A plane-rectangular coordinate system established for each state in the United States by the National Geodetic Survey.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="State Plane Coordinate System"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([lambertc,transmer,obqmerc,polycon])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="spcsType">
+		<xs:sequence>
+			<xs:element ref="spcszone"/>
+			<xs:choice>
+				<xs:element ref="lambertc"/>
+				<xs:element ref="transmer"/>
+				<xs:element ref="obqmerc"/>
+				<xs:element ref="polycon"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="spcszone" type="spcszoneType">
+		<xs:annotation>
+			<xs:documentation>Identifier for the SPCS zone.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="SPCS Zone Identifier"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="spcszoneType">
+		<xs:restriction base="FGDCstring">
+			<xs:pattern value="\d{4}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="arcsys" type="arcsysType">
+		<xs:annotation>
+			<xs:documentation>The Equal Arc-second Coordinate System, a plane-rectangular coordinate system established in Department of Defense, 1990, Military specification ARC Digitized Raster Graphics (ADRG) (MIL-A-89007):  Philadelphia, Department of Defense, Defense Printing Service Detachment Office.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="ARC Coordinate System"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([equirect,azimequi])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="arcsysType">
+		<xs:sequence>
+			<xs:element ref="arczone"/>
+			<xs:choice>
+				<xs:element ref="equirect"/>
+				<xs:element ref="azimequi"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="arczone" type="arczoneType">
+		<xs:annotation>
+			<xs:documentation>Identifier for the ARC Coordinate System Zone.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="ARC Zone Identifier"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="1 &lt;= ARC System Zone Identifier &lt;= 18"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="arczoneType">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="18"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="othergrd" type="othergrdType">
+		<xs:annotation>
+			<xs:documentation>A complete description of a grid system, not defined elsewhere in this standard, that was used for the data set.  The information provided shall include the name of the grid system, the names of the parameters and values used for the data set, and the citation of the specification for the algorithms that describe the mathematical relationship between the Earth and the coordinates of the grid system.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Other Grid System Definition"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="othergrdType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="localp" type="localpType">
+		<xs:annotation>
+			<xs:documentation>Any right-handed planar coordinate system of which the z-axis coincides with a plumb line through the origin that locally is aligned with the surface of the Earth.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Local Planar"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="localpType">
+		<xs:sequence>
+			<xs:element ref="localpd"/>
+			<xs:element ref="localpgi"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="localpd" type="localpdType">
+		<xs:annotation>
+			<xs:documentation>A description of the local planar system.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Local Planar Description"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="localpdType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="localpgi" type="localpgiType">
+		<xs:annotation>
+			<xs:documentation>A description of the information provided to register the local planar system to the Earth (e.g. control points, satellite ephemeral data, inertial navigation data).</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Local Planar Georeference Information"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="localpgiType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="planci" type="planciType">
+		<xs:annotation>
+			<xs:documentation>Information about the coordinate system developed on the planar surface.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Planar Coordinate Information"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkOr([coordrep,distbrep])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="planciType">
+		<xs:sequence>
+			<xs:element ref="plance"/>
+			<xs:choice>
+				<xs:element ref="coordrep"/>
+				<xs:element ref="distbrep"/>
+			</xs:choice>
+			<xs:element ref="plandu"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="plance" type="planceType">
+		<xs:annotation>
+			<xs:documentation>The means used to represent horizontal positions.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Planar Coordinate Encoding Method"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="planceType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="coordinate pair"/>
+			<xs:enumeration value="distance and bearing"/>
+			<xs:enumeration value="row and column"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="coordrep" type="coordrepType">
+		<xs:annotation>
+			<xs:documentation>The method of encoding the position of a point by measuring its distance from perpendicular reference axes (the 'coordinate pair' and 'row and column' methods).</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Coordinate Representation"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMin([absres,0.0]);checkRangeExcludeMin([ordres,0.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="coordrepType">
+		<xs:sequence>
+			<xs:element ref="absres"/>
+			<xs:element ref="ordres"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="absres" type="absresType">
+		<xs:annotation>
+			<xs:documentation>The (nominal) minimum distance between the 'x' or column values of two adjacent points, expressed in Planar Distance Units of measure.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Abscissa Resolution"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="Abscissa Resolution &gt; 0.0."/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="absresType">
+		<xs:restriction base="xs:double">
+			<xs:minExclusive value="0.0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="ordres" type="ordresType">
+		<xs:annotation>
+			<xs:documentation>The (nominal) minimum distance between the 'y' or row values of two adjacent points, expressed in Planar Distance Units of measure.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Ordinate Resolution"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="Ordinate Resolution &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="ordresType">
+		<xs:restriction base="xs:double">
+			<xs:minExclusive value="0.0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="distbrep" type="distbrepType">
+		<xs:annotation>
+			<xs:documentation>A method of encoding the position of a point by measuring its distance and direction (azimuth angle) from another point.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Distance and Bearing Representation"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMin([distres,0.0]);checkRangeExcludeMin([bearres,0.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="distbrepType">
+		<xs:sequence>
+			<xs:element ref="distres"/>
+			<xs:element ref="bearres"/>
+			<xs:element ref="bearunit"/>
+			<xs:element ref="bearrefd"/>
+			<xs:element ref="bearrefm"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="distres" type="distresType">
+		<xs:annotation>
+			<xs:documentation>The minimum distance measurable between two points, expressed Planar Distance Units of measure.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Distance Resolution"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="Distance Resolution &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="distresType">
+		<xs:restriction base="xs:double">
+			<xs:minExclusive value="0.0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="bearres" type="bearresType">
+		<xs:annotation>
+			<xs:documentation>The minimum angle measurable between two points, expressed in Bearing Units of measure.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Bearing Resolution"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="Bearing Resolution &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="bearresType">
+		<xs:restriction base="xs:double">
+			<xs:minExclusive value="0.0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="bearunit" type="bearunitType">
+		<xs:annotation>
+			<xs:documentation>Units of measure used for angles.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Bearing Units"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="bearunitType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="Decimal degrees"/>
+			<xs:enumeration value="Decimal minutes"/>
+			<xs:enumeration value="Decimal seconds"/>
+			<xs:enumeration value="Degrees and decimal minutes"/>
+			<xs:enumeration value="Degrees, minutes, and decimal seconds"/>
+			<xs:enumeration value="Radians"/>
+			<xs:enumeration value="Grads"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="bearrefd" type="bearrefdType">
+		<xs:annotation>
+			<xs:documentation>Direction from which the bearing is measured.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Bearing Reference Direction"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="bearrefdType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="North"/>
+			<xs:enumeration value="South"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="bearrefm" type="bearrefmType">
+		<xs:annotation>
+			<xs:documentation>Axis from which the bearing is measured.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Bearing Reference Meridian"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="bearrefmType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="Assumed"/>
+			<xs:enumeration value="Grid"/>
+			<xs:enumeration value="Magnetic"/>
+			<xs:enumeration value="Astronomic"/>
+			<xs:enumeration value="Geodetic"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="plandu" type="planduType">
+		<xs:annotation>
+			<xs:documentation>Units of measure used for distances.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Planar Distance Units"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="planduType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="meters"/>
+					<xs:enumeration value="international feet"/>
+					<xs:enumeration value="survey feet"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="local" type="localType">
+		<xs:annotation>
+			<xs:documentation>A description of any coordinate system that is not aligned with the surface of the Earth.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Local"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="localType">
+		<xs:sequence>
+			<xs:element ref="localdes"/>
+			<xs:element ref="localgeo"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="localdes" type="localdesType">
+		<xs:annotation>
+			<xs:documentation>A description of the coordinate system and its orientation to the surface of the Earth.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Local Description"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="localdesType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="localgeo" type="localgeoType">
+		<xs:annotation>
+			<xs:documentation>A description of the information provided to register the local system to the Earth (e.g. control points, satellite ephemeral data, inertial navigation data).</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Local Georeference Information"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="localgeoType">
+		<xs:restriction base="FGDCstring"/>
+	</xs:simpleType>
+	<xs:element name="geodetic" type="geodeticType">
+		<xs:annotation>
+			<xs:documentation>Parameters for the shape of the earth.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Geodetic Model"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMin([semiaxis,0.0]);checkRangeExcludeMin([denflat,0.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="geodeticType">
+		<xs:sequence>
+			<xs:element ref="horizdn" minOccurs="0"/>
+			<xs:element ref="ellips"/>
+			<xs:element ref="semiaxis"/>
+			<xs:element ref="denflat"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="horizdn" type="horizdnType">
+		<xs:annotation>
+			<xs:documentation>The identification given to the reference system used for defining the coordinates of points.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Horizontal Datum Name"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="horizdnType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="North American Datum of 1927"/>
+					<xs:enumeration value="North American Datum of 1983"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="ellips" type="ellipsType">
+		<xs:annotation>
+			<xs:documentation>Identification given to established representations of the Earth's shape.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Ellipsoid Name"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="ellipsType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="Clarke 1866"/>
+					<xs:enumeration value="Geodetic Reference System 80"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="semiaxis" type="semiaxisType">
+		<xs:annotation>
+			<xs:documentation>Radius of the equatorial axis of the ellipsoid.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Semi-major Axis"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="Semi-major Axis &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="semiaxisType">
+		<xs:restriction base="xs:double">
+			<xs:minExclusive value="0.0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="denflat" type="denflatType">
+		<xs:annotation>
+			<xs:documentation>The denominator of the ratio of the difference between the equatorial and polar radii of the ellipsoid when the numerator is set to 1.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Denominator of Flattening Ratio"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="Denominator of Flattening &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="denflatType">
+		<xs:restriction base="xs:double">
+			<xs:minExclusive value="0.0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="vertdef" type="vertdefType">
+		<xs:annotation>
+			<xs:documentation>The reference frame or system from which vertical distances (altitudes or depths) are measured.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Vertical Coordinate System Definition"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="other-validation-rules" fixed="checkProperties([altsys,depthsys])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="vertdefType">
+		<xs:sequence>
+			<xs:element ref="altsys" minOccurs="0"/>
+			<xs:element ref="depthsys" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="altsys" type="altsysType">
+		<xs:annotation>
+			<xs:documentation>"The reference frame or system from which altitudes (elevations) are measured.  The term 'altitude' is used instead of the common term 'elevation' to conform to the terminology in Federal Information Processing Standards 70-1 and 173.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Altitude System Definition"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMin([altres,0.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="altsysType">
+		<xs:sequence>
+			<xs:element ref="altdatum"/>
+			<xs:element ref="altres" maxOccurs="unbounded"/>
+			<xs:element ref="altunits"/>
+			<xs:element ref="altenc"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="altdatum" type="altdatumType">
+		<xs:annotation>
+			<xs:documentation>The identification given to the surface taken as the surface of reference from which altitudes are measured.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Altitude Datum Name"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="altdatumType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="National Geodetic Vertical Datum of 1929"/>
+					<xs:enumeration value="North American Vertical Datum of 1988"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="altres" type="altresType">
+		<xs:annotation>
+			<xs:documentation>The minimum distance possible between two adjacent altitude values, expressed in Altitude Distance Units of measure.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Altitude Resolution"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="Altitude Resolution &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="altresType">
+		<xs:restriction base="xs:double">
+			<xs:minExclusive value="0.0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="altunits" type="altunitsType">
+		<xs:annotation>
+			<xs:documentation>Units in which altitudes are recorded.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Altitude Distance Units"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="altunitsType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="meters"/>
+					<xs:enumeration value="feet"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="altenc" type="altencType">
+		<xs:annotation>
+			<xs:documentation>The means used to encode the altitudes.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Altitude Encoding Method"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="altencType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="Explicit elevation coordinate included with horizontal coordinates"/>
+			<xs:enumeration value="Implicit coordinate"/>
+			<xs:enumeration value="Attribute values"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="depthsys" type="depthsysType">
+		<xs:annotation>
+			<xs:documentation>The reference frame or system from which depths are measured.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Depth System Definition"/>
+				<xs:attribute name="use" fixed="Mandatory-if-applicable"/>
+				<xs:attribute name="other-validation-rules" fixed="checkRangeExcludeMin([depthres,0.0])"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="depthsysType">
+		<xs:sequence>
+			<xs:element ref="depthdn"/>
+			<xs:element ref="depthres" maxOccurs="unbounded"/>
+			<xs:element ref="depthdu"/>
+			<xs:element ref="depthem"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="depthdn" type="depthdnType">
+		<xs:annotation>
+			<xs:documentation>The identification given to surface of reference from which depths are measured.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Depth Datum Name"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="depthdnType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="Approximate lowest astronomical tide"/>
+					<xs:enumeration value="Chart datum: datum for sounding reduction"/>
+					<xs:enumeration value="Columbia River datum"/>
+					<xs:enumeration value="Equatorial springs low water"/>
+					<xs:enumeration value="Gulf Coast low water datum"/>
+					<xs:enumeration value="High water"/>
+					<xs:enumeration value="High-water full and charge"/>
+					<xs:enumeration value="Higher high water"/>
+					<xs:enumeration value="Highest astronomical tide"/>
+					<xs:enumeration value="Indian spring low water"/>
+					<xs:enumeration value="Land survey datum"/>
+					<xs:enumeration value="Local surface"/>
+					<xs:enumeration value="Low water"/>
+					<xs:enumeration value="Low-water datum"/>
+					<xs:enumeration value="Low-water full and charge"/>
+					<xs:enumeration value="Lower low water"/>
+					<xs:enumeration value="Lowest low water"/>
+					<xs:enumeration value="Lowest normal low water"/>
+					<xs:enumeration value="Lowest astronomical tide"/>
+					<xs:enumeration value="Mean low water"/>
+					<xs:enumeration value="Mean high water"/>
+					<xs:enumeration value="Mean high water neap"/>
+					<xs:enumeration value="Mean high water springs"/>
+					<xs:enumeration value="Mean low water neap"/>
+					<xs:enumeration value="Mean low water springs"/>
+					<xs:enumeration value="Mean sea level"/>
+					<xs:enumeration value="Mean lower low water"/>
+					<xs:enumeration value="Mean lower low water springs"/>
+					<xs:enumeration value="Mean lower high water"/>
+					<xs:enumeration value="Mean higher low water"/>
+					<xs:enumeration value="Mean higher high water"/>
+					<xs:enumeration value="Mean tide level"/>
+					<xs:enumeration value="Neap tide"/>
+					<xs:enumeration value="No correction"/>
+					<xs:enumeration value="Spring tide"/>
+					<xs:enumeration value="Tropic lower low water"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="depthres" type="depthresType">
+		<xs:annotation>
+			<xs:documentation>The minimum distance possible between two adjacent depth values, expressed in Depth Distance Units of measure.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Depth Resolution"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+				<xs:attribute name="string-input-format" fixed="Depth Resolution &gt; 0.0"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="depthresType">
+		<xs:restriction base="xs:double">
+			<xs:minExclusive value="0.0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="depthdu" type="depthduType">
+		<xs:annotation>
+			<xs:documentation>Units in which depths are recorded.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Depth Distance Units"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="depthduType">
+		<xs:union memberTypes="FGDCstring">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="meters"/>
+					<xs:enumeration value="feet"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:element name="depthem" type="depthemType">
+		<xs:annotation>
+			<xs:documentation>The means used to encode depths.</xs:documentation>
+			<xs:appinfo>
+				<xs:attribute name="mdname" fixed="Depth Encoding Method"/>
+				<xs:attribute name="use" fixed="Mandatory"/>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:element>
+	<xs:simpleType name="depthemType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="Explicit depth coordinate included with horizontal coordinates"/>
+			<xs:enumeration value="Implicit coordinate"/>
+			<xs:enumeration value="Attribute values"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>
