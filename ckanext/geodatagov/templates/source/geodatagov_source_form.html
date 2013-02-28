@@ -11,7 +11,7 @@
          <div class="control-group harvest-types">
            <label class="control-label">Validation</label>
            <div class="controls">
-             {% for key, value in h.get_validation_profiles().items() %}
+             {% for key, value in h.get_validation_profiles() %}
                {% set checked = key == (data.validator_profiles or '')  %}
                <label class="radio">
                  <input type="radio" name="validator_profiles" value="{{ key }}" {{ "checked " if checked }}>

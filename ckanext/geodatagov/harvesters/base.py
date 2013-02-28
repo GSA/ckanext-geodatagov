@@ -17,11 +17,11 @@ custom_validators = [MinimalFGDCValidator, FGDC1998Schema, FGDC1999Schema,
         FGDC2001Schema, FGDC2002Schema]
 
 
-VALIDATION_PROFILES = {'': 'Autodetect',
-                       'iso19139ngdc' : 'ISO19139 XSD Schema (NGDC)',
-                       }
+VALIDATION_PROFILES = [('', 'Autodetect'),
+                       ('iso19139ngdc', 'ISO19139 XSD Schema (NGDC)'),
+                       ]
 for custom_validator in custom_validators:
-    VALIDATION_PROFILES[custom_validator.name] = custom_validator.title
+    VALIDATION_PROFILES.append((custom_validator.name, custom_validator.title))
 
 
 def validate_profiles(profile):
