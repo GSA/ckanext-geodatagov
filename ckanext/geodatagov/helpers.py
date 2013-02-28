@@ -23,7 +23,7 @@ def get_harvest_object_formats(harvest_object_id):
 
     def format_title(format_name):
         format_titles = {
-            'iso': 'ISO-10139',
+            'iso': 'ISO-19139',
             'fgdc': 'FGDC',
             'arcgis_json': 'ArcGIS JSON'
         }
