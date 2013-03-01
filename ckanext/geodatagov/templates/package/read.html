@@ -28,9 +28,10 @@
             <div>
               <span class="format-label" property="dc:format" data-format="{{ ho_formats.object_format_type}}">{{ ho_formats.object_format}}</span>
               <a href="/harvest/object/{{ harvest_object_id }}">Download Metadata</a> ({{ ho_formats.object_format}})
-
-              <span class="format-label" property="dc:format" data-format="html">HTML</span>
-              <a href="/harvest/object/{{ harvest_object_id }}/html">View Full Metadata</a>
+              {% if ho_formats.object_format == 'ISO-19139' %}
+                  <span class="format-label" property="dc:format" data-format="html">HTML</span>
+                  <a href="/harvest/object/{{ harvest_object_id }}/html">View Full Metadata</a>
+              {% endif %}
             </div>
             {% if ho_formats.original_format %}
             <div>
