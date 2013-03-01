@@ -25,7 +25,7 @@ for custom_validator in custom_validators:
 
 
 def validate_profiles(profile):
-    if profile not in VALIDATION_PROFILES.keys():
+    if profile not in [p[0] for p in VALIDATION_PROFILES]:
         raise Invalid('Unknown validation profile: {0}'.format(profile))
     return profile
 
