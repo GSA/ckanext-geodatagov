@@ -2,6 +2,8 @@
 <!--
 
  This file was adapted originally from Esri Geoportal Server source code.
+ Changes:
+    * Allow standalone rendering (create a complete HTML file)
 
 =====================================================
 ESRI Geoportal Server

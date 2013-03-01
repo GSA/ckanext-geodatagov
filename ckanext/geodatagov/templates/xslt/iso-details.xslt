@@ -2,20 +2,24 @@
 <!--
 
  This file was adapted originally from Esri Geoportal Server source code.
+ Changes:
+    * Allow standalone rendering (create a complete HTML file)
+    * Support both gmd:MD_Metadata and gmi:MI_Metadata
+    * Define properties in file
 
-=====================================================
-ESRI Geoportal Server
-Copyright ©2010 Esri. 
-=====================================================
+ =====================================================
+ ESRI Geoportal Server
+ Copyright ©2010 Esri. 
+ =====================================================
 
-This product was created based on contributions from Esri, Inc for the Geoportal, Ontology Service, CSW clients, Publishing Client, Flex Widget, Silverlight Widget, and OpenLS Connector.
+ This product was created based on contributions from Esri, Inc for the Geoportal, Ontology Service, CSW clients, Publishing Client, Flex Widget, Silverlight Widget, and OpenLS Connector.
 
   
 
-This product includes software developed at
+ This product includes software developed at
 
-Esri. (http://www.esri.com/).
-=====================================================
+ Esri. (http://www.esri.com/).
+ =====================================================
 
 
  See the NOTICE file distributed with
@@ -1164,879 +1168,879 @@ Esri. (http://www.esri.com/).
 		<xsl:param name="key" />
 	<!-- Converted parameters from gpt.properties -->
 		<xsl:choose>	
-			<xsl:when test=' $key = &quot;catalog.iso19139.gco.CodeListValue.codeList&quot; '>i18n.catalog.iso19139.gco.CodeListValue.codeList</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.gco.CodeListValue.codeListValue&quot; '>i18n.catalog.iso19139.gco.CodeListValue.codeListValue</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.gco.CodeListValue.codeSpace&quot; '>i18n.catalog.iso19139.gco.CodeListValue.codeSpace</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.gco.ObjectIdentification.id&quot; '>i18n.catalog.iso19139.gco.ObjectIdentification.id</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.gco.ObjectIdentification.uuid&quot; '>i18n.catalog.iso19139.gco.ObjectIdentification.uuid</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.gco.ObjectReference.uuidref&quot; '>i18n.catalog.iso19139.gco.ObjectReference.uuidref</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.MD_Identification&quot; '>i18n.catalog.iso19139.MD_Metadata.MD_Identification</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.MD_DataIdentification&quot; '>i18n.catalog.iso19139.MD_Metadata.MD_DataIdentification</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.MD_ServiceIdentification&quot; '>i18n.catalog.iso19139.MD_Metadata.MD_ServiceIdentification</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.MD_BrowseGraphic&quot; '>i18n.catalog.iso19139.MD_Metadata.MD_BrowseGraphic</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.Multiplicity&quot; '>i18n.catalog.iso19139.Multiplicity</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.Multiplicity.range&quot; '>i18n.catalog.iso19139.Multiplicity.range</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MultiplicityRange&quot; '>i18n.catalog.iso19139.MultiplicityRange</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MultiplicityRange.lower&quot; '>i18n.catalog.iso19139.MultiplicityRange.lower</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MultiplicityRange.upper&quot; '>i18n.catalog.iso19139.MultiplicityRange.upper</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.Length&quot; '>i18n.catalog.iso19139.Length</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.Length.km&quot; '>i18n.catalog.iso19139.Length.km</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.Length.m&quot; '>i18n.catalog.iso19139.Length.m</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.Length.mi&quot; '>i18n.catalog.iso19139.Length.mi</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.Length.ft&quot; '>i18n.catalog.iso19139.Length.ft</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.Length.uom&quot; '>i18n.catalog.iso19139.Length.uom</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ApplicationSchemaInformation&quot; '>i18n.catalog.iso19139.MD_ApplicationSchemaInformation</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ApplicationSchemaInformation.name&quot; '>i18n.catalog.iso19139.MD_ApplicationSchemaInformation.name</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ApplicationSchemaInformation.schemaLanguage&quot; '>i18n.catalog.iso19139.MD_ApplicationSchemaInformation.schemaLanguage</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ApplicationSchemaInformation.constraintLanguage&quot; '>i18n.catalog.iso19139.MD_ApplicationSchemaInformation.constraintLanguage</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ApplicationSchemaInformation.schemaAscii&quot; '>i18n.catalog.iso19139.MD_ApplicationSchemaInformation.schemaAscii</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ApplicationSchemaInformation.graphicsFile&quot; '>i18n.catalog.iso19139.MD_ApplicationSchemaInformation.graphicsFile</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ApplicationSchemaInformation.softwareDevelopmentFile&quot; '>i18n.catalog.iso19139.MD_ApplicationSchemaInformation.softwareDevelopmentFile</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ApplicationSchemaInformation.softwareDevelopmentFileFormat&quot; '>i18n.catalog.iso19139.MD_ApplicationSchemaInformation.softwareDevelopmentFileFormat</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_ResponsibleParty&quot; '>i18n.catalog.iso19139.CI_ResponsibleParty</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_ResponsibleParty.individualName&quot; '>i18n.catalog.iso19139.CI_ResponsibleParty.individualName</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_ResponsibleParty.organisationName&quot; '>i18n.catalog.iso19139.CI_ResponsibleParty.organisationName</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_ResponsibleParty.positionName&quot; '>i18n.catalog.iso19139.CI_ResponsibleParty.positionName</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_ResponsibleParty.contactInfo&quot; '>i18n.catalog.iso19139.CI_ResponsibleParty.contactInfo</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_ResponsibleParty.role&quot; '>i18n.catalog.iso19139.CI_ResponsibleParty.role</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Contact&quot; '>i18n.catalog.iso19139.CI_Contact</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Contact.phone&quot; '>i18n.catalog.iso19139.CI_Contact.phone</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Contact.address&quot; '>i18n.catalog.iso19139.CI_Contact.address</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Contact.onlineResource&quot; '>i18n.catalog.iso19139.CI_Contact.onlineResource</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Contact.hoursOfService&quot; '>i18n.catalog.iso19139.CI_Contact.hoursOfService</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Contact.contactInstructions&quot; '>i18n.catalog.iso19139.CI_Contact.contactInstructions</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Telephone&quot; '>i18n.catalog.iso19139.CI_Telephone</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Telephone.voice&quot; '>i18n.catalog.iso19139.CI_Telephone.voice</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Telephone.facsimile&quot; '>i18n.catalog.iso19139.CI_Telephone.facsimile</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Address&quot; '>i18n.catalog.iso19139.CI_Address</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Address.deliveryPoint&quot; '>i18n.catalog.iso19139.CI_Address.deliveryPoint</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Address.city&quot; '>i18n.catalog.iso19139.CI_Address.city</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Address.administrativeArea&quot; '>i18n.catalog.iso19139.CI_Address.administrativeArea</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Address.postalCode&quot; '>i18n.catalog.iso19139.CI_Address.postalCode</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Address.country&quot; '>i18n.catalog.iso19139.CI_Address.country</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Address.electronicMailAddress&quot; '>i18n.catalog.iso19139.CI_Address.electronicMailAddress</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_OnlineResource&quot; '>i18n.catalog.iso19139.CI_OnlineResource</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_OnlineResource.linkage&quot; '>i18n.catalog.iso19139.CI_OnlineResource.linkage</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_OnlineResource.protocol&quot; '>i18n.catalog.iso19139.CI_OnlineResource.protocol</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_OnlineResource.applicationProfile&quot; '>i18n.catalog.iso19139.CI_OnlineResource.applicationProfile</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_OnlineResource.name&quot; '>i18n.catalog.iso19139.CI_OnlineResource.name</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_OnlineResource.description&quot; '>i18n.catalog.iso19139.CI_OnlineResource.description</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_OnlineResource.function&quot; '>i18n.catalog.iso19139.CI_OnlineResource.function</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_OnLineFunctionCode&quot; '>i18n.catalog.iso19139.CI_OnLineFunctionCode</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_OnLineFunctionCode.caption&quot; '>i18n.catalog.iso19139.CI_OnLineFunctionCode.caption</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_OnLineFunctionCode.download&quot; '>i18n.catalog.iso19139.CI_OnLineFunctionCode.download</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_OnLineFunctionCode.information&quot; '>i18n.catalog.iso19139.CI_OnLineFunctionCode.information</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_OnLineFunctionCode.offlineAccess&quot; '>i18n.catalog.iso19139.CI_OnLineFunctionCode.offlineAccess</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_OnLineFunctionCode.order&quot; '>i18n.catalog.iso19139.CI_OnLineFunctionCode.order</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_OnLineFunctionCode.search&quot; '>i18n.catalog.iso19139.CI_OnLineFunctionCode.search</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_RoleCode&quot; '>i18n.catalog.iso19139.CI_RoleCode</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_RoleCode.caption&quot; '>i18n.catalog.iso19139.CI_RoleCode.caption</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_RoleCode.resourceProvider&quot; '>i18n.catalog.iso19139.CI_RoleCode.resourceProvider</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_RoleCode.custodian&quot; '>i18n.catalog.iso19139.CI_RoleCode.custodian</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_RoleCode.owner&quot; '>i18n.catalog.iso19139.CI_RoleCode.owner</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_RoleCode.user&quot; '>i18n.catalog.iso19139.CI_RoleCode.user</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_RoleCode.distributor&quot; '>i18n.catalog.iso19139.CI_RoleCode.distributor</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_RoleCode.originator&quot; '>i18n.catalog.iso19139.CI_RoleCode.originator</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_RoleCode.pointOfContact&quot; '>i18n.catalog.iso19139.CI_RoleCode.pointOfContact</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_RoleCode.principalInvestigator&quot; '>i18n.catalog.iso19139.CI_RoleCode.principalInvestigator</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_RoleCode.processor&quot; '>i18n.catalog.iso19139.CI_RoleCode.processor</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_RoleCode.publisher&quot; '>i18n.catalog.iso19139.CI_RoleCode.publisher</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_RoleCode.author&quot; '>i18n.catalog.iso19139.CI_RoleCode.author</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Date&quot; '>i18n.catalog.iso19139.CI_Date</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Date.date&quot; '>i18n.catalog.iso19139.CI_Date.date</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Date.dateType&quot; '>i18n.catalog.iso19139.CI_Date.dateType</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_DateTypeCode&quot; '>i18n.catalog.iso19139.CI_DateTypeCode</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_DateTypeCode.creation&quot; '>i18n.catalog.iso19139.CI_DateTypeCode.creation</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_DateTypeCode.publication&quot; '>i18n.catalog.iso19139.CI_DateTypeCode.publication</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_DateTypeCode.revision&quot; '>i18n.catalog.iso19139.CI_DateTypeCode.revision</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_PresentationFormCode&quot; '>i18n.catalog.iso19139.CI_PresentationFormCode</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_PresentationFormCode.documentDigital&quot; '>i18n.catalog.iso19139.CI_PresentationFormCode.documentDigital</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_PresentationFormCode.documentHardcopy&quot; '>i18n.catalog.iso19139.CI_PresentationFormCode.documentHardcopy</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_PresentationFormCode.imageDigital&quot; '>i18n.catalog.iso19139.CI_PresentationFormCode.imageDigital</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_PresentationFormCode.imageHardcopy&quot; '>i18n.catalog.iso19139.CI_PresentationFormCode.imageHardcopy</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_PresentationFormCode.mapDigital&quot; '>i18n.catalog.iso19139.CI_PresentationFormCode.mapDigital</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_PresentationFormCode.mapHardcopy&quot; '>i18n.catalog.iso19139.CI_PresentationFormCode.mapHardcopy</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_PresentationFormCode.modelDigital&quot; '>i18n.catalog.iso19139.CI_PresentationFormCode.modelDigital</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_PresentationFormCode.modelHardcopy&quot; '>i18n.catalog.iso19139.CI_PresentationFormCode.modelHardcopy</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_PresentationFormCode.profileDigital&quot; '>i18n.catalog.iso19139.CI_PresentationFormCode.profileDigital</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_PresentationFormCode.profileHardcopy&quot; '>i18n.catalog.iso19139.CI_PresentationFormCode.profileHardcopy</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_PresentationFormCode.tableDigital&quot; '>i18n.catalog.iso19139.CI_PresentationFormCode.tableDigital</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_PresentationFormCode.tableHardcopy&quot; '>i18n.catalog.iso19139.CI_PresentationFormCode.tableHardcopy</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_PresentationFormCode.videoDigital&quot; '>i18n.catalog.iso19139.CI_PresentationFormCode.videoDigital</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_PresentationFormCode.videoHardcopy&quot; '>i18n.catalog.iso19139.CI_PresentationFormCode.videoHardcopy</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Series&quot; '>i18n.catalog.iso19139.CI_Series</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Series.name&quot; '>i18n.catalog.iso19139.CI_Series.name</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Series.issueIdentification&quot; '>i18n.catalog.iso19139.CI_Series.issueIdentification</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Series.page&quot; '>i18n.catalog.iso19139.CI_Series.page</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Citation&quot; '>i18n.catalog.iso19139.CI_Citation</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Citation.title&quot; '>i18n.catalog.iso19139.CI_Citation.title</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Citation.alternateTitle&quot; '>i18n.catalog.iso19139.CI_Citation.alternateTitle</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Citation.date&quot; '>i18n.catalog.iso19139.CI_Citation.date</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Citation.edition&quot; '>i18n.catalog.iso19139.CI_Citation.edition</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Citation.editionDate&quot; '>i18n.catalog.iso19139.CI_Citation.editionDate</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Citation.identifier&quot; '>i18n.catalog.iso19139.CI_Citation.identifier</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Citation.citedResponsibleParty&quot; '>i18n.catalog.iso19139.CI_Citation.citedResponsibleParty</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Citation.presentationForm&quot; '>i18n.catalog.iso19139.CI_Citation.presentationForm</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Citation.series&quot; '>i18n.catalog.iso19139.CI_Citation.series</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Citation.otherCitationDetails&quot; '>i18n.catalog.iso19139.CI_Citation.otherCitationDetails</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Citation.ISBN&quot; '>i18n.catalog.iso19139.CI_Citation.ISBN</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Citation.ISSN&quot; '>i18n.catalog.iso19139.CI_Citation.ISSN</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Citation.specification.title&quot; '>i18n.catalog.iso19139.CI_Citation.specification.title</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Citation.specification.date&quot; '>i18n.catalog.iso19139.CI_Citation.specification.date</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Constraints&quot; '>i18n.catalog.iso19139.MD_Constraints</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Constraints.useLimitation&quot; '>i18n.catalog.iso19139.MD_Constraints.useLimitation</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_LegalConstraints&quot; '>i18n.catalog.iso19139.MD_LegalConstraints</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_LegalConstraints.accessConstraints&quot; '>i18n.catalog.iso19139.MD_LegalConstraints.accessConstraints</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_LegalConstraints.useConstraints&quot; '>i18n.catalog.iso19139.MD_LegalConstraints.useConstraints</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_LegalConstraints.otherConstraints&quot; '>i18n.catalog.iso19139.MD_LegalConstraints.otherConstraints</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_SecurityConstraints&quot; '>i18n.catalog.iso19139.MD_SecurityConstraints</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_SecurityConstraints.classification&quot; '>i18n.catalog.iso19139.MD_SecurityConstraints.classification</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_SecurityConstraints.userNote&quot; '>i18n.catalog.iso19139.MD_SecurityConstraints.userNote</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_SecurityConstraints.classificationSystem&quot; '>i18n.catalog.iso19139.MD_SecurityConstraints.classificationSystem</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_SecurityConstraints.handlingDescription&quot; '>i18n.catalog.iso19139.MD_SecurityConstraints.handlingDescription</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ClassificationCode&quot; '>i18n.catalog.iso19139.MD_ClassificationCode</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ClassificationCode.unclassified&quot; '>i18n.catalog.iso19139.MD_ClassificationCode.unclassified</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ClassificationCode.restricted&quot; '>i18n.catalog.iso19139.MD_ClassificationCode.restricted</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ClassificationCode.confidential&quot; '>i18n.catalog.iso19139.MD_ClassificationCode.confidential</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ClassificationCode.secret&quot; '>i18n.catalog.iso19139.MD_ClassificationCode.secret</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ClassificationCode.topSecret&quot; '>i18n.catalog.iso19139.MD_ClassificationCode.topSecret</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_RestrictionCode&quot; '>i18n.catalog.iso19139.MD_RestrictionCode</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_RestrictionCode.copyright&quot; '>i18n.catalog.iso19139.MD_RestrictionCode.copyright</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_RestrictionCode.patent&quot; '>i18n.catalog.iso19139.MD_RestrictionCode.patent</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_RestrictionCode.patentPending&quot; '>i18n.catalog.iso19139.MD_RestrictionCode.patentPending</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_RestrictionCode.trademark&quot; '>i18n.catalog.iso19139.MD_RestrictionCode.trademark</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_RestrictionCode.license&quot; '>i18n.catalog.iso19139.MD_RestrictionCode.license</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_RestrictionCode.intellectualPropertyRights&quot; '>i18n.catalog.iso19139.MD_RestrictionCode.intellectualPropertyRights</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_RestrictionCode.restricted&quot; '>i18n.catalog.iso19139.MD_RestrictionCode.restricted</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_RestrictionCode.otherRestrictions&quot; '>i18n.catalog.iso19139.MD_RestrictionCode.otherRestrictions</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DigitalTransferOptions&quot; '>i18n.catalog.iso19139.MD_DigitalTransferOptions</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DigitalTransferOptions.unitsOfDistribution&quot; '>i18n.catalog.iso19139.MD_DigitalTransferOptions.unitsOfDistribution</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DigitalTransferOptions.transferSize&quot; '>i18n.catalog.iso19139.MD_DigitalTransferOptions.transferSize</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DigitalTransferOptions.onLine&quot; '>i18n.catalog.iso19139.MD_DigitalTransferOptions.onLine</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DigitalTransferOptions.offLine&quot; '>i18n.catalog.iso19139.MD_DigitalTransferOptions.offLine</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Distribution&quot; '>i18n.catalog.iso19139.MD_Distribution</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Distribution.distributionFormat&quot; '>i18n.catalog.iso19139.MD_Distribution.distributionFormat</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Distribution.distributor&quot; '>i18n.catalog.iso19139.MD_Distribution.distributor</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Distribution.transferOptions&quot; '>i18n.catalog.iso19139.MD_Distribution.transferOptions</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Distributor&quot; '>i18n.catalog.iso19139.MD_Distributor</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Distributor.distributorContact&quot; '>i18n.catalog.iso19139.MD_Distributor.distributorContact</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Distributor.distributionOrderProcess&quot; '>i18n.catalog.iso19139.MD_Distributor.distributionOrderProcess</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Distributor.distributorFormat&quot; '>i18n.catalog.iso19139.MD_Distributor.distributorFormat</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Distributor.distributorTransferOptions&quot; '>i18n.catalog.iso19139.MD_Distributor.distributorTransferOptions</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Format&quot; '>i18n.catalog.iso19139.MD_Format</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Format.name&quot; '>i18n.catalog.iso19139.MD_Format.name</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Format.version&quot; '>i18n.catalog.iso19139.MD_Format.version</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Format.amendmentNumber&quot; '>i18n.catalog.iso19139.MD_Format.amendmentNumber</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Format.specification&quot; '>i18n.catalog.iso19139.MD_Format.specification</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Format.fileDecompressionTechnique&quot; '>i18n.catalog.iso19139.MD_Format.fileDecompressionTechnique</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Format.formatDistributor&quot; '>i18n.catalog.iso19139.MD_Format.formatDistributor</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Medium&quot; '>i18n.catalog.iso19139.MD_Medium</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Medium.name&quot; '>i18n.catalog.iso19139.MD_Medium.name</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Medium.density&quot; '>i18n.catalog.iso19139.MD_Medium.density</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Medium.densityUnits&quot; '>i18n.catalog.iso19139.MD_Medium.densityUnits</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Medium.volumes&quot; '>i18n.catalog.iso19139.MD_Medium.volumes</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Medium.mediumFormat&quot; '>i18n.catalog.iso19139.MD_Medium.mediumFormat</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Medium.mediumNote&quot; '>i18n.catalog.iso19139.MD_Medium.mediumNote</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_StandardOrderProcess&quot; '>i18n.catalog.iso19139.MD_StandardOrderProcess</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_StandardOrderProcess.fees&quot; '>i18n.catalog.iso19139.MD_StandardOrderProcess.fees</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_StandardOrderProcess.plannedAvailableDateTime&quot; '>i18n.catalog.iso19139.MD_StandardOrderProcess.plannedAvailableDateTime</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_StandardOrderProcess.orderingInstructions&quot; '>i18n.catalog.iso19139.MD_StandardOrderProcess.orderingInstructions</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_StandardOrderProcess.turnaround&quot; '>i18n.catalog.iso19139.MD_StandardOrderProcess.turnaround</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DistributionUnits&quot; '>i18n.catalog.iso19139.MD_DistributionUnits</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumFormatCode&quot; '>i18n.catalog.iso19139.MD_MediumFormatCode</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumFormatCode.cpio&quot; '>i18n.catalog.iso19139.MD_MediumFormatCode.cpio</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumFormatCode.tar&quot; '>i18n.catalog.iso19139.MD_MediumFormatCode.tar</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumFormatCode.highSierra&quot; '>i18n.catalog.iso19139.MD_MediumFormatCode.highSierra</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumFormatCode.iso9660&quot; '>i18n.catalog.iso19139.MD_MediumFormatCode.iso9660</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumFormatCode.iso9660RockRidge&quot; '>i18n.catalog.iso19139.MD_MediumFormatCode.iso9660RockRidge</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumFormatCode.iso9660AppleHFS&quot; '>i18n.catalog.iso19139.MD_MediumFormatCode.iso9660AppleHFS</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode&quot; '>i18n.catalog.iso19139.MD_MediumNameCode</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode.cdRom&quot; '>i18n.catalog.iso19139.MD_MediumNameCode.cdRom</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode.dvd&quot; '>i18n.catalog.iso19139.MD_MediumNameCode.dvd</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode.dvdRom&quot; '>i18n.catalog.iso19139.MD_MediumNameCode.dvdRom</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode.3halfInchFloppy&quot; '>i18n.catalog.iso19139.MD_MediumNameCode.3halfInchFloppy</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode.5quarterInchFloppy&quot; '>i18n.catalog.iso19139.MD_MediumNameCode.5quarterInchFloppy</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode.7trackTape&quot; '>i18n.catalog.iso19139.MD_MediumNameCode.7trackTape</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode.9trackType&quot; '>i18n.catalog.iso19139.MD_MediumNameCode.9trackType</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode.3480Cartridge&quot; '>i18n.catalog.iso19139.MD_MediumNameCode.3480Cartridge</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode.3490Cartridge&quot; '>i18n.catalog.iso19139.MD_MediumNameCode.3490Cartridge</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode.3580Cartridge&quot; '>i18n.catalog.iso19139.MD_MediumNameCode.3580Cartridge</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode.4mmCartridgeTape&quot; '>i18n.catalog.iso19139.MD_MediumNameCode.4mmCartridgeTape</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode.8mmCartridgeTape&quot; '>i18n.catalog.iso19139.MD_MediumNameCode.8mmCartridgeTape</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode.1quarterInchCartridgeTape&quot; '>i18n.catalog.iso19139.MD_MediumNameCode.1quarterInchCartridgeTape</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode.digitalLinearTape&quot; '>i18n.catalog.iso19139.MD_MediumNameCode.digitalLinearTape</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode.onLine&quot; '>i18n.catalog.iso19139.MD_MediumNameCode.onLine</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode.satellite&quot; '>i18n.catalog.iso19139.MD_MediumNameCode.satellite</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode.telephoneLink&quot; '>i18n.catalog.iso19139.MD_MediumNameCode.telephoneLink</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode.hardcopy&quot; '>i18n.catalog.iso19139.MD_MediumNameCode.hardcopy</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractEX_GeographicExtent&quot; '>i18n.catalog.iso19139.AbstractEX_GeographicExtent</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractEX_GeographicExtent.extentTypeCode&quot; '>i18n.catalog.iso19139.AbstractEX_GeographicExtent.extentTypeCode</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.EX_Extent&quot; '>i18n.catalog.iso19139.EX_Extent</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.EX_Extent.description&quot; '>i18n.catalog.iso19139.EX_Extent.description</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.EX_Extent.geographicElement&quot; '>i18n.catalog.iso19139.EX_Extent.geographicElement</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.EX_Extent.temporalElement&quot; '>i18n.catalog.iso19139.EX_Extent.temporalElement</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.EX_Extent.verticalElement&quot; '>i18n.catalog.iso19139.EX_Extent.verticalElement</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.EX_GeographicExtent&quot; '>i18n.catalog.iso19139.EX_GeographicExtent</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.EX_TemporalExtent&quot; '>i18n.catalog.iso19139.EX_TemporalExtent</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.EX_TemporalExtent.extent&quot; '>i18n.catalog.iso19139.EX_TemporalExtent.extent</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.EX_TemporalExtent.beginPosition&quot; '>i18n.catalog.iso19139.EX_TemporalExtent.beginPosition</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.EX_TemporalExtent.endPosition&quot; '>i18n.catalog.iso19139.EX_TemporalExtent.endPosition</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.EX_VerticalExtent&quot; '>i18n.catalog.iso19139.EX_VerticalExtent</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.EX_VerticalExtent.minimumValue&quot; '>i18n.catalog.iso19139.EX_VerticalExtent.minimumValue</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.EX_VerticalExtent.maximumValue&quot; '>i18n.catalog.iso19139.EX_VerticalExtent.maximumValue</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.EX_VerticalExtent.verticalCRS&quot; '>i18n.catalog.iso19139.EX_VerticalExtent.verticalCRS</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.EX_GeographicBoundingBox&quot; '>i18n.catalog.iso19139.EX_GeographicBoundingBox</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.EX_GeographicBoundingBox.westBoundLongitude&quot; '>i18n.catalog.iso19139.EX_GeographicBoundingBox.westBoundLongitude</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.EX_GeographicBoundingBox.eastBoundLongitude&quot; '>i18n.catalog.iso19139.EX_GeographicBoundingBox.eastBoundLongitude</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.EX_GeographicBoundingBox.southBoundLatitude&quot; '>i18n.catalog.iso19139.EX_GeographicBoundingBox.southBoundLatitude</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.EX_GeographicBoundingBox.northBoundLatitude&quot; '>i18n.catalog.iso19139.EX_GeographicBoundingBox.northBoundLatitude</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractMD_Identification&quot; '>i18n.catalog.iso19139.AbstractMD_Identification</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractMD_Identification.citation&quot; '>i18n.catalog.iso19139.AbstractMD_Identification.citation</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractMD_Identification.abstract&quot; '>i18n.catalog.iso19139.AbstractMD_Identification.abstract</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractMD_Identification.purpose&quot; '>i18n.catalog.iso19139.AbstractMD_Identification.purpose</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractMD_Identification.credit&quot; '>i18n.catalog.iso19139.AbstractMD_Identification.credit</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractMD_Identification.status&quot; '>i18n.catalog.iso19139.AbstractMD_Identification.status</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractMD_Identification.pointOfContact&quot; '>i18n.catalog.iso19139.AbstractMD_Identification.pointOfContact</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractMD_Identification.resourceMaintenance&quot; '>i18n.catalog.iso19139.AbstractMD_Identification.resourceMaintenance</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractMD_Identification.graphicOverview&quot; '>i18n.catalog.iso19139.AbstractMD_Identification.graphicOverview</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractMD_Identification.resourceFormat&quot; '>i18n.catalog.iso19139.AbstractMD_Identification.resourceFormat</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractMD_Identification.descriptiveKeywords&quot; '>i18n.catalog.iso19139.AbstractMD_Identification.descriptiveKeywords</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractMD_Identification.resourceSpecificUsage&quot; '>i18n.catalog.iso19139.AbstractMD_Identification.resourceSpecificUsage</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractMD_Identification.resourceConstraints&quot; '>i18n.catalog.iso19139.AbstractMD_Identification.resourceConstraints</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractMD_Identification.aggregationInfo&quot; '>i18n.catalog.iso19139.AbstractMD_Identification.aggregationInfo</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DS_Association&quot; '>i18n.catalog.iso19139.DS_Association</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_AggregateInformation&quot; '>i18n.catalog.iso19139.MD_AggregateInformation</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_AggregateInformation.aggregateDataSetName&quot; '>i18n.catalog.iso19139.MD_AggregateInformation.aggregateDataSetName</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_AggregateInformation.aggregateDataSetIdentifier&quot; '>i18n.catalog.iso19139.MD_AggregateInformation.aggregateDataSetIdentifier</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_AggregateInformation.associationType&quot; '>i18n.catalog.iso19139.MD_AggregateInformation.associationType</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_AggregateInformation.initiativeType&quot; '>i18n.catalog.iso19139.MD_AggregateInformation.initiativeType</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_BrowseGraphic&quot; '>i18n.catalog.iso19139.MD_BrowseGraphic</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_BrowseGraphic.fileName&quot; '>i18n.catalog.iso19139.MD_BrowseGraphic.fileName</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_BrowseGraphic.fileDescription&quot; '>i18n.catalog.iso19139.MD_BrowseGraphic.fileDescription</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_BrowseGraphic.fileType&quot; '>i18n.catalog.iso19139.MD_BrowseGraphic.fileType</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DataIdentification&quot; '>i18n.catalog.iso19139.MD_DataIdentification</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DataIdentification.spatialRepresentationType&quot; '>i18n.catalog.iso19139.MD_DataIdentification.spatialRepresentationType</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DataIdentification.spatialResolution&quot; '>i18n.catalog.iso19139.MD_DataIdentification.spatialResolution</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DataIdentification.language&quot; '>i18n.catalog.iso19139.MD_DataIdentification.language</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DataIdentification.characterSet&quot; '>i18n.catalog.iso19139.MD_DataIdentification.characterSet</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DataIdentification.topicCategory&quot; '>i18n.catalog.iso19139.MD_DataIdentification.topicCategory</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DataIdentification.environmentDescription&quot; '>i18n.catalog.iso19139.MD_DataIdentification.environmentDescription</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DataIdentification.extent&quot; '>i18n.catalog.iso19139.MD_DataIdentification.extent</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DataIdentification.supplementalInformation&quot; '>i18n.catalog.iso19139.MD_DataIdentification.supplementalInformation</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Keywords&quot; '>i18n.catalog.iso19139.MD_Keywords</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Keywords.keyword&quot; '>i18n.catalog.iso19139.MD_Keywords.keyword</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Keywords.type&quot; '>i18n.catalog.iso19139.MD_Keywords.type</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Keywords.thesaurusName&quot; '>i18n.catalog.iso19139.MD_Keywords.thesaurusName</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Keywords.keyword.delimited&quot; '>i18n.catalog.iso19139.MD_Keywords.keyword.delimited</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_RepresentativeFraction&quot; '>i18n.catalog.iso19139.MD_RepresentativeFraction</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_RepresentativeFraction.denominator&quot; '>i18n.catalog.iso19139.MD_RepresentativeFraction.denominator</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Resolution&quot; '>i18n.catalog.iso19139.MD_Resolution</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Resolution.equivalentScale&quot; '>i18n.catalog.iso19139.MD_Resolution.equivalentScale</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Resolution.distance&quot; '>i18n.catalog.iso19139.MD_Resolution.distance</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Usage&quot; '>i18n.catalog.iso19139.MD_Usage</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Usage.specificUsage&quot; '>i18n.catalog.iso19139.MD_Usage.specificUsage</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Usage.usageDateTime&quot; '>i18n.catalog.iso19139.MD_Usage.usageDateTime</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Usage.userDeterminedLimitations&quot; '>i18n.catalog.iso19139.MD_Usage.userDeterminedLimitations</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Usage.userContactInfo&quot; '>i18n.catalog.iso19139.MD_Usage.userContactInfo</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DS_AssociationTypeCode&quot; '>i18n.catalog.iso19139.DS_AssociationTypeCode</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DS_AssociationTypeCode.crossReference&quot; '>i18n.catalog.iso19139.DS_AssociationTypeCode.crossReference</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DS_AssociationTypeCode.largerWorkCitation&quot; '>i18n.catalog.iso19139.DS_AssociationTypeCode.largerWorkCitation</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DS_AssociationTypeCode.partOfSeamlessDatabase&quot; '>i18n.catalog.iso19139.DS_AssociationTypeCode.partOfSeamlessDatabase</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DS_AssociationTypeCode.source&quot; '>i18n.catalog.iso19139.DS_AssociationTypeCode.source</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DS_AssociationTypeCode.stereoMate&quot; '>i18n.catalog.iso19139.DS_AssociationTypeCode.stereoMate</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DS_InitiativeTypeCode&quot; '>i18n.catalog.iso19139.DS_InitiativeTypeCode</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DS_InitiativeTypeCode.campaign&quot; '>i18n.catalog.iso19139.DS_InitiativeTypeCode.campaign</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DS_InitiativeTypeCode.collection&quot; '>i18n.catalog.iso19139.DS_InitiativeTypeCode.collection</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DS_InitiativeTypeCode.exercise&quot; '>i18n.catalog.iso19139.DS_InitiativeTypeCode.exercise</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DS_InitiativeTypeCode.experiment&quot; '>i18n.catalog.iso19139.DS_InitiativeTypeCode.experiment</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DS_InitiativeTypeCode.investigation&quot; '>i18n.catalog.iso19139.DS_InitiativeTypeCode.investigation</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DS_InitiativeTypeCode.mission&quot; '>i18n.catalog.iso19139.DS_InitiativeTypeCode.mission</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DS_InitiativeTypeCode.sensor&quot; '>i18n.catalog.iso19139.DS_InitiativeTypeCode.sensor</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DS_InitiativeTypeCode.operation&quot; '>i18n.catalog.iso19139.DS_InitiativeTypeCode.operation</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DS_InitiativeTypeCode.platform&quot; '>i18n.catalog.iso19139.DS_InitiativeTypeCode.platform</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DS_InitiativeTypeCode.process&quot; '>i18n.catalog.iso19139.DS_InitiativeTypeCode.process</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DS_InitiativeTypeCode.program&quot; '>i18n.catalog.iso19139.DS_InitiativeTypeCode.program</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DS_InitiativeTypeCode.project&quot; '>i18n.catalog.iso19139.DS_InitiativeTypeCode.project</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DS_InitiativeTypeCode.study&quot; '>i18n.catalog.iso19139.DS_InitiativeTypeCode.study</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DS_InitiativeTypeCode.task&quot; '>i18n.catalog.iso19139.DS_InitiativeTypeCode.task</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DS_InitiativeTypeCode.trial&quot; '>i18n.catalog.iso19139.DS_InitiativeTypeCode.trial</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode&quot; '>i18n.catalog.iso19139.MD_CharacterSetCode</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.ucs2&quot; '>i18n.catalog.iso19139.MD_CharacterSetCode.ucs2</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.ucs2&quot; '>i18n.catalog.iso19139.MD_CharacterSetCode.ucs2</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.ucs4&quot; '>i18n.catalog.iso19139.MD_CharacterSetCode.ucs4</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.utf7&quot; '>i18n.catalog.iso19139.MD_CharacterSetCode.utf7</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.utf8&quot; '>i18n.catalog.iso19139.MD_CharacterSetCode.utf8</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.utf16&quot; '>i18n.catalog.iso19139.MD_CharacterSetCode.utf16</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.8859part1&quot; '>i18n.catalog.iso19139.MD_CharacterSetCode.8859part1</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.8859part2&quot; '>i18n.catalog.iso19139.MD_CharacterSetCode.8859part2</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.8859part3&quot; '>i18n.catalog.iso19139.MD_CharacterSetCode.8859part3</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.8859part4&quot; '>i18n.catalog.iso19139.MD_CharacterSetCode.8859part4</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.8859part5&quot; '>i18n.catalog.iso19139.MD_CharacterSetCode.8859part5</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.8859part6&quot; '>i18n.catalog.iso19139.MD_CharacterSetCode.8859part6</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.8859part7&quot; '>i18n.catalog.iso19139.MD_CharacterSetCode.8859part7</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.8859part8&quot; '>i18n.catalog.iso19139.MD_CharacterSetCode.8859part8</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.8859part9&quot; '>i18n.catalog.iso19139.MD_CharacterSetCode.8859part9</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.8859part10&quot; '>i18n.catalog.iso19139.MD_CharacterSetCode.8859part10</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.8859part11&quot; '>i18n.catalog.iso19139.MD_CharacterSetCode.8859part11</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.8859part13&quot; '>i18n.catalog.iso19139.MD_CharacterSetCode.8859part13</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.8859part14&quot; '>i18n.catalog.iso19139.MD_CharacterSetCode.8859part14</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.8859part15&quot; '>i18n.catalog.iso19139.MD_CharacterSetCode.8859part15</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.8859part16&quot; '>i18n.catalog.iso19139.MD_CharacterSetCode.8859part16</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.jis&quot; '>i18n.catalog.iso19139.MD_CharacterSetCode.jis</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.shiftJIS&quot; '>i18n.catalog.iso19139.MD_CharacterSetCode.shiftJIS</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.eucJP&quot; '>i18n.catalog.iso19139.MD_CharacterSetCode.eucJP</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.usAscii&quot; '>i18n.catalog.iso19139.MD_CharacterSetCode.usAscii</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.ebcdic&quot; '>i18n.catalog.iso19139.MD_CharacterSetCode.ebcdic</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.eucKR&quot; '>i18n.catalog.iso19139.MD_CharacterSetCode.eucKR</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.big5&quot; '>i18n.catalog.iso19139.MD_CharacterSetCode.big5</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.GB2312&quot; '>i18n.catalog.iso19139.MD_CharacterSetCode.GB2312</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_KeywordTypeCode&quot; '>i18n.catalog.iso19139.MD_KeywordTypeCode</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_KeywordTypeCode.discipline&quot; '>i18n.catalog.iso19139.MD_KeywordTypeCode.discipline</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_KeywordTypeCode.place&quot; '>i18n.catalog.iso19139.MD_KeywordTypeCode.place</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_KeywordTypeCode.stratum&quot; '>i18n.catalog.iso19139.MD_KeywordTypeCode.stratum</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_KeywordTypeCode.temporal&quot; '>i18n.catalog.iso19139.MD_KeywordTypeCode.temporal</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_KeywordTypeCode.theme&quot; '>i18n.catalog.iso19139.MD_KeywordTypeCode.theme</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ProgressCode&quot; '>i18n.catalog.iso19139.MD_ProgressCode</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ProgressCode.completed&quot; '>i18n.catalog.iso19139.MD_ProgressCode.completed</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ProgressCode.historicalArchive&quot; '>i18n.catalog.iso19139.MD_ProgressCode.historicalArchive</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ProgressCode.obsolete&quot; '>i18n.catalog.iso19139.MD_ProgressCode.obsolete</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ProgressCode.onGoing&quot; '>i18n.catalog.iso19139.MD_ProgressCode.onGoing</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ProgressCode.planned&quot; '>i18n.catalog.iso19139.MD_ProgressCode.planned</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ProgressCode.required&quot; '>i18n.catalog.iso19139.MD_ProgressCode.required</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ProgressCode.underDevelopment&quot; '>i18n.catalog.iso19139.MD_ProgressCode.underDevelopment</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_SpatialRepresentationTypeCode&quot; '>i18n.catalog.iso19139.MD_SpatialRepresentationTypeCode</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_SpatialRepresentationTypeCode.vector&quot; '>i18n.catalog.iso19139.MD_SpatialRepresentationTypeCode.vector</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_SpatialRepresentationTypeCode.grid&quot; '>i18n.catalog.iso19139.MD_SpatialRepresentationTypeCode.grid</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_SpatialRepresentationTypeCode.textTable&quot; '>i18n.catalog.iso19139.MD_SpatialRepresentationTypeCode.textTable</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_SpatialRepresentationTypeCode.tin&quot; '>i18n.catalog.iso19139.MD_SpatialRepresentationTypeCode.tin</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_SpatialRepresentationTypeCode.stereoModel&quot; '>i18n.catalog.iso19139.MD_SpatialRepresentationTypeCode.stereoModel</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_SpatialRepresentationTypeCode.video&quot; '>i18n.catalog.iso19139.MD_SpatialRepresentationTypeCode.video</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode&quot; '>i18n.catalog.iso19139.MD_TopicCategoryCode</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.boundaries&quot; '>i18n.catalog.iso19139.MD_TopicCategoryCode.boundaries</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.farming&quot; '>i18n.catalog.iso19139.MD_TopicCategoryCode.farming</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.climatologyMeteorologyAtmosphere&quot; '>i18n.catalog.iso19139.MD_TopicCategoryCode.climatologyMeteorologyAtmosphere</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.biota&quot; '>i18n.catalog.iso19139.MD_TopicCategoryCode.biota</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.economy&quot; '>i18n.catalog.iso19139.MD_TopicCategoryCode.economy</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.planningCadastre&quot; '>i18n.catalog.iso19139.MD_TopicCategoryCode.planningCadastre</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.society&quot; '>i18n.catalog.iso19139.MD_TopicCategoryCode.society</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.elevation&quot; '>i18n.catalog.iso19139.MD_TopicCategoryCode.elevation</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.environment&quot; '>i18n.catalog.iso19139.MD_TopicCategoryCode.environment</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.structure&quot; '>i18n.catalog.iso19139.MD_TopicCategoryCode.structure</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.geoscientificInformation&quot; '>i18n.catalog.iso19139.MD_TopicCategoryCode.geoscientificInformation</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.health&quot; '>i18n.catalog.iso19139.MD_TopicCategoryCode.health</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.imageryBaseMapsEarthCover&quot; '>i18n.catalog.iso19139.MD_TopicCategoryCode.imageryBaseMapsEarthCover</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.inlandWaters&quot; '>i18n.catalog.iso19139.MD_TopicCategoryCode.inlandWaters</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.location&quot; '>i18n.catalog.iso19139.MD_TopicCategoryCode.location</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.intelligenceMilitary&quot; '>i18n.catalog.iso19139.MD_TopicCategoryCode.intelligenceMilitary</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.oceans&quot; '>i18n.catalog.iso19139.MD_TopicCategoryCode.oceans</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.transportation&quot; '>i18n.catalog.iso19139.MD_TopicCategoryCode.transportation</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.utilitiesCommunication&quot; '>i18n.catalog.iso19139.MD_TopicCategoryCode.utilitiesCommunication</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.XTN_Identification&quot; '>i18n.catalog.iso19139.XTN_Identification</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.XTN_Identification.citation.title&quot; '>i18n.catalog.iso19139.XTN_Identification.citation.title</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.XTN_Identification.citation.date&quot; '>i18n.catalog.iso19139.XTN_Identification.citation.date</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.XTN_Identification.citation.identifier&quot; '>i18n.catalog.iso19139.XTN_Identification.citation.identifier</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.XTN_Identification.citation.MD_Identifier&quot; '>i18n.catalog.iso19139.XTN_Identification.citation.MD_Identifier</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.XTN_Identification.citation.RS_Identifier&quot; '>i18n.catalog.iso19139.XTN_Identification.citation.RS_Identifier</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.XTN_Identification.abstract&quot; '>i18n.catalog.iso19139.XTN_Identification.abstract</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.XTN_Identification.language&quot; '>i18n.catalog.iso19139.XTN_Identification.language</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.XTN_Identification.topicCategory&quot; '>i18n.catalog.iso19139.XTN_Identification.topicCategory</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.XTN_Identification.spatialRepresentationType&quot; '>i18n.catalog.iso19139.XTN_Identification.spatialRepresentationType</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.XTN_Identification.spatialResolution&quot; '>i18n.catalog.iso19139.XTN_Identification.spatialResolution</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.LocalisedCharacterString&quot; '>i18n.catalog.iso19139.LocalisedCharacterString</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.LocalisedCharacterString.id&quot; '>i18n.catalog.iso19139.LocalisedCharacterString.id</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.LocalisedCharacterString.locale&quot; '>i18n.catalog.iso19139.LocalisedCharacterString.locale</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.LocalisedCharacterString.textNode&quot; '>i18n.catalog.iso19139.LocalisedCharacterString.textNode</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.PT_FreeText&quot; '>i18n.catalog.iso19139.PT_FreeText</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.PT_FreeText.textGroup&quot; '>i18n.catalog.iso19139.PT_FreeText.textGroup</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.PT_Locale&quot; '>i18n.catalog.iso19139.PT_Locale</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.PT_Locale.languageCode&quot; '>i18n.catalog.iso19139.PT_Locale.languageCode</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.PT_Locale.country&quot; '>i18n.catalog.iso19139.PT_Locale.country</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.PT_Locale.characterEncoding&quot; '>i18n.catalog.iso19139.PT_Locale.characterEncoding</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.PT_LocaleContainer&quot; '>i18n.catalog.iso19139.PT_LocaleContainer</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.PT_LocaleContainer.description&quot; '>i18n.catalog.iso19139.PT_LocaleContainer.description</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.PT_LocaleContainer.locale&quot; '>i18n.catalog.iso19139.PT_LocaleContainer.locale</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.PT_LocaleContainer.date&quot; '>i18n.catalog.iso19139.PT_LocaleContainer.date</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.PT_LocaleContainer.responsibleParty&quot; '>i18n.catalog.iso19139.PT_LocaleContainer.responsibleParty</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.PT_LocaleContainer.localisedString&quot; '>i18n.catalog.iso19139.PT_LocaleContainer.localisedString</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceInformation&quot; '>i18n.catalog.iso19139.MD_MaintenanceInformation</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceInformation.maintenanceAndUpdateFrequency&quot; '>i18n.catalog.iso19139.MD_MaintenanceInformation.maintenanceAndUpdateFrequency</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceInformation.dateOfNextUpdate&quot; '>i18n.catalog.iso19139.MD_MaintenanceInformation.dateOfNextUpdate</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceInformation.userDefinedMaintenanceFrequency&quot; '>i18n.catalog.iso19139.MD_MaintenanceInformation.userDefinedMaintenanceFrequency</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceInformation.updateScope&quot; '>i18n.catalog.iso19139.MD_MaintenanceInformation.updateScope</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceInformation.updateScopeDescription&quot; '>i18n.catalog.iso19139.MD_MaintenanceInformation.updateScopeDescription</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceInformation.maintenanceNote&quot; '>i18n.catalog.iso19139.MD_MaintenanceInformation.maintenanceNote</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceInformation.contact&quot; '>i18n.catalog.iso19139.MD_MaintenanceInformation.contact</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeDescription&quot; '>i18n.catalog.iso19139.MD_ScopeDescription</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeDescription.attributes&quot; '>i18n.catalog.iso19139.MD_ScopeDescription.attributes</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeDescription.features&quot; '>i18n.catalog.iso19139.MD_ScopeDescription.features</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeDescription.featureInstances&quot; '>i18n.catalog.iso19139.MD_ScopeDescription.featureInstances</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeDescription.attributeInstances&quot; '>i18n.catalog.iso19139.MD_ScopeDescription.attributeInstances</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeDescription.dataset&quot; '>i18n.catalog.iso19139.MD_ScopeDescription.dataset</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeDescription.other&quot; '>i18n.catalog.iso19139.MD_ScopeDescription.other</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceFrequencyCode&quot; '>i18n.catalog.iso19139.MD_MaintenanceFrequencyCode</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceFrequencyCode.continual&quot; '>i18n.catalog.iso19139.MD_MaintenanceFrequencyCode.continual</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceFrequencyCode.daily&quot; '>i18n.catalog.iso19139.MD_MaintenanceFrequencyCode.daily</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceFrequencyCode.weekly&quot; '>i18n.catalog.iso19139.MD_MaintenanceFrequencyCode.weekly</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceFrequencyCode.fortnightly&quot; '>i18n.catalog.iso19139.MD_MaintenanceFrequencyCode.fortnightly</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceFrequencyCode.monthly&quot; '>i18n.catalog.iso19139.MD_MaintenanceFrequencyCode.monthly</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceFrequencyCode.quarterly&quot; '>i18n.catalog.iso19139.MD_MaintenanceFrequencyCode.quarterly</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceFrequencyCode.biannually&quot; '>i18n.catalog.iso19139.MD_MaintenanceFrequencyCode.biannually</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceFrequencyCode.annually&quot; '>i18n.catalog.iso19139.MD_MaintenanceFrequencyCode.annually</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceFrequencyCode.asNeeded&quot; '>i18n.catalog.iso19139.MD_MaintenanceFrequencyCode.asNeeded</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceFrequencyCode.irregular&quot; '>i18n.catalog.iso19139.MD_MaintenanceFrequencyCode.irregular</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceFrequencyCode.notPlanned&quot; '>i18n.catalog.iso19139.MD_MaintenanceFrequencyCode.notPlanned</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceFrequencyCode.unknown&quot; '>i18n.catalog.iso19139.MD_MaintenanceFrequencyCode.unknown</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeCode&quot; '>i18n.catalog.iso19139.MD_ScopeCode</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeCode.attribute&quot; '>i18n.catalog.iso19139.MD_ScopeCode.attribute</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeCode.attributeType&quot; '>i18n.catalog.iso19139.MD_ScopeCode.attributeType</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeCode.collectionHardware&quot; '>i18n.catalog.iso19139.MD_ScopeCode.collectionHardware</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeCode.collectionSession&quot; '>i18n.catalog.iso19139.MD_ScopeCode.collectionSession</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeCode.dataset&quot; '>i18n.catalog.iso19139.MD_ScopeCode.dataset</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeCode.series&quot; '>i18n.catalog.iso19139.MD_ScopeCode.series</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeCode.nonGeographicDataset&quot; '>i18n.catalog.iso19139.MD_ScopeCode.nonGeographicDataset</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeCode.dimensionGroup&quot; '>i18n.catalog.iso19139.MD_ScopeCode.dimensionGroup</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeCode.feature&quot; '>i18n.catalog.iso19139.MD_ScopeCode.feature</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeCode.featureType&quot; '>i18n.catalog.iso19139.MD_ScopeCode.featureType</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeCode.propertyType&quot; '>i18n.catalog.iso19139.MD_ScopeCode.propertyType</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeCode.fieldSession&quot; '>i18n.catalog.iso19139.MD_ScopeCode.fieldSession</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeCode.software&quot; '>i18n.catalog.iso19139.MD_ScopeCode.software</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeCode.service&quot; '>i18n.catalog.iso19139.MD_ScopeCode.service</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeCode.model&quot; '>i18n.catalog.iso19139.MD_ScopeCode.model</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeCode.tile&quot; '>i18n.catalog.iso19139.MD_ScopeCode.tile</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractDS_Aggregate&quot; '>i18n.catalog.iso19139.AbstractDS_Aggregate</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractDS_Aggregate.composedOf&quot; '>i18n.catalog.iso19139.AbstractDS_Aggregate.composedOf</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractDS_Aggregate.seriesMetadata&quot; '>i18n.catalog.iso19139.AbstractDS_Aggregate.seriesMetadata</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractDS_Aggregate.subset&quot; '>i18n.catalog.iso19139.AbstractDS_Aggregate.subset</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractDS_Aggregate.superset&quot; '>i18n.catalog.iso19139.AbstractDS_Aggregate.superset</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DS_DataSet&quot; '>i18n.catalog.iso19139.DS_DataSet</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DS_DataSet.has&quot; '>i18n.catalog.iso19139.DS_DataSet.has</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DS_DataSet.partOf&quot; '>i18n.catalog.iso19139.DS_DataSet.partOf</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata&quot; '>i18n.catalog.iso19139.MD_Metadata</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.fileIdentifier&quot; '>i18n.catalog.iso19139.MD_Metadata.fileIdentifier</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.language&quot; '>i18n.catalog.iso19139.MD_Metadata.language</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.characterSet&quot; '>i18n.catalog.iso19139.MD_Metadata.characterSet</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.parentIdentifier&quot; '>i18n.catalog.iso19139.MD_Metadata.parentIdentifier</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.hierarchyLevel&quot; '>i18n.catalog.iso19139.MD_Metadata.hierarchyLevel</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.hierarchyLevelName&quot; '>i18n.catalog.iso19139.MD_Metadata.hierarchyLevelName</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.contact&quot; '>i18n.catalog.iso19139.MD_Metadata.contact</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.contact.help&quot; '>i18n.catalog.iso19139.MD_Metadata.contact.help</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.dateStamp&quot; '>i18n.catalog.iso19139.MD_Metadata.dateStamp</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.metadataStandardName&quot; '>i18n.catalog.iso19139.MD_Metadata.metadataStandardName</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.metadataStandardVersion&quot; '>i18n.catalog.iso19139.MD_Metadata.metadataStandardVersion</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.dataSetURI&quot; '>i18n.catalog.iso19139.MD_Metadata.dataSetURI</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.locale&quot; '>i18n.catalog.iso19139.MD_Metadata.locale</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.spatialRepresentationInfo&quot; '>i18n.catalog.iso19139.MD_Metadata.spatialRepresentationInfo</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.referenceSystemInfo&quot; '>i18n.catalog.iso19139.MD_Metadata.referenceSystemInfo</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.metadataExtensionInfo&quot; '>i18n.catalog.iso19139.MD_Metadata.metadataExtensionInfo</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.identificationInfo&quot; '>i18n.catalog.iso19139.MD_Metadata.identificationInfo</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.contentInfo&quot; '>i18n.catalog.iso19139.MD_Metadata.contentInfo</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.distributionInfo&quot; '>i18n.catalog.iso19139.MD_Metadata.distributionInfo</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.dataQualityInfo&quot; '>i18n.catalog.iso19139.MD_Metadata.dataQualityInfo</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.portrayalCatalogueInfo&quot; '>i18n.catalog.iso19139.MD_Metadata.portrayalCatalogueInfo</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.metadataConstraints&quot; '>i18n.catalog.iso19139.MD_Metadata.metadataConstraints</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.applicationSchemaInfo&quot; '>i18n.catalog.iso19139.MD_Metadata.applicationSchemaInfo</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.metadataMaintenance&quot; '>i18n.catalog.iso19139.MD_Metadata.metadataMaintenance</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.series&quot; '>i18n.catalog.iso19139.MD_Metadata.series</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.describes&quot; '>i18n.catalog.iso19139.MD_Metadata.describes</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.propertyType&quot; '>i18n.catalog.iso19139.MD_Metadata.propertyType</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.featureType&quot; '>i18n.catalog.iso19139.MD_Metadata.featureType</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.featureAttribute&quot; '>i18n.catalog.iso19139.MD_Metadata.featureAttribute</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.metadata&quot; '>i18n.catalog.iso19139.MD_Metadata.section.metadata</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.metadata.identifier&quot; '>i18n.catalog.iso19139.MD_Metadata.section.metadata.identifier</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.metadata.contact&quot; '>i18n.catalog.iso19139.MD_Metadata.section.metadata.contact</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.metadata.date&quot; '>i18n.catalog.iso19139.MD_Metadata.section.metadata.date</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.metadata.standard&quot; '>i18n.catalog.iso19139.MD_Metadata.section.metadata.standard</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.metadata.reference&quot; '>i18n.catalog.iso19139.MD_Metadata.section.metadata.reference</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification&quot; '>i18n.catalog.iso19139.MD_Metadata.section.identification</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification.citation&quot; '>i18n.catalog.iso19139.MD_Metadata.section.identification.citation</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification.abstract&quot; '>i18n.catalog.iso19139.MD_Metadata.section.identification.abstract</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification.contact&quot; '>i18n.catalog.iso19139.MD_Metadata.section.identification.contact</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification.graphicOverview&quot; '>i18n.catalog.iso19139.MD_Metadata.section.identification.graphicOverview</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification.descriptiveKeywords&quot; '>i18n.catalog.iso19139.MD_Metadata.section.identification.descriptiveKeywords</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification.otherKeywords&quot; '>i18n.catalog.iso19139.MD_Metadata.section.identification.otherKeywords</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification.resourceConstraints&quot; '>i18n.catalog.iso19139.MD_Metadata.section.identification.resourceConstraints</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification.resource&quot; '>i18n.catalog.iso19139.MD_Metadata.section.identification.resource</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification.representation&quot; '>i18n.catalog.iso19139.MD_Metadata.section.identification.representation</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification.language&quot; '>i18n.catalog.iso19139.MD_Metadata.section.identification.language</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification.classification&quot; '>i18n.catalog.iso19139.MD_Metadata.section.identification.classification</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification.extent&quot; '>i18n.catalog.iso19139.MD_Metadata.section.identification.extent</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification.extent.geographicElement&quot; '>i18n.catalog.iso19139.MD_Metadata.section.identification.extent.geographicElement</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification.extent.temporalElement&quot; '>i18n.catalog.iso19139.MD_Metadata.section.identification.extent.temporalElement</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification.service.serviceType&quot; '>i18n.catalog.iso19139.MD_Metadata.section.identification.service.serviceType</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification.service.couplingType&quot; '>i18n.catalog.iso19139.MD_Metadata.section.identification.service.couplingType</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification.service.operation&quot; '>i18n.catalog.iso19139.MD_Metadata.section.identification.service.operation</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification.service.operatesOn&quot; '>i18n.catalog.iso19139.MD_Metadata.section.identification.service.operatesOn</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.distribution&quot; '>i18n.catalog.iso19139.MD_Metadata.section.distribution</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.quality&quot; '>i18n.catalog.iso19139.MD_Metadata.section.quality</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.quality.scope&quot; '>i18n.catalog.iso19139.MD_Metadata.section.quality.scope</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.quality.conformance&quot; '>i18n.catalog.iso19139.MD_Metadata.section.quality.conformance</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.quality.lineage&quot; '>i18n.catalog.iso19139.MD_Metadata.section.quality.lineage</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ExtendedElementInformation&quot; '>i18n.catalog.iso19139.MD_ExtendedElementInformation</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ExtendedElementInformation.name&quot; '>i18n.catalog.iso19139.MD_ExtendedElementInformation.name</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ExtendedElementInformation.shortName&quot; '>i18n.catalog.iso19139.MD_ExtendedElementInformation.shortName</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ExtendedElementInformation.domainCode&quot; '>i18n.catalog.iso19139.MD_ExtendedElementInformation.domainCode</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ExtendedElementInformation.definition&quot; '>i18n.catalog.iso19139.MD_ExtendedElementInformation.definition</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ExtendedElementInformation.obligation&quot; '>i18n.catalog.iso19139.MD_ExtendedElementInformation.obligation</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ExtendedElementInformation.condition&quot; '>i18n.catalog.iso19139.MD_ExtendedElementInformation.condition</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ExtendedElementInformation.dataType&quot; '>i18n.catalog.iso19139.MD_ExtendedElementInformation.dataType</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ExtendedElementInformation.maximumOccurrence&quot; '>i18n.catalog.iso19139.MD_ExtendedElementInformation.maximumOccurrence</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ExtendedElementInformation.domainValue&quot; '>i18n.catalog.iso19139.MD_ExtendedElementInformation.domainValue</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ExtendedElementInformation.parentEntity&quot; '>i18n.catalog.iso19139.MD_ExtendedElementInformation.parentEntity</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ExtendedElementInformation.rule&quot; '>i18n.catalog.iso19139.MD_ExtendedElementInformation.rule</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ExtendedElementInformation.rationale&quot; '>i18n.catalog.iso19139.MD_ExtendedElementInformation.rationale</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ExtendedElementInformation.source&quot; '>i18n.catalog.iso19139.MD_ExtendedElementInformation.source</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MetadataExtensionInformation&quot; '>i18n.catalog.iso19139.MD_MetadataExtensionInformation</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MetadataExtensionInformation.extensionOnLineResource&quot; '>i18n.catalog.iso19139.MD_MetadataExtensionInformation.extensionOnLineResource</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MetadataExtensionInformation.extendedElementInformation&quot; '>i18n.catalog.iso19139.MD_MetadataExtensionInformation.extendedElementInformation</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DatatypeCode&quot; '>i18n.catalog.iso19139.MD_DatatypeCode</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DatatypeCode.class&quot; '>i18n.catalog.iso19139.MD_DatatypeCode.class</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DatatypeCode.codelist&quot; '>i18n.catalog.iso19139.MD_DatatypeCode.codelist</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DatatypeCode.enumeration&quot; '>i18n.catalog.iso19139.MD_DatatypeCode.enumeration</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DatatypeCode.codelistElement&quot; '>i18n.catalog.iso19139.MD_DatatypeCode.codelistElement</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DatatypeCode.abstractClass&quot; '>i18n.catalog.iso19139.MD_DatatypeCode.abstractClass</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DatatypeCode.aggregateClass&quot; '>i18n.catalog.iso19139.MD_DatatypeCode.aggregateClass</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DatatypeCode.specifiedClass&quot; '>i18n.catalog.iso19139.MD_DatatypeCode.specifiedClass</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DatatypeCode.datatypeClass&quot; '>i18n.catalog.iso19139.MD_DatatypeCode.datatypeClass</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DatatypeCode.interfaceClass&quot; '>i18n.catalog.iso19139.MD_DatatypeCode.interfaceClass</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DatatypeCode.unionClass&quot; '>i18n.catalog.iso19139.MD_DatatypeCode.unionClass</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DatatypeCode.metaClass&quot; '>i18n.catalog.iso19139.MD_DatatypeCode.metaClass</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DatatypeCode.typeClass&quot; '>i18n.catalog.iso19139.MD_DatatypeCode.typeClass</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DatatypeCode.characterString&quot; '>i18n.catalog.iso19139.MD_DatatypeCode.characterString</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DatatypeCode.integer&quot; '>i18n.catalog.iso19139.MD_DatatypeCode.integer</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DatatypeCode.association&quot; '>i18n.catalog.iso19139.MD_DatatypeCode.association</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ObligationCode&quot; '>i18n.catalog.iso19139.MD_ObligationCode</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ObligationCode.mandatory&quot; '>i18n.catalog.iso19139.MD_ObligationCode.mandatory</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ObligationCode.optional&quot; '>i18n.catalog.iso19139.MD_ObligationCode.optional</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ObligationCode.conditional&quot; '>i18n.catalog.iso19139.MD_ObligationCode.conditional</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_PortrayalCatalogueReference&quot; '>i18n.catalog.iso19139.MD_PortrayalCatalogueReference</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_PortrayalCatalogueReference.portrayalCatalogueCitation&quot; '>i18n.catalog.iso19139.MD_PortrayalCatalogueReference.portrayalCatalogueCitation</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractRS_ReferenceSystem&quot; '>i18n.catalog.iso19139.AbstractRS_ReferenceSystem</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractRS_ReferenceSystem.name&quot; '>i18n.catalog.iso19139.AbstractRS_ReferenceSystem.name</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractRS_ReferenceSystem.domainOfValidity&quot; '>i18n.catalog.iso19139.AbstractRS_ReferenceSystem.domainOfValidity</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Identifier&quot; '>i18n.catalog.iso19139.MD_Identifier</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Identifier.authority&quot; '>i18n.catalog.iso19139.MD_Identifier.authority</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Identifier.code&quot; '>i18n.catalog.iso19139.MD_Identifier.code</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ReferenceSystem&quot; '>i18n.catalog.iso19139.MD_ReferenceSystem</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ReferenceSystem.referenceSystemIdentifier&quot; '>i18n.catalog.iso19139.MD_ReferenceSystem.referenceSystemIdentifier</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.RS_Identifier&quot; '>i18n.catalog.iso19139.RS_Identifier</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.RS_Identifier.authority&quot; '>i18n.catalog.iso19139.RS_Identifier.authority</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.RS_Identifier.code&quot; '>i18n.catalog.iso19139.RS_Identifier.code</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.RS_Identifier.codeSpace&quot; '>i18n.catalog.iso19139.RS_Identifier.codeSpace</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.RS_Identifier.version&quot; '>i18n.catalog.iso19139.RS_Identifier.version</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Dimension&quot; '>i18n.catalog.iso19139.MD_Dimension</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Dimension.dimensionName&quot; '>i18n.catalog.iso19139.MD_Dimension.dimensionName</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Dimension.dimensionSize&quot; '>i18n.catalog.iso19139.MD_Dimension.dimensionSize</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Dimension.resolution&quot; '>i18n.catalog.iso19139.MD_Dimension.resolution</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_GeometricObjects&quot; '>i18n.catalog.iso19139.MD_GeometricObjects</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_GeometricObjects.geometricObjectType&quot; '>i18n.catalog.iso19139.MD_GeometricObjects.geometricObjectType</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_GeometricObjects.geometricObjectCount&quot; '>i18n.catalog.iso19139.MD_GeometricObjects.geometricObjectCount</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Georectified&quot; '>i18n.catalog.iso19139.MD_Georectified</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Georectified.checkPointAvailability&quot; '>i18n.catalog.iso19139.MD_Georectified.checkPointAvailability</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Georectified.checkPointDescription&quot; '>i18n.catalog.iso19139.MD_Georectified.checkPointDescription</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Georectified.cornerPoints&quot; '>i18n.catalog.iso19139.MD_Georectified.cornerPoints</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Georectified.centerPoint&quot; '>i18n.catalog.iso19139.MD_Georectified.centerPoint</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Georectified.pointInPixel&quot; '>i18n.catalog.iso19139.MD_Georectified.pointInPixel</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Georectified.transformationDimensionDescription&quot; '>i18n.catalog.iso19139.MD_Georectified.transformationDimensionDescription</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Georectified.transformationDimensionMapping&quot; '>i18n.catalog.iso19139.MD_Georectified.transformationDimensionMapping</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Georeferenceable&quot; '>i18n.catalog.iso19139.MD_Georeferenceable</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Georeferenceable.controlPointAvailability&quot; '>i18n.catalog.iso19139.MD_Georeferenceable.controlPointAvailability</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Georeferenceable.orientationParameterAvailability&quot; '>i18n.catalog.iso19139.MD_Georeferenceable.orientationParameterAvailability</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Georeferenceable.orientationParameterDescription&quot; '>i18n.catalog.iso19139.MD_Georeferenceable.orientationParameterDescription</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Georeferenceable.georeferencedParameters&quot; '>i18n.catalog.iso19139.MD_Georeferenceable.georeferencedParameters</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Georeferenceable.parameterCitation&quot; '>i18n.catalog.iso19139.MD_Georeferenceable.parameterCitation</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_GridSpatialRepresentation&quot; '>i18n.catalog.iso19139.MD_GridSpatialRepresentation</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_GridSpatialRepresentation.numberOfDimensions&quot; '>i18n.catalog.iso19139.MD_GridSpatialRepresentation.numberOfDimensions</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_GridSpatialRepresentation.axisDimensionProperties&quot; '>i18n.catalog.iso19139.MD_GridSpatialRepresentation.axisDimensionProperties</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_GridSpatialRepresentation.cellGeometry&quot; '>i18n.catalog.iso19139.MD_GridSpatialRepresentation.cellGeometry</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_GridSpatialRepresentation.transformationParameterAvailability&quot; '>i18n.catalog.iso19139.MD_GridSpatialRepresentation.transformationParameterAvailability</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_VectorSpatialRepresentation&quot; '>i18n.catalog.iso19139.MD_VectorSpatialRepresentation</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_VectorSpatialRepresentation.topologyLevel&quot; '>i18n.catalog.iso19139.MD_VectorSpatialRepresentation.topologyLevel</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_VectorSpatialRepresentation.geometricObjects&quot; '>i18n.catalog.iso19139.MD_VectorSpatialRepresentation.geometricObjects</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CellGeometryCode&quot; '>i18n.catalog.iso19139.MD_CellGeometryCode</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CellGeometryCode.point&quot; '>i18n.catalog.iso19139.MD_CellGeometryCode.point</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CellGeometryCode.area&quot; '>i18n.catalog.iso19139.MD_CellGeometryCode.area</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DimensionNameTypeCode&quot; '>i18n.catalog.iso19139.MD_DimensionNameTypeCode</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DimensionNameTypeCode.row&quot; '>i18n.catalog.iso19139.MD_DimensionNameTypeCode.row</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DimensionNameTypeCode.column&quot; '>i18n.catalog.iso19139.MD_DimensionNameTypeCode.column</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DimensionNameTypeCode.vertical&quot; '>i18n.catalog.iso19139.MD_DimensionNameTypeCode.vertical</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DimensionNameTypeCode.track&quot; '>i18n.catalog.iso19139.MD_DimensionNameTypeCode.track</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DimensionNameTypeCode.crossTrack&quot; '>i18n.catalog.iso19139.MD_DimensionNameTypeCode.crossTrack</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DimensionNameTypeCode.line&quot; '>i18n.catalog.iso19139.MD_DimensionNameTypeCode.line</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DimensionNameTypeCode.sample&quot; '>i18n.catalog.iso19139.MD_DimensionNameTypeCode.sample</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DimensionNameTypeCode.time&quot; '>i18n.catalog.iso19139.MD_DimensionNameTypeCode.time</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_GeometricObjectTypeCode&quot; '>i18n.catalog.iso19139.MD_GeometricObjectTypeCode</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_GeometricObjectTypeCode.complex&quot; '>i18n.catalog.iso19139.MD_GeometricObjectTypeCode.complex</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_GeometricObjectTypeCode.composite&quot; '>i18n.catalog.iso19139.MD_GeometricObjectTypeCode.composite</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_GeometricObjectTypeCode.curve&quot; '>i18n.catalog.iso19139.MD_GeometricObjectTypeCode.curve</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_GeometricObjectTypeCode.point&quot; '>i18n.catalog.iso19139.MD_GeometricObjectTypeCode.point</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_GeometricObjectTypeCode.solid&quot; '>i18n.catalog.iso19139.MD_GeometricObjectTypeCode.solid</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_GeometricObjectTypeCode.surface&quot; '>i18n.catalog.iso19139.MD_GeometricObjectTypeCode.surface</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_PixelOrientationCode&quot; '>i18n.catalog.iso19139.MD_PixelOrientationCode</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_PixelOrientationCode.center&quot; '>i18n.catalog.iso19139.MD_PixelOrientationCode.center</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_PixelOrientationCode.lowerLeft&quot; '>i18n.catalog.iso19139.MD_PixelOrientationCode.lowerLeft</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_PixelOrientationCode.lowerRight&quot; '>i18n.catalog.iso19139.MD_PixelOrientationCode.lowerRight</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_PixelOrientationCode.upperRight&quot; '>i18n.catalog.iso19139.MD_PixelOrientationCode.upperRight</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_PixelOrientationCode.upperLeft&quot; '>i18n.catalog.iso19139.MD_PixelOrientationCode.upperLeft</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopologyLevelCode&quot; '>i18n.catalog.iso19139.MD_TopologyLevelCode</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopologyLevelCode.geometryOnly&quot; '>i18n.catalog.iso19139.MD_TopologyLevelCode.geometryOnly</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopologyLevelCode.topology1D&quot; '>i18n.catalog.iso19139.MD_TopologyLevelCode.topology1D</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopologyLevelCode.planarGraph&quot; '>i18n.catalog.iso19139.MD_TopologyLevelCode.planarGraph</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopologyLevelCode.fullPlanarGraph&quot; '>i18n.catalog.iso19139.MD_TopologyLevelCode.fullPlanarGraph</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopologyLevelCode.surfaceGraph&quot; '>i18n.catalog.iso19139.MD_TopologyLevelCode.surfaceGraph</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopologyLevelCode.fullSurfaceGraph&quot; '>i18n.catalog.iso19139.MD_TopologyLevelCode.fullSurfaceGraph</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopologyLevelCode.topology3D&quot; '>i18n.catalog.iso19139.MD_TopologyLevelCode.topology3D</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopologyLevelCode.fullTopology3D&quot; '>i18n.catalog.iso19139.MD_TopologyLevelCode.fullTopology3D</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopologyLevelCode.abstract&quot; '>i18n.catalog.iso19139.MD_TopologyLevelCode.abstract</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_DataQuality&quot; '>i18n.catalog.iso19139.DQ_DataQuality</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_DataQuality.scope&quot; '>i18n.catalog.iso19139.DQ_DataQuality.scope</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_DataQuality.report&quot; '>i18n.catalog.iso19139.DQ_DataQuality.report</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_DataQuality.lineage&quot; '>i18n.catalog.iso19139.DQ_DataQuality.lineage</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_Scope&quot; '>i18n.catalog.iso19139.DQ_Scope</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_Scope.level&quot; '>i18n.catalog.iso19139.DQ_Scope.level</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_Scope.extent&quot; '>i18n.catalog.iso19139.DQ_Scope.extent</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_Scope.levelDescription&quot; '>i18n.catalog.iso19139.DQ_Scope.levelDescription</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractDQ_Element&quot; '>i18n.catalog.iso19139.AbstractDQ_Element</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractDQ_Element.nameOfMeasure&quot; '>i18n.catalog.iso19139.AbstractDQ_Element.nameOfMeasure</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractDQ_Element.measureIdentification&quot; '>i18n.catalog.iso19139.AbstractDQ_Element.measureIdentification</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractDQ_Element.measureDescription&quot; '>i18n.catalog.iso19139.AbstractDQ_Element.measureDescription</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractDQ_Element.evaluationMethodType&quot; '>i18n.catalog.iso19139.AbstractDQ_Element.evaluationMethodType</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractDQ_Element.evaluationMethodDescription&quot; '>i18n.catalog.iso19139.AbstractDQ_Element.evaluationMethodDescription</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractDQ_Element.evaluationProcedure&quot; '>i18n.catalog.iso19139.AbstractDQ_Element.evaluationProcedure</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractDQ_Element.dateTime&quot; '>i18n.catalog.iso19139.AbstractDQ_Element.dateTime</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractDQ_Element.result&quot; '>i18n.catalog.iso19139.AbstractDQ_Element.result</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_AbsoluteExternalPositionalAccuracy&quot; '>i18n.catalog.iso19139.DQ_AbsoluteExternalPositionalAccuracy</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_GriddedDataPositionalAccuracy&quot; '>i18n.catalog.iso19139.DQ_GriddedDataPositionalAccuracy</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_RelativeInternalPositionalAccuracy&quot; '>i18n.catalog.iso19139.DQ_RelativeInternalPositionalAccuracy</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_NonQuantitiveAttributeAccuracy&quot; '>i18n.catalog.iso19139.DQ_NonQuantitiveAttributeAccuracy</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_QuantitativeAttributeAccuracy&quot; '>i18n.catalog.iso19139.DQ_QuantitativeAttributeAccuracy</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_AccuracyOfATimeMeasurement&quot; '>i18n.catalog.iso19139.DQ_AccuracyOfATimeMeasurement</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_CompletenessOmission&quot; '>i18n.catalog.iso19139.DQ_CompletenessOmission</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_CompletenessCommission&quot; '>i18n.catalog.iso19139.DQ_CompletenessCommission</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_ConceptualConsistency&quot; '>i18n.catalog.iso19139.DQ_ConceptualConsistency</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_DomainConsistency&quot; '>i18n.catalog.iso19139.DQ_DomainConsistency</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_FormatConsistency&quot; '>i18n.catalog.iso19139.DQ_FormatConsistency</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_TemporalAccuracy&quot; '>i18n.catalog.iso19139.DQ_TemporalAccuracy</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_TemporalConsistency&quot; '>i18n.catalog.iso19139.DQ_TemporalConsistency</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_TemporalValidity&quot; '>i18n.catalog.iso19139.DQ_TemporalValidity</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_ThematicAccuracy&quot; '>i18n.catalog.iso19139.DQ_ThematicAccuracy</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_ThematicClassificationCorrectness&quot; '>i18n.catalog.iso19139.DQ_ThematicClassificationCorrectness</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_TopologicalConsistency&quot; '>i18n.catalog.iso19139.DQ_TopologicalConsistency</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_QuantitativeResult&quot; '>i18n.catalog.iso19139.DQ_QuantitativeResult</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_QuantitativeResult.valueType&quot; '>i18n.catalog.iso19139.DQ_QuantitativeResult.valueType</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_QuantitativeResult.errorStatistic&quot; '>i18n.catalog.iso19139.DQ_QuantitativeResult.errorStatistic</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_QuantitativeResult.value&quot; '>i18n.catalog.iso19139.DQ_QuantitativeResult.value</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_QuantitativeResult.valueUnit&quot; '>i18n.catalog.iso19139.DQ_QuantitativeResult.valueUnit</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_ConformanceResult&quot; '>i18n.catalog.iso19139.DQ_ConformanceResult</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_ConformanceResult.specification&quot; '>i18n.catalog.iso19139.DQ_ConformanceResult.specification</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_ConformanceResult.explanation&quot; '>i18n.catalog.iso19139.DQ_ConformanceResult.explanation</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_ConformanceResult.pass&quot; '>i18n.catalog.iso19139.DQ_ConformanceResult.pass</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_ConformanceResult.pass.Boolean&quot; '>i18n.catalog.iso19139.DQ_ConformanceResult.pass.Boolean</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_ConformanceResult.pass.Boolean.true&quot; '>i18n.catalog.iso19139.DQ_ConformanceResult.pass.Boolean.true</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_ConformanceResult.pass.Boolean.false&quot; '>i18n.catalog.iso19139.DQ_ConformanceResult.pass.Boolean.false</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.LI_Lineage&quot; '>i18n.catalog.iso19139.LI_Lineage</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.LI_Lineage.statement&quot; '>i18n.catalog.iso19139.LI_Lineage.statement</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.LI_Lineage.processStep&quot; '>i18n.catalog.iso19139.LI_Lineage.processStep</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.LI_Lineage.source&quot; '>i18n.catalog.iso19139.LI_Lineage.source</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.LI_ProcessStep&quot; '>i18n.catalog.iso19139.LI_ProcessStep</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.LI_ProcessStep.description&quot; '>i18n.catalog.iso19139.LI_ProcessStep.description</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.LI_ProcessStep.rationale&quot; '>i18n.catalog.iso19139.LI_ProcessStep.rationale</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.LI_ProcessStep.dateTime&quot; '>i18n.catalog.iso19139.LI_ProcessStep.dateTime</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.LI_ProcessStep.processor&quot; '>i18n.catalog.iso19139.LI_ProcessStep.processor</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.LI_ProcessStep.source&quot; '>i18n.catalog.iso19139.LI_ProcessStep.source</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.LI_Source&quot; '>i18n.catalog.iso19139.LI_Source</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.LI_Source.description&quot; '>i18n.catalog.iso19139.LI_Source.description</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.LI_Source.scaleDenominator&quot; '>i18n.catalog.iso19139.LI_Source.scaleDenominator</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.LI_Source.sourceReferenceSystem&quot; '>i18n.catalog.iso19139.LI_Source.sourceReferenceSystem</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.LI_Source.sourceCitation&quot; '>i18n.catalog.iso19139.LI_Source.sourceCitation</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.LI_Source.sourceExtent&quot; '>i18n.catalog.iso19139.LI_Source.sourceExtent</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.LI_Source.sourceStep&quot; '>i18n.catalog.iso19139.LI_Source.sourceStep</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.XTN_Scope.level&quot; '>i18n.catalog.iso19139.XTN_Scope.level</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractTimePrimitive&quot; '>i18n.catalog.iso19139.AbstractTimePrimitive</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.StandardObjectProperties&quot; '>i18n.catalog.iso19139.StandardObjectProperties</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.StandardObjectProperties.metaDataProperty&quot; '>i18n.catalog.iso19139.StandardObjectProperties.metaDataProperty</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.StandardObjectProperties.description&quot; '>i18n.catalog.iso19139.StandardObjectProperties.description</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.StandardObjectProperties.descriptionReference&quot; '>i18n.catalog.iso19139.StandardObjectProperties.descriptionReference</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.StandardObjectProperties.name&quot; '>i18n.catalog.iso19139.StandardObjectProperties.name</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.StandardObjectProperties.identifier&quot; '>i18n.catalog.iso19139.StandardObjectProperties.identifier</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_FeatureCatalogueDescription&quot; '>i18n.catalog.iso19139.MD_FeatureCatalogueDescription</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_FeatureCatalogueDescription.complianceCode&quot; '>i18n.catalog.iso19139.MD_FeatureCatalogueDescription.complianceCode</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_FeatureCatalogueDescription.language&quot; '>i18n.catalog.iso19139.MD_FeatureCatalogueDescription.language</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_FeatureCatalogueDescription.includedWithDataset&quot; '>i18n.catalog.iso19139.MD_FeatureCatalogueDescription.includedWithDataset</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_FeatureCatalogueDescription.featureTypes&quot; '>i18n.catalog.iso19139.MD_FeatureCatalogueDescription.featureTypes</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_FeatureCatalogueDescription.featureCatalogueCitation&quot; '>i18n.catalog.iso19139.MD_FeatureCatalogueDescription.featureCatalogueCitation</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CoverageDescription&quot; '>i18n.catalog.iso19139.MD_CoverageDescription</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CoverageDescription.attributeDescription&quot; '>i18n.catalog.iso19139.MD_CoverageDescription.attributeDescription</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CoverageDescription.contentType&quot; '>i18n.catalog.iso19139.MD_CoverageDescription.contentType</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CoverageDescription.dimension&quot; '>i18n.catalog.iso19139.MD_CoverageDescription.dimension</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CoverageContentTypeCode&quot; '>i18n.catalog.iso19139.MD_CoverageContentTypeCode</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CoverageContentTypeCode.image&quot; '>i18n.catalog.iso19139.MD_CoverageContentTypeCode.image</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CoverageContentTypeCode.thematicClassification&quot; '>i18n.catalog.iso19139.MD_CoverageContentTypeCode.thematicClassification</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CoverageContentTypeCode.physicalMeasurement&quot; '>i18n.catalog.iso19139.MD_CoverageContentTypeCode.physicalMeasurement</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_RangeDimension&quot; '>i18n.catalog.iso19139.MD_RangeDimension</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_RangeDimension.sequenceIdentifier&quot; '>i18n.catalog.iso19139.MD_RangeDimension.sequenceIdentifier</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_RangeDimension.descriptor&quot; '>i18n.catalog.iso19139.MD_RangeDimension.descriptor</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Band&quot; '>i18n.catalog.iso19139.MD_Band</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Band.sequenceIdentifier&quot; '>i18n.catalog.iso19139.MD_Band.sequenceIdentifier</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Band.descriptor&quot; '>i18n.catalog.iso19139.MD_Band.descriptor</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Band.minValue&quot; '>i18n.catalog.iso19139.MD_Band.minValue</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Band.maxValue&quot; '>i18n.catalog.iso19139.MD_Band.maxValue</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Band.units&quot; '>i18n.catalog.iso19139.MD_Band.units</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Band.peakResponse&quot; '>i18n.catalog.iso19139.MD_Band.peakResponse</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Band.bitsPerValue&quot; '>i18n.catalog.iso19139.MD_Band.bitsPerValue</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Band.toneGradation&quot; '>i18n.catalog.iso19139.MD_Band.toneGradation</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Band.scaleFactor&quot; '>i18n.catalog.iso19139.MD_Band.scaleFactor</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Band.offset&quot; '>i18n.catalog.iso19139.MD_Band.offset</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImageDescription&quot; '>i18n.catalog.iso19139.MD_ImageDescription</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImageDescription.attributeDescription&quot; '>i18n.catalog.iso19139.MD_ImageDescription.attributeDescription</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImageDescription.contentType&quot; '>i18n.catalog.iso19139.MD_ImageDescription.contentType</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImageDescription.dimension&quot; '>i18n.catalog.iso19139.MD_ImageDescription.dimension</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImageDescription.illuminationElevationAngle&quot; '>i18n.catalog.iso19139.MD_ImageDescription.illuminationElevationAngle</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImageDescription.illuminationAzimuthAngle&quot; '>i18n.catalog.iso19139.MD_ImageDescription.illuminationAzimuthAngle</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImageDescription.imagingCondition&quot; '>i18n.catalog.iso19139.MD_ImageDescription.imagingCondition</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImageDescription.imageQualityCode&quot; '>i18n.catalog.iso19139.MD_ImageDescription.imageQualityCode</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImageDescription.cloudCoverPercentage&quot; '>i18n.catalog.iso19139.MD_ImageDescription.cloudCoverPercentage</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImageDescription.processingLevelCode&quot; '>i18n.catalog.iso19139.MD_ImageDescription.processingLevelCode</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImageDescription.compressionGenerationQuantity&quot; '>i18n.catalog.iso19139.MD_ImageDescription.compressionGenerationQuantity</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImageDescription.triangulationIndicator&quot; '>i18n.catalog.iso19139.MD_ImageDescription.triangulationIndicator</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImageDescription.radiometricCalibrationDataAvailability&quot; '>i18n.catalog.iso19139.MD_ImageDescription.radiometricCalibrationDataAvailability</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImageDescription.cameraCalibrationInformationAvailability&quot; '>i18n.catalog.iso19139.MD_ImageDescription.cameraCalibrationInformationAvailability</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImageDescription.filmDistortionInformationAvailability&quot; '>i18n.catalog.iso19139.MD_ImageDescription.filmDistortionInformationAvailability</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImageDescription.lensDistortionInformationAvailability&quot; '>i18n.catalog.iso19139.MD_ImageDescription.lensDistortionInformationAvailability</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImagingConditionCode&quot; '>i18n.catalog.iso19139.MD_ImagingConditionCode</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImagingConditionCode.blurredImage&quot; '>i18n.catalog.iso19139.MD_ImagingConditionCode.blurredImage</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImagingConditionCode.cloud&quot; '>i18n.catalog.iso19139.MD_ImagingConditionCode.cloud</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImagingConditionCode.degradingObliquity&quot; '>i18n.catalog.iso19139.MD_ImagingConditionCode.degradingObliquity</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImagingConditionCode.fog&quot; '>i18n.catalog.iso19139.MD_ImagingConditionCode.fog</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImagingConditionCode.heavySmokeOrDust&quot; '>i18n.catalog.iso19139.MD_ImagingConditionCode.heavySmokeOrDust</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImagingConditionCode.night&quot; '>i18n.catalog.iso19139.MD_ImagingConditionCode.night</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImagingConditionCode.rain&quot; '>i18n.catalog.iso19139.MD_ImagingConditionCode.rain</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImagingConditionCode.semiDarkness&quot; '>i18n.catalog.iso19139.MD_ImagingConditionCode.semiDarkness</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImagingConditionCode.shadow&quot; '>i18n.catalog.iso19139.MD_ImagingConditionCode.shadow</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImagingConditionCode.snow&quot; '>i18n.catalog.iso19139.MD_ImagingConditionCode.snow</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Operation&quot; '>i18n.catalog.iso19139.SV_Operation</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Operation.operationName&quot; '>i18n.catalog.iso19139.SV_Operation.operationName</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Operation.dependsOn&quot; '>i18n.catalog.iso19139.SV_Operation.dependsOn</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Operation.parameter&quot; '>i18n.catalog.iso19139.SV_Operation.parameter</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_PortSpecification&quot; '>i18n.catalog.iso19139.SV_PortSpecification</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_PortSpecification.binding&quot; '>i18n.catalog.iso19139.SV_PortSpecification.binding</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_PortSpecification.address&quot; '>i18n.catalog.iso19139.SV_PortSpecification.address</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Interface&quot; '>i18n.catalog.iso19139.SV_Interface</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Interface.typeName&quot; '>i18n.catalog.iso19139.SV_Interface.typeName</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Interface.theSV_Port&quot; '>i18n.catalog.iso19139.SV_Interface.theSV_Port</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Interface.operation&quot; '>i18n.catalog.iso19139.SV_Interface.operation</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Service&quot; '>i18n.catalog.iso19139.SV_Service</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Service.specification&quot; '>i18n.catalog.iso19139.SV_Service.specification</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Service.theSV_Port&quot; '>i18n.catalog.iso19139.SV_Service.theSV_Port</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Port&quot; '>i18n.catalog.iso19139.SV_Port</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Port.theSV_Interface&quot; '>i18n.catalog.iso19139.SV_Port.theSV_Interface</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_ServiceType&quot; '>i18n.catalog.iso19139.SV_ServiceType</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_ServiceSpecification&quot; '>i18n.catalog.iso19139.SV_ServiceSpecification</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_ServiceSpecification.name&quot; '>i18n.catalog.iso19139.SV_ServiceSpecification.name</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_ServiceSpecification.opModel&quot; '>i18n.catalog.iso19139.SV_ServiceSpecification.opModel</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_ServiceSpecification.typeSpec&quot; '>i18n.catalog.iso19139.SV_ServiceSpecification.typeSpec</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_ServiceSpecification.theSV_Interface&quot; '>i18n.catalog.iso19139.SV_ServiceSpecification.theSV_Interface</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_PlatformNeutralServiceSpecification&quot; '>i18n.catalog.iso19139.SV_PlatformNeutralServiceSpecification</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_PlatformNeutralServiceSpecification.name&quot; '>i18n.catalog.iso19139.SV_PlatformNeutralServiceSpecification.name</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_PlatformNeutralServiceSpecification.opModel&quot; '>i18n.catalog.iso19139.SV_PlatformNeutralServiceSpecification.opModel</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_PlatformNeutralServiceSpecification.serviceType&quot; '>i18n.catalog.iso19139.SV_PlatformNeutralServiceSpecification.serviceType</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_PlatformNeutralServiceSpecification.implSpec&quot; '>i18n.catalog.iso19139.SV_PlatformNeutralServiceSpecification.implSpec</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_PlatformSpecificServiceSpecification&quot; '>i18n.catalog.iso19139.SV_PlatformSpecificServiceSpecification</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_PlatformSpecificServiceSpecification.name&quot; '>i18n.catalog.iso19139.SV_PlatformSpecificServiceSpecification.name</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_PlatformSpecificServiceSpecification.opModel&quot; '>i18n.catalog.iso19139.SV_PlatformSpecificServiceSpecification.opModel</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_PlatformSpecificServiceSpecification.serviceType&quot; '>i18n.catalog.iso19139.SV_PlatformSpecificServiceSpecification.serviceType</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_PlatformSpecificServiceSpecification.implSpec&quot; '>i18n.catalog.iso19139.SV_PlatformSpecificServiceSpecification.implSpec</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_PlatformSpecificServiceSpecification.DCP&quot; '>i18n.catalog.iso19139.SV_PlatformSpecificServiceSpecification.DCP</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_PlatformSpecificServiceSpecification.implementation&quot; '>i18n.catalog.iso19139.SV_PlatformSpecificServiceSpecification.implementation</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_ParameterDirection&quot; '>i18n.catalog.iso19139.SV_ParameterDirection</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Paramater&quot; '>i18n.catalog.iso19139.SV_Paramater</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Paramater.name&quot; '>i18n.catalog.iso19139.SV_Paramater.name</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Paramater.direction&quot; '>i18n.catalog.iso19139.SV_Paramater.direction</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Paramater.description&quot; '>i18n.catalog.iso19139.SV_Paramater.description</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Paramater.optionality&quot; '>i18n.catalog.iso19139.SV_Paramater.optionality</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Paramater.repeatability&quot; '>i18n.catalog.iso19139.SV_Paramater.repeatability</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Paramater.valueType&quot; '>i18n.catalog.iso19139.SV_Paramater.valueType</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DCPList&quot; '>i18n.catalog.iso19139.DCPList</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DCPList.XML&quot; '>i18n.catalog.iso19139.DCPList.XML</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DCPList.CORBA&quot; '>i18n.catalog.iso19139.DCPList.CORBA</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DCPList.JAVA&quot; '>i18n.catalog.iso19139.DCPList.JAVA</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DCPList.COM&quot; '>i18n.catalog.iso19139.DCPList.COM</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DCPList.SQL&quot; '>i18n.catalog.iso19139.DCPList.SQL</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.DCPList.WebServices&quot; '>i18n.catalog.iso19139.DCPList.WebServices</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_OperationMetadata&quot; '>i18n.catalog.iso19139.SV_OperationMetadata</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_OperationMetadata.operationName&quot; '>i18n.catalog.iso19139.SV_OperationMetadata.operationName</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_OperationMetadata.DCP&quot; '>i18n.catalog.iso19139.SV_OperationMetadata.DCP</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_OperationMetadata.operationDescription&quot; '>i18n.catalog.iso19139.SV_OperationMetadata.operationDescription</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_OperationMetadata.invocationName&quot; '>i18n.catalog.iso19139.SV_OperationMetadata.invocationName</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_OperationMetadata.parameters&quot; '>i18n.catalog.iso19139.SV_OperationMetadata.parameters</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_OperationMetadata.connectPoint&quot; '>i18n.catalog.iso19139.SV_OperationMetadata.connectPoint</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_OperationMetadata.dependsOn&quot; '>i18n.catalog.iso19139.SV_OperationMetadata.dependsOn</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_CoupledResource&quot; '>i18n.catalog.iso19139.SV_CoupledResource</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_CoupledResource.operationName&quot; '>i18n.catalog.iso19139.SV_CoupledResource.operationName</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_CoupledResource.identifier&quot; '>i18n.catalog.iso19139.SV_CoupledResource.identifier</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_OperationChainMetadata&quot; '>i18n.catalog.iso19139.SV_OperationChainMetadata</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_OperationChainMetadata.name&quot; '>i18n.catalog.iso19139.SV_OperationChainMetadata.name</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_OperationChainMetadata.description&quot; '>i18n.catalog.iso19139.SV_OperationChainMetadata.description</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_OperationChainMetadata.operation&quot; '>i18n.catalog.iso19139.SV_OperationChainMetadata.operation</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_OperationChain&quot; '>i18n.catalog.iso19139.SV_OperationChain</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_OperationChain.name&quot; '>i18n.catalog.iso19139.SV_OperationChain.name</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_OperationChain.description&quot; '>i18n.catalog.iso19139.SV_OperationChain.description</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_OperationChain.operation&quot; '>i18n.catalog.iso19139.SV_OperationChain.operation</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_ServiceIdentification&quot; '>i18n.catalog.iso19139.SV_ServiceIdentification</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_ServiceIdentification.serviceType&quot; '>i18n.catalog.iso19139.SV_ServiceIdentification.serviceType</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_ServiceIdentification.serviceTypeVersion&quot; '>i18n.catalog.iso19139.SV_ServiceIdentification.serviceTypeVersion</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_ServiceIdentification.accessProperties&quot; '>i18n.catalog.iso19139.SV_ServiceIdentification.accessProperties</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_ServiceIdentification.restrictions&quot; '>i18n.catalog.iso19139.SV_ServiceIdentification.restrictions</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_ServiceIdentification.keywords&quot; '>i18n.catalog.iso19139.SV_ServiceIdentification.keywords</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_ServiceIdentification.extent&quot; '>i18n.catalog.iso19139.SV_ServiceIdentification.extent</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_ServiceIdentification.coupledResource&quot; '>i18n.catalog.iso19139.SV_ServiceIdentification.coupledResource</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_ServiceIdentification.couplingType&quot; '>i18n.catalog.iso19139.SV_ServiceIdentification.couplingType</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_ServiceIdentification.containsOperations&quot; '>i18n.catalog.iso19139.SV_ServiceIdentification.containsOperations</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_ServiceIdentification.operatesOn&quot; '>i18n.catalog.iso19139.SV_ServiceIdentification.operatesOn</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_CouplingType&quot; '>i18n.catalog.iso19139.SV_CouplingType</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_CouplingType.loose&quot; '>i18n.catalog.iso19139.SV_CouplingType.loose</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_CouplingType.mixed&quot; '>i18n.catalog.iso19139.SV_CouplingType.mixed</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.SV_CouplingType.tight&quot; '>i18n.catalog.iso19139.SV_CouplingType.tight</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.EX_GeographicDescription&quot; '>i18n.catalog.iso19139.EX_GeographicDescription</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.EX_GeographicDescription.geographicIdentifier&quot; '>i18n.catalog.iso19139.EX_GeographicDescription.geographicIdentifier</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.EX_VerticalExtent.verticalCRS.href&quot; '>i18n.catalog.iso19139.EX_VerticalExtent.verticalCRS.href</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.TM_Primitive.indeterminatePosition&quot; '>i18n.catalog.iso19139.TM_Primitive.indeterminatePosition</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.TM_Primitive.indeterminatePosition.before&quot; '>i18n.catalog.iso19139.TM_Primitive.indeterminatePosition.before</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.TM_Primitive.indeterminatePosition.after&quot; '>i18n.catalog.iso19139.TM_Primitive.indeterminatePosition.after</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.TM_Primitive.indeterminatePosition.now&quot; '>i18n.catalog.iso19139.TM_Primitive.indeterminatePosition.now</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.TM_Primitive.indeterminatePosition.unknown&quot; '>i18n.catalog.iso19139.TM_Primitive.indeterminatePosition.unknown</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.object.uuidref&quot; '>i18n.catalog.iso19139.object.uuidref</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.iso19139.object.xlink.href&quot; '>i18n.catalog.iso19139.object.xlink.href</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.gco.CodeListValue.codeList&quot; '>Code List</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.gco.CodeListValue.codeListValue&quot; '>Code Value</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.gco.CodeListValue.codeSpace&quot; '>Code Space</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.gco.ObjectIdentification.id&quot; '>id</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.gco.ObjectIdentification.uuid&quot; '>uuid</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.gco.ObjectReference.uuidref&quot; '>uuidref</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.MD_Identification&quot; '>Metadata Identification</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.MD_DataIdentification&quot; '>Data Identification</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.MD_ServiceIdentification&quot; '>Service Identification</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.MD_BrowseGraphic&quot; '>Browse Graphic</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.Multiplicity&quot; '>Multiplicity</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.Multiplicity.range&quot; '>Range</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MultiplicityRange&quot; '>Multiplicity Range</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MultiplicityRange.lower&quot; '>Lower</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MultiplicityRange.upper&quot; '>Upper</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.Length&quot; '>Length</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.Length.km&quot; '>kilometers</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.Length.m&quot; '>meters</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.Length.mi&quot; '>miles</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.Length.ft&quot; '>feet</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.Length.uom&quot; '>Units of Measure</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ApplicationSchemaInformation&quot; '>Application Schema Information</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ApplicationSchemaInformation.name&quot; '>Name</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ApplicationSchemaInformation.schemaLanguage&quot; '>Schema Language</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ApplicationSchemaInformation.constraintLanguage&quot; '>Constraint Language</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ApplicationSchemaInformation.schemaAscii&quot; '>Schema Ascii</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ApplicationSchemaInformation.graphicsFile&quot; '>Graphics File</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ApplicationSchemaInformation.softwareDevelopmentFile&quot; '>Software Development File</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ApplicationSchemaInformation.softwareDevelopmentFileFormat&quot; '>Software Development File Format</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_ResponsibleParty&quot; '>Responsible Party</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_ResponsibleParty.individualName&quot; '>Individual Name</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_ResponsibleParty.organisationName&quot; '>Organisation Name</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_ResponsibleParty.positionName&quot; '>Position Name</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_ResponsibleParty.contactInfo&quot; '>Contact Info</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_ResponsibleParty.role&quot; '>Role</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Contact&quot; '>Contact</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Contact.phone&quot; '>Phone</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Contact.address&quot; '>Address</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Contact.onlineResource&quot; '>Online Resource</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Contact.hoursOfService&quot; '>Hours Of Service</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Contact.contactInstructions&quot; '>Contact Instructions</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Telephone&quot; '>Telephone</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Telephone.voice&quot; '>Voice</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Telephone.facsimile&quot; '>Fax</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Address&quot; '>Address</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Address.deliveryPoint&quot; '>Delivery Point</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Address.city&quot; '>City</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Address.administrativeArea&quot; '>Administrative Area</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Address.postalCode&quot; '>Postal Code</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Address.country&quot; '>Country</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Address.electronicMailAddress&quot; '>E-Mail Address</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_OnlineResource&quot; '>Online Resource</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_OnlineResource.linkage&quot; '>URL</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_OnlineResource.protocol&quot; '>Protocol</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_OnlineResource.applicationProfile&quot; '>Application Profile</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_OnlineResource.name&quot; '>Name</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_OnlineResource.description&quot; '>Description</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_OnlineResource.function&quot; '>Function</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_OnLineFunctionCode&quot; '>OnLine Function Code</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_OnLineFunctionCode.caption&quot; '>Function</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_OnLineFunctionCode.download&quot; '>Download</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_OnLineFunctionCode.information&quot; '>Information</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_OnLineFunctionCode.offlineAccess&quot; '>Offline Access</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_OnLineFunctionCode.order&quot; '>Order</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_OnLineFunctionCode.search&quot; '>Search</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_RoleCode&quot; '>Role Code</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_RoleCode.caption&quot; '>Role</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_RoleCode.resourceProvider&quot; '>Resource Provider</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_RoleCode.custodian&quot; '>Custodian</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_RoleCode.owner&quot; '>Owner</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_RoleCode.user&quot; '>User</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_RoleCode.distributor&quot; '>Distributor</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_RoleCode.originator&quot; '>Originator</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_RoleCode.pointOfContact&quot; '>Point Of Contact</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_RoleCode.principalInvestigator&quot; '>Principal Investigator</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_RoleCode.processor&quot; '>Processor</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_RoleCode.publisher&quot; '>Publisher</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_RoleCode.author&quot; '>Author</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Date&quot; '>Date</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Date.date&quot; '>Date</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Date.dateType&quot; '>Date Type</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_DateTypeCode&quot; '>Date Type Code</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_DateTypeCode.creation&quot; '>Creation Date</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_DateTypeCode.publication&quot; '>Publication Date</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_DateTypeCode.revision&quot; '>Revision Date</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_PresentationFormCode&quot; '>Presentation Form Code</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_PresentationFormCode.documentDigital&quot; '>Document Digital</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_PresentationFormCode.documentHardcopy&quot; '>Document Hardcopy</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_PresentationFormCode.imageDigital&quot; '>Image Digital</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_PresentationFormCode.imageHardcopy&quot; '>Image Hardcopy</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_PresentationFormCode.mapDigital&quot; '>Map Digital</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_PresentationFormCode.mapHardcopy&quot; '>Map Hardcopy</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_PresentationFormCode.modelDigital&quot; '>Model Digital</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_PresentationFormCode.modelHardcopy&quot; '>Model Hardcopy</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_PresentationFormCode.profileDigital&quot; '>Profile Digital</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_PresentationFormCode.profileHardcopy&quot; '>Profile Hardcopy</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_PresentationFormCode.tableDigital&quot; '>Table Digital</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_PresentationFormCode.tableHardcopy&quot; '>Table Hardcopy</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_PresentationFormCode.videoDigital&quot; '>Video Digital</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_PresentationFormCode.videoHardcopy&quot; '>Video Hardcopy</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Series&quot; '>Series</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Series.name&quot; '>Name</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Series.issueIdentification&quot; '>Issue Identification</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Series.page&quot; '>Page</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Citation&quot; '>Citation</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Citation.title&quot; '>Title</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Citation.alternateTitle&quot; '>Alternate Title</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Citation.date&quot; '>Date</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Citation.edition&quot; '>Edition</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Citation.editionDate&quot; '>Edition Date</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Citation.identifier&quot; '>Identifier</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Citation.citedResponsibleParty&quot; '>Cited Responsible Party</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Citation.presentationForm&quot; '>Presentation Form</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Citation.series&quot; '>Series</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Citation.otherCitationDetails&quot; '>Other Citation Details</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Citation.ISBN&quot; '>ISBN</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Citation.ISSN&quot; '>ISSN</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Citation.specification.title&quot; '>Specification Title</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.CI_Citation.specification.date&quot; '>Specification Date</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Constraints&quot; '>Usage Constraints</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Constraints.useLimitation&quot; '>Use Limitation</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_LegalConstraints&quot; '>Legal Constraints</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_LegalConstraints.accessConstraints&quot; '>Access Constraints</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_LegalConstraints.useConstraints&quot; '>Use Constraints</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_LegalConstraints.otherConstraints&quot; '>Other Constraints</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_SecurityConstraints&quot; '>Security Constraints</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_SecurityConstraints.classification&quot; '>Classification</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_SecurityConstraints.userNote&quot; '>User Note</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_SecurityConstraints.classificationSystem&quot; '>Classification System</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_SecurityConstraints.handlingDescription&quot; '>Handling Description</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ClassificationCode&quot; '>Classification Code</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ClassificationCode.unclassified&quot; '>Unclassified</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ClassificationCode.restricted&quot; '>Restricted</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ClassificationCode.confidential&quot; '>Confidential</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ClassificationCode.secret&quot; '>Secret</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ClassificationCode.topSecret&quot; '>Top Secret</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_RestrictionCode&quot; '>Restriction Code</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_RestrictionCode.copyright&quot; '>Copyright</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_RestrictionCode.patent&quot; '>Patent</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_RestrictionCode.patentPending&quot; '>Patent Pending</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_RestrictionCode.trademark&quot; '>Trademark</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_RestrictionCode.license&quot; '>License</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_RestrictionCode.intellectualPropertyRights&quot; '>Intellectual Property Rights</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_RestrictionCode.restricted&quot; '>Restricted</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_RestrictionCode.otherRestrictions&quot; '>Other Restrictions</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DigitalTransferOptions&quot; '>Digital Transfer Options</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DigitalTransferOptions.unitsOfDistribution&quot; '>Units Of Distribution</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DigitalTransferOptions.transferSize&quot; '>Transfer Size</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DigitalTransferOptions.onLine&quot; '>Online</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DigitalTransferOptions.offLine&quot; '>Offline</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Distribution&quot; '>Distribution</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Distribution.distributionFormat&quot; '>Distribution Format</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Distribution.distributor&quot; '>Distributor</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Distribution.transferOptions&quot; '>Transfer Options</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Distributor&quot; '>Distributor</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Distributor.distributorContact&quot; '>Distributor Contact</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Distributor.distributionOrderProcess&quot; '>Distribution Order Process</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Distributor.distributorFormat&quot; '>Distributor Format</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Distributor.distributorTransferOptions&quot; '>Distributor Transfer Options</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Format&quot; '>Format</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Format.name&quot; '>Format Name</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Format.version&quot; '>Format Version</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Format.amendmentNumber&quot; '>Amendment Number</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Format.specification&quot; '>Specification</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Format.fileDecompressionTechnique&quot; '>File Decompression Technique</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Format.formatDistributor&quot; '>Format Distributor</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Medium&quot; '>Medium</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Medium.name&quot; '>Name</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Medium.density&quot; '>Density</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Medium.densityUnits&quot; '>Density Units</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Medium.volumes&quot; '>Volumes</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Medium.mediumFormat&quot; '>Medium Format</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Medium.mediumNote&quot; '>Medium Note</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_StandardOrderProcess&quot; '>Standard Order Process</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_StandardOrderProcess.fees&quot; '>Fees</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_StandardOrderProcess.plannedAvailableDateTime&quot; '>Planned Available Date/Time</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_StandardOrderProcess.orderingInstructions&quot; '>Ordering Instructions</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_StandardOrderProcess.turnaround&quot; '>Turnaround</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DistributionUnits&quot; '>Distribution Units</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumFormatCode&quot; '>Medium Format Code</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumFormatCode.cpio&quot; '>cpio</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumFormatCode.tar&quot; '>tar</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumFormatCode.highSierra&quot; '>highSierra</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumFormatCode.iso9660&quot; '>iso9660</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumFormatCode.iso9660RockRidge&quot; '>iso9660RockRidge</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumFormatCode.iso9660AppleHFS&quot; '>iso9660AppleHFS</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode&quot; '>Medium Name Code</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode.cdRom&quot; '>CD Rom</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode.dvd&quot; '>DVD</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode.dvdRom&quot; '>DVD Rom</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode.3halfInchFloppy&quot; '>3.5 Inch Floppy</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode.5quarterInchFloppy&quot; '>5.25 Inch Floppy</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode.7trackTape&quot; '>7 Track Tape</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode.9trackType&quot; '>9 Track Type</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode.3480Cartridge&quot; '>3480 Cartridge</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode.3490Cartridge&quot; '>3490 Cartridge</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode.3580Cartridge&quot; '>3580 Cartridge</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode.4mmCartridgeTape&quot; '>4mm Cartridge Tape</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode.8mmCartridgeTape&quot; '>8mm Cartridge Tape</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode.1quarterInchCartridgeTape&quot; '>1.25 Inch Cartridge Tape</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode.digitalLinearTape&quot; '>Digital Linear Tape</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode.onLine&quot; '>Online</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode.satellite&quot; '>Satellite</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode.telephoneLink&quot; '>Telephone Link</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MediumNameCode.hardcopy&quot; '>Hard Copy</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractEX_GeographicExtent&quot; '>Geographic Extent</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractEX_GeographicExtent.extentTypeCode&quot; '>Extent type code</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.EX_Extent&quot; '>Extent</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.EX_Extent.description&quot; '>Description</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.EX_Extent.geographicElement&quot; '>Spatial Extent</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.EX_Extent.temporalElement&quot; '>Temporal Extent</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.EX_Extent.verticalElement&quot; '>Vertical Extent</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.EX_GeographicExtent&quot; '>Spatial Extent</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.EX_TemporalExtent&quot; '>Temporal Extent</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.EX_TemporalExtent.extent&quot; '>Extent</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.EX_TemporalExtent.beginPosition&quot; '>Begin Date</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.EX_TemporalExtent.endPosition&quot; '>End Date</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.EX_VerticalExtent&quot; '>Vertical Extent</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.EX_VerticalExtent.minimumValue&quot; '>Minimum value</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.EX_VerticalExtent.maximumValue&quot; '>Maximum value</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.EX_VerticalExtent.verticalCRS&quot; '>Vertical CRS</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.EX_GeographicBoundingBox&quot; '>Geographic Bounding Box</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.EX_GeographicBoundingBox.westBoundLongitude&quot; '>West Bounding Longitude</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.EX_GeographicBoundingBox.eastBoundLongitude&quot; '>East Bounding Longitude</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.EX_GeographicBoundingBox.southBoundLatitude&quot; '>South Bounding Latitude</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.EX_GeographicBoundingBox.northBoundLatitude&quot; '>North Bounding Latitude</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractMD_Identification&quot; '>Resource Identification</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractMD_Identification.citation&quot; '>Citation</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractMD_Identification.abstract&quot; '>Abstract</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractMD_Identification.purpose&quot; '>Purpose</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractMD_Identification.credit&quot; '>Credit</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractMD_Identification.status&quot; '>Status</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractMD_Identification.pointOfContact&quot; '>Point Of Contact</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractMD_Identification.resourceMaintenance&quot; '>Maintenance</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractMD_Identification.graphicOverview&quot; '>Graphic Overview</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractMD_Identification.resourceFormat&quot; '>Format</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractMD_Identification.descriptiveKeywords&quot; '>Keyword Collection</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractMD_Identification.resourceSpecificUsage&quot; '>Usage</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractMD_Identification.resourceConstraints&quot; '>Constraints</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractMD_Identification.aggregationInfo&quot; '>Aggregation</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DS_Association&quot; '>Association</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_AggregateInformation&quot; '>Aggregate Information</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_AggregateInformation.aggregateDataSetName&quot; '>Aggregate Dataset Name</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_AggregateInformation.aggregateDataSetIdentifier&quot; '>Aggregate Dataset Identifier</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_AggregateInformation.associationType&quot; '>Association Type</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_AggregateInformation.initiativeType&quot; '>Initiative Type</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_BrowseGraphic&quot; '>Browse Graphic</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_BrowseGraphic.fileName&quot; '>Browse Graphic URL</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_BrowseGraphic.fileDescription&quot; '>Browse Graphic Caption</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_BrowseGraphic.fileType&quot; '>Browse Graphic Type</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DataIdentification&quot; '>Data Identification</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DataIdentification.spatialRepresentationType&quot; '>Representation Type</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DataIdentification.spatialResolution&quot; '>Resolution</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DataIdentification.language&quot; '>Language</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DataIdentification.characterSet&quot; '>Character Set</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DataIdentification.topicCategory&quot; '>Topic Category</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DataIdentification.environmentDescription&quot; '>Environment Description</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DataIdentification.extent&quot; '>Extent</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DataIdentification.supplementalInformation&quot; '>Supplemental</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Keywords&quot; '>Keywords</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Keywords.keyword&quot; '>Keyword</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Keywords.type&quot; '>Keyword Type</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Keywords.thesaurusName&quot; '>Associated Thesaurus</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Keywords.keyword.delimited&quot; '>Keywords (use comma or newline to separate)</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_RepresentativeFraction&quot; '>Representative Fraction</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_RepresentativeFraction.denominator&quot; '>Denominator</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Resolution&quot; '>Resolution</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Resolution.equivalentScale&quot; '>Equivalent Scale</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Resolution.distance&quot; '>Distance</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Usage&quot; '>Usage</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Usage.specificUsage&quot; '>Specific Usage</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Usage.usageDateTime&quot; '>Usage Date/Time</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Usage.userDeterminedLimitations&quot; '>User Determined Limitations</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Usage.userContactInfo&quot; '>User Contact Info</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DS_AssociationTypeCode&quot; '>Association Type Code</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DS_AssociationTypeCode.crossReference&quot; '>Cross Reference</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DS_AssociationTypeCode.largerWorkCitation&quot; '>Larger Work Citation</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DS_AssociationTypeCode.partOfSeamlessDatabase&quot; '>Part Of Seamless Database</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DS_AssociationTypeCode.source&quot; '>Source</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DS_AssociationTypeCode.stereoMate&quot; '>Stereo Mate</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DS_InitiativeTypeCode&quot; '>Initiative Type Code</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DS_InitiativeTypeCode.campaign&quot; '>Campaign</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DS_InitiativeTypeCode.collection&quot; '>Collection</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DS_InitiativeTypeCode.exercise&quot; '>Exercise</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DS_InitiativeTypeCode.experiment&quot; '>Experiment</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DS_InitiativeTypeCode.investigation&quot; '>Investigation</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DS_InitiativeTypeCode.mission&quot; '>Mission</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DS_InitiativeTypeCode.sensor&quot; '>Sensor</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DS_InitiativeTypeCode.operation&quot; '>Operation</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DS_InitiativeTypeCode.platform&quot; '>Platform</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DS_InitiativeTypeCode.process&quot; '>Process</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DS_InitiativeTypeCode.program&quot; '>Program</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DS_InitiativeTypeCode.project&quot; '>Project</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DS_InitiativeTypeCode.study&quot; '>Study</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DS_InitiativeTypeCode.task&quot; '>Task</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DS_InitiativeTypeCode.trial&quot; '>Trial</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode&quot; '>Character Set Code</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.ucs2&quot; '>ucs2</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.ucs2&quot; '>ucs2</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.ucs4&quot; '>ucs4</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.utf7&quot; '>utf7</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.utf8&quot; '>utf8</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.utf16&quot; '>utf16</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.8859part1&quot; '>8859part1</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.8859part2&quot; '>8859part2</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.8859part3&quot; '>8859part3</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.8859part4&quot; '>8859part4</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.8859part5&quot; '>8859part5</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.8859part6&quot; '>8859part6</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.8859part7&quot; '>8859part7</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.8859part8&quot; '>8859part8</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.8859part9&quot; '>8859part9</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.8859part10&quot; '>8859part10</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.8859part11&quot; '>8859part11</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.8859part13&quot; '>8859part13</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.8859part14&quot; '>8859part14</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.8859part15&quot; '>8859part15</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.8859part16&quot; '>8859part16</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.jis&quot; '>jis</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.shiftJIS&quot; '>shiftJIS</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.eucJP&quot; '>eucJP</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.usAscii&quot; '>usAscii</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.ebcdic&quot; '>ebcdic</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.eucKR&quot; '>eucKR</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.big5&quot; '>big5</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CharacterSetCode.GB2312&quot; '>GB2312</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_KeywordTypeCode&quot; '>Keyword Type Code</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_KeywordTypeCode.discipline&quot; '>Discipline</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_KeywordTypeCode.place&quot; '>Place</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_KeywordTypeCode.stratum&quot; '>Stratum</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_KeywordTypeCode.temporal&quot; '>Temporal</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_KeywordTypeCode.theme&quot; '>Theme</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ProgressCode&quot; '>Progress Code</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ProgressCode.completed&quot; '>Completed</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ProgressCode.historicalArchive&quot; '>Historical Archive</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ProgressCode.obsolete&quot; '>Obsolete</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ProgressCode.onGoing&quot; '>On Going</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ProgressCode.planned&quot; '>Planned</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ProgressCode.required&quot; '>Required</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ProgressCode.underDevelopment&quot; '>Under Development</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_SpatialRepresentationTypeCode&quot; '>Spatial Representation Type Code</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_SpatialRepresentationTypeCode.vector&quot; '>Vector</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_SpatialRepresentationTypeCode.grid&quot; '>Grid</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_SpatialRepresentationTypeCode.textTable&quot; '>Text Table</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_SpatialRepresentationTypeCode.tin&quot; '>TIN</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_SpatialRepresentationTypeCode.stereoModel&quot; '>Stereo Model</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_SpatialRepresentationTypeCode.video&quot; '>Video</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode&quot; '>Topic Category Code</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.boundaries&quot; '>Administrative and Political Boundaries</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.farming&quot; '>Agriculture and Farming</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.climatologyMeteorologyAtmosphere&quot; '>Atmosphere and Climatic</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.biota&quot; '>Biology and Ecology</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.economy&quot; '>Business and Economic</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.planningCadastre&quot; '>Cadastral</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.society&quot; '>Cultural, Society and Demography</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.elevation&quot; '>Elevation and Derived Products</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.environment&quot; '>Environment and Conservation</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.structure&quot; '>Facilities and Structures</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.geoscientificInformation&quot; '>Geological and Geophysical</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.health&quot; '>Human Health and Disease</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.imageryBaseMapsEarthCover&quot; '>Imagery and Base Maps</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.inlandWaters&quot; '>Inland Water Resources</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.location&quot; '>Locations and Geodetic Networks</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.intelligenceMilitary&quot; '>Military</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.oceans&quot; '>Oceans and Estuaries</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.transportation&quot; '>Transportation Networks</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopicCategoryCode.utilitiesCommunication&quot; '>Utilities and Communication</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.XTN_Identification&quot; '>Identification</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.XTN_Identification.citation.title&quot; '>Resource Title</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.XTN_Identification.citation.date&quot; '>Resource Date</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.XTN_Identification.citation.identifier&quot; '>Unique Resource Identifier</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.XTN_Identification.citation.MD_Identifier&quot; '>URI</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.XTN_Identification.citation.RS_Identifier&quot; '>ID Plus Code Space</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.XTN_Identification.abstract&quot; '>Resource Abstract</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.XTN_Identification.language&quot; '>Resource Language</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.XTN_Identification.topicCategory&quot; '>Topic Category</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.XTN_Identification.spatialRepresentationType&quot; '>Spatial Representation Type</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.XTN_Identification.spatialResolution&quot; '>Spatial Resolution</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.LocalisedCharacterString&quot; '>Localised Character String</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.LocalisedCharacterString.id&quot; '>ID</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.LocalisedCharacterString.locale&quot; '>Locale</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.LocalisedCharacterString.textNode&quot; '>Text</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.PT_FreeText&quot; '>Free Text</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.PT_FreeText.textGroup&quot; '>Text Group</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.PT_Locale&quot; '>PT_Locale</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.PT_Locale.languageCode&quot; '>Language Code</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.PT_Locale.country&quot; '>country</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.PT_Locale.characterEncoding&quot; '>Character Encoding</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.PT_LocaleContainer&quot; '>Locale Container</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.PT_LocaleContainer.description&quot; '>Description</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.PT_LocaleContainer.locale&quot; '>Locale</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.PT_LocaleContainer.date&quot; '>Date</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.PT_LocaleContainer.responsibleParty&quot; '>Responsible Party</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.PT_LocaleContainer.localisedString&quot; '>Localised String</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceInformation&quot; '>Maintenance Information</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceInformation.maintenanceAndUpdateFrequency&quot; '>Frequency</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceInformation.dateOfNextUpdate&quot; '>Date Of Next Update</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceInformation.userDefinedMaintenanceFrequency&quot; '>User Defined Maintenance Frequency</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceInformation.updateScope&quot; '>Update Scope</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceInformation.updateScopeDescription&quot; '>Update Scope Description</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceInformation.maintenanceNote&quot; '>Maintenance Note</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceInformation.contact&quot; '>Contact</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeDescription&quot; '>Scope Description</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeDescription.attributes&quot; '>Attributes</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeDescription.features&quot; '>Features</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeDescription.featureInstances&quot; '>Feature Instances</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeDescription.attributeInstances&quot; '>Attribute Instances</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeDescription.dataset&quot; '>Dataset</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeDescription.other&quot; '>Other</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceFrequencyCode&quot; '>Maintenance Frequency Code</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceFrequencyCode.continual&quot; '>Continual</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceFrequencyCode.daily&quot; '>Daily</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceFrequencyCode.weekly&quot; '>Weekly</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceFrequencyCode.fortnightly&quot; '>Fortnightly</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceFrequencyCode.monthly&quot; '>Monthly</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceFrequencyCode.quarterly&quot; '>Quarterly</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceFrequencyCode.biannually&quot; '>Biannually</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceFrequencyCode.annually&quot; '>annually</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceFrequencyCode.asNeeded&quot; '>As Needed</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceFrequencyCode.irregular&quot; '>Irregular</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceFrequencyCode.notPlanned&quot; '>Not Planned</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MaintenanceFrequencyCode.unknown&quot; '>Unknown</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeCode&quot; '>Scope Code</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeCode.attribute&quot; '>Attribute</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeCode.attributeType&quot; '>Attribute Type</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeCode.collectionHardware&quot; '>Collection Hardware</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeCode.collectionSession&quot; '>Collection Session</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeCode.dataset&quot; '>Dataset</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeCode.series&quot; '>Series</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeCode.nonGeographicDataset&quot; '>Non-geographic Dataset</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeCode.dimensionGroup&quot; '>Dimension Group</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeCode.feature&quot; '>Feature</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeCode.featureType&quot; '>Feature Type</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeCode.propertyType&quot; '>Property Type</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeCode.fieldSession&quot; '>Field Session</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeCode.software&quot; '>Software</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeCode.service&quot; '>Service</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeCode.model&quot; '>Model</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ScopeCode.tile&quot; '>Tile</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractDS_Aggregate&quot; '>Aggregate</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractDS_Aggregate.composedOf&quot; '>Composed Of</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractDS_Aggregate.seriesMetadata&quot; '>Series Metadata</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractDS_Aggregate.subset&quot; '>Subset</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractDS_Aggregate.superset&quot; '>Superset</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DS_DataSet&quot; '>Data Set</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DS_DataSet.has&quot; '>Has Metadata</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DS_DataSet.partOf&quot; '>Is Part Of</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata&quot; '>ISO 19139 Metadata</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.fileIdentifier&quot; '>File Identifier</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.language&quot; '>Metadata Language</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.characterSet&quot; '>Character Set</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.parentIdentifier&quot; '>Parent Identifier</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.hierarchyLevel&quot; '>Hierarchy Level</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.hierarchyLevelName&quot; '>Hierarchy Level Name</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.contact&quot; '>Metadata Contact</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.contact.help&quot; '>Here is some help <a href="http://www.esri.com">Esri</a> target="_blank"</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.dateStamp&quot; '>Metadata Date</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.metadataStandardName&quot; '>Metadata Standard Name</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.metadataStandardVersion&quot; '>Metadata Standard Version</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.dataSetURI&quot; '>Dataset URI</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.locale&quot; '>Locale</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.spatialRepresentationInfo&quot; '>Spatial Representation</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.referenceSystemInfo&quot; '>Reference System</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.metadataExtensionInfo&quot; '>Metadata Extension</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.identificationInfo&quot; '>Identification</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.contentInfo&quot; '>Content</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.distributionInfo&quot; '>Distribution</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.dataQualityInfo&quot; '>Quality</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.portrayalCatalogueInfo&quot; '>Portrayal Catalogue</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.metadataConstraints&quot; '>Constraints</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.applicationSchemaInfo&quot; '>Application Schema</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.metadataMaintenance&quot; '>Maintenance</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.series&quot; '>Series</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.describes&quot; '>Describes</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.propertyType&quot; '>Property Type</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.featureType&quot; '>Feature Type</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.featureAttribute&quot; '>Feature Attribute</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.metadata&quot; '>Metadata</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.metadata.identifier&quot; '>Identifier</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.metadata.contact&quot; '>Contact</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.metadata.date&quot; '>Date</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.metadata.standard&quot; '>Standard</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.metadata.reference&quot; '>Reference</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification&quot; '>Identification</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification.citation&quot; '>Citation</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification.abstract&quot; '>Abstract</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification.contact&quot; '>Contact</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification.graphicOverview&quot; '>Thumbnail</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification.descriptiveKeywords&quot; '>Keywords</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification.otherKeywords&quot; '>Other Keywords</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification.resourceConstraints&quot; '>Constraints</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification.resource&quot; '>Resource</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification.representation&quot; '>Representation</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification.language&quot; '>Language</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification.classification&quot; '>Classification</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification.extent&quot; '>Extent</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification.extent.geographicElement&quot; '>Spatial Extent</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification.extent.temporalElement&quot; '>Temporal Extent</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification.service.serviceType&quot; '>Service Type</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification.service.couplingType&quot; '>Coupling Type</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification.service.operation&quot; '>Operation</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.identification.service.operatesOn&quot; '>Operates On</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.distribution&quot; '>Distribution</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.quality&quot; '>Quality</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.quality.scope&quot; '>Scope</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.quality.conformance&quot; '>Conformance</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Metadata.section.quality.lineage&quot; '>Lineage</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ExtendedElementInformation&quot; '>Extended Element Information</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ExtendedElementInformation.name&quot; '>Name</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ExtendedElementInformation.shortName&quot; '>Short Name</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ExtendedElementInformation.domainCode&quot; '>Domain Code</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ExtendedElementInformation.definition&quot; '>Definition</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ExtendedElementInformation.obligation&quot; '>Obligation</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ExtendedElementInformation.condition&quot; '>Condition</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ExtendedElementInformation.dataType&quot; '>Data Type</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ExtendedElementInformation.maximumOccurrence&quot; '>Maximum Occurrence</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ExtendedElementInformation.domainValue&quot; '>Domain Value</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ExtendedElementInformation.parentEntity&quot; '>Parent Entity</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ExtendedElementInformation.rule&quot; '>Rule</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ExtendedElementInformation.rationale&quot; '>Rationale</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ExtendedElementInformation.source&quot; '>Source</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MetadataExtensionInformation&quot; '>Metadata Extension Information</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MetadataExtensionInformation.extensionOnLineResource&quot; '>Extension Online Resource</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_MetadataExtensionInformation.extendedElementInformation&quot; '>Extended Element Information</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DatatypeCode&quot; '>Datatype Code</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DatatypeCode.class&quot; '>Class</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DatatypeCode.codelist&quot; '>Codelist</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DatatypeCode.enumeration&quot; '>Enumeration</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DatatypeCode.codelistElement&quot; '>Codelist Element</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DatatypeCode.abstractClass&quot; '>Abstract Class</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DatatypeCode.aggregateClass&quot; '>Aggregate Class</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DatatypeCode.specifiedClass&quot; '>Specified Class</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DatatypeCode.datatypeClass&quot; '>Datatype Class</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DatatypeCode.interfaceClass&quot; '>Interface Class</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DatatypeCode.unionClass&quot; '>Union Class</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DatatypeCode.metaClass&quot; '>Meta Class</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DatatypeCode.typeClass&quot; '>Type Class</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DatatypeCode.characterString&quot; '>Character String</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DatatypeCode.integer&quot; '>Integer</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DatatypeCode.association&quot; '>Association</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ObligationCode&quot; '>Obligation Code</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ObligationCode.mandatory&quot; '>Mandatory</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ObligationCode.optional&quot; '>Optional</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ObligationCode.conditional&quot; '>Conditional</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_PortrayalCatalogueReference&quot; '>Portrayal Catalogue Reference</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_PortrayalCatalogueReference.portrayalCatalogueCitation&quot; '>Citation</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractRS_ReferenceSystem&quot; '>Reference System</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractRS_ReferenceSystem.name&quot; '>Name</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractRS_ReferenceSystem.domainOfValidity&quot; '>Domain Of Validity</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Identifier&quot; '>Identifier</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Identifier.authority&quot; '>Authority</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Identifier.code&quot; '>Code</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ReferenceSystem&quot; '>MD_ReferenceSystem</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ReferenceSystem.referenceSystemIdentifier&quot; '>Reference System Identifier</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.RS_Identifier&quot; '>Identifier</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.RS_Identifier.authority&quot; '>Authority</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.RS_Identifier.code&quot; '>Code</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.RS_Identifier.codeSpace&quot; '>Code Space</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.RS_Identifier.version&quot; '>Version</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Dimension&quot; '>Dimension</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Dimension.dimensionName&quot; '>Dimension Name</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Dimension.dimensionSize&quot; '>Dimension Size</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Dimension.resolution&quot; '>Resolution</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_GeometricObjects&quot; '>Geometric Objects</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_GeometricObjects.geometricObjectType&quot; '>Geometric Object Type</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_GeometricObjects.geometricObjectCount&quot; '>Geometric Object Count</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Georectified&quot; '>Georectified</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Georectified.checkPointAvailability&quot; '>Check Point Availability</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Georectified.checkPointDescription&quot; '>Check Point Description</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Georectified.cornerPoints&quot; '>Corner Points</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Georectified.centerPoint&quot; '>Center Point</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Georectified.pointInPixel&quot; '>Point In Pixel</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Georectified.transformationDimensionDescription&quot; '>Transformation Dimension Description</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Georectified.transformationDimensionMapping&quot; '>Transformation Dimension Mapping</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Georeferenceable&quot; '>Georeferenceable</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Georeferenceable.controlPointAvailability&quot; '>Control Point Availability</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Georeferenceable.orientationParameterAvailability&quot; '>Orientation Parameter Availability</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Georeferenceable.orientationParameterDescription&quot; '>Orientation Parameter Description</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Georeferenceable.georeferencedParameters&quot; '>Georeferenced Parameters</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Georeferenceable.parameterCitation&quot; '>Parameter Citation</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_GridSpatialRepresentation&quot; '>Grid Representation</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_GridSpatialRepresentation.numberOfDimensions&quot; '>Number Of Dimensions</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_GridSpatialRepresentation.axisDimensionProperties&quot; '>Axis Dimension Properties</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_GridSpatialRepresentation.cellGeometry&quot; '>Cell Geometry</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_GridSpatialRepresentation.transformationParameterAvailability&quot; '>Transformation Parameter Availability</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_VectorSpatialRepresentation&quot; '>Vector Representation</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_VectorSpatialRepresentation.topologyLevel&quot; '>Topology Level</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_VectorSpatialRepresentation.geometricObjects&quot; '>Geometric Objects</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CellGeometryCode&quot; '>Cell Geometry Code</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CellGeometryCode.point&quot; '>Each cell represents a point</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CellGeometryCode.area&quot; '>Each cell represents an area</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DimensionNameTypeCode&quot; '>Dimension Name Type Code</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DimensionNameTypeCode.row&quot; '>Ordinate (y) Axis</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DimensionNameTypeCode.column&quot; '>Ordinate (x) Axis</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DimensionNameTypeCode.vertical&quot; '>Vertical (z) Axis)</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DimensionNameTypeCode.track&quot; '>Along the direction of motion of the scan point</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DimensionNameTypeCode.crossTrack&quot; '>Perpendicular to the direction of motion of the scan point</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DimensionNameTypeCode.line&quot; '>Scan line of a sensor</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DimensionNameTypeCode.sample&quot; '>Element along a scan line</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_DimensionNameTypeCode.time&quot; '>Duration</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_GeometricObjectTypeCode&quot; '>Geometric Object Type Code</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_GeometricObjectTypeCode.complex&quot; '>Complex</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_GeometricObjectTypeCode.composite&quot; '>Composite</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_GeometricObjectTypeCode.curve&quot; '>Curve</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_GeometricObjectTypeCode.point&quot; '>Point</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_GeometricObjectTypeCode.solid&quot; '>Solid</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_GeometricObjectTypeCode.surface&quot; '>Surface</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_PixelOrientationCode&quot; '>Pixel Orientation Code</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_PixelOrientationCode.center&quot; '>Center of the pixel</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_PixelOrientationCode.lowerLeft&quot; '>Lower-left corner</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_PixelOrientationCode.lowerRight&quot; '>Lower-right corner</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_PixelOrientationCode.upperRight&quot; '>Upper-right corner</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_PixelOrientationCode.upperLeft&quot; '>Upper-left corner</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopologyLevelCode&quot; '>Topology Level Code</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopologyLevelCode.geometryOnly&quot; '>Geometry Only</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopologyLevelCode.topology1D&quot; '>Topology 1D</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopologyLevelCode.planarGraph&quot; '>Planar Graph</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopologyLevelCode.fullPlanarGraph&quot; '>Full Planar Graph</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopologyLevelCode.surfaceGraph&quot; '>Surface Graph</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopologyLevelCode.fullSurfaceGraph&quot; '>Full Surface Graph</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopologyLevelCode.topology3D&quot; '>Topology 3D</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopologyLevelCode.fullTopology3D&quot; '>Full Topology 3D</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_TopologyLevelCode.abstract&quot; '>Abstract</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_DataQuality&quot; '>Data Quality</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_DataQuality.scope&quot; '>Scope</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_DataQuality.report&quot; '>Report</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_DataQuality.lineage&quot; '>Lineage</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_Scope&quot; '>Scope</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_Scope.level&quot; '>Level</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_Scope.extent&quot; '>Extent</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_Scope.levelDescription&quot; '>Level description</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractDQ_Element&quot; '>Element</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractDQ_Element.nameOfMeasure&quot; '>Name of measure</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractDQ_Element.measureIdentification&quot; '>Measure identification</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractDQ_Element.measureDescription&quot; '>Measure description</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractDQ_Element.evaluationMethodType&quot; '>Evaluation method type</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractDQ_Element.evaluationMethodDescription&quot; '>Evaluation method description</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractDQ_Element.evaluationProcedure&quot; '>Evaluation procedure</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractDQ_Element.dateTime&quot; '>Date/time</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractDQ_Element.result&quot; '>Result</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_AbsoluteExternalPositionalAccuracy&quot; '>External accuracy</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_GriddedDataPositionalAccuracy&quot; '>Gridded accuracy</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_RelativeInternalPositionalAccuracy&quot; '>Internal accuracy</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_NonQuantitiveAttributeAccuracy&quot; '>Non Quantitative accuracy</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_QuantitativeAttributeAccuracy&quot; '>Quantitative accuracy</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_AccuracyOfATimeMeasurement&quot; '>Time measurement accuracy</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_CompletenessOmission&quot; '>Completeness omission</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_CompletenessCommission&quot; '>Completeness commission</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_ConceptualConsistency&quot; '>Conceptual consistency</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_DomainConsistency&quot; '>Domain consistency</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_FormatConsistency&quot; '>Format consistency</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_TemporalAccuracy&quot; '>Temporal accuracy</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_TemporalConsistency&quot; '>Temporal consistency</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_TemporalValidity&quot; '>Temporal validity</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_ThematicAccuracy&quot; '>Thematic accuracy</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_ThematicClassificationCorrectness&quot; '>Thematic correctness</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_TopologicalConsistency&quot; '>Topological consistency</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_QuantitativeResult&quot; '>Quantitative</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_QuantitativeResult.valueType&quot; '>Value type</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_QuantitativeResult.errorStatistic&quot; '>Error statistic</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_QuantitativeResult.value&quot; '>Value</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_QuantitativeResult.valueUnit&quot; '>Value unit</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_ConformanceResult&quot; '>Conformance Result</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_ConformanceResult.specification&quot; '>Specification</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_ConformanceResult.explanation&quot; '>Explanation</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_ConformanceResult.pass&quot; '>Degree</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_ConformanceResult.pass.Boolean&quot; '>Validation Performed</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_ConformanceResult.pass.Boolean.true&quot; '>Conformant</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DQ_ConformanceResult.pass.Boolean.false&quot; '>Non Conformant</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.LI_Lineage&quot; '>Lineage</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.LI_Lineage.statement&quot; '>Lineage Statement</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.LI_Lineage.processStep&quot; '>Process step</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.LI_Lineage.source&quot; '>Source</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.LI_ProcessStep&quot; '>Process step</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.LI_ProcessStep.description&quot; '>Description</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.LI_ProcessStep.rationale&quot; '>Rationale</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.LI_ProcessStep.dateTime&quot; '>Date/time</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.LI_ProcessStep.processor&quot; '>Processor</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.LI_ProcessStep.source&quot; '>Source</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.LI_Source&quot; '>Source</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.LI_Source.description&quot; '>Description</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.LI_Source.scaleDenominator&quot; '>Scale denominator</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.LI_Source.sourceReferenceSystem&quot; '>Source reference system</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.LI_Source.sourceCitation&quot; '>Source citation</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.LI_Source.sourceExtent&quot; '>Source extent</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.LI_Source.sourceStep&quot; '>Source step</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.XTN_Scope.level&quot; '>Scope (quality information applies to)</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.AbstractTimePrimitive&quot; '>AbstractTimePrimitive</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.StandardObjectProperties&quot; '>Standard object properties</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.StandardObjectProperties.metaDataProperty&quot; '>Metadata property</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.StandardObjectProperties.description&quot; '>Description</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.StandardObjectProperties.descriptionReference&quot; '>Description reference</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.StandardObjectProperties.name&quot; '>Name</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.StandardObjectProperties.identifier&quot; '>Identifier</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_FeatureCatalogueDescription&quot; '>Feature catalogue description</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_FeatureCatalogueDescription.complianceCode&quot; '>Compliance code</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_FeatureCatalogueDescription.language&quot; '>Language</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_FeatureCatalogueDescription.includedWithDataset&quot; '>Included with dataset</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_FeatureCatalogueDescription.featureTypes&quot; '>Feature types</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_FeatureCatalogueDescription.featureCatalogueCitation&quot; '>Citation</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CoverageDescription&quot; '>Coverage description</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CoverageDescription.attributeDescription&quot; '>Attribute description</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CoverageDescription.contentType&quot; '>Content type</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CoverageDescription.dimension&quot; '>Dimension</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CoverageContentTypeCode&quot; '>Coverage content type code</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CoverageContentTypeCode.image&quot; '>Image</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CoverageContentTypeCode.thematicClassification&quot; '>Thematic classification</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_CoverageContentTypeCode.physicalMeasurement&quot; '>Physical measurement</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_RangeDimension&quot; '>Range dimension</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_RangeDimension.sequenceIdentifier&quot; '>Sequence identifier</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_RangeDimension.descriptor&quot; '>Descriptor</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Band&quot; '>Band</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Band.sequenceIdentifier&quot; '>Sequence identifier</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Band.descriptor&quot; '>Descriptor</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Band.minValue&quot; '>Minimum value</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Band.maxValue&quot; '>Maximum value</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Band.units&quot; '>Units</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Band.peakResponse&quot; '>Peak response</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Band.bitsPerValue&quot; '>Bits per value</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Band.toneGradation&quot; '>Tone gradation</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Band.scaleFactor&quot; '>Scale factor</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_Band.offset&quot; '>Offset</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImageDescription&quot; '>Image description</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImageDescription.attributeDescription&quot; '>Attribute description</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImageDescription.contentType&quot; '>Content type</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImageDescription.dimension&quot; '>Dimension</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImageDescription.illuminationElevationAngle&quot; '>Illumination elevation angle</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImageDescription.illuminationAzimuthAngle&quot; '>Illumination azimuth angle</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImageDescription.imagingCondition&quot; '>Imaging condition</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImageDescription.imageQualityCode&quot; '>Imaging quality code</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImageDescription.cloudCoverPercentage&quot; '>Cloud cover percentage</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImageDescription.processingLevelCode&quot; '>Processing level code</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImageDescription.compressionGenerationQuantity&quot; '>Compression generation quantity</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImageDescription.triangulationIndicator&quot; '>Triangulation indicator</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImageDescription.radiometricCalibrationDataAvailability&quot; '>Radiometric calibration data availability</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImageDescription.cameraCalibrationInformationAvailability&quot; '>Camera calibration information availability</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImageDescription.filmDistortionInformationAvailability&quot; '>Film distortion information availability</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImageDescription.lensDistortionInformationAvailability&quot; '>Lens distortion information availability</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImagingConditionCode&quot; '>Imaging condition code</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImagingConditionCode.blurredImage&quot; '>Blurred image</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImagingConditionCode.cloud&quot; '>Cloud</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImagingConditionCode.degradingObliquity&quot; '>Degrading obliquity</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImagingConditionCode.fog&quot; '>Fog</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImagingConditionCode.heavySmokeOrDust&quot; '>Heavy smoke or dust</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImagingConditionCode.night&quot; '>Night</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImagingConditionCode.rain&quot; '>Rain</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImagingConditionCode.semiDarkness&quot; '>Semi-darkness</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImagingConditionCode.shadow&quot; '>Shadow</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.MD_ImagingConditionCode.snow&quot; '>Snow</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Operation&quot; '>Operation</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Operation.operationName&quot; '>Operation name</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Operation.dependsOn&quot; '>Depends on</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Operation.parameter&quot; '>Parameter</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_PortSpecification&quot; '>Port specification</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_PortSpecification.binding&quot; '>Binding</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_PortSpecification.address&quot; '>Address</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Interface&quot; '>Interface</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Interface.typeName&quot; '>Type</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Interface.theSV_Port&quot; '>Port</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Interface.operation&quot; '>Operation</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Service&quot; '>Service</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Service.specification&quot; '>Specification</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Service.theSV_Port&quot; '>Port</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Port&quot; '>Port</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Port.theSV_Interface&quot; '>Interface</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_ServiceType&quot; '>Service type</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_ServiceSpecification&quot; '>Service specification</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_ServiceSpecification.name&quot; '>Name</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_ServiceSpecification.opModel&quot; '>Model</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_ServiceSpecification.typeSpec&quot; '>Type</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_ServiceSpecification.theSV_Interface&quot; '>Interface</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_PlatformNeutralServiceSpecification&quot; '>Platform neutral service specification</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_PlatformNeutralServiceSpecification.name&quot; '>Name</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_PlatformNeutralServiceSpecification.opModel&quot; '>Model</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_PlatformNeutralServiceSpecification.serviceType&quot; '>Type</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_PlatformNeutralServiceSpecification.implSpec&quot; '>Platform specific service specification</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_PlatformSpecificServiceSpecification&quot; '>Platform specific service specification</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_PlatformSpecificServiceSpecification.name&quot; '>Name</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_PlatformSpecificServiceSpecification.opModel&quot; '>Model</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_PlatformSpecificServiceSpecification.serviceType&quot; '>Type</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_PlatformSpecificServiceSpecification.implSpec&quot; '>Platform specific service specification</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_PlatformSpecificServiceSpecification.DCP&quot; '>DCP</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_PlatformSpecificServiceSpecification.implementation&quot; '>Implementation</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_ParameterDirection&quot; '>Parameter direction</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Paramater&quot; '>Parameter</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Paramater.name&quot; '>Name</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Paramater.direction&quot; '>Direction</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Paramater.description&quot; '>Description</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Paramater.optionality&quot; '>Optionality</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Paramater.repeatability&quot; '>Repeatability</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_Paramater.valueType&quot; '>Value type</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DCPList&quot; '>DCP List</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DCPList.XML&quot; '>XML</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DCPList.CORBA&quot; '>CORBA</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DCPList.JAVA&quot; '>JAVA</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DCPList.COM&quot; '>COM</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DCPList.SQL&quot; '>SQL</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.DCPList.WebServices&quot; '>WebServices</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_OperationMetadata&quot; '>Operation Metadata</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_OperationMetadata.operationName&quot; '>Operation Name</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_OperationMetadata.DCP&quot; '>DCP</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_OperationMetadata.operationDescription&quot; '>Operation description</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_OperationMetadata.invocationName&quot; '>Invocation name</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_OperationMetadata.parameters&quot; '>Parameters</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_OperationMetadata.connectPoint&quot; '>Connect Point</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_OperationMetadata.dependsOn&quot; '>Depends on</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_CoupledResource&quot; '>Coupled resource</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_CoupledResource.operationName&quot; '>Operation name</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_CoupledResource.identifier&quot; '>Identifier</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_OperationChainMetadata&quot; '>Operation chain metadata</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_OperationChainMetadata.name&quot; '>Name</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_OperationChainMetadata.description&quot; '>Description</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_OperationChainMetadata.operation&quot; '>Operation</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_OperationChain&quot; '>Operation chain</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_OperationChain.name&quot; '>Name</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_OperationChain.description&quot; '>Description</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_OperationChain.operation&quot; '>Operation</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_ServiceIdentification&quot; '>Service identification</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_ServiceIdentification.serviceType&quot; '>Service Type</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_ServiceIdentification.serviceTypeVersion&quot; '>Service type version</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_ServiceIdentification.accessProperties&quot; '>Access properties</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_ServiceIdentification.restrictions&quot; '>Restrictions</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_ServiceIdentification.keywords&quot; '>Keywords</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_ServiceIdentification.extent&quot; '>Extent</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_ServiceIdentification.coupledResource&quot; '>Coupled resource</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_ServiceIdentification.couplingType&quot; '>Coupling type</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_ServiceIdentification.containsOperations&quot; '>Contains operations</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_ServiceIdentification.operatesOn&quot; '>Operates on</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_CouplingType&quot; '>Coupling Type</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_CouplingType.loose&quot; '>Loose</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_CouplingType.mixed&quot; '>Mixed</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.SV_CouplingType.tight&quot; '>Tight</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.EX_GeographicDescription&quot; '>Geographic Description</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.EX_GeographicDescription.geographicIdentifier&quot; '>Geographic Identifier</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.EX_VerticalExtent.verticalCRS.href&quot; '>Reference (e.g. urn:ogc:def:crs:EPSG::5701 )</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.TM_Primitive.indeterminatePosition&quot; '>Indeterminate Position</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.TM_Primitive.indeterminatePosition.before&quot; '>Before</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.TM_Primitive.indeterminatePosition.after&quot; '>After</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.TM_Primitive.indeterminatePosition.now&quot; '>Now</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.TM_Primitive.indeterminatePosition.unknown&quot; '>Unknown</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.object.uuidref&quot; '>UUID Reference</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.iso19139.object.xlink.href&quot; '>XLink Reference</xsl:when>
 			<!-- ISO 639-2 language code -->
-			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.ger&quot; '>i18n.catalog.mdCode.language.iso639_2.ger</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.dut&quot; '>i18n.catalog.mdCode.language.iso639_2.dut</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.eng&quot; '>i18n.catalog.mdCode.language.iso639_2.eng</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.fre&quot; '>i18n.catalog.mdCode.language.iso639_2.fre</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.ita&quot; '>i18n.catalog.mdCode.language.iso639_2.ita</xsl:when>			
-			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.kor&quot; '>i18n.catalog.mdCode.language.iso639_2.kor</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.lit&quot; '>i18n.catalog.mdCode.language.iso639_2.lit</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.nor&quot; '>i18n.catalog.mdCode.language.iso639_2.nor</xsl:when>			
-			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.pol&quot; '>i18n.catalog.mdCode.language.iso639_2.pol</xsl:when>			
-			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.por&quot; '>i18n.catalog.mdCode.language.iso639_2.por</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.rus&quot; '>i18n.catalog.mdCode.language.iso639_2.rus</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.spa&quot; '>i18n.catalog.mdCode.language.iso639_2.spa</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.swe&quot; '>i18n.catalog.mdCode.language.iso639_2.swe</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.tur&quot; '>i18n.catalog.mdCode.language.iso639_2.tur</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.chi&quot; '>i18n.catalog.mdCode.language.iso639_2.chi</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.bul&quot; '>i18n.catalog.mdCode.language.iso639_2.bul</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.cze&quot; '>i18n.catalog.mdCode.language.iso639_2.cze</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.dan&quot; '>i18n.catalog.mdCode.language.iso639_2.dan</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.est&quot; '>i18n.catalog.mdCode.language.iso639_2.est</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.fin&quot; '>i18n.catalog.mdCode.language.iso639_2.fin</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.gre&quot; '>i18n.catalog.mdCode.language.iso639_2.gre</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.hun&quot; '>i18n.catalog.mdCode.language.iso639_2.hun</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.gle&quot; '>i18n.catalog.mdCode.language.iso639_2.gle</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.lav&quot; '>i18n.catalog.mdCode.language.iso639_2.lav</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.mlt&quot; '>i18n.catalog.mdCode.language.iso639_2.mlt</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.rum&quot; '>i18n.catalog.mdCode.language.iso639_2.rum</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.slo&quot; '>i18n.catalog.mdCode.language.iso639_2.slo</xsl:when>
-			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.slv&quot; '>i18n.catalog.mdCode.language.iso639_2.slv</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.ger&quot; '>German</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.dut&quot; '>Dutch</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.eng&quot; '>English</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.fre&quot; '>French</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.ita&quot; '>Italian</xsl:when>			
+			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.kor&quot; '>Korean</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.lit&quot; '>Lithuanian</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.nor&quot; '>Norwegian</xsl:when>			
+			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.pol&quot; '>Polish</xsl:when>			
+			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.por&quot; '>Portuguese</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.rus&quot; '>Russian</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.spa&quot; '>Spanish</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.swe&quot; '>Swedish</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.tur&quot; '>Turkish</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.chi&quot; '>Chinese</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.bul&quot; '>Bulgarian</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.cze&quot; '>Czech</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.dan&quot; '>Danish</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.est&quot; '>Estonian</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.fin&quot; '>Finnish</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.gre&quot; '>Greek</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.hun&quot; '>Hungarian</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.gle&quot; '>Gaelic (Irish)</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.lav&quot; '>Latvian</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.mlt&quot; '>Maltese</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.rum&quot; '>Romanian</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.slo&quot; '>Slovak</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.mdCode.language.iso639_2.slv&quot; '>Slovenian</xsl:when>
 			
-			<xsl:when test=' $key = &quot;catalog.gemini.MD_Metadata.hierarchyLevel&quot; '>i18n.catalog.gemini.MD_Metadata.hierarchyLevel</xsl:when>
+			<xsl:when test=' $key = &quot;catalog.gemini.MD_Metadata.hierarchyLevel&quot; '>Resource Type</xsl:when>
 		</xsl:choose>
 	</xsl:template>
 
