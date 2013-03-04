@@ -43,7 +43,7 @@ class GeoDataGovHarvester(SpatialHarvester):
 
     def transform_to_iso(self, original_document, original_format, harvest_object):
 
-        if original_format is not 'fgdc':
+        if original_format != 'fgdc':
             return None
 
         transform_service = config.get('ckanext.geodatagov.fgdc2iso_service')
