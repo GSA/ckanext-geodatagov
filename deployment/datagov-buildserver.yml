@@ -39,7 +39,7 @@
     - name: install fpm
       action: command gem install -v 0.4.21 fpm creates=/usr/bin/fpm 
     - name: get ckan version
-      action: git repo=https://github.com/okfn/ckan dest=/usr/lib/ckan/src/ckan # version=release-0.22
+      action: git repo=https://github.com/okfn/ckan dest=/usr/lib/ckan/src/ckan version=release-v2.0
     - name: get pip
       action: easy_install name=pip
 
