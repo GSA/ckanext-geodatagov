@@ -35,6 +35,12 @@ class GeoDataGovHarvester(SpatialHarvester):
     def get_package_dict(self, iso_values, harvest_object):
         tags = iso_values.pop('tags')
         package_dict = super(GeoDataGovHarvester, self).get_package_dict(iso_values, harvest_object)
+
+        status = self._get_object_extra(harvest_object, 'status')
+
+        if not config.get('public', False) and status == 'new':
+            package_dict['private'] = True
+
         package_dict['extras'].append({'key': tags, 'value': ', '.join(tags)})
         return package_dict
 

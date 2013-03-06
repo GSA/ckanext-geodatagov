@@ -207,6 +207,8 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
             log.error('No harvest object received')
             return False
 
+        config = json.loads(harvest_object.source.config or '{}')
+
         status = self._get_object_extra(harvest_object, 'status')
 
         # Get the last harvested object (if any)
@@ -267,6 +269,9 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
             # plugin)
             model.Session.execute('SET CONSTRAINTS harvest_object_package_id_fkey DEFERRED')
             model.Session.flush()
+
+            if not config.get('public', False):
+                package_dict['private'] = True
 
             try:
                 package_id = get_action('package_create')(context, package_dict)
