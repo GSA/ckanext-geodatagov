@@ -3,13 +3,13 @@ import hashlib
 import requests
 
 from ckan import model
-
+from ckan.lib.navl.validators import ignore_empty, not_empty
 
 from ckanext.harvest.model import HarvestObject
 from ckanext.harvest.model import HarvestObjectExtra as HOExtra
 import ckanext.harvest.queue as queue
 
-from ckanext.geodatagov.harvesters import GeoDataGovWAFHarvester
+from ckanext.geodatagov.harvesters.base import GeoDataGovWAFHarvester, validate_profiles
 
 
 class WAFCollectionHarvester(GeoDataGovWAFHarvester):
@@ -20,6 +20,10 @@ class WAFCollectionHarvester(GeoDataGovWAFHarvester):
             'title': 'Web Accessible Folder (WAF) Collection',
             'description': 'A Web Accessible Folder (WAF) displaying a list of spatial metadata documents with a collection record'
             }
+
+    def extra_schema(self):
+        return {'validator_profiles': [unicode, ignore_empty, validate_profiles, lambda value: [value]],
+                'collection_metadata_url': [not_empty, unicode]}
 
     def get_package_dict(self, iso_values, harvest_object):
 
