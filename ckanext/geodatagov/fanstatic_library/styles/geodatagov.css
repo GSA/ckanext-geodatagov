@@ -18,8 +18,6 @@ body,
   background-image: none;
 }
 .wrapper {
-  border-width: 1px 0 0 0;
-  margin: 0;
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   -o-box-shadow: none;
@@ -51,7 +49,13 @@ body,
   margin-right: 3px;
 }
 .masthead .container {
+  width: 942px;
   margin-top: 20px;
+  background: #ffffff url("../images/header-line.png") 100% 100% no-repeat;
+  -webkit-border-radius: 3px 3px 0 0;
+  -moz-border-radius: 3px 3px 0 0;
+  -o-border-radius: 3px 3px 0 0;
+  border-radius: 3px 3px 0 0;
 }
 .masthead .container .top {
   *zoom: 1;
@@ -160,7 +164,7 @@ body,
 }
 .masthead .container .top-nav {
   clear: both;
-  background-color: white;
+  background-color: transparent;
   padding: 0 10px;
   margin-bottom: 0;
 }
@@ -274,7 +278,9 @@ body,
 }
 .toolbar {
   background-color: white;
-  margin: 0;
+  margin: 0 -1px;
+  border: 1px solid #CCC;
+  border-width: 0 1px;
   padding: 10px;
 }
 .toolbar .add_action {
