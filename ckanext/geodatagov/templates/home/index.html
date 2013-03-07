@@ -1,9 +1,4 @@
-{% ckan_extends "home/index.html" %}
-
-{% block styles %}
-  {{ super() }}
-  <link rel="stylesheet" href="{% url_for_static '/css/demo.css' %}" />
-{% endblock %}
+{% ckan_extends %}
 
 {% block title %}{{ _("geo.data.gov CKAN demo") }} - {{ super() }}{% endblock %}
 
@@ -35,11 +30,6 @@
       </span>
     </form>
   </div>
-{% endblock %}
-
-
-{% block primary_content %}
-  {{ super() }}
 {% endblock %}
 
 {% block scripts %}

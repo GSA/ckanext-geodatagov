@@ -1,0 +1,94 @@
+{% block header %}
+  <header class="pre-header">
+    <div class="container">
+      <a href="http://whitehouse.gov/"><img src="http://www.data.gov/sites/all/themes/datagov/images/usa-flag.gif" alt="{{ _('A little American flag') }}"></a>
+      {{ _('An Official Web Site of the United States Government') }}
+    </div>
+  </header>
+  <header class="masthead">
+    {% if g.debug and not g.debug_supress_header %}
+      <div class="debug">Controller : {{ c.controller }}<br/>Action : {{ c.action }}</div>
+    {% endif %}
+ 
+    <div class="container">
+      <hgroup class="top">
+        <div class="logo">
+          <a href="http://www.data.gov/" class="root"><span>{{ _('data.gov') }}</span></a>
+          <a href="{{ h.url('home') }}" class="specific"><span>{{ _('Geospatial Data') }}</span></a>
+        </div>
+        {% block header_account %}
+          <div class="account-wrapper">
+            {% if c.userobj %}
+              <nav class="account avatar authed" data-module="me" data-me="{{ c.userobj.id }}">
+                <ul class="unstyled">
+                  {% if c.userobj.sysadmin %}
+                    <li>
+                      <a href="{{ h.url_for(controller='admin', action='index') }}" title="{{ _('Sysadmin settings') }}">
+                        <i class="icon-legal"></i>
+                      </a>
+                    </li>
+                  {% endif %}
+                  <li>
+                    <a href="{{ h.url_for(controller='user', action='read', id=c.userobj.name) }}" class="image" title="{{ _('View profile') }}">
+                      {{ h.gravatar((c.userobj.email_hash if c and c.userobj else ''), size=16) }}
+                      {{ c.userobj.display_name }}
+                    </a>
+                  </li>
+                  <li class="notifications {% if c.new_activities > 0 %}notifications-important{% endif %}">
+                    {% set notifications_tooltip = ngettext('Dashboard (%(num)d new item)', 'Dashboard (%(num)d new items)', c.new_activities) %}
+                    <a href="{{ h.url_for(controller='user', action='dashboard') }}" title="{{ notifications_tooltip }}">
+                      <i class="icon-dashboard"></i>
+                      <span>{{ c.new_activities }}</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="{{ h.url_for(controller='user', action='edit', id=c.userobj.name) }}" title="{{ _('Edit settings') }}">
+                      <i class="icon-cog"></i>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="{{ h.url_for('/user/_logout') }}" title="{{ _('Log out') }}">
+                      <i class="icon-signout"></i>
+                    </a>
+                  </li>
+                </ul>
+              </nav>
+            {% else %}
+              <div class="not-authed">
+                <a href="{{ h.url_for(controller='user', action='login') }}">
+                  <span>{{ _('Login') }}</span>
+                </a>
+              </div>
+            {% endif %}
+          </div>
+        {% endblock %}
+      </hgroup>
+
+      <hgroup class="top-nav">
+        {% include 'snippets/root_nav.html' %}
+        {% block header_site_navigation %}
+          <nav class="secondary">
+            {% block header_site_search %}
+              <form class="section site-search simple-input" action="{% url_for controller='package', action='search' %}" method="get">
+                <div class="field">
+                  <label for="field-sitewide-search">{{ _('Search Datasets') }}</label>
+                  <input id="field-sitewide-search" type="text" name="q" placeholder="{{ _('Search') }}" />
+                  <button class="btn-search" type="submit">{{ _('Search') }}</button>
+                </div>
+              </form>
+            {% endblock %}
+            <ul class="nav nav-pills">
+              {{ h.build_nav_main(
+                ('home', _('Home')),
+                ('search', _('Datasets')),
+                ('organizations_index', _('Organizations')),
+                ('group_index', _('Groups'))
+              ) }}
+            </ul>
+          </nav>
+        {% endblock %}
+      </hgroup>
+
+    </div>
+  </header>
+{% endblock %}
