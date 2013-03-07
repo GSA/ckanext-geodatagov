@@ -34,6 +34,46 @@ body,
 [role=main] {
   padding-top: 0;
 }
+body,
+.main,
+[role=main] {
+  background: #f6f6f6;
+}
+#content {
+  margin-top: 0;
+  margin-bottom: 0;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -o-border-radius: 3px;
+  border-radius: 3px;
+}
+.toolbar {
+  background-color: white;
+  margin: 0 -1px;
+  border: 1px solid #CCC;
+  border-width: 0 1px;
+  padding: 10px;
+}
+.toolbar .add_action {
+  top: 8px;
+  right: 10px;
+}
+.page-header {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  -o-border-radius: 0;
+  border-radius: 0;
+}
+a {
+  color: #284a7a;
+}
+.btn-primary {
+  color: white !important;
+  background: #284a7a !important;
+}
+.btn-primary:hover {
+  background: #1b3354 !important;
+}
 .pre-header {
   background: #0a3163 url("http://www.data.gov/sites/all/themes/datagov/images/preheader-bg.jpg") repeat-x center top;
   color: white;
@@ -296,43 +336,61 @@ body,
 .footer-nav .attribution-link span {
   display: none;
 }
-body,
-.main,
-[role=main] {
-  background: #f6f6f6;
+.homepage .wrapper {
+  border-top-width: 0;
+  background-image: none;
 }
-#content {
-  margin-top: 0;
-  margin-bottom: 0;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  -o-border-radius: 3px;
-  border-radius: 3px;
+.homepage .hero {
+  position: relative;
+  padding: 0;
+  margin: 0 9px 10px 9px;
+  background: url("../images/banner.jpg");
+  height: 301px;
+  overflow: hidden;
 }
-.toolbar {
-  background-color: white;
-  margin: 0 -1px;
-  border: 1px solid #CCC;
-  border-width: 0 1px;
-  padding: 10px;
+.homepage .intro {
+  color: #FFF;
+  padding: 20px;
+  width: 320px;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
 }
-.toolbar .add_action {
-  top: 8px;
-  right: 10px;
+.homepage .intro h1 {
+  font-family: "Lucida Bright", "Times New Roman", Times, serif;
+  font-size: 24px;
+  line-height: 1.5;
+  text-transform: uppercase;
+  margin: 0 0 10px 0;
 }
-.page-header {
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  -o-border-radius: 0;
-  border-radius: 0;
+.homepage .intro p {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 15px;
+  line-height: 1.5;
 }
-a {
-  color: #284a7a;
+.homepage .search-box {
+  position: absolute;
+  margin: 0;
+  right: 130px;
+  bottom: 20px;
+  width: 400px;
 }
-.btn-primary {
-  color: white !important;
-  background: #284a7a !important;
+.homepage .search-box .heading {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-weight: normal;
+  color: white;
+  font-size: 21px;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
 }
-.btn-primary:hover {
-  background: #1b3354 !important;
+.homepage .search-box input {
+  border: 3px solid #5881b0;
+  -webkit-box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+  -o-box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+}
+.homepage .search-box input:focus {
+  border-color: #000;
 }

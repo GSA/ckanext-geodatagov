@@ -2,6 +2,27 @@
 
 {% block title %}{{ _("geo.data.gov CKAN demo") }} - {{ super() }}{% endblock %}
 
+{% block content %}
+  <div id="content" class="container homepage">
+    {{ self.flash() }}
+    <div class="wrapper">
+      <div class="hero">
+        <div class="intro">
+          <h1>{{ _('Welcome to Geospatial Data')}}</h1>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque feugiat nisi aliquet lectus mattis faucibus? Mauris ultrices magna eu est mollis sed gravida mi semper. Praesent lacus magna, facilisis nec accumsan vel, blandit vitae ante. Donec commodo adipiscing rutrum. Vestibulum id ligula nec urna malesuada dictum a a ante.</p>
+        </div>
+        <form class="search-box clearfix" method="get" action="{% url_for controller='package', action='search' %}">
+          <h3 class="heading">{{ _('Search Geospatial Data') }}</h3>
+          <span class="control-group search-giant">
+            <input type="text" class="search" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('eg. Maritime Biology') }}" />
+            <button type="submit" value="{{ _('Search') }}">Submit</button>
+          </span>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
 
 {% block home_primary_heading -%}
 {{ _("Welcome to the geo.data.gov CKAN demo") }}
@@ -18,23 +39,6 @@
   <a class="media-image" href="/dataset/curators-index-to-marine-and-lacustrine-geological-samples-database/resource/b75747c3-e991-4814-8722-4bf64273f6ef">
     <img src="/images/wms-preview.png" alt="Map Services Preview" />
   </a>
-{% endblock %}
-
-{% block home_search %}
-  <div class="module module-shallow module-narrow module-dark info">
-    <form class="dataset-search module-content clearfix" method="get" action="{% url_for controller='package', action='search' %}">
-      <h3 class="heading">{{ _("Search Your Data") }}</h3>
-      <span class="control-group search-giant">
-        <input type="text" class="search" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('eg. Maritime Biology') }}" />
-        <button type="submit" value="{{ _('Search') }}">Submit</button>
-      </span>
-    </form>
-  </div>
-{% endblock %}
-
-{% block scripts %}
-  {{ super() }}
-  <script src="{% url_for_static "/javascript/demo.js" %}"></script>
 {% endblock %}
 
 {#
