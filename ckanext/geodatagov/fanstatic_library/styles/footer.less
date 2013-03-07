@@ -1,0 +1,34 @@
+.site-footer {
+  padding-top: 0;
+  text-align: center;
+}
+
+.footer-nav {
+  position: relative;
+  font-size: 12px;
+  ul li {
+  	display: inline;
+  	padding: 0 10px;
+  	border-right: 1px solid #999;
+  	a {
+      color: #999;
+  	}
+  	&:last-child {
+      border-right-width: 0;
+  	}
+  }
+  img {
+    margin: 20px 0;
+  }
+  .attribution-link {
+    position: absolute;
+    bottom: 25px;
+    right: 0;
+    width: 148px;
+    height: 26px;
+    background-image: url("@{geoLocalThemeURL}images/powered-by.png");
+    span {
+      display: none;
+    }
+  }
+}
