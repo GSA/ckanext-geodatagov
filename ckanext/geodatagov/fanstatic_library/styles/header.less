@@ -77,10 +77,10 @@
           display: block;
           padding: 2px 5px;
           color: white;
-          background-color: lighten(@geoHeaderLiteColor, 20%);
+          background-color: @geoHeaderLiteColor;
           .border-radius(2px);
           &:hover {
-            background-color: @geoHeaderLiteColor;
+            background-color: darken(@geoHeaderLiteColor, 10%);
             text-decoration: none;
           }
         }
@@ -126,11 +126,13 @@
         &:first-child a.root {
           border-left-width: 0;
         }
-        &.active a.root {
-          background-color: @geoHeaderLiteColor;
-          border-left-color: @geoHeaderLiteColor;
-        }
         &:hover .dropdown {
+          display: block;
+          .dropdown {
+            display: none;
+          }
+        }
+        &.sub-dropdown:hover .dropdown {
           display: block;
         }
       }
@@ -138,10 +140,15 @@
         display: none;
         position: absolute;
         z-index: 100;
+        margin-left: 1px;
         background-color: #366c9f;
         .box-shadow(0 4px 4px rgba(0, 0, 0, 0.3));
         li {
           float: none;
+          .icon-caret-right {
+            float: right;
+            line-height: 35px;
+          }
           &.active a {
             background-color: @geoHeaderLiteColor;
             border-left-color: @geoHeaderLiteColor;
@@ -149,10 +156,16 @@
         }
         &.wide {
           .clearfix;
+          width:  360px;
           ul {
             width: 180px;
             float: left;
           }
+        }
+        .dropdown {
+          left: 180px;
+          margin-top: -35px;
+          width: 290px;
         }
       }
     }

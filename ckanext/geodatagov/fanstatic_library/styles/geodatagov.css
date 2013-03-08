@@ -192,14 +192,14 @@ a {
   display: block;
   padding: 2px 5px;
   color: white;
-  background-color: #9db5d1;
+  background-color: #5881b0;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   -o-border-radius: 2px;
   border-radius: 2px;
 }
 .masthead .container .account-wrapper ul li a:hover {
-  background-color: #5881b0;
+  background-color: #446891;
   text-decoration: none;
 }
 .masthead .container .top-nav {
@@ -251,17 +251,20 @@ a {
 .masthead .container .top-nav .primary ul li:first-child a.root {
   border-left-width: 0;
 }
-.masthead .container .top-nav .primary ul li.active a.root {
-  background-color: #5881b0;
-  border-left-color: #5881b0;
-}
 .masthead .container .top-nav .primary ul li:hover .dropdown {
+  display: block;
+}
+.masthead .container .top-nav .primary ul li:hover .dropdown .dropdown {
+  display: none;
+}
+.masthead .container .top-nav .primary ul li.sub-dropdown:hover .dropdown {
   display: block;
 }
 .masthead .container .top-nav .primary .dropdown {
   display: none;
   position: absolute;
   z-index: 100;
+  margin-left: 1px;
   background-color: #366c9f;
   -webkit-box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3);
@@ -271,12 +274,17 @@ a {
 .masthead .container .top-nav .primary .dropdown li {
   float: none;
 }
+.masthead .container .top-nav .primary .dropdown li .icon-caret-right {
+  float: right;
+  line-height: 35px;
+}
 .masthead .container .top-nav .primary .dropdown li.active a {
   background-color: #5881b0;
   border-left-color: #5881b0;
 }
 .masthead .container .top-nav .primary .dropdown.wide {
   *zoom: 1;
+  width: 360px;
 }
 .masthead .container .top-nav .primary .dropdown.wide:before,
 .masthead .container .top-nav .primary .dropdown.wide:after {
@@ -290,6 +298,11 @@ a {
 .masthead .container .top-nav .primary .dropdown.wide ul {
   width: 180px;
   float: left;
+}
+.masthead .container .top-nav .primary .dropdown .dropdown {
+  left: 180px;
+  margin-top: -35px;
+  width: 290px;
 }
 .masthead .container .top-nav .site-search {
   float: right;
