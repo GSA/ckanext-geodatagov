@@ -24,8 +24,8 @@ class Z3950Harvester(GeoDataGovHarvester, SingletonPlugin):
     def info(self):
         return {
             'name': 'z3950',
-            'title': 'z3950',
-            'description': 'z3950 database'
+            'title': 'Z39.50',
+            'description': 'A remote database supporting the Z39.50 protocol'
             }
     def extra_schema(self):
         return {'database': [not_empty, unicode],
