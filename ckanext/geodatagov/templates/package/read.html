@@ -54,3 +54,49 @@
     {% endif %}
   {% endif %}
 {% endblock %}
+
+{% block package_additional_info %}
+  <section class="module-content additional-info">
+    <h3>{{ _('Additional Info') }}</h3>
+    <table class="table table-striped table-bordered table-condensed" data-module="table-toggle-more">
+      <thead>
+        <tr>
+          <th scope="col">{{ _('Field') }}</th>
+          <th scope="col">{{ _('Value') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% set extras = c.pkg_dict.extras %}
+        <tr>
+          <th scope="row" class="dataset-label">Resource Type</th>
+          <td>{{ extras['resource-type']|capitalize or 'unknown' }}</td>
+        </tr>
+        <tr>
+          <th scope="row" class="dataset-label">Data Publication Date</th>
+          <td>{{ extras['dataset-reference-date'] or 'unknown' }}</td>
+        </tr>
+        <tr>
+          <th scope="row" class="dataset-label">Responsible Party</th>
+          <td>{{ extras['responsible-party'] or 'unknown' }}</td>
+        </tr>
+        <tr>
+          <th scope="row" class="dataset-label">Contact Email</th>
+          <td>{{ extras['contact-email'] or 'unknown' }}</td>
+        </tr>
+        {% if h.check_access('package_update',{'id':pkg_dict.id}) %}
+          <tr class="toggle-more">
+            <th scope="row" class="dataset-label">{{ _("State") }}</th>
+            <td class="dataset-details">{{ pkg_dict.state }}</td>
+          </tr>
+        {% endif %}
+        {% for extra in h.sorted_extras(extras, auto_clean=true) %}
+          {% set key, value = extra %}
+          <tr rel="dc:relation" resource="_:extra{{ i }}" class="toggle-more">
+            <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key) }}</th>
+            <td class="dataset-details" property="rdf:value">{{ value }}</td>
+          </tr>
+          {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endblock %}
