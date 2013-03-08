@@ -94,4 +94,5 @@ class Demo(p.SingletonPlugin):
                 'get_harvest_object_formats': geodatagov_helpers.get_harvest_object_formats,
                 'get_harvest_source_link': geodatagov_helpers.get_harvest_source_link,
                 'get_validation_profiles': geodatagov_helpers.get_validation_profiles,
+                'get_reference_date' : geodatagov_helpers.get_reference_date,
                 }

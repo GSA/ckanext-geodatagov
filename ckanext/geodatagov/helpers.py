@@ -63,3 +63,30 @@ def get_harvest_source_link(package_dict):
        return p.toolkit.literal(link)
 
     return ''
+
+def get_reference_date(date_str):
+    '''
+        Gets a reference date extra created by the harvesters and formats
+        nicely for the UI.
+
+        Examples:
+            [{"type": "creation", "value": "1977"}, {"type": "revision", "value": "1981-05-15"}]
+            [{"type": "publication", "value": "1977"}]
+            [{"type": "publication", "value": "NaN-NaN-NaN"}]
+
+        Results
+            1977 (creation), May 15, 1981 (revision)
+            1977 (publication)
+            NaN-NaN-NaN (publication)
+    '''
+    if not date_str:
+        return 'Unknown'
+
+    try:
+        out = []
+        for date in h.json.loads(date_str):
+            value = h.render_datetime(date['value']) or date['value']
+            out.append('{0} ({1})'.format(value, date['type']))
+        return ', '.join(out)
+    except ValueError:
+        return date_str
