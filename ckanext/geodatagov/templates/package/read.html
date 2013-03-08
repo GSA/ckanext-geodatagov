@@ -69,24 +69,24 @@
         {% set extras = c.pkg_dict.extras %}
         <tr>
           <th scope="row" class="dataset-label">Resource Type</th>
-          <td>{{ extras['resource-type']|capitalize or 'unknown' }}</td>
+          <td>{{ h.get_pkg_dict_extra(c.pkg_dict, 'resource-type', 'Unknown')|capitalize }}</td>
         </tr>
         <tr>
-          <th scope="row" class="dataset-label">Data Publication Date</th>
-          <td>{{ extras['dataset-reference-date'] or 'unknown' }}</td>
+          <th scope="row" class="dataset-label">Reference Date</th>
+          <td>{{ h.get_pkg_dict_extra(c.pkg_dict, 'dataset-reference-date', 'Unknown') }}</td>
         </tr>
         <tr>
           <th scope="row" class="dataset-label">Responsible Party</th>
-          <td>{{ extras['responsible-party'] or 'unknown' }}</td>
+          <td>{{ h.get_pkg_dict_extra(c.pkg_dict, 'responsible-party', 'Unknown') }}</td>
         </tr>
         <tr>
           <th scope="row" class="dataset-label">Contact Email</th>
-          <td>{{ extras['contact-email'] or 'unknown' }}</td>
+          <td>{{ h.get_pkg_dict_extra(c.pkg_dict, 'contact-email', 'Unknown') }}</td>
         </tr>
         {% if h.check_access('package_update',{'id':pkg_dict.id}) %}
           <tr class="toggle-more">
             <th scope="row" class="dataset-label">{{ _("State") }}</th>
-            <td class="dataset-details">{{ pkg_dict.state }}</td>
+            <td class="dataset-details">{{ pkg_dict.state|capitalize }}</td>
           </tr>
         {% endif %}
         {% for extra in h.sorted_extras(extras, auto_clean=true) %}
