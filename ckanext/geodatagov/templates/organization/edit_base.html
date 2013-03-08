@@ -1,0 +1,14 @@
+{% ckan_extends %}
+
+{% block page_header_tabs %}
+  {{ super() }}
+  {# I'm not so sure about this. But I don't understand how `ckanext-geodatagov`
+     can get a url_for `ckanext-harvest` #}
+  {% set url = "/organization/harvest/{0}".format(c.group_dict.name) %}
+  <li class="{{ 'active' if c.action == 'source_list' }}">
+  	<a href="{{ url }}">
+  		<i class="icon-refresh"></i>
+  		{{ _('Harvest Sources') }}
+  	</a>
+  </li>
+{% endblock %}

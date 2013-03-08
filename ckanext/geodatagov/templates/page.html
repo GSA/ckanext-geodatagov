@@ -1,0 +1,14 @@
+{% ckan_extends %}
+
+{% block flash %}
+  {% set flash_messages = h.flash.pop_messages() | list %}
+  {% if flash_messages %}
+    <div class="flash-messages">
+      {% for message in flash_messages %}
+        <div class="alert fade in {{ message.category }}">
+          {{ h.literal(message) }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock %}
