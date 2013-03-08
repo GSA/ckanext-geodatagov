@@ -414,3 +414,13 @@ a {
 .homepage .search-box input:focus {
   border-color: #000;
 }
+.format-label[data-format="ISO-19139"],
+.format-label[data-format*="ISO-19139"] {
+  background-position: 0 0;
+  background-image: url("../images/icon-iso-19139.png");
+}
+.format-label[data-format="FGDC"],
+.format-label[data-format*="FGDC"] {
+  background-position: 0 0;
+  background-image: url("../images/icon-fgdc.png");
+}
