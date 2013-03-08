@@ -58,7 +58,7 @@ def get_harvest_source_link(package_dict):
 
     if harvest_source_id and harvest_source_title:
        msg = p.toolkit._('Harvested from')
-       url = h.url_for('harvest_source_read', id=harvest_source_id)
+       url = h.url_for('harvest_read', id=harvest_source_id)
        link = '{msg} <a href="{url}">{title}</a>'.format(url=url, msg=msg, title=harvest_source_title)
        return p.toolkit.literal(link)
 
