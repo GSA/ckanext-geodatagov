@@ -316,6 +316,13 @@ a {
   background-color: white;
   color: #5881b0;
 }
+.flash-messages {
+  padding: 10px;
+  border: 1px solid #CCC;
+  background-color: #FFF;
+  border-width: 0 1px;
+  margin: 0 -1px;
+}
 .site-footer {
   padding-top: 0;
   text-align: center;
