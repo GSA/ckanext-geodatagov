@@ -1,3 +1,5 @@
+import hashlib
+hashlib.md5 = hashlib.sha1
 import ckan.plugins as p
 import ckan.model as model
 import ckanext.harvest.plugin

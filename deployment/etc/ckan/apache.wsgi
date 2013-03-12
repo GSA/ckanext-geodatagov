@@ -1,4 +1,7 @@
 import os
+import hashlib
+hashlib.md5 = hashlib.sha1
+os.environ['OPENSSL_FORCE_FIPS_MODE']='1'
 activate_this = os.path.join('/usr/lib/ckan/bin/activate_this.py')
 execfile(activate_this, dict(__file__=activate_this))
 
