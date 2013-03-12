@@ -1,8 +1,27 @@
 {% ckan_extends %}
 
-{% block footer_links %}
-  <li><a href="http://ckan.org/contact">Contact Us</a></li>
-  <li><a href="http://okfn.org/privacy">Privacy Policy</a></li>
-  <li><a href="http://ckan.org">CKAN</a></li>
-  <li><a href="http://okfn.org">OKFN</a></li>
+{% block footer_content %}
+  <nav class="footer-nav">
+    {% block footer_nav %}
+      <ul class="unstyled">
+        <li><a href="http://www.data.gov/about">{{ _('About') }}</a></li>
+        <li><a href="http://www.data.gov/accessibility">{{ _('Accessibility') }}</a></li>
+        <li><a href="http://www.data.gov/contact-us">{{ _('Contact Us') }}</a></li>
+        <li><a href="http://www.data.gov/data-policy">{{ _('Data Policy') }}</a></li>
+        <li><a href="http://www.data.gov/faq">{{ _('FAQ') }}</a></li>
+        <li><a href="http://www.data.gov/privacy-policy">{{ _('Privacy Policy') }}</a></li>
+        <li><a href="http://www.data.gov/sitemap">{{ _('Sitemap') }}</a></li>
+        <li><a href="http://www.usa.gov">{{ _('USA.gov') }}</a></li>
+      </ul>
+    {% endblock %}
+    <img src="http://www.data.gov/sites/all/themes/datagov/images/datagov-footer-logo.png" alt="{{ _('Data.gov') }}">
+    {% block footer_attribution %}
+    <a href="http://ckan.org" class="attribution-link"><span>{{ _('Powered by CKAN') }}</span></a>
+    {% endblock %}
+  </nav>
+  {#
+    {% block footer_lang %}
+      {% snippet "snippets/language_selector.html" %}
+    {% endblock %}
+  #}
 {% endblock %}

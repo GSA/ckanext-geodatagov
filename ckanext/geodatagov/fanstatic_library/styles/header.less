@@ -1,0 +1,195 @@
+.pre-header {
+  background: #0A3163 url("@{geoRemoteThemeURL}images/preheader-bg.jpg") repeat-x center top;
+  color: white;
+  font-style: italic;
+  font-size: 11px;
+  font-family: @geoFontSerifAlt;
+  .container {
+    width: 920px;
+  }
+  a img {
+  	vertical-align: -2px;
+  	margin-right: 3px;
+  }
+}
+
+.masthead .container {
+  width: 942px;
+  margin-top: 20px;
+  background: white url("@{geoLocalThemeURL}images/header-line.png") 100% 100% no-repeat;
+  .border-radius(3px 3px 0 0);
+  .top {
+    .clearfix;
+    position: relative;
+    background: url("@{geoRemoteThemeURL}images/header-start-bg.jpg");
+    .border-radius(4px 4px 0 0);
+  }
+  .logo {
+    .clearfix;
+  	float: left;
+    padding: 4px;
+    a {
+      display: block;
+      float: left;
+      margin-right: 10px;
+      height: 55px;
+      span {
+        display: none;
+      }
+    }
+    .root {
+      background-image: url("@{geoRemoteThemeURL}logo.png");
+      width: 208px;
+    }
+    .specific {
+      background-image: url("@{geoLocalThemeURL}images/logo.png");
+      width: 239px;
+    }
+  }
+  .account-wrapper {
+    float: right;
+    padding: 10px;
+    .not-authed a {
+      color: @geoHeaderDarkColor;
+      font-weight: bold;
+      padding-left: 16px;
+      font-size: 12px;
+      background: transparent url("@{geoRemoteThemeURL}images/icon-login.gif") 0 50% no-repeat;
+      span {
+        text-decoration: underline;
+      }
+    }
+    .authed {
+      padding: 7px;
+      .gravatar {
+        .border-radius(2px);
+        vertical-align: -3px;
+      }
+    }
+    ul {
+      .clearfix;
+      margin-top: 5px;
+      margin-right: 5px;
+      li {
+        float: left;
+        margin-left: 5px;
+        a {
+          display: block;
+          padding: 2px 5px;
+          color: white;
+          background-color: @geoHeaderLiteColor;
+          .border-radius(2px);
+          &:hover {
+            background-color: darken(@geoHeaderLiteColor, 10%);
+            text-decoration: none;
+          }
+        }
+      }
+    }
+  }
+  .top-nav {
+    clear: both;
+    background-color: transparent;
+    padding: 0 10px;
+    margin-bottom: 0;
+    nav ul {
+      .clearfix;
+      li {
+        float: left;
+        a {
+          display: block;
+          &:hover {
+            text-decoration: none;
+          }
+        }
+      }
+    }
+    .primary {
+      background: @geoHeaderDarkColor url("@{geoLocalThemeURL}images/header-nav-bg.png");
+      ul li {
+        a {
+          font-family: @geoFontSerif;
+          padding: 0 15px;
+          text-transform: uppercase;
+          font-weight: bold;
+          font-size: 13px;
+          line-height: 35px;
+          &:hover {
+            background-color: @geoHeaderLiteColor;
+            border-left-color: @geoHeaderLiteColor;
+          }
+        }
+        a.root {
+          border-left: 1px solid #294B78;
+          border-right: 1px solid #0B3064;
+        }
+        &:first-child a.root {
+          border-left-width: 0;
+        }
+        &:hover .dropdown {
+          display: block;
+          .dropdown {
+            display: none;
+          }
+        }
+        &.sub-dropdown:hover .dropdown {
+          display: block;
+        }
+      }
+      .dropdown {
+        display: none;
+        position: absolute;
+        z-index: 100;
+        margin-left: 1px;
+        background-color: #366c9f;
+        .box-shadow(0 4px 4px rgba(0, 0, 0, 0.3));
+        li {
+          float: none;
+          .icon-caret-right {
+            float: right;
+            line-height: 35px;
+          }
+          &.active a {
+            background-color: @geoHeaderLiteColor;
+            border-left-color: @geoHeaderLiteColor;
+          }
+        }
+        &.wide {
+          .clearfix;
+          width:  360px;
+          ul {
+            width: 180px;
+            float: left;
+          }
+        }
+        .dropdown {
+          left: 180px;
+          margin-top: -35px;
+          width: 290px;
+        }
+      }
+    }
+    .site-search {
+      float: right;
+    }
+    .secondary {
+      padding: 5px 8px;
+      background-color: @geoHeaderLiteColor;
+      ul li {
+        a:hover,
+        &.active a {
+          background-color: white;
+          color: @geoHeaderLiteColor;
+        }
+      }
+    }
+  }
+}
+
+.flash-messages {
+  padding: 10px;
+  border: 1px solid #CCC;
+  background-color: #FFF;
+  border-width: 0 1px;
+  margin: 0 -1px;
+}

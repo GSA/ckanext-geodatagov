@@ -1,0 +1,39 @@
+body,
+.main,
+[role=main] {
+  background: @geoBackgroundColor;
+}
+
+#content {
+  margin-top: 0;
+  margin-bottom: 0;
+  .border-radius(3px);
+}
+
+.toolbar {
+  background-color: white;
+  margin: 0 -1px;
+  border: 1px solid #CCC;
+  border-width: 0 1px;
+  padding: 10px;
+  .add_action {
+    top: 8px;
+    right: 10px;
+  }
+}
+
+.page-header {
+  .border-radius(0);
+}
+
+a {
+  color: @geoHeaderDarkColor;
+}
+
+.btn-primary {
+  color: white !important;
+  background: @geoHeaderDarkColor !important;
+  &:hover {
+  	background: darken(@geoHeaderDarkColor, 10%) !important;
+  }
+}

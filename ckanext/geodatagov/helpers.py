@@ -58,8 +58,35 @@ def get_harvest_source_link(package_dict):
 
     if harvest_source_id and harvest_source_title:
        msg = p.toolkit._('Harvested from')
-       url = h.url_for('harvest_source_read', id=harvest_source_id)
+       url = h.url_for('harvest_read', id=harvest_source_id)
        link = '{msg} <a href="{url}">{title}</a>'.format(url=url, msg=msg, title=harvest_source_title)
        return p.toolkit.literal(link)
 
     return ''
+
+def get_reference_date(date_str):
+    '''
+        Gets a reference date extra created by the harvesters and formats
+        nicely for the UI.
+
+        Examples:
+            [{"type": "creation", "value": "1977"}, {"type": "revision", "value": "1981-05-15"}]
+            [{"type": "publication", "value": "1977"}]
+            [{"type": "publication", "value": "NaN-NaN-NaN"}]
+
+        Results
+            1977 (creation), May 15, 1981 (revision)
+            1977 (publication)
+            NaN-NaN-NaN (publication)
+    '''
+    if not date_str:
+        return 'Unknown'
+
+    try:
+        out = []
+        for date in h.json.loads(date_str):
+            value = h.render_datetime(date['value']) or date['value']
+            out.append('{0} ({1})'.format(value, date['type']))
+        return ', '.join(out)
+    except ValueError:
+        return date_str

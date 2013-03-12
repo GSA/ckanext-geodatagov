@@ -92,8 +92,8 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
         '''
         return {
             'name': 'arcgis',
-            'title': 'ArcGIS REST API harvester',
-            'description': 'Harvests ArcGIS REST API endpoints'
+            'title': 'ArcGIS REST API',
+            'description': 'An ArcGIS REST API endpoint'
             }
 
     def gather_stage(self, harvest_job):
