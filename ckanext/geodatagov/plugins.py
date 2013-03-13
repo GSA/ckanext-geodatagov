@@ -26,6 +26,8 @@ import json
 from ckanext.harvest.logic.schema import harvest_source_db_to_form_schema
 from ckan.logic.converters import convert_from_extras
 from ckan.lib.navl.validators import ignore_missing
+from sqlalchemy.util import OrderedDict
+
 
 def split_tags(tag):
     tags = []
@@ -58,11 +60,31 @@ class DataGovHarvest(ckanext.harvest.plugin.Harvest):
         schema['config'] = [convert_from_extras, harvest_source_convert_from_config, ignore_missing]
         return schema
 
+    def dataset_facets(self, facets_dict, package_type):
+
+        if package_type <> 'harvest':
+            return facets_dict
+
+        return OrderedDict([('frequency', 'Frequency'),
+                            ('source_type','Type'),
+                            ('organization_type', 'Organization Types'),
+                           ])
+
+    def organization_facets(self, facets_dict, organization_type, package_type):
+
+        if package_type <> 'harvest':
+            return facets_dict
+
+        return OrderedDict([('frequency', 'Frequency'),
+                            ('source_type','Type'),
+                           ])
+
 class Demo(p.SingletonPlugin):
 
     p.implements(p.IConfigurer)
     p.implements(p.IPackageController, inherit=True)
     p.implements(p.ITemplateHelpers)
+    p.implements(p.IFacets, inherit=True)
 
 
     def update_config(self, config):
@@ -117,3 +139,26 @@ class Demo(p.SingletonPlugin):
                 'get_validation_profiles': geodatagov_helpers.get_validation_profiles,
                 'get_reference_date' : geodatagov_helpers.get_reference_date,
                 }
+
+    def dataset_facets(self, facets_dict, package_type):
+
+        if package_type != 'dataset':
+            return facets_dict
+
+        return OrderedDict([('groups', 'Organizations'),
+                           ('tags','Tags'),
+                           ('res_format', 'Formats'),
+                           ('organization_type', 'Organization Types'),
+                           ])
+
+    def organization_facets(self, facets_dict, organization_type, package_type):
+
+        if not package_type:
+            return OrderedDict([('tags','Tags'),
+                                ('res_format', 'Formats'),
+                                ('harvest_source_title', 'Harvest Source'),
+                                ('capacity', 'Visibility'),
+                               ])
+        else:
+            return facets_dict
+
