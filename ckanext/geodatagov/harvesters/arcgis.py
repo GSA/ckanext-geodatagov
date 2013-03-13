@@ -62,7 +62,7 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
     implements(IHarvester)
 
     extent_template = Template('''
-    {"type", "Polygon", "coordinates": [[[$minx, $miny], [$minx, $maxy], [$maxx, $maxy], [$maxx, $miny], [$minx, $miny]]]}
+       {"type": "Polygon", "coordinates": [[[$minx, $miny], [$minx, $maxy], [$maxx, $maxy], [$maxx, $miny], [$minx, $miny]]]}
     ''')
 
     def info(self):
@@ -111,7 +111,7 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
         modified_from = 0
         modified_to = 999999999999999999
 
-        query_template = 'modified:[{modified_from}+TO+{modified_to}]'
+        query_template = 'modified:[{modified_from}+TO+{modified_to}] AND accountid:0123456789ABCDEF'
 
         query=query_template.format(
             modified_from=str(modified_from).rjust(18,'0'),
