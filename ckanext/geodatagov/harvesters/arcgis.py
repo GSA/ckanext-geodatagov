@@ -17,7 +17,7 @@ from ckanext.harvest.interfaces import IHarvester
 from ckan.plugins.core import SingletonPlugin, implements
 from ckanext.spatial.harvesters.base import SpatialHarvester
 from ckan.logic import get_action, ValidationError
-from ckan.lib.navl.validators import not_empty
+from ckan.lib.navl.validators import not_empty, ignore_empty
 from HTMLParser import HTMLParser
 
 TYPES =  ['Web Map','KML', 'Mobile Application',
@@ -95,6 +95,11 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
             'title': 'ArcGIS REST API',
             'description': 'An ArcGIS REST API endpoint'
             }
+
+    def extra_schema(self):
+        return {
+            'private_datasets': [ignore_empty],
+         }
 
     def gather_stage(self, harvest_job):
 
@@ -207,7 +212,7 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
             log.error('No harvest object received')
             return False
 
-        config = json.loads(harvest_object.source.config or '{}')
+        source_config = json.loads(harvest_object.source.config or '{}')
 
         status = self._get_object_extra(harvest_object, 'status')
 
@@ -270,7 +275,7 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
             model.Session.execute('SET CONSTRAINTS harvest_object_package_id_fkey DEFERRED')
             model.Session.flush()
 
-            if not config.get('public', False):
+            if source_config.get('private_datasets', True):
                 package_dict['private'] = True
 
             try:

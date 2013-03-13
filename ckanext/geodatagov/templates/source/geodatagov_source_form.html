@@ -3,6 +3,8 @@
 {% resource 'harvest-extra-field/main' %}
 
 {% block extra_config %}
+
+
 <fieldset data-module="harvest-extra-form-change" data-module-form-items="{{ h.dump_json(h.harvest_source_extra_fields()) }}">
         {{ form.input('database', id='field-database', label=_('Database'), placeholder=_('eg. My Database'), value=data.database, error=errors.database, classes=['control-full'] ) }}
         {{ form.input('port', id='field-port', label=_('Port'), placeholder=_('eg. 3452'), value=data.port, error=errors.port, classes=['control-full']) }}
@@ -25,6 +27,19 @@
            </div>
          </div>
 
-    </fieldset>
+
+</fieldset>
+
+<div class="control-group">
+  <label for="field-private_datasets" class="control-label">{{ _('Datasets Visibility') }}</label>
+  <div class="controls">
+    <select id="field-private_datasets" name="private_datasets">
+      {% for option in [(true, _('Private')), (false, _('Public'))] %}
+      <option value="{{ option[0] }}" {% if option[0] == data.private_datasets %}selected="selected"{% endif %}>{{ option[1] }}</option>
+      {% endfor %}
+    </select>
+    <i class="icon-question-sign" title="{{ _('This will take effect the next time datasets are created or updated during a harvest job') }}" data-toggle="tooltip"></i>
+  </div>
+</div>
 
 {% endblock extra_config %}

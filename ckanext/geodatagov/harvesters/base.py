@@ -1,7 +1,10 @@
 import requests
 from pylons import config
 
+
+from ckan.logic.validators import boolean_validator
 from ckan.lib.navl.validators import ignore_empty
+from ckan.lib.navl.dictization_functions import Invalid
 
 from ckanext.spatial.validation import Validators
 
@@ -10,7 +13,6 @@ from ckanext.spatial.harvesters import CSWHarvester, WAFHarvester, DocHarvester
 
 from ckanext.geodatagov.validation import (MinimalFGDCValidator,
         FGDC1998Schema, FGDC1999Schema, FGDC2001Schema, FGDC2002Schema)
-from ckan.lib.navl.dictization_functions import Invalid
 
 
 custom_validators = [MinimalFGDCValidator, FGDC1998Schema, FGDC1999Schema,
@@ -32,20 +34,25 @@ def validate_profiles(profile):
 
 class GeoDataGovHarvester(SpatialHarvester):
 
+    def extra_schema(self):
+        return {
+            'private_datasets': [ignore_empty, boolean_validator],
+            'validator_profiles': [unicode, ignore_empty, validate_profiles, lambda value: [value]]
+        }
+
     def get_package_dict(self, iso_values, harvest_object):
+
+        self._set_source_config(harvest_object.source.config)
+
         tags = iso_values.pop('tags')
         package_dict = super(GeoDataGovHarvester, self).get_package_dict(iso_values, harvest_object)
 
-        status = self._get_object_extra(harvest_object, 'status')
-
-        if not config.get('public', False) and status == 'new':
+        if self.source_config.get('private_datasets', True):
             package_dict['private'] = True
 
         package_dict['extras'].append({'key': 'tags', 'value': ', '.join(tags)})
         return package_dict
 
-    def extra_schema(self):
-        return {'validator_profiles': [unicode, ignore_empty, validate_profiles, lambda value: [value]]}
 
     def transform_to_iso(self, original_document, original_format, harvest_object):
 
@@ -62,7 +69,7 @@ class GeoDataGovHarvester(SpatialHarvester):
             profiles = self.source_config.get('validator_profiles')
         else:
             profiles = ['fgdc_minimal']
-       
+
         validator = Validators(profiles=profiles)
         for custom_validator in custom_validators:
             validator.add_validator(custom_validator)
