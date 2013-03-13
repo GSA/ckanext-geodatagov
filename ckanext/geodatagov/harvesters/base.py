@@ -41,7 +41,7 @@ class GeoDataGovHarvester(SpatialHarvester):
         if not config.get('public', False) and status == 'new':
             package_dict['private'] = True
 
-        package_dict['extras'].append({'key': tags, 'value': ', '.join(tags)})
+        package_dict['extras'].append({'key': 'tags', 'value': ', '.join(tags)})
         return package_dict
 
     def extra_schema(self):
