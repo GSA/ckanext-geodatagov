@@ -39,24 +39,40 @@
     - name: install fpm
       action: command gem install -v 0.4.21 fpm creates=/usr/bin/fpm 
     - name: get ckan version
-      action: git repo=https://github.com/okfn/ckan dest=/usr/lib/ckan/src/ckan version=release-v2.0
+      action: git repo=https://github.com/okfn/ckan dest=/usr/lib/ckan/src/ckan version=release-datagov
     - name: get pip
       action: easy_install name=pip
 
     - name: install requirements and make virtualenv
       action: pip requirements=/usr/lib/ckan/src/ckan/pip-requirements.txt virtualenv=/usr/lib/ckan/
+
     - name: run setup.py develop for ckan
       action: command chdir=/usr/lib/ckan/src/ckan/ ../../bin/python setup.py develop
 
     - name: get geodatagov
       action: git repo=https://github.com/okfn/ckanext-geodatagov dest=/usr/lib/ckan/src/ckanext-geodatagov # version=release-0.22
+
+    - name: get harvest extension
+      action: git repo=https://github.com/okfn/ckanext-harvest dest=/usr/lib/ckan/src/ckanext-harvest version=release-v2.0
+
+    - name: run setup.py develop for harvest
+      action: command chdir=/usr/lib/ckan/src/ckanext-harvest/ ../../bin/python setup.py develop
+
+    - name: get spatial extension
+      action: git repo=https://github.com/okfn/ckanext-spatial dest=/usr/lib/ckan/src/ckanext-spatial version=release-v2.0
+
+    - name: run setup.py develop for 
+      action: command chdir=/usr/lib/ckan/src/ckanext-spatial/ ../../bin/python setup.py develop
+
     - name: install requirements for geodatagov
       action: pip requirements=/usr/lib/ckan/src/ckanext-geodatagov/pip-requirements.txt virtualenv=/usr/lib/ckan/
+
     - name: run setup.py develop for geodatagov
       action: command chdir=/usr/lib/ckan/src/ckanext-geodatagov/ ../../bin/python setup.py develop
 
     - name: install requirements for spacial
       action: pip requirements=/usr/lib/ckan/src/ckanext-spatial/pip-requirements.txt virtualenv=/usr/lib/ckan/
+
     - name: install requirements for harvest
       action: pip requirements=/usr/lib/ckan/src/ckanext-harvest/pip-requirements.txt virtualenv=/usr/lib/ckan/
 
