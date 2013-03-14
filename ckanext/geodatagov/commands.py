@@ -24,9 +24,9 @@ class GeoGovCommand(cli.CkanCommand):
     '''
     Commands:
 
-        paster ecportal import-harvest-source <harvest_source_data> <user_to_org_data> -c <config>
-        paster ecportal import-orgs <data> -c <config>
-        paster ecportal post-install-dbinit -c <config>
+        paster geodatagov import-harvest-source <harvest_source_data> -c <config>
+        paster geodatagov import-orgs <data> -c <config>
+        paster geodatagov post-install-dbinit -c <config>
     '''
     summary = __doc__.split('\n')[0]
     usage = __doc__
@@ -48,11 +48,11 @@ class GeoGovCommand(cli.CkanCommand):
         self.user_name = user['name']
 
         if cmd == 'import-harvest-source':
-            if not len(self.args) in [3]:
+            if not len(self.args) in [2]:
                 print GeoGovCommand.__doc__
                 return
 
-            self.import_harvest_source(self.args[1], self.args[2])
+            self.import_harvest_source(self.args[1])
 
         if cmd == 'import-orgs':
             if not len(self.args) in [2, 3]:
@@ -81,37 +81,43 @@ class GeoGovCommand(cli.CkanCommand):
         return mapping
 
 
-    def import_harvest_source(self, sources_location, user_org_mapping):
+    def import_harvest_source(self, sources_location):
         '''Import data from this mysql command
 select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE, FREQUENCY, USERNAME into outfile '/tmp/results_with_user.csv' from GPT_RESOURCE join GPT_USER on owner = USERID where frequency is not null;
 '''
-        mapping = self.get_user_org_mapping(user_org_mapping)
+        error_log = file('harvest_source_import_errors.txt' , 'w+')
 
         fields = ['DOCUUID', 'TITLE', 'OWNER', 'APPROVALSTATUS', 'HOST_URL',
-        'PROTOCAL', 'PROTOCOL_TYPE', 'FREQUENCY', 'USERNAME']
+        'PROTOCAL', 'PROTOCOL_TYPE', 'FREQUENCY', 'ORGID']
 
         user = logic.get_action('get_site_user')({'model': model, 'ignore_auth': True}, {})
 
         harvest_sources = open(sources_location)
         try:
-            csv_reader = csv.reader(harvest_sources, delimiter='\t')
+            csv_reader = csv.reader(harvest_sources)
             for row in csv_reader:
                 row = dict(zip(fields,row))
 
                 ## neeeds some fix
-                if row['PROTOCOL_TYPE'].lower() not in ('waf', 'csw', 'z3950'):
-                    continue
+                #if row['PROTOCOL_TYPE'].lower() not in ('waf', 'csw', 'z3950'):
+                    #continue
 
-                frequency = row['FREQUENCY'].upper()
-                if frequency not in ('WEEKLY', 'MONTHLY', 'BIWEEKLY'):
-                    frequency = 'MANUAL'
+                #frequency = row['FREQUENCY'].upper()
+                #if frequency not in ('WEEKLY', 'MONTHLY', 'BIWEEKLY'):
+
+                frequency = 'MANUAL'
 
                 config = {
-                          'APPROVALSTATUS': row['APPROVALSTATUS'],
                           'ORIGINAL_UUID': row['DOCUUID'][1:-1].lower()
                          }
 
-                root = ET.fromstring(row['PROTOCAL'])
+                protocal = row['PROTOCAL']
+                protocal = protocal[protocal.find('<protocol'):]
+                import re
+                protocal = re.sub('<protocol.*?>', '<protocol>', protocal)
+
+                root = ET.fromstring(protocal[protocal.find('<protocol'):])
+
 
                 for child in root:
                     if child.text:
@@ -124,9 +130,9 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                     'source_type': row['PROTOCOL_TYPE'].lower(),
                     'frequency': frequency,
                     'config': json.dumps(config),
-                    'owner_org': mapping[row['USERNAME'].lower()]
+                    'owner_org': row['ORGID']
                 }
-
+                harvest_source_dict.update(config)
 
                 try:
                     harvest_source = logic.get_action('harvest_source_create')(
@@ -135,12 +141,14 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                         harvest_source_dict
                     )
                 except ckan.logic.ValidationError, e:
-                    print harvest_source_dict
-                    print e.error_dict
+                    error_log.write(json.dumps(harvest_source_dict))
+                    error_log.write(str(e))
+                    error_log.write('\n')
 
         finally:
             model.Session.commit()
             harvest_sources.close()
+            error_log.close()
 
     def import_organizations(self, location):
         fields = ['title', 'type', 'name']
@@ -162,6 +170,6 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                 {'name': row['name'],
                  'title': row['title'],
                  'extras': [{'key': 'organization_type',
-                             'value': json.dumps(row['type'])}]
+                             'value': row['type']}]
                 }
             )
