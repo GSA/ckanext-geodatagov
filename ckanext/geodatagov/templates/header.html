@@ -77,14 +77,29 @@
                 </div>
               </form>
             {% endblock %}
-            <ul class="nav nav-pills">
-              {{ h.build_nav_main(
-                ('home', _('Home')),
-                ('search', _('Datasets')),
-                ('organizations_index', _('Organizations')),
-                ('group_index', _('Groups')),
-                ('harvest_search', _('Harvest Sources')),
-              ) }}
+            <ul class="nav nav-pills" data-module="geodatagov-top-nav">
+              {% set nav_items = [
+                { 'url': h.url_for('home'),
+                  'label': _('Home'),
+                  'selected': (c.controller == 'home') },
+                { 'url': h.url_for('search'),
+                  'label': _('Datasets'),
+                  'check': '/dataset' },
+                { 'url': h.url_for('organizations_index'),
+                  'label': _('Organizations'),
+                  'selected': (c.controller == 'organization') },
+                { 'url': h.url_for('group_index'),
+                  'label': _('Groups'),
+                  'selected': (c.controller == 'group') },
+                { 'url': h.url_for('harvest_search'),
+                  'label': _('Harvest Sources'),
+                  'check': '/harvest' },
+              ] %}
+              {% for nav_item in nav_items %}
+                <li class="{{ 'active' if nav_item.selected }}"{% if nav_item.check %} data-check="{{ nav_item.check }}"{% endif %}>
+                  <a href="{{ nav_item.url }}">{{ nav_item.label }}</a>
+                </li>
+              {% endfor %}
             </ul>
           </nav>
         {% endblock %}
