@@ -37,7 +37,7 @@ class GeoDataGovHarvester(SpatialHarvester):
     def extra_schema(self):
         return {
             'private_datasets': [ignore_empty, boolean_validator],
-            'validator_profiles': [unicode, ignore_empty, validate_profiles, lambda value: [value]]
+            'validator_profiles': [ignore_empty, unicode, validate_profiles, lambda value: [value]]
         }
 
     def get_package_dict(self, iso_values, harvest_object):

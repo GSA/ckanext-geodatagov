@@ -48,7 +48,7 @@ class GeoGovCommand(cli.CkanCommand):
         self.user_name = user['name']
 
         if cmd == 'import-harvest-source':
-            if not len(self.args) in [3]:
+            if not len(self.args) in [2]:
                 print GeoGovCommand.__doc__
                 return
 
@@ -111,7 +111,13 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                           'ORIGINAL_UUID': row['DOCUUID'][1:-1].lower()
                          }
 
-                root = ET.fromstring(row['PROTOCAL'])
+                protocal = row['PROTOCAL']
+                protocal = protocal[protocal.find('<protocol'):]
+                import re
+                protocal = re.sub('<protocol.*?>', '<protocol>', protocal)
+
+                root = ET.fromstring(protocal[protocal.find('<protocol'):])
+
 
                 for child in root:
                     if child.text:
@@ -126,7 +132,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                     'config': json.dumps(config),
                     'owner_org': row['ORGID']
                 }
-
+                harvest_source_dict.update(config)
 
                 try:
                     harvest_source = logic.get_action('harvest_source_create')(
@@ -136,6 +142,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                     )
                 except ckan.logic.ValidationError, e:
                     error_log.write(json.dumps(harvest_source_dict))
+                    error_log.write(str(e))
                     error_log.write('\n')
 
         finally:
@@ -163,6 +170,6 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                 {'name': row['name'],
                  'title': row['title'],
                  'extras': [{'key': 'organization_type',
-                             'value': json.dumps(row['type'])}]
+                             'value': row['type']}]
                 }
             )
