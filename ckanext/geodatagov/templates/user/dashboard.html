@@ -1,0 +1,26 @@
+{% ckan_extends %}
+
+{% block secondary_content %}
+  {{ super() }}
+  {% set organizations = h.organizations_available(permission='read') %}
+  <div class="module module-narrow module-shallow">
+    <h2 class="module-heading">
+      <i class="icon-building"></i>
+      {{ _('My Organizations') }}
+    </h2>
+    {% if organizations %}
+      <ul class="nav nav-simple">
+        {% for organization in organizations %}
+          <li class="nav-item">
+            {% set title = organization.title or organization.name %}
+            {{ h.link_to(h.truncate(title, 80), h.url_for(controller='organization', action='read', id=organization.name)) }}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="module-content">
+        <p class="empty">{{ _('You do not have any organizations') }}</p>
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}
