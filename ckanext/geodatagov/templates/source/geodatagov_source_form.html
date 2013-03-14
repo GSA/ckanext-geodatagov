@@ -42,4 +42,23 @@
   </div>
 </div>
 
+{% set existing_group = data.default_groups %}
+{% set groups_available = h.groups_available() %}
+{% if groups_available %}
+<div class="control-group">
+  <label for="field-default_groups" class="control-label">{{ _('Default Group') }}</label>
+  <div class="controls">
+    <select id="field-default_groups" name="default_groups" data-module="autocomplete">
+      <option value="">{{ _('Select a group...') }}</option>
+      {% for group in groups_available %}
+        {# get out first org from users list only if there is not an existing org #}
+        {% set selected_group = (existing_group and existing_group == group.name) %}
+        <option value="{{ group.name }}" {% if selected_group %} selected="selected" {% endif %}>{{ group.name }}</option>
+      {% endfor %}
+    </select>
+    <i class="icon-question-sign" title="{{ _('Datasets harvested from this source will be assigned to this group') }}" data-toggle="tooltip"></i>
+  </div>
+</div>
+{% endif %}
+
 {% endblock extra_config %}

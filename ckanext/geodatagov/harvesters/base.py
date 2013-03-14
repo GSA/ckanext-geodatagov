@@ -1,6 +1,7 @@
 import requests
 from pylons import config
 
+from ckan import plugins as p
 
 from ckan.logic.validators import boolean_validator
 from ckan.lib.navl.validators import ignore_empty
@@ -31,12 +32,21 @@ def validate_profiles(profile):
         raise Invalid('Unknown validation profile: {0}'.format(profile))
     return profile
 
+def default_groups_validator(value):
+    # Check if default groups exist
+    try:
+        p.toolkit.get_action('group_show')({}, {'id': value})
+    except p.toolkit.ObjectNotFound:
+        raise ValueError('Default group not found {0}'.format(value))
+
+    return value
 
 class GeoDataGovHarvester(SpatialHarvester):
 
     def extra_schema(self):
         return {
             'private_datasets': [ignore_empty, boolean_validator],
+            'default_groups': [ignore_empty, default_groups_validator, lambda value: [value]],
             'validator_profiles': [unicode, ignore_empty, validate_profiles, lambda value: [value]]
         }
 
@@ -49,6 +59,12 @@ class GeoDataGovHarvester(SpatialHarvester):
 
         if self.source_config.get('private_datasets', True):
             package_dict['private'] = True
+
+        default_groups = self.source_config.get('default_groups', None)
+        if default_groups  and len(default_groups):
+            package_dict['groups'] = []
+            for group in default_groups:
+                package_dict['groups'].append({'name': group})
 
         package_dict['extras'].append({'key': 'tags', 'value': ', '.join(tags)})
         return package_dict
