@@ -1,5 +1,10 @@
 {% ckan_extends %}
 
+{% block scripts %}
+  {{ super() }}
+  {% resource 'geodatagov/scripts/geodatagov.js' %}
+{% endblock %}
+
 {% block styles %}
   {{ super() }}
   {% resource 'geodatagov/styles/geodatagov.css' %}
