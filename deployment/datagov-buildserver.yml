@@ -52,17 +52,17 @@
     - name: get geodatagov
       action: git repo=https://github.com/okfn/ckanext-geodatagov dest=/usr/lib/ckan/src/ckanext-geodatagov # version=release-0.22
 
-    - name: get harvest extension
-      action: git repo=https://github.com/okfn/ckanext-harvest dest=/usr/lib/ckan/src/ckanext-harvest version=release-v2.0
-
-    - name: run setup.py develop for harvest
-      action: command chdir=/usr/lib/ckan/src/ckanext-harvest/ ../../bin/python setup.py develop
-
-    - name: get spatial extension
-      action: git repo=https://github.com/okfn/ckanext-spatial dest=/usr/lib/ckan/src/ckanext-spatial version=release-v2.0
-
-    - name: run setup.py develop for 
-      action: command chdir=/usr/lib/ckan/src/ckanext-spatial/ ../../bin/python setup.py develop
+#    - name: get harvest extension
+#      action: git repo=https://github.com/okfn/ckanext-harvest dest=/usr/lib/ckan/src/ckanext-harvest version=release-v2.0
+#
+#    - name: run setup.py develop for harvest
+#      action: command chdir=/usr/lib/ckan/src/ckanext-harvest/ ../../bin/python setup.py develop
+#
+#    - name: get spatial extension
+#      action: git repo=https://github.com/okfn/ckanext-spatial dest=/usr/lib/ckan/src/ckanext-spatial version=release-v2.0
+#
+#    - name: run setup.py develop for 
+#      action: command chdir=/usr/lib/ckan/src/ckanext-spatial/ ../../bin/python setup.py develop
 
     - name: install requirements for geodatagov
       action: pip requirements=/usr/lib/ckan/src/ckanext-geodatagov/pip-requirements.txt virtualenv=/usr/lib/ckan/
