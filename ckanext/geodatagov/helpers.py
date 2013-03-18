@@ -66,7 +66,7 @@ def get_harvest_source_link(package_dict):
 
 def get_reference_date(date_str):
     '''
-        Gets a reference date extra created by the harvesters and formats
+        Gets a reference date extra created by the harvesters and formats it
         nicely for the UI.
 
         Examples:
@@ -79,14 +79,40 @@ def get_reference_date(date_str):
             1977 (publication)
             NaN-NaN-NaN (publication)
     '''
-    if not date_str:
-        return 'Unknown'
-
     try:
         out = []
         for date in h.json.loads(date_str):
             value = h.render_datetime(date['value']) or date['value']
             out.append('{0} ({1})'.format(value, date['type']))
         return ', '.join(out)
-    except ValueError:
+    except (ValueError, TypeError):
         return date_str
+
+def get_responsible_party(value):
+    '''
+        Gets a responsible party extra created by the harvesters and formats it
+        nicely for the UI.
+
+        Examples:
+            [{"name": "Complex Systems Research Center", "roles": ["pointOfContact"]}]
+            [{"name": "British Geological Survey", "roles": ["custodian", "pointOfContact"]}, {"name": "Natural England", "roles": ["publisher"]}]
+
+        Results
+            Complex Systems Research Center (pointOfContact)
+            British Geological Survey (custodian, pointOfContact); Natural England (publisher)
+    '''
+    formatted = {
+        'resourceProvider': p.toolkit._('Resource Provider'),
+        'pointOfContact': p.toolkit._('Point of Contact'),
+        'principalInvestigator': p.toolkit._('Principal Investigator'),
+    }
+
+    try:
+        out = []
+        parties = h.json.loads(value)
+        for party in parties:
+            roles = [formatted[role] if role in formatted.keys() else p.toolkit._(role.capitalize()) for role in party['roles']]
+            out.append('{0} ({1})'.format(party['name'], ', '.join(roles)))
+        return '; '.join(out)
+    except (ValueError, TypeError):
+        return value
