@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE metadata SYSTEM "http://thor-f5.er.usgs.gov/ngtoc/metadata/fgdc-std-001-1998.dtd">
+<metadata>
+  <idinfo>
+    <citation>
+      <citeinfo>
+        <origin>U.S. Geological Survey</origin>
+        <pubdate>2013</pubdate>
+        <title>USGS US Topo Map Collection</title>
+        <geoform>map, raster digital data</geoform>
+        <pubinfo>
+          <pubplace>Rolla, MO and Denver, CO</pubplace>
+          <publish>USGS - National Geospatial Technical Operations Center (NGTOC)</publish>
+        </pubinfo>
+        <onlink>http://thor-f5.er.usgs.gov/ngtoc/metadata/ustopo/</onlink>
+      </citeinfo>
+    </citation>
+    <descript>
+      <abstract>Layered GeoPDF 7.5 Minute Quadrangle Map. Layers of geospatial data include orthoimagery, roads, grids, geographic names, elevation contours, hydrography, and other selected map features.</abstract>
+      <purpose>This map depicts geographic features on the surface of the earth. It is a general purpose map for users who are not GIS experts. One intended purpose is to support emergency response at all levels of government. The geospatial data in this map are from selected National Map data holdings and other government sources.</purpose>
+      <supplinf>Bounding Coordinates identified in FGDC metadata and reflect coverage defined by the USGS Cells database. More information available at: http://nationalmap.gov/ustopo/.</supplinf>
+    </descript>
+    <timeperd>
+      <timeinfo>
+        <rngdates>
+          <begdate>2009</begdate>
+          <enddate>2013</enddate>
+        </rngdates>
+      </timeinfo>
+      <current>publication date</current>
+    </timeperd>
+    <status>
+      <progress>Complete</progress>
+      <update>Irregular</update>
+    </status>
+    <spdom>
+      <bounding>
+*****************
+        <westbc>-72.875</westbc>
+        <eastbc>-72.75</eastbc>
+        <northbc>41</northbc>
+        <southbc>40.875</southbc>
+*****************
+      </bounding>
+    </spdom>
+    <keywords>
+      <theme>
+        <themekt>ISO 19115 Topic Category</themekt>
+        <themekey>imageryBaseMapsEarthCover</themekey>
+        <themekey>EarthCover</themekey>
+        <themekey>Imagery and Base Maps</themekey>
+      </theme>
+      <theme>
+        <themekt>None</themekt>
+        <themekey>topographic</themekey>
+        <themekey>transportation</themekey>
+        <themekey>structures</themekey>
+        <themekey>geographic names</themekey>
+        <themekey>hydrography</themekey>
+        <themekey>boundary</themekey>
+        <themekey>Public Land Survey System</themekey>
+        <themekey>woodland</themekey>
+        <themekey>orthoimage</themekey>
+        <themekey>contour</themekey>
+        <themekey>U.S. National Grid</themekey>
+      </theme>
+      <place>
+        <placekt>Geographic Names Information System</placekt>
+        <placekey>US</placekey>
+        <placekey>United States</placekey>
+*****************
+        <placekey>New York</placekey>
+*****************
+      </place>
+    </keywords>
+    <accconst>None</accconst>
+    <useconst>None. However, users should be aware that temporal changes may have occurred since this data set was collected and that some parts of this data may no longer represent actual surface conditions. Users should not use this data for critical applications without a full awareness of its limitations. Acknowledgment of the U.S. Geological Survey would be appreciated for products derived from these data.</useconst>
+  </idinfo>
+  <dataqual>
+    <attracc>
+      <attraccr>Cartographic content is derived from USGS national geospatial databases. The data is owned and hosted by the USGS, but does not preclude using data sources owned and hosted by other organizations, provided that these sources have been approved by the USGS data program.</attraccr>
+    </attracc>
+    <logic>This product is a layered GeoPDF file. GeoPDF is a copyright format with implementation rights held exclusively by TerraGo Technologies. This design is based on use of specific commercial software systems therefore any changes to the software specifications and dependencies will be followed by the USGS and codified in the product standard.</logic>
+    <complete>Each layer of the GeoPDF is extracted from the USGS national geospatial databases. These data are intended to be cartographically complete at a 1:24,000 scale.</complete>
+    <posacc>
+      <horizpa>
+        <horizpar>This US Topo map product is compiled to meet National Map Accuracy Standards (NMAS). NMAS horizontal accuracy requires that at least 90 percent of well-defined points tested are within 0.02 inch of the true position. In this product, the projection line, grids, and orthoimage are believed to meet NMAS. Positional accuracy of the other data layers is less controllable because of diversity of data sources, and may not meet NMAS.</horizpar>
+      </horizpa>
+      <vertacc>
+        <vertaccr>The accuracy of the National Elevation Dataset (NED) is inherited from the source digital elevation models (DEMs). The overall absolute vertical accuracy expressed as the root mean square error (RMSE) is 2.44 meters. The measured vertical RMSE was converted to equivalent NMAS and NSSDA expressions. The accuracy is expressed in terms of the National Map Accuracy Standards (NMAS), which use a 90 percent confidence interval, and in terms of the National Standard for Spatial Data Accuracy (NSSDA), which uses a 95 percent confidence interval. </vertaccr>
+      </vertacc>
+    </posacc>
+    <lineage>
+      <procstep>
+        <procdesc>The GeoPDFs for this product are created as follows. All geospatial content is taken from national geospatial databases under the stewardship of USGS data programs. The NAIP imagery is provided by a seamless tile service that delivers image data at the resolution and quality of the source imagery. The raster and vector data, including grids and collar information, are processed using ESRI ArcGIS software and exported as a GeoPDF using the TerraGo ArcGIS software extension. Map formatting is performed using a custom application, which includes post-processing to embed the metadata XML document. GeoPDF is a copyrighted format, with implementation rights held exclusively by TerraGo Technologies. Any use of trade, product, or firm names in this publication is for descriptive purposes only and does not imply endorsement by the U.S. Government.</procdesc>
+        <procdate>2013</procdate>
+      </procstep>
+    </lineage>
+  </dataqual>
+  <spdoinfo>
+    <direct>Raster</direct>
+  </spdoinfo>
+  <eainfo>
+    <overview>
+      <eaover>This is a general-purpose design and layout quadrangle map based on the traditional USGS quadrangle cells. The domain is a standard 7.5-minute cell. The scale is 1:24,000.</eaover>
+      <eadetcit>National Geospatial Program US Topo Product Standard, 2011.</eadetcit>
+    </overview>
+  </eainfo>
+  <distinfo>
+      <distrib>
+          <cntinfo>
+              <cntorgp>
+                  <cntorg>U.S. Geological Survey</cntorg>
+                  <cntper>Not Provided</cntper>
+              </cntorgp>
+              <cntaddr>
+                  <addrtype>mailing and physical</addrtype>
+                  <address>Box 25046 Denver Federal Center</address>
+                  <city>Lakewood</city>
+                  <state>CO</state>
+                  <postal>80225</postal>
+              </cntaddr>
+              <cntvoice>1-888-ASK-USGS (1-888-275-8747)</cntvoice>
+              <cntemail>usgsstore@usgs.gov</cntemail>
+          </cntinfo>
+      </distrib>
+      <resdesc>Downloadable Data</resdesc>
+      <distliab>Although these data have been processed successfully on a computer system at the U.S. Geological Survey, no warranty expressed or implied is made regarding the accuracy or utility of the data on any other system or for general or scientific purposes, nor shall the act of distribution constitute any such warranty. This disclaimer applies both to individual use of the data and aggregate use with other data. It is strongly recommended that these data are directly acquired from a U.S. Geological Survey server, and not indirectly through other sources which may have changed the data in some way. It is also strongly recommended that careful attention be paid to the contents of the metadata file associated with these data. The U.S. Geological Survey shall not be held liable for improper or incorrect use of the data described and/or contained herein.</distliab>
+  </distinfo>
+  <metainfo>
+    <metd>2013</metd>
+    <metc>
+      <cntinfo>
+        <cntorgp>
+          <cntorg>U.S. Geological Survey, National Geospatial Technical Operations Center</cntorg>
+          <cntper>Not Provided</cntper>
+        </cntorgp>
+        <cntaddr>
+          <addrtype>mailing and physical</addrtype>
+          <address>1400 Independence Road</address>
+          <city>Rolla</city>
+          <state>MO</state>
+          <postal>65401</postal>
+        </cntaddr>
+        <cntaddr>
+          <addrtype>mailing and physical</addrtype>
+          <address>Box 25046 Denver Federal Center</address>
+          <city>Lakewood</city>
+          <state>CO</state>
+          <postal>80225</postal>
+        </cntaddr>
+        <cntvoice>1-888-ASK-USGS (1-888-275-8747)</cntvoice>
+        <cntemail>http://www.usgs.gov/ask/</cntemail>
+        <hours>Monday through Friday 8:00 AM to 4:00 PM</hours>
+        <cntinst>Metadata information can also be obtained through online services using The National Map Viewer, at http://nationalmap.usgs.gov or EarthExplorer, at http://earthexplorer.usgs.gov or Ask USGS at http://www.usgs.gov/ask.</cntinst>
+      </cntinfo>
+    </metc>
+    <metstdn>FGDC Content Standard for Digital Geospatial Metadata</metstdn>
+    <metstdv>FGDC-STD-001-1998</metstdv>
+  </metainfo>
+</metadata>

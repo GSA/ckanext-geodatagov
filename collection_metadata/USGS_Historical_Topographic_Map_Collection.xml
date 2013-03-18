@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE metadata SYSTEM "http://thor-f5.er.usgs.gov/ngtoc/metadata/fgdc-std-001-1998.dtd">
+<metadata>
+  <idinfo>
+    <citation>
+      <citeinfo>
+        <origin>U.S. Geological Survey</origin>
+        <pubdate>2006</pubdate>
+        <title>USGS Historical Topographic Map Collection</title>
+        <geoform>Scanned Map in GeoPDF</geoform>
+        <pubinfo>
+          <pubplace>Reston, Virginia</pubplace>
+          <publish>U.S. Geological Survey</publish>
+        </pubinfo>
+        <onlink>http://thor-f5.er.usgs.gov/ngtoc/metadata/htmc/</onlink>
+      </citeinfo>
+    </citation>
+    <descript>
+      <abstract>USGS Historical Quadrangle in GeoPDF.</abstract>
+      <purpose>The USGS Historical Quadrangle Scanning Project (HQSP) is scanning all scales and all editions of topographic maps published by the U.S. Geological Survey (USGS) since the inception of the topographic mapping program in 1884. This map is provided as a general purpose map in GeoPDF for users who are not GIS experts.</purpose>
+      <supplinf>Bounding Coordinates identified in FGDC metadata and reflect coverage defined by the USGS Cells database. More information available at: http://nationalmap.gov/historical/.</supplinf>
+    </descript>
+    <timeperd>
+      <timeinfo>
+        <rngdates>
+          <begdate>1882</begdate>
+          <enddate>2006</enddate>
+        </rngdates>
+      </timeinfo>
+      <current>publication date</current>
+    </timeperd>
+    <status>
+      <progress>Complete</progress>
+      <update>None planned</update>
+    </status>
+    <spdom>
+      <bounding>
+*****************
+        <westbc>-79.875</westbc>
+        <eastbc>-79.75</eastbc>
+        <northbc>41.125</northbc>
+        <southbc>41</southbc>
+*****************
+      </bounding>
+    </spdom>
+    <keywords>
+      <theme>
+        <themekt>ISO 19115 Topic Category</themekt>
+        <themekey>imageryBaseMapsEarthCover</themekey>
+      </theme>
+      <place>
+        <placekt>Geographic Names Information System</placekt>
+*****************
+        <placekey>PA</placekey>
+*****************
+      </place>
+    </keywords>
+    <accconst>None</accconst>
+    <useconst>None. However, users should be aware that temporal changes may have occurred since this map was originally produced and that some parts of this data may no longer represent actual surface conditions. Users should not use this data for critical applications without a full awareness of its limitations.</useconst>
+    <ptcontac>
+      <cntinfo>
+        <cntorgp>
+          <cntorg>U.S. Geological Survey</cntorg>
+          <cntper>Not Provided</cntper>
+        </cntorgp>
+        <cntaddr>
+          <addrtype>physical</addrtype>
+          <address>12201 Sunrise Valley Drive</address>
+          <city>Reston</city>
+          <state>Virginia</state>
+          <postal>20192</postal>
+          <country>USA</country>
+        </cntaddr>
+        <cntvoice>1-888-ASK-USGS (1-888-275-8747)</cntvoice>
+        <hours>Monday through Friday 8:00 AM to 4:00 PM Eastern Time Zone USA</hours>
+        <cntinst>Please visit http://www.usgs.gov/ask/ to contact us.</cntinst>
+      </cntinfo>
+    </ptcontac>
+  <datacred>Acknowledgment of the U.S. Geological Survey is expected for products derived from these data.</datacred>
+  </idinfo>
+  <dataqual>
+    <logic>This product is a GeoPDF file. GeoPDF is a copyright format with implementation rights held exclusively by TerraGo Technologies. This design is based on use of specific commercial software systems therefore any changes to the software specifications and dependencies will be followed by the USGS and codified in the product standard.</logic>
+    <complete>Varies</complete>
+    <posacc>
+      <horizpa>
+        <horizpar>The digital GeoPDF version of the historical map was georeferenced with a methodology that preserves, but does not exceed, the accuracy of the original map. The historical map product was compiled to meet National Map Accuracy Standards (NMAS) of the era when the map was originally published.</horizpar>
+      </horizpa>
+    </posacc>
+    <lineage>
+      <procstep>
+        <procdesc>The GeoPDFs for the scanned Historical Quadrangles are produced using the following steps. Historical Quadrangles are scanned typically at 600 PPI (minimum of 400 PPI). Metadata is collected from the information printed in the map collar. Scanned TIFF images are georeferenced to the original map datum, and reprojected to the original map projection. The final GeoPDF file is generated using TerraGo Publisher for Raster software. To support the use of the GeoPDF file in the U.S. Army Geospatial Center GeoPDF seamless viewing tool, neatline coordinates are added to the GeoPDF header file. Last, an FGDC compliant XML metadata file is generated and attached to the GeoPDF. Note that GeoPDF is a copyrighted format, with implementation rights held exclusively by TerraGo Technologies. Any use of trade, product, or firm names in this publication is for descriptive purposes only and does not imply endorsement by the U.S. Government.</procdesc>
+        <procdate>2013</procdate>
+      </procstep>
+    </lineage>
+  </dataqual>
+  <distinfo>
+    <distrib>
+      <cntinfo>
+        <cntorgp>
+          <cntorg>U.S. Geological Survey</cntorg>
+          <cntper>Not Provided</cntper>
+        </cntorgp>
+        <cntaddr>
+          <addrtype>physical</addrtype>
+          <address>12201 Sunrise Valley Drive</address>
+          <city>Reston</city>
+          <state>Virginia</state>
+          <postal>20192</postal>
+          <country>USA</country>
+        </cntaddr>
+        <cntvoice>1-888-ASK-USGS (1-888-275-8747)</cntvoice>
+        <hours>Monday through Friday 8:00 AM to 4:00 PM Eastern Time Zone USA</hours>
+        <cntinst>Please visit http://www.usgs.gov/ask/ to contact us.</cntinst>
+      </cntinfo>
+    </distrib>
+    <resdesc>Downloadable Data</resdesc>
+    <distliab>Although these data have been processed successfully on a computer system at the U.S. Geological Survey, no warranty expressed or implied is made regarding the accuracy or utility of the data on any other system or for general or scientific purposes, nor shall the act of distribution constitute any such warranty. This disclaimer applies both to individual use of the data and aggregate use with other data. It is strongly recommended that these data are directly acquired from a U.S. Geological Survey server, and not indirectly through other sources which may have changed the data in some way. It is also strongly recommended that careful attention be paid to the contents of the metadata file associated with these data. The U.S. Geological Survey shall not be held liable for improper or incorrect use of the data described and/or contained herein.</distliab>
+  </distinfo>
+  <metainfo>
+    <metd>2013</metd>
+    <metc>
+      <cntinfo>
+        <cntorgp>
+          <cntorg>U.S. Geological Survey</cntorg>
+          <cntper>Not Provided</cntper>
+        </cntorgp>
+        <cntaddr>
+          <addrtype>physical</addrtype>
+          <address>12201 Sunrise Valley Drive</address>
+          <city>Reston</city>
+          <state>Virginia</state>
+          <postal>20192</postal>
+          <country>USA</country>
+        </cntaddr>
+        <cntvoice>1-888-ASK-USGS (1-888-275-8747)</cntvoice>
+        <hours>Monday through Friday 8:00 AM to 4:00 PM Eastern Time Zone USA</hours>
+        <cntinst>Please visit http://www.usgs.gov/ask/ to contact us.</cntinst>
+      </cntinfo>
+    </metc>
+    <metstdn>FGDC Content Standard for Digital Geospatial Metadata</metstdn>
+    <metstdv>FGDC-STD-001-1998</metstdv>
+  </metainfo>
+</metadata>
