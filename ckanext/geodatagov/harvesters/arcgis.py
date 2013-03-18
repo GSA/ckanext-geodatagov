@@ -130,12 +130,15 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
             )
             url = urlparse.urljoin(source_url, search_path)
 
+            r = requests.get(url)
             try:
-                results = requests.get(url).json
-            except Exception,e:
+                r.raise_for_status()
+            except requests.exceptions.RequestException, e:
                 self._save_gather_error('Unable to get content for URL: %s: %r' % \
-                                            (source_url, e),harvest_job)
+                                        (url, e),harvest_job)
                 return None
+
+            results = r.json()
 
             for result in results['results']:
                 if result['type'] not in TYPES:
