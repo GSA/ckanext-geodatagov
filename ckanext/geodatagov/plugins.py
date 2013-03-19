@@ -1,6 +1,7 @@
 import hashlib
 import paste.auth.auth_tkt
 from paste.auth.auth_tkt import maybe_encode, encode_ip_timestamp
+from pylons import request
 
 ####  Monkey Patch libraris to make fips work ####
 
@@ -122,10 +123,12 @@ class Demo(p.SingletonPlugin):
 
     def before_search(self, pkg_dict):
 
-        fq = pkg_dict.get('fq', '')
+        q = pkg_dict.get('q', '')
 
-        if 'collection_package_id' not in fq:
-            pkg_dict['fq'] = pkg_dict.get('fq', '') + ' -collection_package_id:["" TO *]'
+        # only show collections on bulk update page and when the facet is explictely added
+
+        if 'collection_package_id' not in q and 'bulk_update' not in request.path:
+            pkg_dict['q'] = q + ' -collection_package_id:["" TO *]'
 
         return pkg_dict
 
