@@ -1,0 +1,17 @@
+{% ckan_extends %}
+
+{% set format = res.format.lower() or 'data' %}
+
+{% block resource_item_explore %}
+  <div class="btn-group">
+    <a href="{{ res.url }}" class="btn btn-primary">
+      {% if format == 'html' %}
+        <i class="icon-globe"></i>
+        {{ _('Visit page') }}
+      {% else %}
+        <i class="icon-download-alt"></i>
+        {{ _('Download') }}
+      {% endif %}
+    </a>
+  </div>
+{% endblock %}
