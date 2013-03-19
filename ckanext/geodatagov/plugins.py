@@ -127,7 +127,7 @@ class Demo(p.SingletonPlugin):
 
         # only show collections on bulk update page and when the facet is explictely added
 
-        if 'collection_package_id' not in q and 'bulk_update' not in request.path:
+        if 'collection_package_id' not in q and 'bulk_process' not in request.path:
             pkg_dict['q'] = q + ' -collection_package_id:["" TO *]'
 
         return pkg_dict
