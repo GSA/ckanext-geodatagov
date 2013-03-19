@@ -31,14 +31,13 @@ class WAFCollectionHarvester(GeoDataGovWAFHarvester):
 
         collection_package_id = self._get_object_extra(harvest_object, 'collection_package_id')
         if collection_package_id:
-            package_dict['extras']['collection_package_id'] = collection_package_id
+            package_dict['extras'].append(dict(key='collection_package_id', value=collection_package_id))
 
         collection_metadata = self._get_object_extra(harvest_object, 'collection_metadata')
         if collection_metadata:
-            package_dict['extras']['collection_metadata'] = collection_metadata
+            package_dict['extras'].append(dict(key='collection_metadata', value=collection_metadata))
 
         return package_dict
-
 
     def gather_stage(self, harvest_job):
         log = logging.getLogger(__name__ + '.WAF.gather')
