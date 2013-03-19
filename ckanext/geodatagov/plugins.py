@@ -159,8 +159,10 @@ class Demo(p.SingletonPlugin):
         if not package_type:
             return OrderedDict([('tags','Tags'),
                                 ('res_format', 'Formats'),
+                                ('groups', 'Groups'),
                                 ('harvest_source_title', 'Harvest Source'),
                                 ('capacity', 'Visibility'),
+                                ('dataset_type', 'Dataset Type'),
                                ])
         else:
             return facets_dict
