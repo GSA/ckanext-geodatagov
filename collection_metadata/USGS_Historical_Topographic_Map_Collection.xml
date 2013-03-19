@@ -35,12 +35,10 @@
     </status>
     <spdom>
       <bounding>
-*****************
-        <westbc>-79.875</westbc>
-        <eastbc>-79.75</eastbc>
-        <northbc>41.125</northbc>
-        <southbc>41</southbc>
-*****************
+        <westbc>-180</westbc>
+        <eastbc>180</eastbc>
+        <northbc>72</northbc>
+        <southbc>-14.3833333</southbc>
       </bounding>
     </spdom>
     <keywords>
@@ -50,9 +48,10 @@
       </theme>
       <place>
         <placekt>Geographic Names Information System</placekt>
-*****************
-        <placekey>PA</placekey>
-*****************
+        <placekey>US</placekey>
+        <placekey>United States</placekey>
+        <placekey>Federated States of Micronesia</placekey>
+        <placekey>Republic of Palau</placekey>
       </place>
     </keywords>
     <accconst>None</accconst>
