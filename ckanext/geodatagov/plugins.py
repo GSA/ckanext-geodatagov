@@ -114,10 +114,10 @@ class Demo(p.SingletonPlugin):
         tags.extend(tag for tag in split_tags(pkg_dict.get('extras_tags','')))
         pkg_dict['tags'] = tags
 
-        for group_name in pkg_dict['groups']:
-            group = model.Group.get(group_name)
-            if 'organization_type' in group.extras:
-                pkg_dict['organization_type'] = group.extras['organization_type']
+        org_name = pkg_dict['organization']
+        group = model.Group.get(org_name)
+        if group and ('organization_type' in group.extras):
+            pkg_dict['organization_type'] = group.extras['organization_type']
 
         return pkg_dict
 
@@ -147,10 +147,11 @@ class Demo(p.SingletonPlugin):
         if package_type != 'dataset':
             return facets_dict
 
-        return OrderedDict([('groups', 'Organizations'),
-                           ('tags','Tags'),
-                           ('res_format', 'Formats'),
-                           ('organization_type', 'Organization Types'),
+        return OrderedDict([('organization', 'Organizations'),
+                            ('groups', 'Groups'),
+                            ('tags','Tags'),
+                            ('res_format', 'Formats'),
+                            ('organization_type', 'Organization Types'),
                            ])
 
     def organization_facets(self, facets_dict, organization_type, package_type):
@@ -164,3 +165,13 @@ class Demo(p.SingletonPlugin):
         else:
             return facets_dict
 
+    def group_facets(self, facets_dict, organization_type, package_type):
+
+        if not package_type:
+            return OrderedDict([('tags','Tags'),
+                                ('res_format', 'Formats'),
+                                ('organization', 'Organizations')
+                                ('organization_type', 'Organization Types'),
+                               ])
+        else:
+            return facets_dict
