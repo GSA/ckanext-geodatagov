@@ -5,6 +5,29 @@
 {% set dataset_extent = h.get_pkg_dict_extra(c.pkg_dict, 'spatial', '') %}
 
 {% block secondary_content %}
+
+  {% set collection_package_id = pkg_dict.extras['collection_package_id'] %}
+
+  {% if pkg_dict.extras['collection_metadata'] %}
+    <div class="module module-narrow">
+      <h2 class="module-heading"><i class="icon-list"></i> {{ _('Collection') }}</h2>
+      <div class="module-content">
+        <p>{{ _('This dataset is a collection of other datasets.') }}</p>
+        <p><a href="{{ h.url_for('search', collection_package_id=pkg_dict.id) }}" class="btn">{{ _('View all datasets') }}</a></p>
+      </div>
+    </div>
+  {% elif collection_package_id %}
+    {% set collection_package = h.get_collection_package(collection_package_id) %}
+    <div class="module module-narrow">
+      <h2 class="module-heading"><i class="icon-list"></i> {{ _('Collection') }}</h2>
+      <div class="module-content">
+        <ul class="dataset-list unstyled">
+          {% snippet "snippets/package_item.html", package=collection_package, truncate=75 %}
+        </ul>
+      </div>
+    </div>
+  {% endif %}
+
   {{ super() }}
   {% set dataset_extent = h.get_pkg_dict_extra(c.pkg_dict, 'spatial', '') %}
   {% if dataset_extent %}
@@ -13,6 +36,7 @@
 {% endblock %}
 
 {% block package_resources %}
+
   {{ super() }}
 
   {% set harvest_object_id = h.get_pkg_dict_extra(pkg, 'harvest_object_id', None) %}
@@ -93,7 +117,7 @@
             <td class="dataset-details">{{ pkg_dict.state|capitalize }}</td>
           </tr>
         {% endif %}
-        {% for extra in h.sorted_extras(extras, auto_clean=true, exclude=['metadata-date', 'dataset-reference-date', 'responsible-party', 'contact-email']) %}
+        {% for extra in h.sorted_extras(extras, auto_clean=false, exclude=['metadata-date', 'dataset-reference-date', 'responsible-party', 'contact-email']) %}
           {% set key, value = extra %}
           <tr rel="dc:relation" resource="_:extra{{ i }}" class="toggle-more">
             <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key) }}</th>
