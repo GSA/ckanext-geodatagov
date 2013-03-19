@@ -24,4 +24,9 @@
       {% snippet "snippets/language_selector.html" %}
     {% endblock %}
   #}
+
+  {% if not not g.debug %}
+    {% snippet "snippets/webtrends.html" %}
+  {% endif %}
+
 {% endblock %}
