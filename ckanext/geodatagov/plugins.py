@@ -170,7 +170,7 @@ class Demo(p.SingletonPlugin):
         if not package_type:
             return OrderedDict([('tags','Tags'),
                                 ('res_format', 'Formats'),
-                                ('organization', 'Organizations')
+                                ('organization', 'Organizations'),
                                 ('organization_type', 'Organization Types'),
                                ])
         else:
