@@ -88,12 +88,6 @@
                 { 'url': h.url_for('organizations_index'),
                   'label': _('Organizations'),
                   'selected': (c.controller == 'organization') },
-                { 'url': h.url_for('group_index'),
-                  'label': _('Groups'),
-                  'selected': (c.controller == 'group') },
-                { 'url': h.url_for('harvest_search'),
-                  'label': _('Harvest Sources'),
-                  'check': '/harvest' },
               ] %}
               {% for nav_item in nav_items %}
                 <li class="{{ 'active' if nav_item.selected }}"{% if nav_item.check %} data-check="{{ nav_item.check }}"{% endif %}>
