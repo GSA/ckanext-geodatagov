@@ -12,7 +12,7 @@
         <p><a href="{{ h.url_for('search', collection_package_id=pkg_dict.id) }}" class="btn">{{ _('View all datasets') }}</a></p>
       </div>
     </div>
-  {% elif true collection_package_id %}
+  {% elif collection_package_id %}
     {% set collection_package = h.get_collection_package(collection_package_id) %}
     <div class="module module-narrow">
       <h2 class="module-heading"><i class="icon-list"></i> {{ _('Collection') }}</h2>
