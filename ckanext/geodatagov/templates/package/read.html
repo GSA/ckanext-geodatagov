@@ -13,6 +13,7 @@
 {% endblock %}
 
 {% block package_resources %}
+
   {{ super() }}
 
   {% set harvest_object_id = h.get_pkg_dict_extra(pkg, 'harvest_object_id', None) %}

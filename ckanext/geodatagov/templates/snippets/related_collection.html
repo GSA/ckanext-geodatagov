@@ -1,0 +1,14 @@
+{% set collection_package = h.get_collection_package(collection_package_id) %}
+{% set title = title or _('Collection:') %}
+{% set wrapper_class = wrapper_class or "well" %}
+
+{% if collection_package %}
+  <div class="module-content collection-package">
+    <div class="{{ wrapper_class }}">
+      <h3>{{ title }}</h3>
+      <ul class="dataset-list unstyled">
+        {% snippet "snippets/package_item.html", package=collection_package %}
+      </ul>
+    </div>
+  </div>
+{% endif %}
