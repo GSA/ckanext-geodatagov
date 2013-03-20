@@ -6,9 +6,9 @@
 
 {% block secondary_content %}
 
-  {% set collection_package_id = pkg_dict.extras['collection_package_id'] %}
+  {% set collection_package_id = h.get_pkg_dict_extra(pkg_dict, 'collection_package_id', '') %}
 
-  {% if pkg_dict.extras['collection_metadata'] %}
+  {% if h.get_pkg_dict_extra(c.pkg_dict, 'collection_metadata', '') %}
     <div class="module module-narrow">
       <h2 class="module-heading"><i class="icon-list"></i> {{ _('Collection') }}</h2>
       <div class="module-content">
