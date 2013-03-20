@@ -424,3 +424,9 @@ a {
   background-position: 0 0;
   background-image: url("../images/icon-fgdc.png");
 }
+.module-content.collection-package {
+  padding-bottom: 0;
+}
+.module-content.collection-package h3 {
+  margin-top: 0;
+}
