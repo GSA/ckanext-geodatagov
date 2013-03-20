@@ -12,7 +12,8 @@ from ckanext.harvest.model import HarvestObjectExtra as HOExtra
 
 from ckanext.geodatagov.harvesters import GeoDataGovHarvester
 
-from ckan.lib.navl.validators import not_empty, convert_int
+from ckan.lib.navl.validators import not_empty, convert_int, ignore_empty
+from ckan.logic.validators import boolean_validator
 
 class Z3950Harvester(GeoDataGovHarvester, SingletonPlugin):
     '''
@@ -28,7 +29,8 @@ class Z3950Harvester(GeoDataGovHarvester, SingletonPlugin):
             'description': 'A remote database supporting the Z39.50 protocol'
             }
     def extra_schema(self):
-        return {'database': [not_empty, unicode],
+        return {'private_datasets': [ignore_empty, boolean_validator],
+                'database': [not_empty, unicode],
                 'port': [not_empty, convert_int]}
 
     def gather_stage(self,harvest_job):
