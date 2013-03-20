@@ -1,4 +1,5 @@
 import hashlib
+import logging
 import paste.auth.auth_tkt
 from paste.auth.auth_tkt import maybe_encode, encode_ip_timestamp
 from pylons import request
@@ -24,11 +25,16 @@ import ckan.plugins as p
 import ckan.model as model
 import ckanext.harvest.plugin
 import json
-from ckanext.harvest.logic.schema import harvest_source_db_to_form_schema
 from ckan.logic.converters import convert_from_extras
 from ckan.lib.navl.validators import ignore_missing
 from sqlalchemy.util import OrderedDict
 
+log = logging.getLogger(__name__)
+
+try:
+    from ckanext.harvest.logic.schema import harvest_source_db_to_form_schema
+except ImportError, e:
+    log.critical('Harvester not available %s' % str(e))
 
 def split_tags(tag):
     tags = []
