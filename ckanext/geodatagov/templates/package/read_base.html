@@ -1,0 +1,27 @@
+{% ckan_extends %}
+
+{% block package_organization %}
+  {{ super() }}
+
+  {% set collection_package_id = h.get_pkg_dict_extra(c.pkg_dict, 'collection_package_id', '') %}
+  {% if h.get_pkg_dict_extra(c.pkg_dict, 'collection_metadata', '') %}
+    <div class="module module-narrow">
+      <h2 class="module-heading"><i class="icon-list"></i> {{ _('Collection') }}</h2>
+      <div class="module-content">
+        <p>{{ _('This dataset is a collection of other datasets.') }}</p>
+        <p><a href="{{ h.url_for('search', collection_package_id=pkg_dict.id) }}" class="btn">{{ _('View all datasets') }}</a></p>
+      </div>
+    </div>
+  {% elif true collection_package_id %}
+    {% set collection_package = h.get_collection_package(collection_package_id) %}
+    <div class="module module-narrow">
+      <h2 class="module-heading"><i class="icon-list"></i> {{ _('Collection') }}</h2>
+      <div class="module-content">
+        <ul class="dataset-list unstyled">
+          {% snippet "snippets/package_item.html", package=collection_package, truncate=75 %}
+        </ul>
+      </div>
+    </div>
+  {% endif %}
+
+{% endblock %}
