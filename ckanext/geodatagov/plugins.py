@@ -123,12 +123,12 @@ class Demo(p.SingletonPlugin):
 
     def before_search(self, pkg_dict):
 
-        q = pkg_dict.get('q', '')
+        fq = pkg_dict.get('fq', '')
 
         # only show collections on bulk update page and when the facet is explictely added
 
-        if 'collection_package_id' not in q and 'bulk_process' not in request.path:
-            pkg_dict['q'] = q + ' -collection_package_id:["" TO *]'
+        if 'collection_package_id' not in fq and 'bulk_process' not in request.path:
+            pkg_dict['fq'] = fq + ' -collection_package_id:["" TO *]'
 
         return pkg_dict
 
