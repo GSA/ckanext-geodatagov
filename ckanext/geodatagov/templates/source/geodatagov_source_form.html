@@ -31,14 +31,14 @@
 </fieldset>
 
 <div class="control-group">
-  <label for="field-private_datasets" class="control-label">{{ _('Datasets Visibility') }}</label>
+  <label for="field-private_datasets" class="control-label">{{ _('Dataset visibility') }}</label>
   <div class="controls">
     <select id="field-private_datasets" name="private_datasets">
       {% for option in [(true, _('Private')), (false, _('Public'))] %}
       <option value="{{ option[0] }}" {% if option[0] == data.private_datasets %}selected="selected"{% endif %}>{{ option[1] }}</option>
       {% endfor %}
     </select>
-    <i class="icon-question-sign" title="{{ _('This will take effect the next time datasets are created or updated during a harvest job') }}" data-toggle="tooltip"></i>
+    <i class="icon-question-sign muted" title="{{ _('This will take effect the next time datasets are created or updated during a harvest job') }}" data-toggle="tooltip"></i>
   </div>
 </div>
 
@@ -56,7 +56,9 @@
         <option value="{{ group.name }}" {% if selected_group %} selected="selected" {% endif %}>{{ group.name }}</option>
       {% endfor %}
     </select>
-    <i class="icon-question-sign" title="{{ _('Datasets harvested from this source will be assigned to this group') }}" data-toggle="tooltip"></i>
+    <span class="select2-helper">
+      <i class="icon-question-sign muted" title="{{ _('Datasets harvested from this source will be assigned to this group') }}" data-toggle="tooltip"></i>
+    </span>
   </div>
 </div>
 {% endif %}
