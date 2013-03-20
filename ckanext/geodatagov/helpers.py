@@ -1,9 +1,14 @@
 import logging
 from ckan import plugins as p
 from ckan.lib import helpers as h
-from ckanext.geodatagov.harvesters.base import VALIDATION_PROFILES
 
 log = logging.getLogger(__name__)
+
+try:
+    from ckanext.geodatagov.harvesters.base import VALIDATION_PROFILES
+except ImportError, e:
+    log.critical('Harvester not available %s' % str(e))
+
 
 def get_validation_profiles():
     return VALIDATION_PROFILES
