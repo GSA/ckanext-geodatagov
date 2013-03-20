@@ -424,3 +424,10 @@ a {
   background-position: 0 0;
   background-image: url("../images/icon-fgdc.png");
 }
+.select2-helper {
+  position: relative;
+  top: -9px;
+}
+.select2-helper i {
+  line-height: 32px;
+}
