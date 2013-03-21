@@ -308,10 +308,12 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
 
         #try hard to get unique name
         name = _slugify(content.get('title') or content.get('item', ''))
+
         if not name or len(name) < 5:
             name = content['id']
+
+        name = name[:60]
         existing_pkg = model.Package.get(name)
-        name = name[:80]
         if existing_pkg and existing_pkg.id <> harvest_object.package_id:
             name = name + '_' + content['id']
         title = content.get('title')
@@ -324,7 +326,6 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
 
         extras = [dict(key='guid',value=harvest_object.guid),
                   dict(key='metadata_source',value='arcgis'),
-                  dict(key='arcgis_type',value=content['type']),
                   dict(key='tags',value=tags)]
 
         extent = content.get('extent')
@@ -355,10 +356,10 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
             resource_url = urlparse.urljoin(
                 source_url, resource_url)
 
-        if content['type'] in ['WMS']:
-            format = 'WMS'
+        if content['type'] in ['Web Map']:
+            format = 'HTML'
         else:
-            format = mimetypes.guess_type(urlparse.urlparse(resource_url).path)[0]
+            format = content['type'].upper()
 
         resource = {'url': resource_url, 'name': name,
                     'format': format}
