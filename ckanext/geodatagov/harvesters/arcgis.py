@@ -123,6 +123,7 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
 
         new_metadata = {}
 
+
         while start <> -1:
             search_path = 'sharing/search?f=pjson&q={query}&num={num}&start={start}'.format(
                 query=query,
@@ -131,8 +132,8 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
             )
             url = urlparse.urljoin(source_url, search_path)
 
-            r = requests.get(url)
             try:
+                r = requests.get(url)
                 r.raise_for_status()
             except requests.exceptions.RequestException, e:
                 self._save_gather_error('Unable to get content for URL: %s: %r' % \
