@@ -429,6 +429,12 @@ a {
 .homepage .search-box input:focus {
   border-color: #000;
 }
+#hp-message {
+  margin: 10px;
+}
+#hp-message .alert {
+  margin: 0;
+}
 .format-label[data-format="ISO-19139"],
 .format-label[data-format*="ISO-19139"] {
   background-position: 0 0;
@@ -460,4 +466,11 @@ a {
 .format-label[data-format*=wms] {
   background-position: 0 0;
   background-image: url("../images/icon-wms.png");
+}
+#search-helper-message {
+  background-color: white;
+  padding: 5px 15px;
+  border: 1px solid #CCC;
+  border-width: 0 1px;
+  margin: 0 -1px;
 }
