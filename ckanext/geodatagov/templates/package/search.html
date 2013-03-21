@@ -17,8 +17,9 @@
   <section class="module">
     <div class="module-content">
       <form id="dataset-search" class="dataset-search clearfix" method="get" data-module="select-switch">
+        {% set search_placeholder = 'Search collection...' if request.params.collection_package_id else 'Search datasets...' %}
         <span class="control-group search-giant">
-          <input type="text" class="search" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search...') }}" />
+          <input type="text" class="search" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ search_placeholder }}" />
           <button type="submit" value="search">{{ _('Submit') }}</button>
         </span>
 
