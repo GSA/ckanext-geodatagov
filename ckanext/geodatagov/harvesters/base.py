@@ -1,5 +1,8 @@
+import re
+
 import requests
 from pylons import config
+from lxml import etree
 
 from ckan import plugins as p
 
@@ -96,9 +99,22 @@ class GeoDataGovHarvester(SpatialHarvester):
             # TODO: Provide an option to continue anyway
             return None
 
+        original_document = re.sub('<\?xml(.*)\?>', '', original_document)
+
+        tree = etree.fromstring(original_document)
+        comments = tree.xpath('//comment()')
+
+        for comment in comments:
+            p = comment.getparent()
+            if p:
+                p.remove(comment)
+
+        original_document = etree.tostring(tree)
+
         response = requests.post(transform_service,
                                  data=original_document.encode('utf8'),
                                  headers={'content-type': 'text/xml; charset=utf-8'})
+
         if response.status_code == 200:
             # XML coming from the conversion tool is already declared and encoded as utf-8
             return response.content

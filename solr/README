@@ -1,0 +1,4 @@
+This file has been copied from the schema-2.0.xml file in CKAN core,
+and includes the following modifications:
+
+    * Add 'spatial_geom' field to index geometries for the spatial query

@@ -18,6 +18,7 @@ from ckan.plugins.core import SingletonPlugin, implements
 from ckanext.spatial.harvesters.base import SpatialHarvester
 from ckan.logic import get_action, ValidationError
 from ckan.lib.navl.validators import not_empty, ignore_empty
+from ckan.logic.validators import boolean_validator
 from HTMLParser import HTMLParser
 
 TYPES =  ['Web Map','KML', 'Mobile Application',
@@ -98,7 +99,7 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
 
     def extra_schema(self):
         return {
-            'private_datasets': [ignore_empty],
+            'private_datasets': [ignore_empty, boolean_validator],
          }
 
     def gather_stage(self, harvest_job):
@@ -123,7 +124,7 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
         new_metadata = {}
 
         while start <> -1:
-            search_path = '/sharing/search?f=pjson&q={query}&num={num}&start={start}'.format(
+            search_path = 'sharing/search?f=pjson&q={query}&num={num}&start={start}'.format(
                 query=query,
                 num=num,
                 start=start,

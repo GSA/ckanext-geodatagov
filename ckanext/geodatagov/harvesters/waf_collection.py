@@ -22,8 +22,9 @@ class WAFCollectionHarvester(GeoDataGovWAFHarvester):
             }
 
     def extra_schema(self):
-        return {'validator_profiles': [unicode, ignore_empty, validate_profiles, lambda value: [value]],
-                'collection_metadata_url': [not_empty, unicode]}
+        extra_schema = super(WAFCollectionHarvester, self).extra_schema()
+        extra_schema['collection_metadata_url'] = [not_empty, unicode]
+        return extra_schema
 
     def get_package_dict(self, iso_values, harvest_object):
 

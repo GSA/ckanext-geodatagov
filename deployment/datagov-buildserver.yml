@@ -76,6 +76,9 @@
     - name: install requirements for harvest
       action: pip requirements=/usr/lib/ckan/src/ckanext-harvest/pip-requirements.txt virtualenv=/usr/lib/ckan/
 
+    - name: install requirements for qa
+      action: pip requirements=/usr/lib/ckan/src/ckanext-qa/pip-requirements.txt virtualenv=/usr/lib/ckan/
+
     - name: install supervisor
       action: pip name=supervisor virtualenv=/usr/lib/ckan/
 
