@@ -12,7 +12,7 @@
           <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque feugiat nisi aliquet lectus mattis faucibus? Mauris ultrices magna eu est mollis sed gravida mi semper. Praesent lacus magna, facilisis nec accumsan vel, blandit vitae ante. Donec commodo adipiscing rutrum. Vestibulum id ligula nec urna malesuada dictum a a ante.</p>
         </div>
         <form class="search-box clearfix" method="get" action="{% url_for controller='package', action='search' %}">
-          <h3 class="heading">{{ _('Search Geospatial Data') }}</h3>
+          <h3 class="heading">{{ _('Search geospatial data') }}</h3>
           <span class="control-group search-giant">
             <input type="text" class="search" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('eg. Maritime Biology') }}" />
             <button type="submit" value="{{ _('Search') }}">Submit</button>
