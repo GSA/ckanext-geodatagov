@@ -146,6 +146,21 @@ a {
   background-image: url("../images/logo.png");
   width: 239px;
 }
+.masthead .container .beta {
+  position: absolute;
+  top: 25px;
+  left: 475px;
+  background-color: #5881b0;
+  text-transform: uppercase;
+  padding: 3px 5px;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 1;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -o-border-radius: 2px;
+  border-radius: 2px;
+}
 .masthead .container .account-wrapper {
   float: right;
   padding: 10px;
