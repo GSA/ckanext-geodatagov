@@ -146,6 +146,20 @@ a {
   background-image: url("../images/logo.png");
   width: 239px;
 }
+.masthead .container .beta {
+  position: absolute;
+  top: 25px;
+  background-color: #5881b0;
+  text-transform: uppercase;
+  padding: 3px 5px;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 1;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -o-border-radius: 2px;
+  border-radius: 2px;
+}
 .masthead .container .account-wrapper {
   float: right;
   padding: 10px;
@@ -424,15 +438,16 @@ a {
   background-position: 0 0;
   background-image: url("../images/icon-fgdc.png");
 }
-.module-content.collection-package {
-  padding-bottom: 0;
-}
-.module-content.collection-package h3 {
-  margin-top: 0;
 .select2-helper {
   position: relative;
   top: -9px;
 }
 .select2-helper i {
   line-height: 32px;
+}
+.module-content.collection-package {
+  padding-bottom: 0;
+}
+.module-content.collection-package h3 {
+  margin-top: 0;
 }
