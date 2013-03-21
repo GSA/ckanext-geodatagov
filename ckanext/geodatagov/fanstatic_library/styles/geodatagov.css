@@ -474,3 +474,14 @@ a {
   border-width: 0 1px;
   margin: 0 -1px;
 }
+#debug-toggle,
+.masthead .debug {
+  color: #999;
+}
+.masthead .debug {
+  opacity: 0.6;
+}
+#debug {
+  text-align: left;
+  background-color: white;
+}
