@@ -1,5 +1,12 @@
 {% ckan_extends %}
 
+{% block toolbar %}
+  {{ super() }}
+  <div id="search-helper-message">
+    <p>To find datasets, enter your search terms in the search box below or browse through the categories on the left.  As you browse, you will be refining and narrowing your search.  To broaden your search again, click on the "clear all" link at the top of any category or on the "X" to the right of any single term.</p>
+  </div>
+{% endblock %}
+
 {% block primary_content %}
   {% if request.params.collection_package_id %}
     <div class="module">

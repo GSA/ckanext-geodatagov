@@ -424,15 +424,25 @@ a {
   background-position: 0 0;
   background-image: url("../images/icon-fgdc.png");
 }
-.module-content.collection-package {
-  padding-bottom: 0;
-}
-.module-content.collection-package h3 {
-  margin-top: 0;
 .select2-helper {
   position: relative;
   top: -9px;
 }
 .select2-helper i {
   line-height: 32px;
+}
+.module-content.collection-package {
+  padding-bottom: 0;
+}
+.module-content.collection-package h3 {
+  margin-top: 0;
+}
+#search-helper-message {
+  background-color: white;
+  padding: 5px 15px;
+  border: 1px solid #CCC;
+  border-width: 0 1px;
+  margin: 0 -1px;
+  color: #999;
+  font-size: 12px;
 }
