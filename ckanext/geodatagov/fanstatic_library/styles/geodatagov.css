@@ -149,6 +149,7 @@ a {
 .masthead .container .beta {
   position: absolute;
   top: 25px;
+  left: 475px;
   background-color: #5881b0;
   text-transform: uppercase;
   padding: 3px 5px;
