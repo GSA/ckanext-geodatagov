@@ -36,6 +36,43 @@ try:
 except ImportError, e:
     log.critical('Harvester not available %s' % str(e))
 
+
+RESOURCE_MAPPING = {
+    'text/html': 'HTML',
+    'application/zip': 'ZIP',
+    'application/xml': 'XML',
+    'application/x-netcdf': 'NetCDF',
+    'application/x-httpd-php': 'HTML',
+    'application/pdf': 'PDF',
+    'application/x-msdos-program': 'EXE',
+    'arcgis_rest': 'Esri REST',
+    'application/vnd.ms-excel': 'Excel',
+    'application/x-tar': 'TAR',
+    'wms': 'WMS',
+    'application/rar': 'RAR',
+    'application/x-qgis': 'QGIS',
+    'wfs': ' WFS',
+    'text/plain': 'TXT',
+    'application/msaccess': 'Access',
+    'image/jpeg': 'JPEG',
+    'audio/prs.sid': 'MrSID',
+    'kml': 'KML',
+    'image/tiff': 'TIFF',
+    'kmz': 'KMZ',
+    'wcs': 'WCS',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'OpenXML',
+    'text/x-perl': 'Perl',
+    'application/msword': 'DOC',
+    'text/csv': 'CSV',
+    'image/x-ms-bmp': 'BMP',
+    'chemical/x-xyz': 'XYZ',
+    'image/png': 'PNG',
+}
+
+
+
+
+
 def split_tags(tag):
     tags = []
     for tag in tag.split(','):
@@ -137,6 +174,17 @@ class Demo(p.SingletonPlugin):
             pkg_dict['fq'] = fq + ' -collection_package_id:["" TO *]'
 
         return pkg_dict
+
+
+    def after_show(self, context, data_dict):
+
+        if 'resources' in data_dict:
+            formats = RESOURCE_MAPPING.keys()
+            for resource in data_dict['resources']:
+                if resource['format'] in formats:
+                    resource['format'] = RESOURCE_MAPPING[resource['format']]
+
+        return data_dict
 
     ## ITemplateHelpers
 
