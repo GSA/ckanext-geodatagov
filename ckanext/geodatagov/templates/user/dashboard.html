@@ -1,7 +1,6 @@
 {% ckan_extends %}
 
 {% block secondary_content %}
-  {{ super() }}
   {% set organizations = h.organizations_available(permission='read') %}
   <div class="module module-narrow module-shallow">
     <h2 class="module-heading">
@@ -19,7 +18,7 @@
       </ul>
     {% else %}
       <div class="module-content">
-        <p class="empty">{{ _('You do not have any organizations') }}</p>
+        <p class="empty">{{ _('You are currently not a member of any organizations') }}</p>
       </div>
     {% endif %}
   </div>
