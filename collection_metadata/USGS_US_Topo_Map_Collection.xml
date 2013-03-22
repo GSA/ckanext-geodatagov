@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE metadata SYSTEM "http://thor-f5.er.usgs.gov/ngtoc/metadata/fgdc-std-001-1998.dtd">
 <metadata>
   <idinfo>
@@ -16,8 +16,9 @@
       </citeinfo>
     </citation>
     <descript>
-      <abstract>Layered GeoPDF 7.5 Minute Quadrangle Map. Layers of geospatial data include orthoimagery, roads, grids, geographic names, elevation contours, hydrography, and other selected map features.</abstract>
-      <purpose>This map depicts geographic features on the surface of the earth. It is a general purpose map for users who are not GIS experts. One intended purpose is to support emergency response at all levels of government. The geospatial data in this map are from selected National Map data holdings and other government sources.</purpose>
+      <abstract>Layered GeoPDF 7.5 Minute Quadrangle Map. Layers of geospatial data include orthoimagery, roads, grids, geographic names, elevation contours, hydrography, and other selected map features.
+This map depicts geographic features on the surface of the earth. One intended purpose is to support emergency response at all levels of government. The geospatial data in this map are from selected National Map data holdings and other government sources.</abstract>
+<purpose>These are general purpose maps for users who are not GIS experts. </purpose>
       <supplinf>Bounding Coordinates identified in FGDC metadata and reflect coverage defined by the USGS Cells database. More information available at: http://nationalmap.gov/ustopo/.</supplinf>
     </descript>
     <timeperd>
@@ -35,10 +36,12 @@
     </status>
     <spdom>
       <bounding>
-        <westbc>-179.1666667</westbc>
-        <eastbc>180</eastbc>
-        <northbc>71.5</northbc>
-        <southbc>17.625</southbc>
+*****************
+        <westbc>-72.875</westbc>
+        <eastbc>-72.75</eastbc>
+        <northbc>41</northbc>
+        <southbc>40.875</southbc>
+*****************
       </bounding>
     </spdom>
     <keywords>
@@ -66,6 +69,9 @@
         <placekt>Geographic Names Information System</placekt>
         <placekey>US</placekey>
         <placekey>United States</placekey>
+*****************
+        <placekey>New York</placekey>
+*****************
       </place>
     </keywords>
     <accconst>None</accconst>

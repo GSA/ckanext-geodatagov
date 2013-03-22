@@ -16,8 +16,8 @@
       </citeinfo>
     </citation>
     <descript>
-      <abstract>USGS Historical Quadrangle in GeoPDF.</abstract>
-      <purpose>The USGS Historical Quadrangle Scanning Project (HQSP) is scanning all scales and all editions of topographic maps published by the U.S. Geological Survey (USGS) since the inception of the topographic mapping program in 1884. This map is provided as a general purpose map in GeoPDF for users who are not GIS experts.</purpose>
+      <abstract>USGS Historical Quadrangle in GeoPDF. The USGS Historical Quadrangle Scanning Project (HQSP) is scanning all scales and all editions of topographic maps published by the U.S. Geological Survey (USGS) since the inception of the topographic mapping program in 1884. </abstract>
+      <purpose>This map is provided as a general purpose map in GeoPDF for users who are not GIS experts.</purpose>
       <supplinf>Bounding Coordinates identified in FGDC metadata and reflect coverage defined by the USGS Cells database. More information available at: http://nationalmap.gov/historical/.</supplinf>
     </descript>
     <timeperd>
@@ -35,10 +35,12 @@
     </status>
     <spdom>
       <bounding>
-        <westbc>-180</westbc>
-        <eastbc>180</eastbc>
-        <northbc>72</northbc>
-        <southbc>-14.3833333</southbc>
+*****************
+        <westbc>-79.875</westbc>
+        <eastbc>-79.75</eastbc>
+        <northbc>41.125</northbc>
+        <southbc>41</southbc>
+*****************
       </bounding>
     </spdom>
     <keywords>
@@ -48,10 +50,9 @@
       </theme>
       <place>
         <placekt>Geographic Names Information System</placekt>
-        <placekey>US</placekey>
-        <placekey>United States</placekey>
-        <placekey>Federated States of Micronesia</placekey>
-        <placekey>Republic of Palau</placekey>
+*****************
+        <placekey>PA</placekey>
+*****************
       </place>
     </keywords>
     <accconst>None</accconst>
