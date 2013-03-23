@@ -111,6 +111,7 @@ class DataGovHarvest(ckanext.harvest.plugin.Harvest):
 
         return OrderedDict([('frequency', 'Frequency'),
                             ('source_type','Type'),
+                            ('organization', 'Organizations'),
                             ('organization_type', 'Organization Types'),
                            ])
 
