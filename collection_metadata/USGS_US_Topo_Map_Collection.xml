@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE metadata SYSTEM "http://thor-f5.er.usgs.gov/ngtoc/metadata/fgdc-std-001-1998.dtd">
 <metadata>
   <idinfo>
@@ -36,12 +36,10 @@ This map depicts geographic features on the surface of the earth. One intended p
     </status>
     <spdom>
       <bounding>
-*****************
-        <westbc>-72.875</westbc>
-        <eastbc>-72.75</eastbc>
-        <northbc>41</northbc>
-        <southbc>40.875</southbc>
-*****************
+        <westbc>-179.1666667</westbc>
+        <eastbc>180</eastbc>
+        <northbc>71.5</northbc>
+        <southbc>17.625</southbc>
       </bounding>
     </spdom>
     <keywords>
@@ -69,9 +67,6 @@ This map depicts geographic features on the surface of the earth. One intended p
         <placekt>Geographic Names Information System</placekt>
         <placekey>US</placekey>
         <placekey>United States</placekey>
-*****************
-        <placekey>New York</placekey>
-*****************
       </place>
     </keywords>
     <accconst>None</accconst>
