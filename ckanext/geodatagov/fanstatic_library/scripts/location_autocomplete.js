@@ -44,6 +44,9 @@ this.ckan.module('location-autocomplete', function (jQuery, _) {
     setupAutoComplete: function () {
       var module = this;
       var previous_location = this._getParameterByName('ext_location');
+      if (previous_location) {
+        $('#ext_location').val(previous_location);
+      }
       var settings = {
         width: 'resolve',
         formatResult: this.formatResult,
