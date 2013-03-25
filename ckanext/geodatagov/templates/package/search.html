@@ -103,6 +103,11 @@
       <a href="{{ h.remove_url_param('ext_bbox') }}" class="action">{{ _('Clear') }}</a>
     </h2>
 
+    <input type="text" id="field-location" placeholder="{{ _('Enter location...') }}"
+           value="{{ request.params.ext_location }}"
+           data-module="location-autocomplete"
+           data-module-source="/api/action/location_search" />
+
     <div class="dataset-map" data-module="spatial-query">
       <div id="dataset-map-container"></div>
       <div id="dataset-map-attribution">
