@@ -129,7 +129,7 @@ class Demo(p.SingletonPlugin):
     p.implements(p.IPackageController, inherit=True)
     p.implements(p.ITemplateHelpers)
     p.implements(p.IFacets, inherit=True)
-
+    p.implements(p.IActions)
 
     def update_config(self, config):
         # add template directory
@@ -196,6 +196,18 @@ class Demo(p.SingletonPlugin):
                 'get_validation_profiles': geodatagov_helpers.get_validation_profiles,
                 'get_collection_package': geodatagov_helpers.get_collection_package,
                 }
+
+    ## IActions
+
+    def get_actions(self):
+
+        from ckanext.geodatagov.logic import location_search
+
+        return {'location_search': location_search}
+
+
+
+    ## IFacets
 
     def dataset_facets(self, facets_dict, package_type):
 
