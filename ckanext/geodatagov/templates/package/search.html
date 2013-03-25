@@ -13,7 +13,7 @@
       {% snippet "snippets/related_collection.html", collection_package_id=request.params.collection_package_id %}
     </div>
   {% endif %}
-  
+
   <section class="module">
     <div class="module-content">
       <form id="dataset-search" class="dataset-search clearfix" method="get" data-module="select-switch">
@@ -93,15 +93,28 @@
 
 {% endblock %}
 
-{#
 
 {% block secondary_content %}
+  <section class="module module-narrow module-shallow">
+    <h2 class="module-heading">
+      <i class="icon-medium icon-globe"></i>
+      {{ _('Filter by location') }}
+      {# TODO: we need to also remove 'ext_prev_extent' and 'ext_location'!  #}
+      <a href="{{ h.remove_url_param('ext_bbox') }}" class="action">{{ _('Clear') }}</a>
+    </h2>
 
-  {{ h.snippet('snippets/facet_list.html', title='Groups', name='groups') }}
-  {{ h.snippet('snippets/facet_list.html', title='Tags', name='tags') }}
-  {{ h.snippet('snippets/facet_list.html', title='Organization', name='responsible-party') }}
-  {{ h.snippet('snippets/facet_list.html', title='Formats', name='res_format') }}
+    <div class="dataset-map" data-module="spatial-query">
+      <div id="dataset-map-container"></div>
+      <div id="dataset-map-attribution">
+        <div>Map data CC-BY-SA by <a href="http://openstreetmap.org">OpenStreetMap</a></div>
+        <div>Tiles by <a href="http://www.mapquest.com">MapQuest</a></div>
+      </div>
+    </div>
+
+    {% resource 'geodatagov/spatial_query' %}
+
+
+    {{ super() }}
 
 {% endblock %}
 
-#}
