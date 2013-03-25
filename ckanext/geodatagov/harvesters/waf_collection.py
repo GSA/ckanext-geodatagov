@@ -78,7 +78,7 @@ class WAFCollectionHarvester(GeoDataGovWAFHarvester):
             filter(HarvestObject.harvest_source_id==harvest_job.source.id).first()
 
         if existing_harvest_object:
-            status = 'changed'
+            status = 'change'
             guid = existing_harvest_object.guid
             package_id = existing_harvest_object.package_id
         else:
