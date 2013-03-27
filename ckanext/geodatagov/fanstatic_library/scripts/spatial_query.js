@@ -1,21 +1,5 @@
-/* An auto-complete module for select and input elements that can pull in
- * a list of terms from an API endpoint (provided using data-module-source).
- *
- * source   - A url pointing to an API autocomplete endpoint.
- * interval - The interval between requests in milliseconds (default: 1000).
- * items    - The max number of items to display (default: 10)
- * tags     - Boolean attribute if true will create a tag input.
- * key      - A string of the key you want to be the form value to end up on
- *            from the ajax returned results
- * label    - A string of the label you want to appear within the dropdown for
- *            returned results
- *
- * Examples
- *
- *   // <input name="tags" data-module="autocomplete" data-module-source="http://" />
- *
+/* Module for handling the spatial querying
  */
-// Dataset map module
 this.ckan.module('spatial-query', function (jQuery, _) {
 
   return {
