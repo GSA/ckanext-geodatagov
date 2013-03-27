@@ -23,11 +23,11 @@ this.ckan.module('spatial-query', function (jQuery, _) {
       i18n: {
       },
       style: {
-        color: '#B52',
+        color: '#F06F64',
         weight: 2,
         opacity: 1,
-        fillColor: '#FCF6CF',
-        fillOpacity: 0.4
+        fillColor: '#F06F64',
+        fillOpacity: 0.1
       },
       default_extent: [[15.62, -139.21], [64.92, -61.87]] //TODO: customize
       //[[90, 180], [-90, -180]]

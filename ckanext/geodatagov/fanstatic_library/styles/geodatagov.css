@@ -474,3 +474,29 @@ a {
   border-width: 0 1px;
   margin: 0 -1px;
 }
+.module-narrow #dataset-map-container {
+  height: 200px;
+}
+.module-content #dataset-map-container {
+  height: 250px;
+}
+#dataset-map-attribution {
+  font-size: 11px;
+  line-height: 1.5;
+}
+.module-narrow #dataset-map-attribution {
+  margin: 5px 8px;
+  color: #666;
+}
+.leaflet-draw-label-single {
+  display: none;
+}
+.leaflet-draw-label-subtext {
+  display: none;
+}
+#field-location {
+  width: 177px;
+}
+.select2-results .select2-no-results {
+  padding: 3px 6px;
+}
