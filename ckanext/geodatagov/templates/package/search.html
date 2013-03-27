@@ -99,8 +99,7 @@
     <h2 class="module-heading">
       <i class="icon-medium icon-globe"></i>
       {{ _('Filter by location') }}
-      {# TODO: we need to also remove 'ext_prev_extent' and 'ext_location'!  #}
-      <a href="{{ h.remove_url_param('ext_bbox') }}" class="action">{{ _('Clear') }}</a>
+      <a href="{{ h.remove_url_param(['ext_bbox','ext_prev_extent', 'ext_location']) }}" class="action">{{ _('Clear') }}</a>
     </h2>
 
     <input type="text" id="field-location" placeholder="{{ _('Enter location...') }}"
