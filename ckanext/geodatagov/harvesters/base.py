@@ -109,6 +109,19 @@ class GeoDataGovHarvester(SpatialHarvester):
             if p:
                 p.remove(comment)
 
+        ptvctcnt = tree.xpath('//ptvctcnt')
+        for node in ptvctcnt:
+            p = node.getparent()
+            if p and not node.text:
+                p.remove(node)
+
+        themekt = tree.xpath('//themekt')
+        for num, node in enumerate(themekt):
+            p = node.getparent()
+            ###remove all but first
+            if p and num > 0:
+                p.remove(node)
+
         original_document = etree.tostring(tree)
 
         response = requests.post(transform_service,

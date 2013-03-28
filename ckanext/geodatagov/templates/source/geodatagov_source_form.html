@@ -10,6 +10,7 @@
         {{ form.input('port', id='field-port', label=_('Port'), placeholder=_('eg. 3452'), value=data.port, error=errors.port, classes=['control-full']) }}
 
         {{ form.input('collection_metadata_url', id='feild-collection_metadata_url', label=_('Collection Metadata Url'), placeholder=_('eg. http://example.com/collection.xml'), value=data.collection_metadata_url, error=errors.port, classes=['control-full']) }}
+        {{ form.input('extra_search_criteria', id='field-extra_search_criteria', label=_('Extra Search Criteria'), placeholder=_('eg. accountid:0123456789ABCDEF'), value=data.extra_search_criteria, error=errors.extra_search_criteria, classes=['control-full']) }}
 
 
   <div data-module="reclinepreview" data-module-site_url="{{ h.dump_json(h.url('/', locale='default', qualified=true)) }}">
