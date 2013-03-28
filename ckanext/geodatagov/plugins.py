@@ -32,7 +32,7 @@ from sqlalchemy.util import OrderedDict
 log = logging.getLogger(__name__)
 
 try:
-    from ckanext.harvest.logic.schema import harvest_source_db_to_form_schema
+    from ckanext.harvest.logic.schema import harvest_source_show_package_schema
 except ImportError, e:
     log.critical('Harvester not available %s' % str(e))
 
@@ -95,12 +95,13 @@ class DataGovHarvest(ckanext.harvest.plugin.Harvest):
     def package_form(self):
         return 'source/geodatagov_source_form.html'
 
-    def db_to_form_schema(self):
+    def show_package_schema(self):
         '''
         Returns the schema for mapping package data from the database into a
         format suitable for the form
         '''
-        schema = harvest_source_db_to_form_schema()
+
+        schema = harvest_source_show_package_schema()
         schema['config'] = [convert_from_extras, harvest_source_convert_from_config, ignore_missing]
         return schema
 
