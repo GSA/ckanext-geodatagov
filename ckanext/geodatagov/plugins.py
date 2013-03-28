@@ -129,6 +129,7 @@ class Demo(p.SingletonPlugin):
     p.implements(p.IConfigurer)
     p.implements(p.IPackageController, inherit=True)
     p.implements(p.ITemplateHelpers)
+    p.implements(p.IActions)
     p.implements(p.IFacets, inherit=True)
 
 
@@ -197,6 +198,20 @@ class Demo(p.SingletonPlugin):
                 'get_validation_profiles': geodatagov_helpers.get_validation_profiles,
                 'get_collection_package': geodatagov_helpers.get_collection_package,
                 }
+
+    ## IActions
+
+    def get_actions(self):
+
+        from ckanext.geodatagov import logic as geodatagov_logic
+
+        return {
+            'group_show': geodatagov_logic.group_show,
+            'organization_show': geodatagov_logic.organization_show,
+        }
+
+
+    ## IFacets
 
     def dataset_facets(self, facets_dict, package_type):
 
