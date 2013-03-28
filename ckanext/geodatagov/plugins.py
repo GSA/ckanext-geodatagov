@@ -109,10 +109,10 @@ class DataGovHarvest(ckanext.harvest.plugin.Harvest):
         if package_type <> 'harvest':
             return facets_dict
 
-        return OrderedDict([('frequency', 'Frequency'),
+        return OrderedDict([('organization_type', 'Organization Types'),
+                            ('frequency', 'Frequency'),
                             ('source_type','Type'),
                             ('organization', 'Organizations'),
-                            ('organization_type', 'Organization Types'),
                            ])
 
     def organization_facets(self, facets_dict, organization_type, package_type):
@@ -203,11 +203,11 @@ class Demo(p.SingletonPlugin):
         if package_type != 'dataset':
             return facets_dict
 
-        return OrderedDict([('organization', 'Organizations'),
+        return OrderedDict([('organization_type', 'Organization Types'),
+                            ('organization', 'Organizations'),
                             ('groups', 'Groups'),
                             ('tags','Tags'),
                             ('res_format', 'Formats'),
-                            ('organization_type', 'Organization Types'),
                            ])
 
     def organization_facets(self, facets_dict, organization_type, package_type):
@@ -226,10 +226,10 @@ class Demo(p.SingletonPlugin):
     def group_facets(self, facets_dict, organization_type, package_type):
 
         if not package_type:
-            return OrderedDict([('tags','Tags'),
+            return OrderedDict([('organization_type', 'Organization Types'),
+                                ('tags','Tags'),
                                 ('res_format', 'Formats'),
                                 ('organization', 'Organizations'),
-                                ('organization_type', 'Organization Types'),
                                ])
         else:
             return facets_dict
