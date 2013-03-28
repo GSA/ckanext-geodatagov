@@ -198,13 +198,17 @@ class Demo(p.SingletonPlugin):
                 'get_validation_profiles': geodatagov_helpers.get_validation_profiles,
                 'get_collection_package': geodatagov_helpers.get_collection_package,
                 }
+
     ## IActions
 
     def get_actions(self):
 
-        from ckanext.geodatagov.logic import group_show
+        from ckanext.geodatagov import logic as geodatagov_logic
 
-        return {'group_show': group_show}
+        return {
+            'group_show': geodatagov_logic.group_show,
+            'organization_show': geodatagov_logic.organization_show,
+        }
 
 
     ## IFacets
