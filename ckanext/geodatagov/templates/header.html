@@ -83,7 +83,7 @@
                 { 'url': h.url_for('home'),
                   'label': _('Home'),
                   'selected': (c.controller == 'home') },
-                { 'url': h.url_for('search'),
+                { 'url': h.url_for('search') + '?organization_type=Federal+Government',
                   'label': _('Datasets'),
                   'check': '/dataset' },
                 { 'url': h.url_for('organizations_index'),
