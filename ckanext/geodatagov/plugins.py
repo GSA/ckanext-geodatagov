@@ -130,6 +130,7 @@ class Demo(p.SingletonPlugin):
     p.implements(p.IPackageController, inherit=True)
     p.implements(p.ITemplateHelpers)
     p.implements(p.IActions)
+    p.implements(p.IAuthFunctions)
     p.implements(p.IFacets, inherit=True)
 
 
@@ -210,6 +211,17 @@ class Demo(p.SingletonPlugin):
             'organization_show': geodatagov_logic.organization_show,
         }
 
+    ## IAuthFunctions
+
+    def get_auth_functions(self):
+
+        from ckanext.geodatagov import auth as geodatagov_auth
+
+        return {
+            'related_create': geodatagov_auth.related_create,
+            'related_update': geodatagov_auth.related_update,
+            'user_create': geodatagov_auth.user_create,
+        }
 
     ## IFacets
 
