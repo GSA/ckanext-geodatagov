@@ -213,10 +213,11 @@ class Demo(p.SingletonPlugin):
         if 'resources' in data_dict:
             formats = RESOURCE_MAPPING.keys()
             for resource in data_dict['resources']:
-                if resource['format'].lower() in formats:
-                    resource['format'] = RESOURCE_MAPPING[resource['format']][0]
+                resource_format = resource.get('format', '').lower()
+                if resource_format in formats:
+                    resource['format'] = RESOURCE_MAPPING[resource_format][0]
                     if resource.get('name') == 'Unnamed resource':
-                        resource['name'] = RESOURCE_MAPPING[resource['format']][1]
+                        resource['name'] = RESOURCE_MAPPING[resource_format][1]
                 elif resource.get('name') == 'Unnamed resource':
                     resource['name'] = 'Web Link'
         return data_dict
