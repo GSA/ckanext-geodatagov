@@ -216,6 +216,7 @@ class Demo(p.SingletonPlugin):
         return {
             'group_show': geodatagov_logic.group_show,
             'organization_show': geodatagov_logic.organization_show,
+            'organization_list': geodatagov_logic.organization_list,
         }
 
     ## IAuthFunctions
