@@ -39,34 +39,57 @@ except ImportError, e:
 
 RESOURCE_MAPPING = {
     'text/html': ('HTML', 'Web Link'),
+    'html': ('HTML', 'Web Link'),
     'application/zip': ('ZIP', 'Zip File'),
+    'zip': ('ZIP', 'Zip File'),
     'application/xml': ('XML', 'XML File'),
+    'xml': ('xml', 'XML File'),
     'application/x-netcdf': ('NetCDF', 'NetCDF File'),
+    'NetCDF': ('NetCDF', 'NetCDF File'),
     'application/x-httpd-php': ('HTML', 'Web Link'),
     'application/pdf': ('PDF', 'PDF File'),
+    'pdf': ('PDF', 'PDF File'),
     'application/x-msdos-program': ('EXE', 'Windows Executable'),
+    'exe': ('EXE', 'Windows Executable'),
     'arcgis_rest': ('Esri REST', 'Esri Rest API Endpoint'),
+    'esri rest': ('Esri REST', 'Esri Rest API Endpoint'),
     'application/vnd.ms-excel': ('Excel', 'Excel Document'),
+    'excel': ('Excel', 'Excel Document'),
     'application/x-tar': ('TAR', 'TAR Compressed File'),
+    'tar': ('TAR', 'TAR Compressed File'),
     'wms': ('WMS', 'Web Mapping Service'),
     'application/rar': ('RAR', 'RAR Compressed File'),
+    'rar': ('RAR', 'RAR Compressed File'),
     'application/x-qgis': ('QGIS', 'QGIS File'),
+    'qgis': ('QGIS', 'QGIS File'),
     'wfs': ('WFS', 'Web Feature Service'),
     'text/plain': ('TXT', 'Text File'),
+    'txt': ('TXT', 'Text File'),
     'application/msaccess': ('Acesss', 'Access Database'),
+    'access': ('Acesss', 'Access Database'),
     'image/jpeg': ('JPEG', 'JPEG Image File'),
+    'jpeg': ('JPEG', 'JPEG Image File'),
     'audio/prs.sid': ('MrSID', 'MrSID'),
+    'mrsid': ('MrSID', 'MrSID'),
     'kml': ('KML', 'KML File'),
     'image/tiff': ('TIFF', 'TIFF Image File'),
+    'tiff': ('TIFF', 'TIFF Image File'),
     'kmz': ('KMZ', 'KMZ File'),
     'wcs': ('WCS', 'Web Coverage Service'),
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ('OpenXML', 'OpenXML'),
+    'openXML': ('OpenXML', 'OpenXML'),
     'text/x-perl': ('Perl', 'Perl Script'),
+    'perl': ('Perl', 'Perl Script'),
     'application/msword': ('DOC', 'Microsoft Word File'),
+    'doc': ('DOC', 'Microsoft Word File'),
     'text/csv': ('CSV', 'Comma Seperated Variable File'),
+    'csv': ('CSV', 'Comma Seperated Variable File'),
     'image/x-ms-bmp': ('BMP', 'Bitmap Image File'),
+    'bmp': ('BMP', 'Bitmap Image File'),
     'chemical/x-xyz': ('XYZ', 'XYZ'),
+    'xyz': ('XYZ', 'XYZ'),
     'image/png': ('PNG', 'PNG Image File'),
+    'png': ('PNG', 'PNG Image File'),
 }
 
 
@@ -190,7 +213,7 @@ class Demo(p.SingletonPlugin):
         if 'resources' in data_dict:
             formats = RESOURCE_MAPPING.keys()
             for resource in data_dict['resources']:
-                if resource['format'] in formats:
+                if resource['format'].lower() in formats:
                     resource['format'] = RESOURCE_MAPPING[resource['format']][0]
                     if resource.get('name') == 'Unnamed resource':
                         resource['name'] = RESOURCE_MAPPING[resource['format']][1]
