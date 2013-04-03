@@ -38,38 +38,36 @@ except ImportError, e:
 
 
 RESOURCE_MAPPING = {
-    'text/html': 'HTML',
-    'application/zip': 'ZIP',
-    'application/xml': 'XML',
-    'application/x-netcdf': 'NetCDF',
-    'application/x-httpd-php': 'HTML',
-    'application/pdf': 'PDF',
-    'application/x-msdos-program': 'EXE',
-    'arcgis_rest': 'Esri REST',
-    'application/vnd.ms-excel': 'Excel',
-    'application/x-tar': 'TAR',
-    'wms': 'WMS',
-    'application/rar': 'RAR',
-    'application/x-qgis': 'QGIS',
-    'wfs': ' WFS',
-    'text/plain': 'TXT',
-    'application/msaccess': 'Access',
-    'image/jpeg': 'JPEG',
-    'audio/prs.sid': 'MrSID',
-    'kml': 'KML',
-    'image/tiff': 'TIFF',
-    'kmz': 'KMZ',
-    'wcs': 'WCS',
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'OpenXML',
-    'text/x-perl': 'Perl',
-    'application/msword': 'DOC',
-    'text/csv': 'CSV',
-    'image/x-ms-bmp': 'BMP',
-    'chemical/x-xyz': 'XYZ',
-    'image/png': 'PNG',
+    'text/html': ('HTML', 'Web Link'),
+    'application/zip': ('ZIP', 'Zip File'),
+    'application/xml': ('XML', 'XML File'),
+    'application/x-netcdf': ('NetCDF', 'NetCDF File'),
+    'application/x-httpd-php': ('HTML', 'Web Link'),
+    'application/pdf': ('PDF', 'PDF File'),
+    'application/x-msdos-program': ('EXE', 'Windows Executable'),
+    'arcgis_rest': ('Esri REST', 'Esri Rest API Endpoint'),
+    'application/vnd.ms-excel': ('Excel', 'Excel Document'),
+    'application/x-tar': ('TAR', 'TAR Compressed File'),
+    'wms': ('WMS', 'Web Mapping Service'),
+    'application/rar': ('RAR', 'RAR Compressed File'),
+    'application/x-qgis': ('QGIS', 'QGIS File'),
+    'wfs': ('WFS', 'Web Feature Service'),
+    'text/plain': ('TXT', 'Text File'),
+    'application/msaccess': ('Acesss', 'Access Database'),
+    'image/jpeg': ('JPEG', 'JPEG Image File'),
+    'audio/prs.sid': ('MrSID', 'MrSID'),
+    'kml': ('KML', 'KML File'),
+    'image/tiff': ('TIFF', 'TIFF Image File'),
+    'kmz': ('KMZ', 'KMZ File'),
+    'wcs': ('WCS', 'Web Coverage Service'),
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ('OpenXML', 'OpenXML'),
+    'text/x-perl': ('Perl', 'Perl Script'),
+    'application/msword': ('DOC', 'Microsoft Word File'),
+    'text/csv': ('CSV', 'Comma Seperated Variable File'),
+    'image/x-ms-bmp': ('BMP', 'Bitmap Image File'),
+    'chemical/x-xyz': ('XYZ', 'XYZ'),
+    'image/png': ('PNG', 'PNG Image File'),
 }
-
-
 
 
 
@@ -159,6 +157,7 @@ class Demo(p.SingletonPlugin):
             if result:
                 organization['organization_type'] = result[0]
 
+
         return pkg_dict
 
     def before_index(self, pkg_dict):
@@ -192,8 +191,11 @@ class Demo(p.SingletonPlugin):
             formats = RESOURCE_MAPPING.keys()
             for resource in data_dict['resources']:
                 if resource['format'] in formats:
-                    resource['format'] = RESOURCE_MAPPING[resource['format']]
-
+                    resource['format'] = RESOURCE_MAPPING[resource['format']][0]
+                    if resource.get('name') == 'Unnamed resource':
+                        resource['name'] = RESOURCE_MAPPING[resource['format']][1]
+                elif resource.get('name') == 'Unnamed resource':
+                    resource['name'] = 'Web Link'
         return data_dict
 
     ## ITemplateHelpers
