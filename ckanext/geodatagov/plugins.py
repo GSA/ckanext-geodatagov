@@ -152,6 +152,13 @@ class Demo(p.SingletonPlugin):
                 pkg_dict['extras'].pop(num)
                 break
 
+        organization = pkg_dict.get('organization')
+        if organization:
+            result = model.Session.query(model.GroupExtra.value).filter_by(
+                key='organization_type', group_id=organization['id']).first()
+            if result:
+                organization['organization_type'] = result[0]
+
         return pkg_dict
 
     def before_index(self, pkg_dict):
