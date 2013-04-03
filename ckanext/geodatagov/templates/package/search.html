@@ -66,7 +66,7 @@
           <p><strong>There was an error while searching.</strong> Please try again.</p>
         {% endtrans %}
       {% endif %}
-      {{ h.snippet('snippets/package_list.html', packages=c.page.items) }}
+      {{ h.snippet('snippets/package_list.html', packages=c.page.items, show_organization=true) }}
     </div>
 
     {{ c.page.pager(q=c.q) }}

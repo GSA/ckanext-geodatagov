@@ -474,3 +474,81 @@ a {
   border-width: 0 1px;
   margin: 0 -1px;
 }
+.dataset-item {
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+.dataset-item .dataset-content {
+  padding: 20px 0;
+}
+.dataset-item .dataset-organization {
+  display: inline;
+  font-style: italic;
+}
+.dataset-item .notes div {
+  display: inline;
+}
+.dataset-item .notes .empty {
+  display: inline;
+  margin-bottom: 0;
+}
+.dataset-item.has-organization .notes {
+  padding-right: 50px;
+}
+.results {
+  margin-bottom: 0;
+}
+.context-info .module-content {
+  position: relative;
+  overflow: hidden;
+}
+.organization-type {
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
+  -webkit-transform-origin: top left;
+  -moz-transform-origin: top left;
+  -ms-transform-origin: top left;
+  -o-transform-origin: top left;
+  transform-origin: top left;
+  position: absolute;
+  right: 0;
+  width: 120px;
+  height: 26px;
+  line-height: 26px;
+  text-align: center;
+  top: -18px;
+  right: -54px;
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+  background-color: #666;
+}
+.organization-type[data-organization-type="federal"] {
+  background-color: #71999f;
+}
+.organization-type[data-organization-type="university"] {
+  background-color: #71769f;
+}
+.organization-type[data-organization-type="state"] {
+  background-color: #8e719f;
+}
+.organization-type[data-organization-type="tribal"] {
+  background-color: #9f718e;
+}
+.organization-type[data-organization-type="non-profit"] {
+  background-color: #9f7771;
+}
+.organization-type[data-organization-type="other"] {
+  background-color: #9f9a71;
+}
+.organization-type[data-organization-type="local"] {
+  background-color: #829f71;
+}
+.organization-type[data-organization-type="commercial"] {
+  background-color: #719f83;
+}
