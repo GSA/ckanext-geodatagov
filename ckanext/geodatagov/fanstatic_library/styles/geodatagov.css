@@ -472,11 +472,20 @@ a {
   background-image: url("../images/icon-wms.png");
 }
 #search-helper-message {
-  background-color: white;
-  padding: 5px 15px;
-  border: 1px solid #CCC;
-  border-width: 0 1px;
-  margin: 0 -1px;
+  display: none;
+  position: absolute;
+  z-index: 1;
+  color: #FFF;
+  background-color: #000;
+  background-color: rgba(0, 0, 0, 0.85);
+  padding: 10px 15px;
+  width: 300px;
+  right: 0;
+  top: 35px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
 }
 .dataset-item {
   position: relative;
