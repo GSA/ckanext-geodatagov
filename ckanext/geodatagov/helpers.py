@@ -1,4 +1,8 @@
+import urllib
 import logging
+
+from pylons import config
+
 from ckan import plugins as p
 from ckan.lib import helpers as h
 
@@ -72,3 +76,27 @@ def get_harvest_source_link(package_dict):
        return p.toolkit.literal(link)
 
     return ''
+
+def resource_preview_custom(resource, pkg_id):
+
+    viewer_url = config.get('ckanext.geodatagov.spatial_preview.url')
+    formats = config.get('ckanext.geodatagov.spatial_preview.formats', 'wms kml kmz').strip().split(' ')
+
+    if viewer_url and resource.get('url') and resource.get('format','').lower() in formats:
+        params= {
+            'url': resource['url'],
+            'serviceType': resource['format'].lower(),
+        }
+        if resource.get('default_srs'):
+            params['srs'] = resource['default_srs']
+
+        url = '{viewer_url}?{params}'.format(
+                viewer_url=viewer_url,
+                params=urllib.urlencode(params))
+
+        return p.toolkit.render_snippet("dataviewer/snippets/data_preview.html",
+               data={'embed': False,
+               'resource_url': url,
+               'raw_resource_url': resource['url']})
+
+    return h.resource_preview(resource, pkg_id)
