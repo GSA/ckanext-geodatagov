@@ -3,7 +3,7 @@ import logging
 
 import ckan.plugins as p
 from ckan.logic import side_effect_free
-
+from ckan.logic.action import get as core_get
 
 log = logging.getLogger(__name__)
 
@@ -50,3 +50,15 @@ def location_search(context, data_dict):
                     'text': row['display_name'],
                     'geom': json.loads(row['geom'])})
     return out
+
+def group_show(context, data_dict):
+
+    context.update({'limits': {'packages': 2}})
+
+    return core_get.group_show(context, data_dict)
+
+def organization_show(context, data_dict):
+
+    context.update({'limits': {'packages': 2}})
+
+    return core_get.organization_show(context, data_dict)

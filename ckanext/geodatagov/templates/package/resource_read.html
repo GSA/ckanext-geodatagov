@@ -1,0 +1,5 @@
+{% ckan_extends %}
+
+{% block data_preview %}
+  {{ h.resource_preview_custom(c.resource, c.package.id) }}
+{% endblock %}

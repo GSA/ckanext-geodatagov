@@ -109,9 +109,10 @@ class DataGovHarvest(ckanext.harvest.plugin.Harvest):
         if package_type <> 'harvest':
             return facets_dict
 
-        return OrderedDict([('frequency', 'Frequency'),
+        return OrderedDict([('organization_type', 'Organization Types'),
+                            ('frequency', 'Frequency'),
                             ('source_type','Type'),
-                            ('organization_type', 'Organization Types'),
+                            ('organization', 'Organizations'),
                            ])
 
     def organization_facets(self, facets_dict, organization_type, package_type):
@@ -128,6 +129,8 @@ class Demo(p.SingletonPlugin):
     p.implements(p.IConfigurer)
     p.implements(p.IPackageController, inherit=True)
     p.implements(p.ITemplateHelpers)
+    p.implements(p.IActions)
+    p.implements(p.IAuthFunctions)
     p.implements(p.IFacets, inherit=True)
     p.implements(p.IActions)
 
@@ -148,6 +151,13 @@ class Demo(p.SingletonPlugin):
                 pkg_dict['tags'] = tags
                 pkg_dict['extras'].pop(num)
                 break
+
+        organization = pkg_dict.get('organization')
+        if organization:
+            result = model.Session.query(model.GroupExtra.value).filter_by(
+                key='organization_type', group_id=organization['id']).first()
+            if result:
+                organization['organization_type'] = result[0]
 
         return pkg_dict
 
@@ -195,17 +205,33 @@ class Demo(p.SingletonPlugin):
                 'get_harvest_source_link': geodatagov_helpers.get_harvest_source_link,
                 'get_validation_profiles': geodatagov_helpers.get_validation_profiles,
                 'get_collection_package': geodatagov_helpers.get_collection_package,
+                'resource_preview_custom': geodatagov_helpers.resource_preview_custom,
                 }
 
     ## IActions
 
     def get_actions(self):
 
-        from ckanext.geodatagov.logic import location_search
 
-        return {'location_search': location_search}
+        from ckanext.geodatagov import logic as geodatagov_logic
 
+        return {
+            'group_show': geodatagov_logic.group_show,
+            'organization_show': geodatagov_logic.organization_show,
+            'location_search': geodatagov_logic.location_search,
+        }
 
+    ## IAuthFunctions
+
+    def get_auth_functions(self):
+
+        from ckanext.geodatagov import auth as geodatagov_auth
+
+        return {
+            'related_create': geodatagov_auth.related_create,
+            'related_update': geodatagov_auth.related_update,
+            'user_create': geodatagov_auth.user_create,
+        }
 
     ## IFacets
 
@@ -214,11 +240,11 @@ class Demo(p.SingletonPlugin):
         if package_type != 'dataset':
             return facets_dict
 
-        return OrderedDict([('organization', 'Organizations'),
+        return OrderedDict([('organization_type', 'Organization Types'),
+                            ('organization', 'Organizations'),
                             ('groups', 'Groups'),
                             ('tags','Tags'),
                             ('res_format', 'Formats'),
-                            ('organization_type', 'Organization Types'),
                            ])
 
     def organization_facets(self, facets_dict, organization_type, package_type):
@@ -237,10 +263,10 @@ class Demo(p.SingletonPlugin):
     def group_facets(self, facets_dict, organization_type, package_type):
 
         if not package_type:
-            return OrderedDict([('tags','Tags'),
+            return OrderedDict([('organization_type', 'Organization Types'),
+                                ('tags','Tags'),
                                 ('res_format', 'Formats'),
                                 ('organization', 'Organizations'),
-                                ('organization_type', 'Organization Types'),
                                ])
         else:
             return facets_dict

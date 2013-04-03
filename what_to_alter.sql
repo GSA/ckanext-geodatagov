@@ -22,6 +22,9 @@ create index idx_resource_group_revision on resource_group_revision(id);
 
 create index idx_resource_revision on resource_revision(id);
 create index idx_resource_revision_res_grp_id on resource_revision(resource_group_id);
+create index idx_member_revision_id on member_revision(id);
+create index idx_member_revision_group_id on member_revision(group_id);
+
 
 
 
@@ -43,6 +46,9 @@ drop INDEX idx_resource_group_current ;
 drop INDEX idx_resource_period;
 drop INDEX idx_resource_current;
 drop INDEX idx_resource_period_resource_group;
+
+drop index idx_package_group_period_package_group;
+drop index "idx_package_group_current";
 
 
 drop index idx_pkg_id;

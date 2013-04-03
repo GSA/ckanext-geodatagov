@@ -37,6 +37,12 @@ class WAFCollectionHarvester(GeoDataGovWAFHarvester):
         collection_metadata = self._get_object_extra(harvest_object, 'collection_metadata')
         if collection_metadata:
             package_dict['extras'].append(dict(key='collection_metadata', value=collection_metadata))
+            status = self._get_object_extra(harvest_object, 'status')
+            if status == 'change':
+                self.force_import = True
+            else:
+                self.force_import = False
+
 
         return package_dict
 
@@ -77,7 +83,7 @@ class WAFCollectionHarvester(GeoDataGovWAFHarvester):
             filter(HarvestObject.harvest_source_id==harvest_job.source.id).first()
 
         if existing_harvest_object:
-            status = 'changed'
+            status = 'change'
             guid = existing_harvest_object.guid
             package_id = existing_harvest_object.package_id
         else:
