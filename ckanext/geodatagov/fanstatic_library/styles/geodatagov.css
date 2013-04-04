@@ -123,6 +123,7 @@ a {
   *zoom: 1;
   float: left;
   padding: 4px;
+  width: 540px;
 }
 .masthead .container .logo:before,
 .masthead .container .logo:after {
@@ -139,21 +140,25 @@ a {
   margin-right: 10px;
   height: 55px;
 }
-.masthead .container .logo a span {
-  display: none;
-}
 .masthead .container .logo .root {
   background-image: url("http://www.data.gov/sites/all/themes/datagov/logo.png");
   width: 208px;
 }
+.masthead .container .logo .root span {
+  display: none;
+}
 .masthead .container .logo .specific {
-  background-image: url("../images/logo.png");
-  width: 239px;
+  color: #000;
+  font-weight: bold;
+  font-size: 28px;
+  color: #284a7a;
+  margin: 0 10px;
+  line-height: 58px;
 }
 .masthead .container .beta {
   position: absolute;
   top: 25px;
-  left: 475px;
+  left: 470px;
   background-color: #5881b0;
   text-transform: uppercase;
   padding: 3px 5px;
@@ -394,16 +399,9 @@ a {
   text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
 }
 .homepage .intro h1 {
-  font-family: "Lucida Bright", "Times New Roman", Times, serif;
-  font-size: 24px;
-  line-height: 1.5;
-  text-transform: uppercase;
-  margin: 0 0 10px 0;
-}
-.homepage .intro p {
-  font-family: Georgia, "Times New Roman", Times, serif;
-  font-size: 15px;
-  line-height: 1.5;
+  font-size: 32px;
+  line-height: 1.3;
+  margin: 10px 0 15px 0;
 }
 .homepage .search-box {
   position: absolute;
@@ -411,13 +409,6 @@ a {
   right: 130px;
   bottom: 20px;
   width: 400px;
-}
-.homepage .search-box .heading {
-  font-family: Georgia, "Times New Roman", Times, serif;
-  font-weight: normal;
-  color: white;
-  font-size: 21px;
-  text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
 }
 .homepage .search-box input {
   border: 3px solid #5881b0;
