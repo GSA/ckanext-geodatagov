@@ -51,15 +51,15 @@ except ImportError, e:
 
 
 RESOURCE_MAPPING = {
-    'text/html': ('HTML', 'Web Link'),
-    'html': ('HTML', 'Web Link'),
+    'text/html': ('HTML', 'Web Page'),
+    'html': ('HTML', 'Web Page'),
     'application/zip': ('ZIP', 'Zip File'),
     'zip': ('ZIP', 'Zip File'),
     'application/xml': ('XML', 'XML File'),
     'xml': ('xml', 'XML File'),
     'application/x-netcdf': ('NetCDF', 'NetCDF File'),
     'NetCDF': ('NetCDF', 'NetCDF File'),
-    'application/x-httpd-php': ('HTML', 'Web Link'),
+    'application/x-httpd-php': ('HTML', 'Web Page'),
     'application/pdf': ('PDF', 'PDF File'),
     'pdf': ('PDF', 'PDF File'),
     'application/x-msdos-program': ('EXE', 'Windows Executable Program'),
@@ -95,8 +95,8 @@ RESOURCE_MAPPING = {
     'perl': ('Perl', 'Perl Script'),
     'application/msword': ('DOC', 'Microsoft Word File'),
     'doc': ('DOC', 'Microsoft Word File'),
-    'text/csv': ('CSV', 'Comma Seperated Variable File'),
-    'csv': ('CSV', 'Comma Seperated Variable File'),
+    'text/csv': ('CSV', 'Comma Seperated Values File'),
+    'csv': ('CSV', 'Comma Seperated Values File'),
     'image/x-ms-bmp': ('BMP', 'Bitmap Image File'),
     'bmp': ('BMP', 'Bitmap Image File'),
     'chemical/x-xyz': ('XYZ', 'XYZ'),
@@ -232,7 +232,7 @@ class Demo(p.SingletonPlugin):
                     if resource.get('name') == 'Unnamed resource':
                         resource['name'] = RESOURCE_MAPPING[resource_format][1]
                 elif resource.get('name') == 'Unnamed resource':
-                    resource['name'] = 'Web Link'
+                    resource['name'] = 'Web Page'
         return data_dict
 
     ## ITemplateHelpers
