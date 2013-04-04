@@ -1,11 +1,12 @@
 {% ckan_extends %}
 
 {% set format = res.format.lower() or 'data' %}
+{% set is_webpage = format == 'html' or format == 'data' %}
 
 {% block resource_item_explore %}
   <div class="btn-group">
-    <a href="{{ res.url }}" class="btn btn-primary">
-      {% if format == 'html' %}
+    <a href="{{ res.url }}" class="btn btn-primary"{% if is_webpage %} target="_blank"{% endif %}>
+      {% if is_webpage %}
         <i class="icon-globe"></i>
         {{ _('Visit page') }}
       {% else %}
