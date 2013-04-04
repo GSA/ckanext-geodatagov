@@ -29,7 +29,8 @@
   	float: left;
     padding: 4px;
     width: 540px;
-    a {
+    a,
+    .slash {
       display: block;
       float: left;
       margin-right: 10px;
@@ -42,13 +43,17 @@
         display: none;
       }
     }
+    .slash,
     .specific {
-      color: #000;
       font-weight: bold;
       font-size: 28px;
-      color: @geoHeaderDarkColor;
-      margin: 0 10px;
       line-height: 58px;
+    }
+    .slash {
+      color: #999;
+    }
+    .specific {
+      color: @geoHeaderDarkColor;
     }
   }
   .beta {
