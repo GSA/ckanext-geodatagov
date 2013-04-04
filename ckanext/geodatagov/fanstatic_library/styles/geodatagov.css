@@ -37,6 +37,11 @@ body,
 h1,
 h2 {
   font-size: 24.5px;
+  line-height: 1.3;
+}
+h3 {
+  font-size: 21px;
+  line-height: 1.3;
 }
 body,
 .main,
@@ -134,7 +139,8 @@ a {
 .masthead .container .logo:after {
   clear: both;
 }
-.masthead .container .logo a {
+.masthead .container .logo a,
+.masthead .container .logo .slash {
   display: block;
   float: left;
   margin-right: 10px;
@@ -147,13 +153,17 @@ a {
 .masthead .container .logo .root span {
   display: none;
 }
+.masthead .container .logo .slash,
 .masthead .container .logo .specific {
-  color: #000;
   font-weight: bold;
   font-size: 28px;
-  color: #284a7a;
-  margin: 0 10px;
   line-height: 58px;
+}
+.masthead .container .logo .slash {
+  color: #999;
+}
+.masthead .container .logo .specific {
+  color: #284a7a;
 }
 .masthead .container .beta {
   position: absolute;
@@ -498,8 +508,11 @@ a {
   display: inline;
   margin-bottom: 0;
 }
-.dataset-item.has-organization .notes {
+.dataset-item.has-organization .dataset-heading {
   padding-right: 50px;
+}
+.dataset-item.has-organization .notes {
+  padding-right: 30px;
 }
 .results {
   margin-bottom: 0;
