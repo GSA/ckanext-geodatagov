@@ -21,6 +21,19 @@ paste.auth.auth_tkt.calculate_digest = calculate_digest
 
 #############################################################
 
+from sqlalchemy import exc
+from sqlalchemy import event
+from sqlalchemy.pool import Pool
+
+@event.listens_for(Pool, "checkout")
+def ping_connection(dbapi_connection, connection_record, connection_proxy):
+    cursor = dbapi_connection.cursor()
+    try:
+        cursor.execute("SELECT 1")
+    except:
+        raise exc.DisconnectionError()
+    cursor.close()
+
 import ckan.plugins as p
 import ckan.model as model
 import ckanext.harvest.plugin
