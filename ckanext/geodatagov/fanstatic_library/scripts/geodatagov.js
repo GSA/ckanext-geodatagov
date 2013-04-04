@@ -13,3 +13,19 @@ this.ckan.module('geodatagov-top-nav', function($, _) {
     }
   };
 });
+
+this.ckan.module('geodatagov-search-helper-message', function($, _) {
+  return {
+    options: {},
+    initialize: function() {
+      var popup = $('#search-helper-message');
+      this.el
+        .on('mouseover', function() {
+          popup.show();
+        })
+        .on('mouseout', function() {
+          popup.hide();
+        });
+    }
+  };
+});
