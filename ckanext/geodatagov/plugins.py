@@ -158,6 +158,16 @@ class DataGovHarvest(ckanext.harvest.plugin.Harvest):
                             ('source_type','Type'),
                            ])
 
+def change_resource_details(resource):
+    formats = RESOURCE_MAPPING.keys()
+    resource_format = resource.get('format', '').lower()
+    if resource_format in formats:
+        resource['format'] = RESOURCE_MAPPING[resource_format][0]
+        if resource.get('name') == 'Unnamed resource':
+            resource['name'] = RESOURCE_MAPPING[resource_format][1]
+    elif resource.get('name') == 'Unnamed resource':
+        resource['name'] = 'Web Page'
+
 class Demo(p.SingletonPlugin):
 
     p.implements(p.IConfigurer)
@@ -224,15 +234,8 @@ class Demo(p.SingletonPlugin):
     def after_show(self, context, data_dict):
 
         if 'resources' in data_dict:
-            formats = RESOURCE_MAPPING.keys()
             for resource in data_dict['resources']:
-                resource_format = resource.get('format', '').lower()
-                if resource_format in formats:
-                    resource['format'] = RESOURCE_MAPPING[resource_format][0]
-                    if resource.get('name') == 'Unnamed resource':
-                        resource['name'] = RESOURCE_MAPPING[resource_format][1]
-                elif resource.get('name') == 'Unnamed resource':
-                    resource['name'] = 'Web Page'
+                change_resource_details(resource)
         return data_dict
 
     ## ITemplateHelpers
@@ -254,9 +257,10 @@ class Demo(p.SingletonPlugin):
         from ckanext.geodatagov import logic as geodatagov_logic
 
         return {
-            'group_show': geodatagov_logic.group_show,
+            'resource_show': geodatagov_logic.resource_show,
             'organization_show': geodatagov_logic.organization_show,
             'organization_list': geodatagov_logic.organization_list,
+            'group_show': geodatagov_logic.group_show,
         }
 
     ## IAuthFunctions
