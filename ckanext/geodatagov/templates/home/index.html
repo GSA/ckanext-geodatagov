@@ -13,7 +13,7 @@
         </div>
         <form class="search-box clearfix" method="get" action="{% url_for controller='package', action='search' %}">
           <span class="control-group search-giant">
-            <input type="text" class="search" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search geospatial datasets...') }}" />
+            <input type="text" class="search" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search datasets...') }}" />
             <button type="submit" value="{{ _('Search') }}">Submit</button>
           </span>
         </form>
