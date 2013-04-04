@@ -21,6 +21,19 @@ paste.auth.auth_tkt.calculate_digest = calculate_digest
 
 #############################################################
 
+from sqlalchemy import exc
+from sqlalchemy import event
+from sqlalchemy.pool import Pool
+
+@event.listens_for(Pool, "checkout")
+def ping_connection(dbapi_connection, connection_record, connection_proxy):
+    cursor = dbapi_connection.cursor()
+    try:
+        cursor.execute("SELECT 1")
+    except:
+        raise exc.DisconnectionError()
+    cursor.close()
+
 import ckan.plugins as p
 import ckan.model as model
 import ckanext.harvest.plugin
@@ -38,19 +51,19 @@ except ImportError, e:
 
 
 RESOURCE_MAPPING = {
-    'text/html': ('HTML', 'Web Link'),
-    'html': ('HTML', 'Web Link'),
+    'text/html': ('HTML', 'Web Page'),
+    'html': ('HTML', 'Web Page'),
     'application/zip': ('ZIP', 'Zip File'),
     'zip': ('ZIP', 'Zip File'),
     'application/xml': ('XML', 'XML File'),
     'xml': ('xml', 'XML File'),
     'application/x-netcdf': ('NetCDF', 'NetCDF File'),
     'NetCDF': ('NetCDF', 'NetCDF File'),
-    'application/x-httpd-php': ('HTML', 'Web Link'),
+    'application/x-httpd-php': ('HTML', 'Web Page'),
     'application/pdf': ('PDF', 'PDF File'),
     'pdf': ('PDF', 'PDF File'),
-    'application/x-msdos-program': ('EXE', 'Windows Executable'),
-    'exe': ('EXE', 'Windows Executable'),
+    'application/x-msdos-program': ('EXE', 'Windows Executable Program'),
+    'exe': ('EXE', 'Windows Executable Program'),
     'arcgis_rest': ('Esri REST', 'Esri Rest API Endpoint'),
     'esri rest': ('Esri REST', 'Esri Rest API Endpoint'),
     'application/vnd.ms-excel': ('Excel', 'Excel Document'),
@@ -82,8 +95,8 @@ RESOURCE_MAPPING = {
     'perl': ('Perl', 'Perl Script'),
     'application/msword': ('DOC', 'Microsoft Word File'),
     'doc': ('DOC', 'Microsoft Word File'),
-    'text/csv': ('CSV', 'Comma Seperated Variable File'),
-    'csv': ('CSV', 'Comma Seperated Variable File'),
+    'text/csv': ('CSV', 'Comma Seperated Values File'),
+    'csv': ('CSV', 'Comma Seperated Values File'),
     'image/x-ms-bmp': ('BMP', 'Bitmap Image File'),
     'bmp': ('BMP', 'Bitmap Image File'),
     'chemical/x-xyz': ('XYZ', 'XYZ'),
@@ -144,6 +157,16 @@ class DataGovHarvest(ckanext.harvest.plugin.Harvest):
         return OrderedDict([('frequency', 'Frequency'),
                             ('source_type','Type'),
                            ])
+
+def change_resource_details(resource):
+    formats = RESOURCE_MAPPING.keys()
+    resource_format = resource.get('format', '').lower()
+    if resource_format in formats:
+        resource['format'] = RESOURCE_MAPPING[resource_format][0]
+        if resource.get('name') == 'Unnamed resource':
+            resource['name'] = RESOURCE_MAPPING[resource_format][1]
+    elif resource.get('name') == 'Unnamed resource':
+        resource['name'] = 'Web Page'
 
 class Demo(p.SingletonPlugin):
 
@@ -211,15 +234,8 @@ class Demo(p.SingletonPlugin):
     def after_show(self, context, data_dict):
 
         if 'resources' in data_dict:
-            formats = RESOURCE_MAPPING.keys()
             for resource in data_dict['resources']:
-                resource_format = resource.get('format', '').lower()
-                if resource_format in formats:
-                    resource['format'] = RESOURCE_MAPPING[resource_format][0]
-                    if resource.get('name') == 'Unnamed resource':
-                        resource['name'] = RESOURCE_MAPPING[resource_format][1]
-                elif resource.get('name') == 'Unnamed resource':
-                    resource['name'] = 'Web Link'
+                change_resource_details(resource)
         return data_dict
 
     ## ITemplateHelpers
@@ -242,10 +258,11 @@ class Demo(p.SingletonPlugin):
         from ckanext.geodatagov import logic as geodatagov_logic
 
         return {
-            'group_show': geodatagov_logic.group_show,
+            'resource_show': geodatagov_logic.resource_show,
             'organization_show': geodatagov_logic.organization_show,
             'location_search': geodatagov_logic.location_search,
             'organization_list': geodatagov_logic.organization_list,
+            'group_show': geodatagov_logic.group_show,
         }
 
     ## IAuthFunctions

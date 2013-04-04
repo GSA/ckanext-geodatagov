@@ -4,6 +4,7 @@ import logging
 import ckan.plugins as p
 from ckan.logic import side_effect_free
 from ckan.logic.action import get as core_get
+from ckanext.geodatagov.plugins import change_resource_details
 
 log = logging.getLogger(__name__)
 
@@ -87,4 +88,16 @@ def organization_list(context, data_dict):
             group['organization_type'] = organization_type
 
     return results
+
+def resource_show(context, data_dict):
+    resource = core_get.resource_show(context, data_dict)
+    change_resource_details(resource)
+    return resource
+
+
+
+
+
+
+
 
