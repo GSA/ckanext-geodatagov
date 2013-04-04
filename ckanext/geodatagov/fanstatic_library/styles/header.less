@@ -28,28 +28,33 @@
     .clearfix;
   	float: left;
     padding: 4px;
+    width: 540px;
     a {
       display: block;
       float: left;
       margin-right: 10px;
       height: 55px;
-      span {
-        display: none;
-      }
     }
     .root {
       background-image: url("@{geoRemoteThemeURL}logo.png");
       width: 208px;
+      span {
+        display: none;
+      }
     }
     .specific {
-      background-image: url("@{geoLocalThemeURL}images/logo.png");
-      width: 239px;
+      color: #000;
+      font-weight: bold;
+      font-size: 28px;
+      color: @geoHeaderDarkColor;
+      margin: 0 10px;
+      line-height: 58px;
     }
   }
   .beta {
     position: absolute;
     top: 25px;
-    left: 475px;
+    left: 470px;
     background-color: @geoHeaderLiteColor;
     text-transform: uppercase;
     padding: 3px 5px;
