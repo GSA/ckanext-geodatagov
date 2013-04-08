@@ -2,9 +2,7 @@
 -e git+https://github.com/okfn/ckanext-spatial.git@release-v2.0#egg=ckanext-spatial
 -e git+https://github.com/okfn/ckanext-qa.git@release-v2.0#egg=ckanext-qa
 -e git+https://github.com/okfn/ckanext-googleanalytics.git@master#egg=ckanext-googleanalytics
-requests==0.14.2
-pyparsing==1.5.6
-python-dateutil==1.5
+
 -e git+https://github.com/asl2/PyZ3950.git#egg=py3250
 ply==3.4
 
