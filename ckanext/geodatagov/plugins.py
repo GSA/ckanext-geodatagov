@@ -249,6 +249,7 @@ class Demo(p.SingletonPlugin):
                 'get_validation_profiles': geodatagov_helpers.get_validation_profiles,
                 'get_collection_package': geodatagov_helpers.get_collection_package,
                 'resource_preview_custom': geodatagov_helpers.resource_preview_custom,
+                'is_web_format': geodatagov_helpers.is_web_format,
                 }
 
     ## IActions

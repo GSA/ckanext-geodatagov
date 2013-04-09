@@ -450,6 +450,20 @@ a {
   background-position: 0 0;
   background-image: url("../images/icon-fgdc.png");
 }
+.format-label[data-format="web page"],
+.format-label[data-format*="web page"],
+.format-label[data-format="data"],
+.format-label[data-format*="data"] {
+  width: 32px;
+  height: 35px;
+  background-position: -320px -62px;
+}
+.label[data-format="web page"],
+.label[data-format*="web page"],
+.label[data-format="data"],
+.label[data-format*="data"] {
+  background-color: #56A3D0;
+}
 .select2-helper {
   position: relative;
   top: -9px;
@@ -507,6 +521,20 @@ a {
 .dataset-item .notes .empty {
   display: inline;
   margin-bottom: 0;
+}
+.dataset-item .more {
+  display: inline-block;
+  padding: 2px 4px;
+  font-size: 11.844px;
+  line-height: 14px;
+  background-color: transparent;
+  color: #666;
+}
+.dataset-item .more:hover {
+  color: #222;
+}
+.dataset-item .label:hover {
+  background-color: #333;
 }
 .dataset-item.has-organization .dataset-heading {
   padding-right: 50px;
@@ -650,4 +678,15 @@ a {
 }
 .dataset-map-expanded .wrapper {
   margin-top: 383px;
+
+#debug-toggle,
+.masthead .debug {
+  color: #999;
+}
+.masthead .debug {
+  opacity: 0.6;
+}
+#debug {
+  text-align: left;
+  background-color: white;
 }

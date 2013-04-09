@@ -17,6 +17,7 @@ Example:
 {% set title = package.title or package.name %}
 {% set notes = h.markdown_extract(package.notes, extract_length=truncate) %}
 {% set organization = package.organization %}
+{% set resource_limit = resource_limit or 7 %}
 
 <li class="{{ item_class or "dataset-item" }}{% if organization %} has-organization{% endif %}">
   {% block package_item_content %}
@@ -54,10 +55,19 @@ Example:
       </div>
       {% if package.resources and not hide_resources %}
         <ul class="dataset-resources unstyled">
-          {% for resource in h.dict_list_reduce(package.resources, 'format') %}
-            <li>
-              <a href="{{ h.url_for(controller='package', action='read', id=package.name) }}" class="label" data-format="{{ resource.lower() }}">{{ resource }}</a>
-            </li>
+          {% for resource in package.resources %}
+            {% set format = resource.format or 'web page' %}
+            {% set is_web_format = h.is_web_format(resource) %}
+            {% if loop.index < resource_limit %}
+              <li>
+                <a href="{{ resource.url }}" class="label" data-format="{{ format|lower }}"{% if is_web_format %} target="_blank"{% endif %}>{{ format }}</a>
+              </li>
+            {% elif loop.index == resource_limit %}
+              {% set more = loop.length - resource_limit + 1 %}
+              <li>
+                <a href="{{ h.url_for(controller='package', action='read', id=package.name) }}" class="more">{{ '{0} more in dataset'.format(more) }}</a>
+              </li>
+            {% endif %}
           {% endfor %}
         </ul>
       {% endif %}
