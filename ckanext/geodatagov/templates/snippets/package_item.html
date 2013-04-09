@@ -65,7 +65,7 @@ Example:
             {% elif loop.index == resource_limit %}
               {% set more = loop.length - resource_limit + 1 %}
               <li>
-                <a href="{{ h.url_for(controller='package', action='read', id=package.name) }}" class="label">{{ ungettext('and {more} more resource', 'and {more} more resources', more).format(more=more) }}</a>
+                <a href="{{ h.url_for(controller='package', action='read', id=package.name) }}" class="more">{{ '{0} more in dataset'.format(more) }}</a>
               </li>
             {% endif %}
           {% endfor %}

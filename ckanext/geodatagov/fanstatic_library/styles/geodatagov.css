@@ -522,6 +522,20 @@ a {
   display: inline;
   margin-bottom: 0;
 }
+.dataset-item .more {
+  display: inline-block;
+  padding: 2px 4px;
+  font-size: 11.844px;
+  line-height: 14px;
+  background-color: transparent;
+  color: #666;
+}
+.dataset-item .more:hover {
+  color: #222;
+}
+.dataset-item .label:hover {
+  background-color: #333;
+}
 .dataset-item.has-organization .dataset-heading {
   padding-right: 50px;
 }
