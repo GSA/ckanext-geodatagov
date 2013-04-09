@@ -56,7 +56,7 @@ Example:
       {% if package.resources and not hide_resources %}
         <ul class="dataset-resources unstyled">
           {% for resource in package.resources %}
-            {% set format = resource.format or 'web page' %}
+            {% set format = resource.format or 'HTML' %}
             {% set is_web_format = h.is_web_format(resource) %}
             {% if loop.index < resource_limit %}
               <li>

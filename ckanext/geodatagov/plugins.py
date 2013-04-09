@@ -56,7 +56,7 @@ RESOURCE_MAPPING = {
     'application/zip': ('ZIP', 'Zip File'),
     'zip': ('ZIP', 'Zip File'),
     'application/xml': ('XML', 'XML File'),
-    'xml': ('xml', 'XML File'),
+    'xml': ('XML', 'XML File'),
     'application/x-netcdf': ('NetCDF', 'NetCDF File'),
     'NetCDF': ('NetCDF', 'NetCDF File'),
     'application/x-httpd-php': ('HTML', 'Web Page'),
