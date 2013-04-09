@@ -1,5 +1,26 @@
 {% ckan_extends %}
 
+{% block resource_actions_inner %}
+  {% set is_web_format = h.is_web_format(res) %}
+  {% if h.check_access('package_update', {'id':pkg.id }) %}
+    <li>{% link_for _('Edit'), controller='package', action='resource_edit', id=pkg.name, resource_id=res.id, class_='btn', icon='wrench' %}</li>
+  {% endif %}
+  {% if res.url %}
+    <li>
+      <a class="btn btn-primary resource-url-analytics resource-type-{{ res.resource_type }}" href="{{ res.url }}"{% if is_web_format %} target="_blank"{% endif %}>
+        {% if is_web_format %}
+          <i class="icon-globe"></i> {{ _('Visit page') }}
+        {% else %}
+          <i class="icon-download-alt"></i> {{ _('Download') }}
+        {% endif %}
+      </a>
+    </li>
+  {% endif %}
+  {% if 'datastore' in g.plugins %}
+    <li>{% snippet 'package/snippets/data_api_button.html', resource=res, datastore_root_url=c.datastore_api %}</li>
+  {% endif %}
+{% endblock %}
+
 {% block data_preview %}
   {{ h.resource_preview_custom(c.resource, c.package.id) }}
 {% endblock %}
