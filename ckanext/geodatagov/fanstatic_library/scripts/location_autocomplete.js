@@ -44,9 +44,6 @@ this.ckan.module('location-autocomplete', function (jQuery, _) {
     setupAutoComplete: function () {
       var module = this;
       var previous_location = this._getParameterByName('ext_location');
-      if (previous_location) {
-        $('#ext_location').val(previous_location);
-      }
       var settings = {
         width: 'resolve',
         formatResult: this.formatResult,
@@ -155,7 +152,12 @@ this.ckan.module('location-autocomplete', function (jQuery, _) {
      * Returns nothing.
      */
     _onReady: function () {
+      var previous_location = this._getParameterByName('ext_location');
       $('<input type="hidden" />').attr({'id': 'ext_location', 'name': 'ext_location'}).appendTo("#dataset-search");
+      if (previous_location) {
+        $('#ext_location').val(previous_location);
+      }
+
     }
 
   };
