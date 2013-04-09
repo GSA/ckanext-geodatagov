@@ -57,10 +57,10 @@ Example:
         <ul class="dataset-resources unstyled">
           {% for resource in package.resources %}
             {% set format = resource.format or 'web page' %}
-            {% set is_webpage = format == 'html' or format == 'web page' %}
+            {% set is_web_format = h.is_web_format(resource) %}
             {% if loop.index < resource_limit %}
               <li>
-                <a href="{{ resource.url }}" class="label" data-format="{{ format|lower }}"{% if is_webpage %} target="_blank"{% endif %}>{{ format }}</a>
+                <a href="{{ resource.url }}" class="label" data-format="{{ format|lower }}"{% if is_web_format %} target="_blank"{% endif %}>{{ format }}</a>
               </li>
             {% elif loop.index == resource_limit %}
               {% set more = loop.length - resource_limit + 1 %}
