@@ -100,3 +100,12 @@ def resource_preview_custom(resource, pkg_id):
                'raw_resource_url': resource['url']})
 
     return h.resource_preview(resource, pkg_id)
+
+WEB_FORMATS = ('html', 'data')
+
+def is_web_format(resource):
+    if (resource):
+        format = resource.get('format', 'data').lower()
+        if (format in WEB_FORMATS):
+            return True
+    return False
