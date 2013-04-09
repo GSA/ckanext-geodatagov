@@ -597,3 +597,14 @@ a {
 .organization-type[data-organization-type="commercial"] {
   background-color: #719f83;
 }
+#debug-toggle,
+.masthead .debug {
+  color: #999;
+}
+.masthead .debug {
+  opacity: 0.6;
+}
+#debug {
+  text-align: left;
+  background-color: white;
+}
