@@ -43,6 +43,7 @@ this.ckan.module('location-autocomplete', function (jQuery, _) {
      */
     setupAutoComplete: function () {
       var module = this;
+      module.form = $("#dataset-search");
       var previous_location = this._getParameterByName('ext_location');
       var settings = {
         width: 'resolve',
@@ -83,12 +84,20 @@ this.ckan.module('location-autocomplete', function (jQuery, _) {
       // the change so the map can update the bbox shown
       this.el.on('change', function(e){
         if (module._locationsRegistry[e.val] && module._locationsRegistry[e.val].geom){
+          var geom = module._locationsRegistry[e.val].geom;
+
+          var minx = Math.min(geom['coordinates'][0][2][0], geom['coordinates'][0][0][0]);
+          var miny = Math.min(geom['coordinates'][0][2][1], geom['coordinates'][0][0][1]);
+          var maxx = Math.max(geom['coordinates'][0][2][0], geom['coordinates'][0][0][0]);
+          var maxy = Math.max(geom['coordinates'][0][2][1], geom['coordinates'][0][0][1]);
+
+          var bbox = [minx, miny, maxx, maxy].join()
+
           $('#ext_location').val(module._locationsRegistry[e.val].text);
-          module.sandbox.publish('change:location', {
-            'id': e.val,
-            'text': module._locationsRegistry[e.val].text,
-            'geom': module._locationsRegistry[e.val].geom
-          });
+          $('#ext_prev_extent').val('');
+          $('#ext_bbox').val(bbox);
+
+          module.form.submit();
         }
       });
 
@@ -152,8 +161,17 @@ this.ckan.module('location-autocomplete', function (jQuery, _) {
      * Returns nothing.
      */
     _onReady: function () {
-      var previous_location = this._getParameterByName('ext_location');
+      var module = this;
+      var previous_location = module._getParameterByName('ext_location');
+
+      // Add necessary fields to the search form if not already created
       $('<input type="hidden" />').attr({'id': 'ext_location', 'name': 'ext_location'}).appendTo("#dataset-search");
+      $(['ext_bbox', 'ext_prev_extent']).each(function(index, item){
+        if ($("#" + item).length === 0) {
+          $('<input type="hidden" />').attr({'id': item, 'name': item}).appendTo(module.form);
+        }
+      });
+
       if (previous_location) {
         $('#ext_location').val(previous_location);
       }

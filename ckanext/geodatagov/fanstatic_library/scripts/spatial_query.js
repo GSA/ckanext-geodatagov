@@ -63,9 +63,11 @@ this.ckan.module('spatial-query', function ($, _) {
       var form = $("#dataset-search");
       var buttons;
 
-      // Add necessary fields to the search form
+      // Add necessary fields to the search form if not already created
       $(['ext_bbox', 'ext_prev_extent']).each(function(index, item){
-        $('<input type="hidden" />').attr({'id': item, 'name': item}).appendTo(form);
+        if ($("#" + item).length === 0) {
+          $('<input type="hidden" />').attr({'id': item, 'name': item}).appendTo(form);
+        }
       });
 
       // OK map time
@@ -145,19 +147,8 @@ this.ckan.module('spatial-query', function ($, _) {
         $('#ext_prev_extent').val(map.getBounds().toBBoxString());
       });
 
-      // Listen to changes in extent (ie location search box)
-      module.sandbox.subscribe('change:location', function (location_) {
-        if (extentLayer) {
-          map.removeLayer(extentLayer);
-        }
-        extentLayer = module._drawExtentFromGeoJSON(location_.geom);
-        map.fitBounds(extentLayer.getBounds());
-        map.addLayer(extentLayer);
-        $('#ext_bbox').val(extentLayer.getBounds().toBBoxString());
-        submitForm();
-      });
-
       // Ok setup the default state for the map
+      var previous_bbox;
       setPreviousBBBox();
       setPreviousExtent();
 
@@ -166,6 +157,7 @@ this.ckan.module('spatial-query', function ($, _) {
         should_zoom = false;
       });
 
+
       // Is there an existing box from a previous search?
       function setPreviousBBBox() {
         previous_bbox = module._getParameterByName('ext_bbox');
@@ -173,6 +165,7 @@ this.ckan.module('spatial-query', function ($, _) {
           $('#ext_bbox').val(previous_bbox);
           extentLayer = module._drawExtentFromCoords(previous_bbox.split(','))
           map.addLayer(extentLayer);
+          map.fitBounds(extentLayer.getBounds());
         }
       }
 
@@ -183,7 +176,9 @@ this.ckan.module('spatial-query', function ($, _) {
           coords = previous_extent.split(',');
           map.fitBounds([[coords[1], coords[0]], [coords[3], coords[2]]]);
         } else {
-          map.fitBounds(module.options.default_extent);
+          if (!previous_bbox){
+              map.fitBounds(module.options.default_extent);
+          }
         }
       }
 
