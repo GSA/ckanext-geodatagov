@@ -658,7 +658,8 @@ a {
   color: #000;
   text-decoration: underline;
 }
-.secondary .module .module-heading .icon-medium {
+.secondary .module .module-heading .icon-filter,
+.secondary .module .module-heading .icon-globe {
   display: none;
 }
 #debug-toggle,
