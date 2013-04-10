@@ -1,3 +1,7 @@
+drop table old_new_source_id_mapping;
+drop table harvest_source_after_load;
+drop table tmp_to_delete;
+
 
 ALTER TABLE activity
 	ADD CONSTRAINT activity_pkey PRIMARY KEY (id);

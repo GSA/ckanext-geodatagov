@@ -119,8 +119,17 @@
     - name: create superviserctl symlink
       action: file src=/usr/lib/ckan/bin/supervisorctl dest=/usr/bin/supervisorctl state=link
 
-    - name: horrible hack to get libxml to work.
-      action: command sed -i 's/gml:doubleList/string/g' /usr/lib/ckan/src/ckanext-spatial/ckanext/spatial/validation/xml/iso19139ngdc/schema/gml/geometryBasic0d1d.xsd; sed -i 's/gml:doubleList/string/g' /usr/lib/ckan/src/ckanext-spatial/ckanext/spatial/validation/xml/iso19139ngdc/schema/gml/basicTypes.xsd; sed -i 's/gml:NameOrNilReasonList/string/g' /usr/lib/ckan/src/ckanext-spatial/ckanext/spatial/validation/xml/iso19139ngdc/schema/gml/basicTypes.xsd; sed -i 's/gml:doubleOrNilReasonList/string/g' /usr/lib/ckan/src/ckanext-spatial/ckanext/spatial/validation/xml/iso19139ngdc/schema/gml/basicTypes.xsd 
+    - name: horrible hacks to get libxml to work
+      action: command sed -i 's/gml:doubleList/string/g' /usr/lib/ckan/src/ckanext-spatial/ckanext/spatial/validation/xml/iso19139ngdc/schema/gml/geometryBasic0d1d.xsd
+
+    - name: horrible hacks to get libxml to work
+      action: command sed -i 's/gml:doubleList/string/g' /usr/lib/ckan/src/ckanext-spatial/ckanext/spatial/validation/xml/iso19139ngdc/schema/gml/basicTypes.xsd
+
+    - name: horrible hacks to get libxml to work
+      action: command  sed -i 's/gml:NameOrNilReasonList/string/g' /usr/lib/ckan/src/ckanext-spatial/ckanext/spatial/validation/xml/iso19139ngdc/schema/gml/basicTypes.xsd
+
+    - name: horrible hacks to get libxml to work
+      action: command sed -i 's/gml:doubleOrNilReasonList/string/g' /usr/lib/ckan/src/ckanext-spatial/ckanext/spatial/validation/xml/iso19139ngdc/schema/gml/basicTypes.xsd 
 
     - name: restart apache
       action: service name=httpd state=restarted

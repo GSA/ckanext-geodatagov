@@ -72,7 +72,7 @@ class WAFCollectionHarvester(GeoDataGovWAFHarvester):
                                         (source_url, e),harvest_job)
             return None
 
-        guid=hashlib.md5(collection_metadata_url.encode('utf8',errors='ignore')).hexdigest()
+        guid=hashlib.md5(collection_metadata_url.encode('utf8', 'ignore')).hexdigest()
 
         existing_harvest_object = model.Session.\
             query(HarvestObject.guid, HarvestObject.package_id, HOExtra.value).\
