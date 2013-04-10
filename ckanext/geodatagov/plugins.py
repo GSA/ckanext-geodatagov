@@ -306,11 +306,11 @@ class Demo(p.SingletonPlugin):
         if package_type != 'dataset':
             return facets_dict
 
-        return OrderedDict([('organization_type', 'Organization Types'),
-                            ('organization', 'Organizations'),
-                            ('groups', 'Groups'),
-                            ('tags','Tags'),
+        return OrderedDict([('tags','Tags'),
                             ('res_format', 'Formats'),
+                            ('groups', 'Groups'),
+                            ('organization_type', 'Organization Types'),
+                            ('organization', 'Organizations'),
                            ])
 
     def organization_facets(self, facets_dict, organization_type, package_type):
