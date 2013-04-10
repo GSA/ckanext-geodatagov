@@ -159,15 +159,37 @@ class DataGovHarvest(ckanext.harvest.plugin.Harvest):
                             ('source_type','Type'),
                            ])
 
+def get_filename_and_extension(resource):
+    url = resource.get('url')
+    if '?' in url:
+        return '', ''
+    last_part = url.split('/')[-1]
+    ending = last_part.split('.')[-1].lower()
+    if len(ending) in [2,3,4] and len(last_part) > 4:
+        return last_part, ending
+    return '', ''
+
+
 def change_resource_details(resource):
     formats = RESOURCE_MAPPING.keys()
     resource_format = resource.get('format', '').lower()
+    filename, extension = get_filename_and_extension(resource)
+    if not resource_format:
+        resource_format = extension
     if resource_format in formats:
         resource['format'] = RESOURCE_MAPPING[resource_format][0]
         if resource.get('name') == 'Unnamed resource':
             resource['name'] = RESOURCE_MAPPING[resource_format][1]
+            if filename:
+                resource['name'] = resource['name']
     elif resource.get('name') == 'Unnamed resource':
+        if extension:
+            resource['format'] = extension.upper()
         resource['name'] = 'Web Page'
+
+    if filename and not resource.get('description'):
+        resource['description'] = filename
+
 
 class Demo(p.SingletonPlugin):
 
