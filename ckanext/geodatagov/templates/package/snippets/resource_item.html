@@ -1,18 +1,32 @@
-{% ckan_extends %}
-
+{% set url = h.url_for(controller='package', action='resource_read', id=pkg.name, resource_id=res.id) %}
 {% set format = res.format.lower() or 'data' %}
 {% set is_web_format = h.is_web_format(res) %}
 
-{% block resource_item_explore %}
-  <div class="btn-group">
-    <a href="{{ res.url }}" class="btn btn-primary"{% if is_web_format %} target="_blank"{% endif %}>
-      {% if is_web_format %}
-        <i class="icon-globe"></i>
-        {{ _('Visit page') }}
-      {% else %}
-        <i class="icon-download-alt"></i>
-        {{ _('Download') }}
-      {% endif %}
-    </a>
-  </div>
-{% endblock %}
+<li class="resource-item">
+  {% block resource_item_title %}
+  <a class="heading" href="{{ url }}" title="{{ res.name or res.description }}">
+    {{ h.resource_display_name(res) | truncate(50) }}<span class="format-label" property="dc:format" data-format="{{ res.format.lower() or 'data' }}">{{ res.format }}</span>
+    {{ h.popular('views', res.tracking_summary.total, min=10) }}
+  </a>
+  {% endblock %}
+  <p class="description">
+    {% if res.description %}
+      {{ h.markdown_extract(res.description, extract_length=80) }}
+    {% else %}
+      {{ res.format }}
+    {% endif %}
+  </p>
+  {% block resource_item_explore %}
+    <div class="btn-group">
+      <a href="{{ res.url }}" class="btn btn-primary"{% if is_web_format %} target="_blank"{% endif %}>
+        {% if is_web_format %}
+          <i class="icon-globe"></i>
+          {{ _('Visit page') }}
+        {% else %}
+          <i class="icon-download-alt"></i>
+          {{ _('Download') }}
+        {% endif %}
+      </a>
+    </div>
+  {% endblock %}
+</li>
