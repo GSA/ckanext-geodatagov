@@ -9,3 +9,4 @@ initctl start supervisor
 service rabbitmq-server restart
 service tomcat6 restart
 service crond restart
+supervisorctl restart all
