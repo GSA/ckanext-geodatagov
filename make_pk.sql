@@ -1,3 +1,7 @@
+drop table old_new_source_id_mapping;
+drop table harvest_source_after_load;
+drop table tmp_to_delete;
+
 
 ALTER TABLE activity
 	ADD CONSTRAINT activity_pkey PRIMARY KEY (id);
@@ -49,9 +53,6 @@ ALTER TABLE system_info_revision
 
 ALTER TABLE term_translation
 	ADD CONSTRAINT term_translation_pkey PRIMARY KEY (term, term_translation);
-
-ALTER TABLE geography_columns
-	ADD CONSTRAINT geography_columns_pkey PRIMARY KEY (f_table_catalog, f_table_schema, f_table_name, f_geography_column);
 
 ALTER TABLE tracking_raw
 	ADD CONSTRAINT tracking_raw_pkey PRIMARY KEY (user_key, access_timestamp);

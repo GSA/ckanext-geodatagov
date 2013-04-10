@@ -119,6 +119,19 @@
     - name: create superviserctl symlink
       action: file src=/usr/lib/ckan/bin/supervisorctl dest=/usr/bin/supervisorctl state=link
 
+    - name: horrible hacks to get libxml to work
+      action: command sed -i 's/gml:doubleList/string/g' /usr/lib/ckan/src/ckanext-spatial/ckanext/spatial/validation/xml/iso19139ngdc/schema/gml/geometryBasic0d1d.xsd
+
+    - name: horrible hacks to get libxml to work
+      action: command sed -i 's/gml:doubleList/string/g' /usr/lib/ckan/src/ckanext-spatial/ckanext/spatial/validation/xml/iso19139ngdc/schema/gml/basicTypes.xsd
+
+    - name: horrible hacks to get libxml to work
+      action: command  sed -i 's/gml:NameOrNilReasonList/string/g' /usr/lib/ckan/src/ckanext-spatial/ckanext/spatial/validation/xml/iso19139ngdc/schema/gml/basicTypes.xsd
+
+    - name: horrible hacks to get libxml to work
+      action: command sed -i 's/gml:doubleOrNilReasonList/string/g' /usr/lib/ckan/src/ckanext-spatial/ckanext/spatial/validation/xml/iso19139ngdc/schema/gml/basicTypes.xsd 
+
+
     - name: restart apache
       action: service name=httpd state=restarted
 
@@ -129,4 +142,5 @@
       action: command chdir=/var/www/ckan-repo/ fpm -t rpm -s dir --description='geo.data.gov harvester frontend' --after-install=/tmp/after_harvester.sh -n geo.data.gov.harvester --iteration $iteration -v $version -d geos -d postgresql -d rabbitmq-server -d python-psycopg2 -d tomcat6 -d java-openjdk -d libxslt -d libxml2 -d cronie --config-files /etc/ckan/production.ini /usr/bin/ckan /usr/lib/ckan/ /etc/ckan/ /etc/init/supervisor.conf /etc/supervisord.conf /usr/bin/supervisorctl /var/lib/tomcat6/webapps/fgdc2iso.war /etc/cron.d/ckan-harvest
     - name: create repo
       action: command createrepo /var/www/ckan-repo/
+
 
