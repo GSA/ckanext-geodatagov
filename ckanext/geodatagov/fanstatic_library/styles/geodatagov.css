@@ -340,6 +340,7 @@ a {
 }
 .masthead .container .top-nav .site-search {
   float: right;
+  margin-top: 0;
 }
 .masthead .container .top-nav .secondary {
   padding: 5px 5px 0 5px;
@@ -628,6 +629,37 @@ a {
 }
 .control-order-by select {
   margin-bottom: 0;
+}
+.secondary .module {
+  margin: 10px 0;
+}
+.secondary .module .nav-item > a {
+  font-size: 13px;
+  padding: 5px 15px;
+}
+.secondary .module .nav-item.active > a:before {
+  height: 30px;
+  background-position: 0 50%;
+}
+.secondary .module .module-footer a {
+  font-size: 13px;
+  font-weight: normal;
+  color: #999;
+}
+.secondary .module .module-footer a:hover {
+  color: #000;
+}
+.secondary .module .module-heading .action {
+  color: #999;
+  text-decoration: none;
+  font-weight: normal;
+}
+.secondary .module .module-heading .action:hover {
+  color: #000;
+  text-decoration: underline;
+}
+.secondary .module .module-heading .icon-medium {
+  display: none;
 }
 #debug-toggle,
 .masthead .debug {
