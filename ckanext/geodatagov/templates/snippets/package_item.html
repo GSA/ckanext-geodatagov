@@ -13,10 +13,13 @@ Example:
   {% snippet 'snippets/package_item.html', package=c.datasets[0] %}
 
 #}
+{% set organization = package.organization %}
 {% set truncate = truncate or 180 %}
+{% if organization and show_organization %}
+  {% set truncate = truncate - organization|length if organization|length < truncate else 10 %}
+{% endif %}
 {% set title = package.title or package.name %}
 {% set notes = h.markdown_extract(package.notes, extract_length=truncate) %}
-{% set organization = package.organization %}
 {% set resource_limit = resource_limit or 7 %}
 
 <li class="{{ item_class or "dataset-item" }}{% if organization %} has-organization{% endif %}">

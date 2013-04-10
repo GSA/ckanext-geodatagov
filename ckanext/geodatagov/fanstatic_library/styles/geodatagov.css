@@ -507,9 +507,10 @@ a {
   overflow: hidden;
   padding-bottom: 0;
   margin-bottom: 0;
+  border-bottom-width: 0;
 }
 .dataset-item .dataset-content {
-  padding: 20px 0;
+  padding: 0 0 25px 0;
 }
 .dataset-item .dataset-organization {
   display: inline;
@@ -542,8 +543,11 @@ a {
 .dataset-item.has-organization .notes {
   padding-right: 30px;
 }
-.results {
+.results,
+.is-search-title {
   margin-bottom: 0;
+  padding-bottom: 10px;
+  border-bottom-width: 0;
 }
 .context-info .module-content {
   position: relative;
@@ -596,6 +600,15 @@ a {
 }
 .organization-type[data-organization-type="commercial"] {
   background-color: #719f83;
+}
+#dataset-search {
+  margin-bottom: 5px;
+}
+.control-order-by {
+  bottom: -46px;
+}
+.control-order-by select {
+  margin-bottom: 0;
 }
 #debug-toggle,
 .masthead .debug {
