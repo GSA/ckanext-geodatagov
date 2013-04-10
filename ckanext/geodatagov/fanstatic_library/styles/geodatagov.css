@@ -271,7 +271,7 @@ a {
   padding: 0 15px;
   text-transform: uppercase;
   font-weight: bold;
-  font-size: 13px;
+  font-size: 12px;
   line-height: 35px;
 }
 .masthead .container .top-nav .primary ul li a:hover {
@@ -340,10 +340,28 @@ a {
 }
 .masthead .container .top-nav .site-search {
   float: right;
+  margin-top: 0;
 }
 .masthead .container .top-nav .secondary {
-  padding: 5px 8px;
+  padding: 5px 5px 0 5px;
   background-color: #5881b0;
+}
+.masthead .container .top-nav .secondary ul li {
+  margin-right: 10px;
+}
+.masthead .container .top-nav .secondary ul li a {
+  margin: 0;
+  padding: 0 10px;
+  font: bold 11px "Myriad Pro", "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  height: 34px;
+  line-height: 34px;
+  -webkit-border-radius: 3px 3px 0 0;
+  -moz-border-radius: 3px 3px 0 0;
+  -o-border-radius: 3px 3px 0 0;
+  border-radius: 3px 3px 0 0;
 }
 .masthead .container .top-nav .secondary ul li a:hover,
 .masthead .container .top-nav .secondary ul li.active a {
@@ -507,9 +525,10 @@ a {
   overflow: hidden;
   padding-bottom: 0;
   margin-bottom: 0;
+  border-bottom-width: 0;
 }
 .dataset-item .dataset-content {
-  padding: 20px 0;
+  padding: 0 0 30px 0;
 }
 .dataset-item .dataset-organization {
   display: inline;
@@ -537,13 +556,18 @@ a {
   background-color: #333;
 }
 .dataset-item.has-organization .dataset-heading {
-  padding-right: 50px;
+  padding-right: 80px;
 }
 .dataset-item.has-organization .notes {
-  padding-right: 30px;
+  padding-right: 50px;
 }
-.results {
-  margin-bottom: 0;
+.results,
+.is-search-title {
+  margin-bottom: 20px;
+  padding-bottom: 5px;
+}
+.filter-list {
+  margin-bottom: 5px;
 }
 .context-info .module-content {
   position: relative;
@@ -679,6 +703,47 @@ a {
 .dataset-map-expanded .wrapper {
   margin-top: 383px;
 
+#dataset-search {
+  margin-bottom: 5px;
+}
+.control-order-by {
+  bottom: -46px;
+}
+.control-order-by select {
+  margin-bottom: 0;
+}
+.secondary .module {
+  margin: 10px 0;
+}
+.secondary .module .nav-item > a {
+  font-size: 13px;
+  padding: 5px 15px;
+}
+.secondary .module .nav-item.active > a:before {
+  height: 30px;
+  background-position: 0 50%;
+}
+.secondary .module .module-footer a {
+  font-size: 13px;
+  font-weight: normal;
+  color: #999;
+}
+.secondary .module .module-footer a:hover {
+  color: #000;
+}
+.secondary .module .module-heading .action {
+  color: #999;
+  text-decoration: none;
+  font-weight: normal;
+}
+.secondary .module .module-heading .action:hover {
+  color: #000;
+  text-decoration: underline;
+}
+.secondary .module .module-heading .icon-filter,
+.secondary .module .module-heading .icon-globe {
+  display: none;
+}
 #debug-toggle,
 .masthead .debug {
   color: #999;

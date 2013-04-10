@@ -1,0 +1,7 @@
+{% ckan_extends %}
+
+{% block organization_description %}
+  {% if c.group_dict.description %}
+    {{ h.render_markdown(c.group_dict.description) }}
+  {% endif %}
+{% endblock %}
