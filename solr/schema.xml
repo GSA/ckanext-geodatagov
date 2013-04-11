@@ -67,12 +67,6 @@
         </analyzer>
     </fieldType>
 
-    <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType"
-               spatialContextFactory="com.spatial4j.core.context.jts.JtsSpatialContextFactory"
-               distErrPct="0.025"
-               maxDistErr="0.000009"
-               units="degrees"
-            />
 </types>
 
 
@@ -144,7 +138,11 @@
     <dynamicField name="extras_*" type="text" indexed="true" stored="true" multiValued="false"/>
     <dynamicField name="vocab_*" type="string" indexed="true" stored="true" multiValued="true"/>
 
-    <field name="spatial_geom" type="location_rpt" indexed="true" stored="true" />
+    <field name="bbox_area" type="float" indexed="true" stored="true" />
+    <field name="maxx" type="float" indexed="true" stored="true" />
+    <field name="maxy" type="float" indexed="true" stored="true" />
+    <field name="minx" type="float" indexed="true" stored="true" />
+    <field name="miny" type="float" indexed="true" stored="true" />
 
     <dynamicField name="*" type="string" indexed="true"  stored="false"/>
 </fields>
