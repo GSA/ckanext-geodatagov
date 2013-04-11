@@ -160,12 +160,13 @@ class DataGovHarvest(ckanext.harvest.plugin.Harvest):
                            ])
 
 def get_filename_and_extension(resource):
-    url = resource.get('url')
+    url = resource.get('url').rstrip('/')
     if '?' in url:
         return '', ''
-    last_part = url.split('/')[-1]
+    split = url.split('/')
+    last_part = split[-1]
     ending = last_part.split('.')[-1].lower()
-    if len(ending) in [2,3,4] and len(last_part) > 4:
+    if len(ending) in [2,3,4] and len(last_part) > 4 and len(split) > 0:
         return last_part, ending
     return '', ''
 
