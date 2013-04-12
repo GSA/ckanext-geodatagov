@@ -200,7 +200,7 @@ class Demo(p.SingletonPlugin):
     p.implements(p.IActions)
     p.implements(p.IAuthFunctions)
     p.implements(p.IFacets, inherit=True)
-
+    p.implements(p.IActions)
 
     def update_config(self, config):
         # add template directory
@@ -279,11 +279,13 @@ class Demo(p.SingletonPlugin):
 
     def get_actions(self):
 
+
         from ckanext.geodatagov import logic as geodatagov_logic
 
         return {
             'resource_show': geodatagov_logic.resource_show,
             'organization_show': geodatagov_logic.organization_show,
+            'location_search': geodatagov_logic.location_search,
             'organization_list': geodatagov_logic.organization_list,
             'group_show': geodatagov_logic.group_show,
         }
