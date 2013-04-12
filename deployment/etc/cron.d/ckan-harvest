@@ -1,1 +1,1 @@
-*/3 * * * * root /usr/lib/ckan/bin/python /usr/lib/ckan/bin/paster --plugin=ckanext-harvest harvester run -c /etc/ckan/production.ini > /dev/null
+*/3 * * * * root ckan --plugin=ckanext-harvest harvester run -c /etc/ckan/production.ini > /dev/null
