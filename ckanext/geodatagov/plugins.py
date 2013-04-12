@@ -166,7 +166,7 @@ def get_filename_and_extension(resource):
     split = url.split('/')
     last_part = split[-1]
     ending = last_part.split('.')[-1].lower()
-    if len(ending) in [2,3,4] and len(last_part) > 4 and len(split) > 0:
+    if len(ending) in [2,3,4] and len(last_part) > 4 and len(split) > 1:
         return last_part, ending
     return '', ''
 
