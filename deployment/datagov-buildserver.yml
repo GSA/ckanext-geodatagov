@@ -131,7 +131,6 @@
     - name: horrible hacks to get libxml to work
       action: command sed -i 's/gml:doubleOrNilReasonList/string/g' /usr/lib/ckan/src/ckanext-spatial/ckanext/spatial/validation/xml/iso19139ngdc/schema/gml/basicTypes.xsd 
 
-
     - name: restart apache
       action: service name=httpd state=restarted
 
