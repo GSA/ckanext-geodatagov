@@ -1,0 +1,77 @@
+{#
+Displays a single of dataset.
+
+package        - A package to display.
+item_class     - The class name to use on the list item.
+hide_resources - If true hides the resources (default: false).
+banner         - If true displays a popular banner (default: false).
+truncate       - The length to trucate the description to (default: 180)
+truncate_title - The length to truncate the title to (default: 80).
+
+Example:
+
+  {% snippet 'snippets/package_item.html', package=c.datasets[0] %}
+
+#}
+{% set organization = package.organization %}
+{% set truncate = truncate or 180 %}
+{% if organization and show_organization %}
+  {% set truncate = truncate - organization|length if organization|length < truncate else 10 %}
+{% endif %}
+{% set title = package.title or package.name %}
+{% set notes = h.markdown_extract(package.notes, extract_length=truncate) %}
+{% set resource_limit = resource_limit or 7 %}
+
+<li class="{{ item_class or "dataset-item" }}{% if organization %} has-organization{% endif %}">
+  {% block package_item_content %}
+    <div class="dataset-content">
+      {% set organization_type = organization.organization_type|replace(' Government', '') %}
+      {% if organization_type and show_organization %}
+        <span class="organization-type" title="{{ organization.organization_type }}" data-organization-type="{{ organization_type|lower }}">
+          {{ organization_type }}
+        </span>
+      {% endif %}
+      <h3 class="dataset-heading">
+        {% if package.private %}
+          <span class="dataset-private label label-inverse">
+            <i class="icon-lock"></i>
+            {{ _('Private') }}
+          </span>
+        {% endif %}
+        {{ h.link_to(title, h.url_for(controller='package', action='read', id=package.name)) }}
+        {% if package.get('state', '').startswith('draft') %}
+          <span class="label label-info">{{ _('Draft') }}</span>
+        {% elif package.get('state', '').startswith('deleted') %}
+          <span class="label label-important">{{ _('Deleted') }}</span>
+        {% endif %}
+        {{ h.popular('recent views', package.tracking_summary.recent, min=10) if package.tracking_summary }}
+      </h3>
+      <div class="notes">
+        {% if organization and show_organization %}
+          <p class="dataset-organization">{{ organization.title or organization.name }} &mdash;</p>
+        {% endif %}
+        {% if notes %}
+          <div>{{ notes|urlize }}</div>
+        {% endif %}
+      </div>
+      {% if package.resources and not hide_resources %}
+        <ul class="dataset-resources unstyled">
+          {% for resource in package.resources %}
+            {% set format = resource.format or 'HTML' %}
+            {% set is_web_format = h.is_web_format(resource) %}
+            {% if loop.index < resource_limit %}
+              <li>
+                <a href="{{ resource.url }}" class="label" data-format="{{ format|lower }}"{% if is_web_format %} target="_blank"{% endif %}>{{ format }}</a>
+              </li>
+            {% elif loop.index == resource_limit %}
+              {% set more = loop.length - resource_limit + 1 %}
+              <li>
+                <a href="{{ h.url_for(controller='package', action='read', id=package.name) }}" class="more">{{ '{0} more in dataset'.format(more) }}</a>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+  {% endblock %}
+</li>

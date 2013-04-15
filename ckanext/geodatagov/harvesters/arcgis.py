@@ -100,19 +100,27 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
     def extra_schema(self):
         return {
             'private_datasets': [ignore_empty, boolean_validator],
+            'extra_search_criteria': [ignore_empty, unicode],
          }
 
     def gather_stage(self, harvest_job):
 
         self.harvest_job = harvest_job
         source_url = harvest_job.source.url
+        source_config = json.loads(harvest_job.source.config or '{}')
+        extra_search_criteria = source_config.get('extra_search_criteria')
 
         num = 100
 
         modified_from = 0
         modified_to = 999999999999999999
 
-        query_template = 'modified:[{modified_from}+TO+{modified_to}] AND accountid:0123456789ABCDEF'
+        query_template = 'modified:[{modified_from}+TO+{modified_to}]'
+
+        if extra_search_criteria:
+            query_template = query_template + ' AND (%s)' % extra_search_criteria
+
+        #accountid:0123456789ABCDEF
 
         query=query_template.format(
             modified_from=str(modified_from).rjust(18,'0'),
@@ -123,6 +131,7 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
 
         new_metadata = {}
 
+
         while start <> -1:
             search_path = 'sharing/search?f=pjson&q={query}&num={num}&start={start}'.format(
                 query=query,
@@ -131,8 +140,8 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
             )
             url = urlparse.urljoin(source_url, search_path)
 
-            r = requests.get(url)
             try:
+                r = requests.get(url)
                 r.raise_for_status()
             except requests.exceptions.RequestException, e:
                 self._save_gather_error('Unable to get content for URL: %s: %r' % \
@@ -308,10 +317,12 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
 
         #try hard to get unique name
         name = _slugify(content.get('title') or content.get('item', ''))
+
         if not name or len(name) < 5:
             name = content['id']
+
+        name = name[:60]
         existing_pkg = model.Package.get(name)
-        name = name[:80]
         if existing_pkg and existing_pkg.id <> harvest_object.package_id:
             name = name + '_' + content['id']
         title = content.get('title')
@@ -324,7 +335,6 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
 
         extras = [dict(key='guid',value=harvest_object.guid),
                   dict(key='metadata_source',value='arcgis'),
-                  dict(key='arcgis_type',value=content['type']),
                   dict(key='tags',value=tags)]
 
         extent = content.get('extent')
@@ -337,15 +347,31 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
             )
             extras.append(dict(key='spatial',value=extent_string.strip()))
 
-        source_url = harvest_object.source.url
+        source_url = harvest_object.source.url.rstrip('/') + '/'
 
-        resource_url = content.get('url') 
+        resources = []
 
-        if not resource_url and content['type'] in ['Web Map']:
+        ### map service has 2 resources
+        resource_url = content.get('url')
+        if content['type'] in ['Map Service']:
+            resources.append(
+                {'url': resource_url, 'name': name,
+                 'format': 'ArcGIS Map Service'})
+
+        format = content['type'].upper()
+
+        if content['type'] in ['Web Map']:
             resource_url = urlparse.urljoin(
                 source_url,
-                '/home/webmap/viewer.html?webmap=' + content['id']
+                'home/webmap/viewer.html?webmap=' + content['id']
             )
+
+        if content['type'] in ['Map Service']:
+            resource_url = urlparse.urljoin(
+                source_url,
+                'home/webmap/viewer.html?service=' + content['id']
+            )
+            format = 'ArcGIS MAP Preview'
 
         if not resource_url:
             self._save_object_error('Validation Error: url not in record')
@@ -355,13 +381,13 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
             resource_url = urlparse.urljoin(
                 source_url, resource_url)
 
-        if content['type'] in ['WMS']:
-            format = 'WMS'
-        else:
-            format = mimetypes.guess_type(urlparse.urlparse(resource_url).path)[0]
+        if content['type'] in ['Web Map', 'Web Mapping Application']:
+            format = 'Web Map Application'
 
         resource = {'url': resource_url, 'name': name,
                     'format': format}
+
+        resources.append(resource)
 
         pkg = model.Package.get(harvest_object.package_id)
         if pkg:
@@ -372,7 +398,7 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
             title=title,
             notes=notes,
             extras=extras,
-            resources=[resource]
+            resources=resources
         )
 
         source_dataset = model.Package.get(harvest_object.source.id)

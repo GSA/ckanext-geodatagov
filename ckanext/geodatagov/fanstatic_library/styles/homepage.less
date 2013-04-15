@@ -17,16 +17,9 @@
     width: 320px;
     text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
     h1 {
-      font-family: @geoFontSerifAlt;
-      font-size: 24px;
-      line-height: 1.5;
-      text-transform: uppercase;
-      margin: 0 0 10px 0;
-    }
-    p {
-      font-family: @geoFontSerif;
-      font-size: 15px;
-      line-height: 1.5;
+      font-size: 32px;
+      line-height: 1.3;
+      margin: 10px 0 15px 0;
     }
   }
   .search-box {
@@ -35,13 +28,6 @@
     right: 130px;
     bottom: 20px;
     width: 400px;
-    .heading {
-      font-family: @geoFontSerif;
-      font-weight: normal;
-      color: white;
-      font-size: 21px;
-      text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
-    }
     input {
       border: 3px solid @geoHeaderLiteColor;
       .box-shadow(0 0 6px rgba(0, 0, 0, 0.5));
@@ -50,5 +36,12 @@
         border-color: #000;
       }
     }
+  }
+}
+
+#hp-message {
+  margin: 10px;
+  .alert {
+    margin: 0;
   }
 }

@@ -70,8 +70,12 @@ class GeoDataGovHarvester(SpatialHarvester):
                 package_dict['groups'].append({'name': group})
 
         package_dict['extras'].append({'key': 'tags', 'value': ', '.join(tags)})
-        return package_dict
 
+        if not package_dict.get('resources'):
+            self._save_object_error('No resources invalid metadata', harvest_object, 'Import')
+            return None
+
+        return package_dict
 
     def transform_to_iso(self, original_document, original_format, harvest_object):
 
@@ -108,6 +112,19 @@ class GeoDataGovHarvester(SpatialHarvester):
             p = comment.getparent()
             if p:
                 p.remove(comment)
+
+        ptvctcnt = tree.xpath('//ptvctcnt')
+        for node in ptvctcnt:
+            p = node.getparent()
+            if p and not node.text:
+                p.remove(node)
+
+        themekt = tree.xpath('//themekt')
+        for num, node in enumerate(themekt):
+            p = node.getparent()
+            ###remove all but first
+            if p and num > 0:
+                p.remove(node)
 
         original_document = etree.tostring(tree)
 
