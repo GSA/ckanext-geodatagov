@@ -755,6 +755,12 @@ a {
   text-align: left;
   background-color: white;
 }
+.ie7 .masthead .container .top-nav .primary {
+  width: 922px;
+}
+.ie7 .masthead .container .top-nav .secondary {
+  height: 34px;
+}
 .ie7 .organization-type,
 .ie8 .organization-type {
   -webkit-transform: none;
