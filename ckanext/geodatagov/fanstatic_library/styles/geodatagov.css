@@ -758,6 +758,11 @@ a {
 .ie7 .masthead .container .top-nav .primary {
   width: 922px;
 }
+.ie7 .masthead .container .top-nav .primary .dropdown li .icon-caret-right {
+  position: absolute;
+  margin-top: -10px;
+  margin-left: 40px;
+}
 .ie7 .masthead .container .top-nav .secondary {
   height: 34px;
 }
