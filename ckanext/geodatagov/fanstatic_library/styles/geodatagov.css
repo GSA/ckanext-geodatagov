@@ -766,6 +766,9 @@ a {
 .ie7 .masthead .container .top-nav .secondary {
   height: 34px;
 }
+.ie7 .toolbar .breadcrumb li {
+  background-image: url("../images/breadcrumb-slash-ie7.png");
+}
 .ie7 .organization-type,
 .ie8 .organization-type {
   -webkit-transform: none;
