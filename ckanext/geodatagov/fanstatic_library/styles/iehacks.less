@@ -1,0 +1,57 @@
+.ie7 {
+  .masthead .container .top-nav {
+    .primary {
+      width: 922px;
+      .dropdown li .icon-caret-right {
+        position: absolute;
+        margin-top: -10px;
+        margin-left: 40px;
+      }
+    }
+    .secondary {
+      height: 34px;
+    }
+  }
+  .toolbar .breadcrumb li {
+    background-image: url("@{geoLocalThemeURL}images/breadcrumb-slash-ie7.png");
+  }
+}
+
+.ie7,
+.ie8 {
+  .organization-type {
+  	.transform(none);
+    width: 85px;
+    height: 85px;
+    top: 0;
+    right: 0;
+    background-color: transparent !important;
+    span {
+      display: none;
+    }
+    &[data-organization-type="federal"] {
+      background-image: url("@{geoLocalThemeURL}images/organization-type/federal.png");
+    }
+    &[data-organization-type="university"] {
+      background-image: url("@{geoLocalThemeURL}images/organization-type/university.png");
+    }
+    &[data-organization-type="state"] {
+      background-image: url("@{geoLocalThemeURL}images/organization-type/state.png");
+    }
+    &[data-organization-type="tribal"] {
+      background-image: url("@{geoLocalThemeURL}images/organization-type/tribal.png");
+    }
+    &[data-organization-type="non-profit"] {
+      background-image: url("@{geoLocalThemeURL}images/organization-type/non-profit.png");
+    }
+    &[data-organization-type="other"] {
+      background-image: url("@{geoLocalThemeURL}images/organization-type/other.png");
+    }
+    &[data-organization-type="local"] {
+      background-image: url("@{geoLocalThemeURL}images/organization-type/local.png");
+    }
+    &[data-organization-type="commercial"] {
+      background-image: url("@{geoLocalThemeURL}images/organization-type/commercial.png");
+    }
+  }
+}

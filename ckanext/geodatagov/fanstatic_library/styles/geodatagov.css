@@ -520,6 +520,88 @@ a {
   -o-border-radius: 5px;
   border-radius: 5px;
 }
+.module-narrow #dataset-map-container {
+  height: 200px;
+}
+.module-content #dataset-map-container {
+  height: 250px;
+}
+#dataset-map-attribution {
+  font-size: 11px;
+  line-height: 1.5;
+}
+.module-narrow #dataset-map-attribution {
+  margin: 5px 8px;
+  color: #666;
+}
+.leaflet-draw-label-single {
+  display: none;
+}
+.leaflet-draw-label-subtext {
+  display: none;
+}
+#field-location {
+  width: 190px;
+}
+.select2-results .select2-no-results {
+  padding: 3px 6px;
+}
+#dataset-map-edit {
+  margin: 5px 8px;
+}
+#dataset-map-edit-buttons {
+  display: none;
+}
+.leaflet-control-draw-rectangle {
+  background-image: url("../images/pencil.png");
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+}
+.dataset-map-expanded #dataset-map {
+  position: absolute;
+  width: 940px;
+  height: 384px;
+  top: -384px;
+  left: -1px;
+  background-color: white;
+  border: 1px solid #CCC;
+  margin: 0;
+}
+.dataset-map-expanded #dataset-map #dataset-map-container {
+  height: 300px;
+}
+.dataset-map-expanded #dataset-map #dataset-map-attribution {
+  *zoom: 1;
+}
+.dataset-map-expanded #dataset-map #dataset-map-attribution:before,
+.dataset-map-expanded #dataset-map #dataset-map-attribution:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.dataset-map-expanded #dataset-map #dataset-map-attribution:after {
+  clear: both;
+}
+.dataset-map-expanded #dataset-map #dataset-map-attribution div {
+  float: left;
+  margin-right: 10px;
+}
+.dataset-map-expanded #dataset-map #dataset-map-edit-buttons {
+  display: block;
+  float: right;
+  padding: 10px;
+}
+.dataset-map-expanded #dataset-map #dataset-map-edit {
+  display: none;
+}
+.dataset-map-expanded #dataset-map .module-heading {
+  border-top-color: #000;
+}
+.dataset-map-expanded .wrapper {
+  margin-top: 383px;
+}
 .dataset-item {
   position: relative;
   overflow: hidden;
@@ -621,89 +703,6 @@ a {
 .organization-type[data-organization-type="commercial"] {
   background-color: #719f83;
 }
-.module-narrow #dataset-map-container {
-  height: 200px;
-}
-.module-content #dataset-map-container {
-  height: 250px;
-}
-#dataset-map-attribution {
-  font-size: 11px;
-  line-height: 1.5;
-}
-.module-narrow #dataset-map-attribution {
-  margin: 5px 8px;
-  color: #666;
-}
-.leaflet-draw-label-single {
-  display: none;
-}
-.leaflet-draw-label-subtext {
-  display: none;
-}
-#field-location {
-  width: 190px;
-}
-.select2-results .select2-no-results {
-  padding: 3px 6px;
-}
-#dataset-map-edit {
-  margin: 5px 8px;
-}
-#dataset-map-edit-buttons {
-  display: none;
-}
-.leaflet-control-draw-rectangle {
-  background-image: url("../images/pencil.png");
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -o-border-radius: 5px;
-  border-radius: 5px;
-}
-.dataset-map-expanded #dataset-map {
-  position: absolute;
-  width: 940px;
-  height: 384px;
-  top: -384px;
-  left: -1px;
-  background-color: white;
-  border: 1px solid #CCC;
-  margin: 0;
-}
-.dataset-map-expanded #dataset-map #dataset-map-container {
-  height: 300px;
-}
-.dataset-map-expanded #dataset-map #dataset-map-attribution {
-  *zoom: 1;
-}
-.dataset-map-expanded #dataset-map #dataset-map-attribution:before,
-.dataset-map-expanded #dataset-map #dataset-map-attribution:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-.dataset-map-expanded #dataset-map #dataset-map-attribution:after {
-  clear: both;
-}
-.dataset-map-expanded #dataset-map #dataset-map-attribution div {
-  float: left;
-  margin-right: 10px;
-}
-.dataset-map-expanded #dataset-map #dataset-map-edit-buttons {
-  display: block;
-  float: right;
-  padding: 10px;
-}
-.dataset-map-expanded #dataset-map #dataset-map-edit {
-  display: none;
-}
-.dataset-map-expanded #dataset-map .module-heading {
-  border-top-color: #000;
-}
-.dataset-map-expanded .wrapper {
-  margin-top: 383px;
-}
-
 #dataset-search {
   margin-bottom: 5px;
 }
@@ -755,4 +754,67 @@ a {
 #debug {
   text-align: left;
   background-color: white;
+}
+.ie7 .masthead .container .top-nav .primary {
+  width: 922px;
+}
+.ie7 .masthead .container .top-nav .primary .dropdown li .icon-caret-right {
+  position: absolute;
+  margin-top: -10px;
+  margin-left: 40px;
+}
+.ie7 .masthead .container .top-nav .secondary {
+  height: 34px;
+}
+.ie7 .toolbar .breadcrumb li {
+  background-image: url("../images/breadcrumb-slash-ie7.png");
+}
+.ie7 .organization-type,
+.ie8 .organization-type {
+  -webkit-transform: none;
+  -moz-transform: none;
+  -ms-transform: none;
+  -o-transform: none;
+  transform: none;
+  width: 85px;
+  height: 85px;
+  top: 0;
+  right: 0;
+  background-color: transparent !important;
+}
+.ie7 .organization-type span,
+.ie8 .organization-type span {
+  display: none;
+}
+.ie7 .organization-type[data-organization-type="federal"],
+.ie8 .organization-type[data-organization-type="federal"] {
+  background-image: url("../images/organization-type/federal.png");
+}
+.ie7 .organization-type[data-organization-type="university"],
+.ie8 .organization-type[data-organization-type="university"] {
+  background-image: url("../images/organization-type/university.png");
+}
+.ie7 .organization-type[data-organization-type="state"],
+.ie8 .organization-type[data-organization-type="state"] {
+  background-image: url("../images/organization-type/state.png");
+}
+.ie7 .organization-type[data-organization-type="tribal"],
+.ie8 .organization-type[data-organization-type="tribal"] {
+  background-image: url("../images/organization-type/tribal.png");
+}
+.ie7 .organization-type[data-organization-type="non-profit"],
+.ie8 .organization-type[data-organization-type="non-profit"] {
+  background-image: url("../images/organization-type/non-profit.png");
+}
+.ie7 .organization-type[data-organization-type="other"],
+.ie8 .organization-type[data-organization-type="other"] {
+  background-image: url("../images/organization-type/other.png");
+}
+.ie7 .organization-type[data-organization-type="local"],
+.ie8 .organization-type[data-organization-type="local"] {
+  background-image: url("../images/organization-type/local.png");
+}
+.ie7 .organization-type[data-organization-type="commercial"],
+.ie8 .organization-type[data-organization-type="commercial"] {
+  background-image: url("../images/organization-type/commercial.png");
 }
