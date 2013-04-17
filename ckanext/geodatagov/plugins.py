@@ -192,6 +192,14 @@ def change_resource_details(resource):
         resource['description'] = filename
 
 
+def related_create_auth_fn(context, data_dict=None):
+    return {'success': False}
+
+
+def related_update_auth_fn(context, data_dict=None):
+    return {'success': False}
+
+
 class Demo(p.SingletonPlugin):
 
     p.implements(p.IConfigurer)
@@ -293,13 +301,9 @@ class Demo(p.SingletonPlugin):
     ## IAuthFunctions
 
     def get_auth_functions(self):
-
-        from ckanext.geodatagov import auth as geodatagov_auth
-
         return {
-            'related_create': geodatagov_auth.related_create,
-            'related_update': geodatagov_auth.related_update,
-            'user_create': geodatagov_auth.user_create,
+            'related_create': related_create_auth_fn,
+            'related_update': related_update_auth_fn,
         }
 
     ## IFacets
