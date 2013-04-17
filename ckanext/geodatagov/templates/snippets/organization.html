@@ -17,7 +17,7 @@ Example:
       {% set organization_type = organization.organization_type|replace(' Government', '') %}
       {% if organization_type %}
         <span class="organization-type" title="{{ organization.organization_type }}" data-organization-type="{{ organization_type|lower }}">
-          {{ organization_type }}
+          <span>{{ organization_type }}</span>
         </span>
       {% endif %}
       <div class="image">
