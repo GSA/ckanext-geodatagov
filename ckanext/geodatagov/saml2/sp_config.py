@@ -12,6 +12,12 @@ USER_MAPPING = {
     'fullname': 'field_display_name',
 }
 
+ORGANIZATION_MAPPING = {
+    'name': 'field_unique_id',
+    'title': 'field_organization',
+    'extras:organization_type': 'field_organization_type',
+}
+
 CONFIG = {
     'entityid' : 'urn:mace:umu.se:saml:ckan:sp',
     'description': 'CKAN saml2 authorizor',
@@ -31,7 +37,11 @@ CONFIG = {
                 'roles',
                 'field_display_name',
                 'realname',
-                # group stuff
+                'field_unique_id',
+                'field_type_of_user',
+                'field_organization_type',
+                'field_agency',
+                'field_organization',
             ],
             'optional_attributes': [],
             'idp': ['urn:mace:umu.se:saml:ckan:idp'],
