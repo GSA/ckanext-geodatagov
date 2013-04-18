@@ -17,7 +17,7 @@ class WAFCollectionHarvester(GeoDataGovWAFHarvester):
     def info(self):
         return {
             'name': 'waf-collection',
-            'title': 'Web Accessible Folder (WAF) Collection',
+            'title': 'Web Accessible Folder (WAF) Homogeneous Collection',
             'description': 'A Web Accessible Folder (WAF) displaying a list of spatial metadata documents with a collection record'
             }
 

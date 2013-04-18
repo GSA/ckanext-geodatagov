@@ -24,7 +24,7 @@ custom_validators = [MinimalFGDCValidator, FGDC1998Schema, FGDC1999Schema,
 
 
 VALIDATION_PROFILES = [('', 'Autodetect'),
-                       ('iso19139ngdc', 'ISO19139 XSD Schema (NGDC)'),
+                       ('iso19139ngdc', 'ISO 19115 Metadata (ISO 19139 XSD)'),
                        ]
 for custom_validator in custom_validators:
     VALIDATION_PROFILES.append((custom_validator.name, custom_validator.title))
