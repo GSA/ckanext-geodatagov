@@ -57,7 +57,7 @@ class FGDC1998Schema(FGDCSchema):
     '''
 
     name = 'fgdc_std_001_1998'
-    title = 'FGDC-STD-001-1998 XSD Schema'
+    title = 'FGDC CSDGM Version 2.0, 1998 (FGDC-STD-001-1998)'
 
 
 class FGDC1999Schema(FGDCValidator):
@@ -71,7 +71,7 @@ class FGDC1999Schema(FGDCValidator):
     _xsd_file = 'fgdc-std-001.1-1999.xsd'
 
     name = 'fgdc_std_001.1_1999'
-    title = 'FGDC-STD-001.1-1999 XSD Schema'
+    title = 'FGDC CSDGM Biological Data Profile (FGDC-STD-001.1-1999)'
 
 
 
@@ -86,7 +86,7 @@ class FGDC2001Schema(FGDCValidator):
     _xsd_file = 'fgdc-std-001.2-2001.xsd'
 
     name = 'fgdc_std_001.2_2001'
-    title = 'FGDC-STD-001.2-2001 XSD Schema'
+    title = 'FGDC CSDGM Metadata Profile for Shoreline Data (FGDC-STD-001.2-2001)'
 
 
 class FGDC2002Schema(FGDCValidator):
@@ -100,4 +100,4 @@ class FGDC2002Schema(FGDCValidator):
     _xsd_file = 'fgdc-std-012-2002.xsd'
 
     name = 'fgdc_std_012_2002'
-    title = 'FGDC-STD-012-2002 XSD Schema'
+    title = 'FGDC Extensions for Remote Sensing (FGDC-STD-012-2002)'
