@@ -159,3 +159,9 @@ class GeoDataGovDocHarvester(DocHarvester, GeoDataGovHarvester):
     '''
     A Harvester for single spatial metadata docs, with customizations for geo.data.gov
     '''
+    def info(self):
+        return {
+            'name': 'single-doc',
+            'title': 'Single spatial metadata document',
+            'description': 'A single FGDC or ISO 19139 .xml file'
+            }
