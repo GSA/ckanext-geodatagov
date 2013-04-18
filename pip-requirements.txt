@@ -2,7 +2,11 @@
 -e git+https://github.com/okfn/ckanext-spatial.git@release-v2.0#egg=ckanext-spatial
 -e git+https://github.com/okfn/ckanext-qa.git@release-v2.0#egg=ckanext-qa
 -e git+https://github.com/okfn/ckanext-googleanalytics.git@master#egg=ckanext-googleanalytics
+-e git+https://github.com/okfn/ckanext-saml2.git@master#egg=ckanext-saml2
 
 -e git+https://github.com/asl2/PyZ3950.git#egg=py3250
 ply==3.4
+
+M2Crypto
+python-memcached
 
