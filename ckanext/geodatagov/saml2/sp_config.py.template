@@ -37,7 +37,6 @@ CONFIG = {
             'idp': ['urn:mace:umu.se:saml:ckan:idp'],
         }
     },
-    'subject_data': ('memcached', 'localhost:12121'),
     'debug': 0,
     'key_file': CONFIG_PATH + '/pki/mykey.pem',
     'cert_file': CONFIG_PATH + '/pki/mycert.pem',
