@@ -1,29 +1,26 @@
-<md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" entityID="https://uat-datagov.reisys.com">
-  <md:SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:1.1:protocol urn:oasis:names:tc:SAML:2.0:protocol">
+<?xml version="1.0"?>
+<md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" entityID="https://uat-idp-datagov.reisys.com/saml/saml2/idp/metadata.php">
+  <md:IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
     <md:KeyDescriptor use="signing">
       <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
         <ds:X509Data>
-          <ds:X509Certificate>MIID/TCCAuWgAwIBAgIJAIZMH/+jpZMXMA0GCSqGSIb3DQEBBQUAMFwxCzAJBgNVBAYTAnF3MQowCAYDVQQIEwFmMQowCAYDVQQHEwFmMQowCAYDVQQKEwFxMQowCAYDVQQLEwF3MQswCQYDVQQDEwJ3ZTEQMA4GCSqGSIb3DQEJARYBcTAeFw0xMzAzMjAyMTQ3MzZaFw0yMzAzMjAyMTQ3MzZaMFwxCzAJBgNVBAYTAnF3MQowCAYDVQQIEwFmMQowCAYDVQQHEwFmMQowCAYDVQQKEwFxMQowCAYDVQQLEwF3MQswCQYDVQQDEwJ3ZTEQMA4GCSqGSIb3DQEJARYBcTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAOIYmnI7INDcrgRY+Ptnv6iMc9VihRRL6vehBAvULTrcGVg0uJJS20XZVlALjRoTJESvReopQS6kDTQfRSofMuNRHGdkG+9hok6YQGk4glXNgUaHOd2/GUsnPekIYTvFvDtH1P/hYsCwF3NKWpgoiZckMgvDibK/blDm71pE3tYKq+eGQt928BDIO6AZvnkn82XLHZ1gjAM77Is659oEeh3CtfU5YBAEUfcRbaSecLbPukfPu0INL4eHyNPEkw4KdXAFGDogsJcHIFAaPw8mPl4Soa9sncReA6+GxFkuUFGkln0H2fmhwb1glohtUm4TjD3/qDmU31dG/pO+Yp2YG5sCAwEAAaOBwTCBvjAdBgNVHQ4EFgQUUjFGlSjP6WzaO8EDkaJ2ma40NfAwgY4GA1UdIwSBhjCBg4AUUjFGlSjP6WzaO8EDkaJ2ma40NfChYKReMFwxCzAJBgNVBAYTAnF3MQowCAYDVQQIEwFmMQowCAYDVQQHEwFmMQowCAYDVQQKEwFxMQowCAYDVQQLEwF3MQswCQYDVQQDEwJ3ZTEQMA4GCSqGSIb3DQEJARYBcYIJAIZMH/+jpZMXMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEFBQADggEBAAVT8HPsUQiX3a+DTyA4iFKXciJ+kvO/siPUOAAwuxtEDYh3aDAjptvGCc8739SKkHliQ+DSki5t8g54x69QKFhdh/d7zdjqr0V2qDYIAq0owzTDKflkSQPc6bVx4WO2nFpDY88c9iFAEwrp+13CJ+xl3Mxu0V4FdAi3g01oxY2ckrhabhYrTGVN55e9lS756hZVBiEsCQUKgJRNrxEx2ntwL+U/ZYB/f2PtexL0bW7O4eAr8SOrbCxs8X6FdXkCFnUYWvMJYcbmocI8rIBwMTK9uwrQzLNo5dgoMXR4dbXhDrAwshbpEtI2aBkG/+pxfdfHFSzjUn6FgeabJ/hF9r8=</ds:X509Certificate>
+          <ds:X509Certificate>MIICgTCCAeoCCQCbOlrWDdX7FTANBgkqhkiG9w0BAQUFADCBhDELMAkGA1UEBhMCTk8xGDAWBgNVBAgTD0FuZHJlYXMgU29sYmVyZzEMMAoGA1UEBxMDRm9vMRAwDgYDVQQKEwdVTklORVRUMRgwFgYDVQQDEw9mZWlkZS5lcmxhbmcubm8xITAfBgkqhkiG9w0BCQEWEmFuZHJlYXNAdW5pbmV0dC5ubzAeFw0wNzA2MTUxMjAxMzVaFw0wNzA4MTQxMjAxMzVaMIGEMQswCQYDVQQGEwJOTzEYMBYGA1UECBMPQW5kcmVhcyBTb2xiZXJnMQwwCgYDVQQHEwNGb28xEDAOBgNVBAoTB1VOSU5FVFQxGDAWBgNVBAMTD2ZlaWRlLmVybGFuZy5ubzEhMB8GCSqGSIb3DQEJARYSYW5kcmVhc0B1bmluZXR0Lm5vMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDivbhR7P516x/S3BqKxupQe0LONoliupiBOesCO3SHbDrl3+q9IbfnfmE04rNuMcPsIxB161TdDpIesLCn7c8aPHISKOtPlAeTZSnb8QAu7aRjZq3+PbrP5uW3TcfCGPtKTytHOge/OlJbo078dVhXQ14d1EDwXJW1rRXuUt4C8QIDAQABMA0GCSqGSIb3DQEBBQUAA4GBACDVfp86HObqY+e8BUoWQ9+VMQx1ASDohBjwOsg2WykUqRXF+dLfcUH9dWR63CtZIKFDbStNomPnQz7nbK+onygwBspVEbnHuUihZq3ZUdmumQqCw4Uvs/1Uvq3orOo/WJVhTyvLgFVK2QarQ4/67OZfHd7R+POBXhophSMv1ZOo</ds:X509Certificate>
         </ds:X509Data>
       </ds:KeyInfo>
     </md:KeyDescriptor>
     <md:KeyDescriptor use="encryption">
       <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
         <ds:X509Data>
-          <ds:X509Certificate>MIID/TCCAuWgAwIBAgIJAIZMH/+jpZMXMA0GCSqGSIb3DQEBBQUAMFwxCzAJBgNVBAYTAnF3MQowCAYDVQQIEwFmMQowCAYDVQQHEwFmMQowCAYDVQQKEwFxMQowCAYDVQQLEwF3MQswCQYDVQQDEwJ3ZTEQMA4GCSqGSIb3DQEJARYBcTAeFw0xMzAzMjAyMTQ3MzZaFw0yMzAzMjAyMTQ3MzZaMFwxCzAJBgNVBAYTAnF3MQowCAYDVQQIEwFmMQowCAYDVQQHEwFmMQowCAYDVQQKEwFxMQowCAYDVQQLEwF3MQswCQYDVQQDEwJ3ZTEQMA4GCSqGSIb3DQEJARYBcTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAOIYmnI7INDcrgRY+Ptnv6iMc9VihRRL6vehBAvULTrcGVg0uJJS20XZVlALjRoTJESvReopQS6kDTQfRSofMuNRHGdkG+9hok6YQGk4glXNgUaHOd2/GUsnPekIYTvFvDtH1P/hYsCwF3NKWpgoiZckMgvDibK/blDm71pE3tYKq+eGQt928BDIO6AZvnkn82XLHZ1gjAM77Is659oEeh3CtfU5YBAEUfcRbaSecLbPukfPu0INL4eHyNPEkw4KdXAFGDogsJcHIFAaPw8mPl4Soa9sncReA6+GxFkuUFGkln0H2fmhwb1glohtUm4TjD3/qDmU31dG/pO+Yp2YG5sCAwEAAaOBwTCBvjAdBgNVHQ4EFgQUUjFGlSjP6WzaO8EDkaJ2ma40NfAwgY4GA1UdIwSBhjCBg4AUUjFGlSjP6WzaO8EDkaJ2ma40NfChYKReMFwxCzAJBgNVBAYTAnF3MQowCAYDVQQIEwFmMQowCAYDVQQHEwFmMQowCAYDVQQKEwFxMQowCAYDVQQLEwF3MQswCQYDVQQDEwJ3ZTEQMA4GCSqGSIb3DQEJARYBcYIJAIZMH/+jpZMXMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEFBQADggEBAAVT8HPsUQiX3a+DTyA4iFKXciJ+kvO/siPUOAAwuxtEDYh3aDAjptvGCc8739SKkHliQ+DSki5t8g54x69QKFhdh/d7zdjqr0V2qDYIAq0owzTDKflkSQPc6bVx4WO2nFpDY88c9iFAEwrp+13CJ+xl3Mxu0V4FdAi3g01oxY2ckrhabhYrTGVN55e9lS756hZVBiEsCQUKgJRNrxEx2ntwL+U/ZYB/f2PtexL0bW7O4eAr8SOrbCxs8X6FdXkCFnUYWvMJYcbmocI8rIBwMTK9uwrQzLNo5dgoMXR4dbXhDrAwshbpEtI2aBkG/+pxfdfHFSzjUn6FgeabJ/hF9r8=</ds:X509Certificate>
+          <ds:X509Certificate>MIICgTCCAeoCCQCbOlrWDdX7FTANBgkqhkiG9w0BAQUFADCBhDELMAkGA1UEBhMCTk8xGDAWBgNVBAgTD0FuZHJlYXMgU29sYmVyZzEMMAoGA1UEBxMDRm9vMRAwDgYDVQQKEwdVTklORVRUMRgwFgYDVQQDEw9mZWlkZS5lcmxhbmcubm8xITAfBgkqhkiG9w0BCQEWEmFuZHJlYXNAdW5pbmV0dC5ubzAeFw0wNzA2MTUxMjAxMzVaFw0wNzA4MTQxMjAxMzVaMIGEMQswCQYDVQQGEwJOTzEYMBYGA1UECBMPQW5kcmVhcyBTb2xiZXJnMQwwCgYDVQQHEwNGb28xEDAOBgNVBAoTB1VOSU5FVFQxGDAWBgNVBAMTD2ZlaWRlLmVybGFuZy5ubzEhMB8GCSqGSIb3DQEJARYSYW5kcmVhc0B1bmluZXR0Lm5vMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDivbhR7P516x/S3BqKxupQe0LONoliupiBOesCO3SHbDrl3+q9IbfnfmE04rNuMcPsIxB161TdDpIesLCn7c8aPHISKOtPlAeTZSnb8QAu7aRjZq3+PbrP5uW3TcfCGPtKTytHOge/OlJbo078dVhXQ14d1EDwXJW1rRXuUt4C8QIDAQABMA0GCSqGSIb3DQEBBQUAA4GBACDVfp86HObqY+e8BUoWQ9+VMQx1ASDohBjwOsg2WykUqRXF+dLfcUH9dWR63CtZIKFDbStNomPnQz7nbK+onygwBspVEbnHuUihZq3ZUdmumQqCw4Uvs/1Uvq3orOo/WJVhTyvLgFVK2QarQ4/67OZfHd7R+POBXhophSMv1ZOo</ds:X509Certificate>
         </ds:X509Data>
       </ds:KeyInfo>
     </md:KeyDescriptor>
-    <md:SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://uat-datagov.reisys.com/saml/module.php/saml/sp/saml2-logout.php/uat-datagov-sp"/>
-    <md:SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://uat-datagov.reisys.com/saml/module.php/saml/sp/saml2-logout.php/uat-datagov-sp"/>
-    <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://uat-datagov.reisys.com/saml/module.php/saml/sp/saml2-acs.php/uat-datagov-sp" index="0"/>
-    <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:1.0:profiles:browser-post" Location="https://uat-datagov.reisys.com/saml/module.php/saml/sp/saml1-acs.php/uat-datagov-sp" index="1"/>
-    <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact" Location="https://uat-datagov.reisys.com/saml/module.php/saml/sp/saml2-acs.php/uat-datagov-sp" index="2"/>
-    <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:1.0:profiles:artifact-01" Location="https://uat-datagov.reisys.com/saml/module.php/saml/sp/saml1-acs.php/uat-datagov-sp/artifact" index="3"/>
-    <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:profiles:holder-of-key:SSO:browser" Location="https://uat-datagov.reisys.com/saml/module.php/saml/sp/saml2-acs.php/uat-datagov-sp" index="4"/>
-  </md:SPSSODescriptor>
+    <md:SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://uat-idp-datagov.reisys.com/saml/saml2/idp/SingleLogoutService.php"/>
+    <md:NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</md:NameIDFormat>
+    <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://uat-idp-datagov.reisys.com/saml/saml2/idp/SSOService.php"/>
+  </md:IDPSSODescriptor>
   <md:ContactPerson contactType="technical">
-    <md:GivenName>Administrator</md:GivenName>
+    <md:SurName>Administrator</md:SurName>
     <md:EmailAddress>dan.olaru@reisystems.com</md:EmailAddress>
   </md:ContactPerson>
 </md:EntityDescriptor>
