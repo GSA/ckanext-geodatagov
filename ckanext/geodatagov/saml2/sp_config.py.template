@@ -59,7 +59,7 @@ CONFIG = {
     'name_form': NAME_FORMAT_URI,
     'logger': {
         'rotating': {
-            'filename': 'sp.log',
+            'filename': '/tmp/sp.log',
             'maxBytes': 100000,
             'backupCount': 5,
             },
