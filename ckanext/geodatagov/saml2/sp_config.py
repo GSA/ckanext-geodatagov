@@ -7,17 +7,6 @@ BASE= 'https://saml-test.datagov.ckan.org/'
 #BASE = 'http://localhost:5000/'
 CONFIG_PATH = os.path.dirname(__file__)
 
-USER_MAPPING = {
-    'email': 'mail',
-    'fullname': 'field_display_name',
-}
-
-ORGANIZATION_MAPPING = {
-    'name': 'field_unique_id',
-    'title': 'field_organization',
-    'extras:organization_type': 'field_organization_type',
-}
-
 CONFIG = {
     'entityid' : 'urn:mace:umu.se:saml:ckan:sp',
     'description': 'CKAN saml2 authorizor',
