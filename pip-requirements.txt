@@ -8,4 +8,4 @@ ply==3.4
 
 
 -e git+https://github.com/okfn/ckanext-saml2.git@master#egg=ckanext-saml2
--e git+https://github.com/tobes/pysaml2.git@master#egg=pysaml2
+-e git+https://github.com/tobes/pysaml2.git@fixes#egg=pysaml2
