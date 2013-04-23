@@ -169,7 +169,7 @@ a {
   position: absolute;
   top: 25px;
   left: 470px;
-  background-color: #5881b0;
+  background-color: #4ba9d0;
   text-transform: uppercase;
   padding: 3px 5px;
   font-weight: bold;
@@ -226,14 +226,14 @@ a {
   display: block;
   padding: 2px 5px;
   color: white;
-  background-color: #5881b0;
+  background-color: #4ba9d0;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   -o-border-radius: 2px;
   border-radius: 2px;
 }
 .masthead .container .account-wrapper ul li a:hover {
-  background-color: #446891;
+  background-color: #3090b8;
   text-decoration: none;
 }
 .masthead .container .top-nav {
@@ -275,8 +275,8 @@ a {
   line-height: 35px;
 }
 .masthead .container .top-nav .primary ul li a:hover {
-  background-color: #5881b0;
-  border-left-color: #5881b0;
+  background-color: #4ba9d0;
+  border-left-color: #4ba9d0;
 }
 .masthead .container .top-nav .primary ul li a.root {
   border-left: 1px solid #294B78;
@@ -313,8 +313,8 @@ a {
   line-height: 35px;
 }
 .masthead .container .top-nav .primary .dropdown li.active a {
-  background-color: #5881b0;
-  border-left-color: #5881b0;
+  background-color: #4ba9d0;
+  border-left-color: #4ba9d0;
 }
 .masthead .container .top-nav .primary .dropdown.wide {
   *zoom: 1;
@@ -344,7 +344,7 @@ a {
 }
 .masthead .container .top-nav .secondary {
   padding: 5px 5px 0 5px;
-  background-color: #5881b0;
+  background-color: #4ba9d0;
 }
 .masthead .container .top-nav .secondary ul li {
   margin-right: 10px;
@@ -366,7 +366,7 @@ a {
 .masthead .container .top-nav .secondary ul li a:hover,
 .masthead .container .top-nav .secondary ul li.active a {
   background-color: white;
-  color: #5881b0;
+  color: #4ba9d0;
 }
 .flash-messages {
   padding: 10px;
@@ -438,7 +438,7 @@ a {
   width: 400px;
 }
 .homepage .search-box input {
-  border: 3px solid #5881b0;
+  border: 3px solid #4ba9d0;
   -webkit-box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
   -moz-box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
   -o-box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
