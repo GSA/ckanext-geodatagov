@@ -58,7 +58,7 @@ body,
 }
 .toolbar {
   background-color: white;
-  margin: 0 -1px;
+  margin: 0;
   border: 1px solid #CCC;
   border-width: 0 1px;
   padding: 10px;
@@ -98,9 +98,9 @@ a {
   margin-right: 3px;
 }
 .masthead .container {
-  width: 942px;
+  width: 940px;
   margin-top: 20px;
-  background: #ffffff url("../images/header-line.png") 100% 100% no-repeat;
+  background: #ffffff url("../images/header-line.png?1") 100% 100% no-repeat;
   -webkit-border-radius: 3px 3px 0 0;
   -moz-border-radius: 3px 3px 0 0;
   -o-border-radius: 3px 3px 0 0;
@@ -373,7 +373,6 @@ a {
   border: 1px solid #CCC;
   background-color: #FFF;
   border-width: 0 1px;
-  margin: 0 -1px;
 }
 .site-footer {
   padding-top: 0;
@@ -646,7 +645,7 @@ a {
 .results,
 .is-search-title {
   margin-bottom: 20px;
-  padding-bottom: 5px;
+  padding-bottom: 10px;
 }
 .filter-list {
   margin-bottom: 5px;
