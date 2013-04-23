@@ -1,8 +1,8 @@
 #!/bin/bash
 
-chkconfig --level 2345 rabbitmq-server on
 chkconfig --level 2345 tomcat6 on
 chkconfig --level 2345 crond on
+chkconfig --level 2345 redis on
 initctl reload-configuration
 
 if [ ! -f /usr/lib64/libxmlsec1-openssl.so ];
@@ -11,7 +11,7 @@ then
 fi
 
 initctl start supervisor
-service rabbitmq-server restart
+service redis restart
 service tomcat6 restart
 service crond restart
 supervisorctl restart all
