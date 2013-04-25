@@ -290,7 +290,7 @@ class Demo(p.SingletonPlugin):
                 'resource_preview_custom': geodatagov_helpers.resource_preview_custom,
                 'is_web_format': geodatagov_helpers.is_web_format,
 
-                'saml2_user_edit_url': saml2_user_edit_url,
+                'saml2_user_edit_url': self.saml2_user_edit_url,
                 }
 
     ## IActions
