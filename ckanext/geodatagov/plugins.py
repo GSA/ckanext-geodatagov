@@ -203,6 +203,7 @@ def related_update_auth_fn(context, data_dict=None):
 class Demo(p.SingletonPlugin):
 
     p.implements(p.IConfigurer)
+    p.implements(p.IConfigurable)
     p.implements(p.IPackageController, inherit=True)
     p.implements(p.ITemplateHelpers)
     p.implements(p.IActions)
@@ -216,6 +217,13 @@ class Demo(p.SingletonPlugin):
         p.toolkit.add_public_directory(config, 'public')
         p.toolkit.add_resource('fanstatic_library', 'geodatagov')
 
+    def configure(self, config):
+        self.edit_url = config.get('saml2.user_edit')
+
+
+    @classmethod
+    def saml2_user_edit_url(cls):
+        return cls.edit_url
 
     def before_view(self, pkg_dict):
 
@@ -281,6 +289,8 @@ class Demo(p.SingletonPlugin):
                 'get_collection_package': geodatagov_helpers.get_collection_package,
                 'resource_preview_custom': geodatagov_helpers.resource_preview_custom,
                 'is_web_format': geodatagov_helpers.is_web_format,
+
+                'saml2_user_edit_url': saml2_user_edit_url,
                 }
 
     ## IActions
