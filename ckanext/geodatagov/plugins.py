@@ -210,6 +210,7 @@ class Demo(p.SingletonPlugin):
     p.implements(p.IAuthFunctions)
     p.implements(p.IFacets, inherit=True)
     p.implements(p.IActions)
+    edit_url = None
 
     def update_config(self, config):
         # add template directory
