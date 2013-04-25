@@ -219,7 +219,7 @@ class Demo(p.SingletonPlugin):
         p.toolkit.add_resource('fanstatic_library', 'geodatagov')
 
     def configure(self, config):
-        self.edit_url = config.get('saml2.user_edit')
+        self.__class__.edit_url = config.get('saml2.user_edit')
 
 
     @classmethod
