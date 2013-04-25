@@ -139,31 +139,15 @@ a {
 .masthead .container .logo:after {
   clear: both;
 }
-.masthead .container .logo a,
-.masthead .container .logo .slash {
+.masthead .container .logo a {
   display: block;
   float: left;
-  margin-right: 10px;
   height: 55px;
-}
-.masthead .container .logo .root {
   background-image: url("http://www.data.gov/sites/all/themes/datagov/logo.png");
   width: 208px;
 }
-.masthead .container .logo .root span {
+.masthead .container .logo a span {
   display: none;
-}
-.masthead .container .logo .slash,
-.masthead .container .logo .specific {
-  font-weight: bold;
-  font-size: 28px;
-  line-height: 58px;
-}
-.masthead .container .logo .slash {
-  color: #999;
-}
-.masthead .container .logo .specific {
-  color: #284a7a;
 }
 .masthead .container .beta {
   position: absolute;
@@ -340,33 +324,69 @@ a {
 }
 .masthead .container .top-nav .site-search {
   float: right;
-  margin-top: 0;
+  margin: 9px 18px;
+}
+.masthead .container .top-nav .site-search input {
+  border-width: 0;
+  font-family: 'Open Sans';
+  font-weight: 600;
+  padding: 6px 10px;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  -o-border-radius: 0;
+  border-radius: 0;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  -o-box-shadow: none;
+  box-shadow: none;
 }
 .masthead .container .top-nav .secondary {
-  padding: 5px 5px 0 5px;
   background-color: #4ba9d0;
+  font-family: 'Open Sans';
+  font-weight: 600;
+  height: 50px;
+}
+.masthead .container .top-nav .secondary ul {
+  *zoom: 1;
+}
+.masthead .container .top-nav .secondary ul:before,
+.masthead .container .top-nav .secondary ul:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.masthead .container .top-nav .secondary ul:after {
+  clear: both;
 }
 .masthead .container .top-nav .secondary ul li {
-  margin-right: 10px;
+  float: left;
 }
 .masthead .container .top-nav .secondary ul li a {
-  margin: 0;
-  padding: 0 10px;
-  font: bold 11px "Myriad Pro", "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
-  text-decoration: none;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  height: 34px;
-  line-height: 34px;
-  -webkit-border-radius: 3px 3px 0 0;
-  -moz-border-radius: 3px 3px 0 0;
-  -o-border-radius: 3px 3px 0 0;
-  border-radius: 3px 3px 0 0;
+  line-height: 50px;
+  padding: 0 15px;
 }
 .masthead .container .top-nav .secondary ul li a:hover,
 .masthead .container .top-nav .secondary ul li.active a {
+  background-color: #3090b8;
+}
+.masthead .container .top-nav .secondary ul li.home {
+  margin-right: 10px;
+}
+.masthead .container .top-nav .secondary ul li.home a {
+  background: transparent url("../images/geo-icon.png") 20px 50% no-repeat;
+  padding-left: 65px;
+  padding-right: 20px;
+  font-size: 21px;
+}
+.masthead .container .top-nav .secondary ul li.home a span {
+  margin-left: 5px;
+  text-transform: uppercase;
+  font-size: 9px;
+  line-height: 1;
+  vertical-align: 10px;
+  color: black;
   background-color: white;
-  color: #4ba9d0;
+  padding: 0 2px;
 }
 .flash-messages {
   padding: 10px;
@@ -771,9 +791,6 @@ a {
   position: absolute;
   right: 10px;
   margin-top: -10px;
-}
-.ie7 .masthead .container .top-nav .secondary {
-  height: 34px;
 }
 .ie7 .toolbar .breadcrumb li {
   background-image: url("../images/breadcrumb-slash-ie7.png");

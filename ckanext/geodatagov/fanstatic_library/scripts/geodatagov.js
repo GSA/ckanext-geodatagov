@@ -11,7 +11,7 @@ this.ckan.module('geodatagov-top-nav', function($, _) {
           $this.addClass('active');
         }
       });
-      if (html.hasClass('ie7') || html.hasClass('ie8')) {
+      if (html.hasClass('ie7') || html.hasClass('ie8') || html.hasClass('ie9')) {
         $('input, textarea').placeholder();
       }
     }
