@@ -22,7 +22,20 @@
     <li class="active">
       <a href="http://www.data.gov/metric" class="root">{{ _('Metrics') }}<i class="icon-caret-down"></i></a>
       <ul class="unstyled dropdown">
-        <li><a href="http://www.data.gov/metric">{{ _('Federal Agency') }}</a></li>
+        <li class="sub-dropdown">
+          <a href="http://www.data.gov/metric">{{ _('Federal Agency') }}<i class="icon-caret-right"></i></a>
+          <ul class="unstyled dropdown">
+            <li>
+              <a href="http://www.data.gov/metric">{{ _('Agency Participation') }}</a>
+            </li>
+            <li>
+              <a href="http://www.data.gov/metric/federalagency/datasetbycategory">{{ _('Datasets By Category') }}</a>
+            </li>
+            <li>
+              <a href="/metric/federalagency/datasetpublishedpermonth">{{ _('Datasets Published Per Month') }}</a>
+            </li>
+          </ul>
+        </li>
         <li><a href="http://www.data.gov/suggestdataset">{{ _('Suggested Datasets') }}</a></li>
         <li class="sub-dropdown">
           <a href="http://www.data.gov/metric/visitorstats/dailyvisitorstatistics">{{ _('Visitor Stats') }}<i class="icon-caret-right"></i></a>

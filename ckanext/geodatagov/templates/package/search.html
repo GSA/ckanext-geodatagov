@@ -24,8 +24,6 @@
           <button type="submit" value="search">{{ _('Submit') }}</button>
         </span>
 
-        {{ h.snippet('snippets/sort_by.html', sort=c.sort_by_selected) }}
-
         {% if c.fields -%}
           <span>
             {{ form.hidden_from_list(fields=c.fields) }}
@@ -35,6 +33,7 @@
         <div id="dataset-search-ext">{% block dataset_search_ext %}{% endblock %}</div>
       </form>
       <div class="results">
+        {{ h.snippet('snippets/sort_by.html', sort=c.sort_by_selected) }}
         <strong>
           {% snippet 'snippets/search_result_text.html', query=c.q, count=c.page.item_count, type='dataset' %}
         </strong>

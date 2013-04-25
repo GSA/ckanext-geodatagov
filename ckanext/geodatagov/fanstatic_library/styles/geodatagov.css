@@ -169,7 +169,7 @@ a {
   position: absolute;
   top: 25px;
   left: 470px;
-  background-color: #4ba9d0;
+  background-color: #5881b0;
   text-transform: uppercase;
   padding: 3px 5px;
   font-weight: bold;
@@ -226,14 +226,14 @@ a {
   display: block;
   padding: 2px 5px;
   color: white;
-  background-color: #4ba9d0;
+  background-color: #5881b0;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   -o-border-radius: 2px;
   border-radius: 2px;
 }
 .masthead .container .account-wrapper ul li a:hover {
-  background-color: #3090b8;
+  background-color: #446891;
   text-decoration: none;
 }
 .masthead .container .top-nav {
@@ -275,8 +275,8 @@ a {
   line-height: 35px;
 }
 .masthead .container .top-nav .primary ul li a:hover {
-  background-color: #4ba9d0;
-  border-left-color: #4ba9d0;
+  background-color: #5881b0;
+  border-left-color: #5881b0;
 }
 .masthead .container .top-nav .primary ul li a.root {
   border-left: 1px solid #294B78;
@@ -313,8 +313,8 @@ a {
   line-height: 35px;
 }
 .masthead .container .top-nav .primary .dropdown li.active a {
-  background-color: #4ba9d0;
-  border-left-color: #4ba9d0;
+  background-color: #5881b0;
+  border-left-color: #5881b0;
 }
 .masthead .container .top-nav .primary .dropdown.wide {
   *zoom: 1;
@@ -438,7 +438,7 @@ a {
   width: 400px;
 }
 .homepage .search-box input {
-  border: 3px solid #4ba9d0;
+  border: 3px solid #5881b0;
   -webkit-box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
   -moz-box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
   -o-box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
@@ -647,6 +647,12 @@ a {
   margin-bottom: 20px;
   padding-bottom: 10px;
 }
+.results strong:before,
+.is-search-title strong:before,
+.results:before,
+.is-search-title:before {
+  display: none;
+}
 .filter-list {
   margin-bottom: 5px;
 }
@@ -706,7 +712,11 @@ a {
   margin-bottom: 5px;
 }
 .control-order-by {
-  bottom: -46px;
+  position: relative;
+  bottom: 0;
+  float: right;
+  margin-top: 5px;
+  margin-left: 10px;
 }
 .control-order-by select {
   margin-bottom: 0;
@@ -755,18 +765,28 @@ a {
   background-color: white;
 }
 .ie7 .masthead .container .top-nav .primary {
-  width: 922px;
+  width: 920px;
 }
 .ie7 .masthead .container .top-nav .primary .dropdown li .icon-caret-right {
   position: absolute;
+  right: 10px;
   margin-top: -10px;
-  margin-left: 40px;
 }
 .ie7 .masthead .container .top-nav .secondary {
   height: 34px;
 }
 .ie7 .toolbar .breadcrumb li {
   background-image: url("../images/breadcrumb-slash-ie7.png");
+}
+.ie7 .dataset-map-expanded #dataset-map {
+  width: 938px;
+}
+.ie8 .masthead .container .account-wrapper ul li a {
+  white-space: nowrap;
+}
+.ie7 .control-order-by select,
+.ie8 .control-order-by select {
+  margin-top: 8px;
 }
 .ie7 .organization-type,
 .ie8 .organization-type {
