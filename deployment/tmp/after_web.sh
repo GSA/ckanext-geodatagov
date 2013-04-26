@@ -15,6 +15,6 @@ then
      ln -s /usr/lib64/libxmlsec1-openssl.so.1.2.16 /usr/lib64/libxmlsec1-openssl.so
 fi
 
-service memcached restart
+service memcached start
 service httpd restart
 service nginx restart
