@@ -114,10 +114,14 @@
         {% endif %}
         {% for extra in h.sorted_extras(extras, auto_clean=true, exclude=['metadata-date', 'dataset-reference-date', 'responsible-party', 'contact-email']) %}
           {% set key, value = extra %}
-          <tr rel="dc:relation" resource="_:extra{{ i }}" class="toggle-more">
-            <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key) }}</th>
-            <td class="dataset-details" property="rdf:value">{{ value }}</td>
-          </tr>
+            <tr rel="dc:relation" resource="_:extra{{ i }}" class="toggle-more">
+              <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key) }}</th>
+              <td class="dataset-details" property="rdf:value">
+                {% if value != '[]' %}
+                  {{ value }}
+                {% endif %}
+              </td>
+            </tr>
           {% endfor %}
       </tbody>
     </table>

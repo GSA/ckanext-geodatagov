@@ -2,10 +2,11 @@
 
 {% block scripts %}
   {{ super() }}
-  {% resource 'geodatagov/scripts/geodatagov.js' %}
+  {% resource 'geodatagov/js' %}
 {% endblock %}
 
 {% block styles %}
   {{ super() }}
+  <link href="http://fonts.googleapis.com/css?family=Open+Sans:600" rel="stylesheet" type="text/css">
   {% resource 'geodatagov/styles/geodatagov.css' %}
 {% endblock %}

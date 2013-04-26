@@ -14,9 +14,6 @@
       <hgroup class="top">
         <div class="logo">
           <a href="http://www.data.gov/" class="root"><span>{{ _('data.gov') }}</span></a>
-          <span class="slash">/</span>
-          <a href="{{ h.url('home') }}" class="specific"><span>{{ _('Geospatial Data') }}</span></a>
-          <span class="beta">Beta</span>
         </div>
         {% block header_account %}
           <div class="account-wrapper">
@@ -79,11 +76,12 @@
                 </div>
               </form>
             {% endblock %}
-            <ul class="nav nav-pills" data-module="geodatagov-top-nav">
+            <ul class="nav" data-module="geodatagov-top-nav">
               {% set nav_items = [
                 { 'url': h.url_for('home'),
-                  'label': _('Home'),
-                  'selected': (c.controller == 'home') },
+                  'label': _('Geospatial Data <span>Beta</span>'),
+                  'selected': (c.controller == 'home'),
+                  'class': 'home' },
                 { 'url': h.url_for('search'),
                   'label': _('Datasets'),
                   'check': '/dataset' },
@@ -92,8 +90,8 @@
                   'selected': (c.controller == 'organization') },
               ] %}
               {% for nav_item in nav_items %}
-                <li class="{{ 'active' if nav_item.selected }}"{% if nav_item.check %} data-check="{{ nav_item.check }}"{% endif %}>
-                  <a href="{{ nav_item.url }}">{{ nav_item.label }}</a>
+                <li class="{{ 'active' if nav_item.selected }} {{ nav_item.class }}"{% if nav_item.check %} data-check="{{ nav_item.check }}"{% endif %}>
+                  <a href="{{ nav_item.url }}">{{ nav_item.label|safe }}</a>
                 </li>
               {% endfor %}
             </ul>

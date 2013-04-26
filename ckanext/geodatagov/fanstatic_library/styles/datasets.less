@@ -50,6 +50,10 @@
 .is-search-title {
   margin-bottom: 20px;
   padding-bottom: 10px;
+  strong:before,
+  &:before {
+    display: none;
+  }
 }
 
 .filter-list {
@@ -110,7 +114,11 @@
 }
 
 .control-order-by {
-  bottom: -46px;
+  position: relative;
+  bottom: 0;
+  float: right;
+  margin-top: 5px;
+  margin-left: 10px;
   select {
     margin-bottom: 0;
   }

@@ -139,37 +139,21 @@ a {
 .masthead .container .logo:after {
   clear: both;
 }
-.masthead .container .logo a,
-.masthead .container .logo .slash {
+.masthead .container .logo a {
   display: block;
   float: left;
-  margin-right: 10px;
   height: 55px;
-}
-.masthead .container .logo .root {
   background-image: url("http://www.data.gov/sites/all/themes/datagov/logo.png");
   width: 208px;
 }
-.masthead .container .logo .root span {
+.masthead .container .logo a span {
   display: none;
-}
-.masthead .container .logo .slash,
-.masthead .container .logo .specific {
-  font-weight: bold;
-  font-size: 28px;
-  line-height: 58px;
-}
-.masthead .container .logo .slash {
-  color: #999;
-}
-.masthead .container .logo .specific {
-  color: #284a7a;
 }
 .masthead .container .beta {
   position: absolute;
   top: 25px;
   left: 470px;
-  background-color: #4ba9d0;
+  background-color: #5881b0;
   text-transform: uppercase;
   padding: 3px 5px;
   font-weight: bold;
@@ -226,14 +210,14 @@ a {
   display: block;
   padding: 2px 5px;
   color: white;
-  background-color: #4ba9d0;
+  background-color: #5881b0;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   -o-border-radius: 2px;
   border-radius: 2px;
 }
 .masthead .container .account-wrapper ul li a:hover {
-  background-color: #3090b8;
+  background-color: #446891;
   text-decoration: none;
 }
 .masthead .container .top-nav {
@@ -275,8 +259,8 @@ a {
   line-height: 35px;
 }
 .masthead .container .top-nav .primary ul li a:hover {
-  background-color: #4ba9d0;
-  border-left-color: #4ba9d0;
+  background-color: #5881b0;
+  border-left-color: #5881b0;
 }
 .masthead .container .top-nav .primary ul li a.root {
   border-left: 1px solid #294B78;
@@ -313,8 +297,8 @@ a {
   line-height: 35px;
 }
 .masthead .container .top-nav .primary .dropdown li.active a {
-  background-color: #4ba9d0;
-  border-left-color: #4ba9d0;
+  background-color: #5881b0;
+  border-left-color: #5881b0;
 }
 .masthead .container .top-nav .primary .dropdown.wide {
   *zoom: 1;
@@ -340,33 +324,69 @@ a {
 }
 .masthead .container .top-nav .site-search {
   float: right;
-  margin-top: 0;
+  margin: 9px 18px;
+}
+.masthead .container .top-nav .site-search input {
+  border-width: 0;
+  font-family: 'Open Sans';
+  font-weight: 600;
+  padding: 6px 10px;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  -o-border-radius: 0;
+  border-radius: 0;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  -o-box-shadow: none;
+  box-shadow: none;
 }
 .masthead .container .top-nav .secondary {
-  padding: 5px 5px 0 5px;
   background-color: #4ba9d0;
+  font-family: 'Open Sans';
+  font-weight: 600;
+  height: 50px;
+}
+.masthead .container .top-nav .secondary ul {
+  *zoom: 1;
+}
+.masthead .container .top-nav .secondary ul:before,
+.masthead .container .top-nav .secondary ul:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.masthead .container .top-nav .secondary ul:after {
+  clear: both;
 }
 .masthead .container .top-nav .secondary ul li {
-  margin-right: 10px;
+  float: left;
 }
 .masthead .container .top-nav .secondary ul li a {
-  margin: 0;
-  padding: 0 10px;
-  font: bold 11px "Myriad Pro", "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
-  text-decoration: none;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  height: 34px;
-  line-height: 34px;
-  -webkit-border-radius: 3px 3px 0 0;
-  -moz-border-radius: 3px 3px 0 0;
-  -o-border-radius: 3px 3px 0 0;
-  border-radius: 3px 3px 0 0;
+  line-height: 50px;
+  padding: 0 15px;
 }
 .masthead .container .top-nav .secondary ul li a:hover,
 .masthead .container .top-nav .secondary ul li.active a {
+  background-color: #3090b8;
+}
+.masthead .container .top-nav .secondary ul li.home {
+  margin-right: 10px;
+}
+.masthead .container .top-nav .secondary ul li.home a {
+  background: transparent url("../images/geo-icon.png") 20px 50% no-repeat;
+  padding-left: 65px;
+  padding-right: 20px;
+  font-size: 21px;
+}
+.masthead .container .top-nav .secondary ul li.home a span {
+  margin-left: 5px;
+  text-transform: uppercase;
+  font-size: 9px;
+  line-height: 1;
+  vertical-align: 10px;
+  color: black;
   background-color: white;
-  color: #4ba9d0;
+  padding: 0 2px;
 }
 .flash-messages {
   padding: 10px;
@@ -438,7 +458,7 @@ a {
   width: 400px;
 }
 .homepage .search-box input {
-  border: 3px solid #4ba9d0;
+  border: 3px solid #5881b0;
   -webkit-box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
   -moz-box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
   -o-box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
@@ -647,6 +667,12 @@ a {
   margin-bottom: 20px;
   padding-bottom: 10px;
 }
+.results strong:before,
+.is-search-title strong:before,
+.results:before,
+.is-search-title:before {
+  display: none;
+}
 .filter-list {
   margin-bottom: 5px;
 }
@@ -706,7 +732,11 @@ a {
   margin-bottom: 5px;
 }
 .control-order-by {
-  bottom: -46px;
+  position: relative;
+  bottom: 0;
+  float: right;
+  margin-top: 5px;
+  margin-left: 10px;
 }
 .control-order-by select {
   margin-bottom: 0;
@@ -755,18 +785,25 @@ a {
   background-color: white;
 }
 .ie7 .masthead .container .top-nav .primary {
-  width: 922px;
+  width: 920px;
 }
 .ie7 .masthead .container .top-nav .primary .dropdown li .icon-caret-right {
   position: absolute;
+  right: 10px;
   margin-top: -10px;
-  margin-left: 40px;
-}
-.ie7 .masthead .container .top-nav .secondary {
-  height: 34px;
 }
 .ie7 .toolbar .breadcrumb li {
   background-image: url("../images/breadcrumb-slash-ie7.png");
+}
+.ie7 .dataset-map-expanded #dataset-map {
+  width: 938px;
+}
+.ie8 .masthead .container .account-wrapper ul li a {
+  white-space: nowrap;
+}
+.ie7 .control-order-by select,
+.ie8 .control-order-by select {
+  margin-top: 8px;
 }
 .ie7 .organization-type,
 .ie8 .organization-type {
