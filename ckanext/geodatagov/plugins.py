@@ -103,6 +103,9 @@ RESOURCE_MAPPING = {
     'xyz': ('XYZ', 'XYZ'),
     'image/png': ('PNG', 'PNG Image File'),
     'png': ('PNG', 'PNG Image File'),
+    'web map application': ('ArcGIS Online Map', 'ArcGIS Online Map'),
+    'arcgis map preview': ('ArcGIS Map Preview', 'ArcGIS Map Preview'),
+    'arcgis map service': ('ArcGIS Map Service', 'ArcGIS Map Service'),
 }
 
 
