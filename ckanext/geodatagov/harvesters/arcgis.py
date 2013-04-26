@@ -369,7 +369,7 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
         if content['type'] in ['Map Service']:
             resource_url = urlparse.urljoin(
                 source_url,
-                'home/webmap/viewer.html?service=' + content['id']
+                'home/webmap/viewer.html?services=' + content['id']
             )
             format = 'ArcGIS MAP Preview'
 
