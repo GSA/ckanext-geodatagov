@@ -203,7 +203,18 @@ class Demo(p.SingletonPlugin):
     p.implements(p.IActions)
     p.implements(p.IAuthFunctions)
     p.implements(p.IFacets, inherit=True)
-    p.implements(p.IActions)
+    p.implements(p.IRoutes, inherit=True)
+
+
+    ## IRoutes
+
+    def before_map(self, map):
+        controller = 'ckanext.geodatagov.controllers:ViewController'
+        map.connect('map_viewer', '/viewer',controller=controller, action='show')
+
+        return map
+
+    ## IConfigurer
 
     def update_config(self, config):
         # add template directory
@@ -211,6 +222,8 @@ class Demo(p.SingletonPlugin):
         p.toolkit.add_public_directory(config, 'public')
         p.toolkit.add_resource('fanstatic_library', 'geodatagov')
 
+
+    ## IPackageController
 
     def before_view(self, pkg_dict):
 
@@ -276,6 +289,8 @@ class Demo(p.SingletonPlugin):
                 'get_collection_package': geodatagov_helpers.get_collection_package,
                 'resource_preview_custom': geodatagov_helpers.resource_preview_custom,
                 'is_web_format': geodatagov_helpers.is_web_format,
+                'is_map_viewer_format' : geodatagov_helpers.is_map_viewer_format,
+                'get_map_viewer_params': geodatagov_helpers.get_map_viewer_params,
                 }
 
     ## IActions

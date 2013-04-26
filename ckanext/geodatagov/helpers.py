@@ -77,22 +77,38 @@ def get_harvest_source_link(package_dict):
 
     return ''
 
+
+def is_map_viewer_format(resource):
+    viewer_url = config.get('ckanext.geodatagov.spatial_preview.url')
+    viewer_formats = config.get('ckanext.geodatagov.spatial_preview.formats', 'wms kml kmz').strip().split(' ')
+
+    return viewer_url and resource.get('url') and resource.get('format', '').lower() in viewer_formats
+
+def get_map_viewer_params(resource, advanced=False):
+
+    params= {
+        'url': resource['url'],
+        'serviceType': resource.get('format'),
+    }
+    if resource.get('default_srs'):
+        params['srs'] = resource['default_srs']
+
+    if advanced:
+        params['mode'] == 'advanced'
+
+    return urllib.urlencode(params)
+
 def resource_preview_custom(resource, pkg_id):
 
-    viewer_url = config.get('ckanext.geodatagov.spatial_preview.url')
-    formats = config.get('ckanext.geodatagov.spatial_preview.formats', 'wms kml kmz').strip().split(' ')
+    resource_format = resource.get('format', '').lower()
 
-    if viewer_url and resource.get('url') and resource.get('format','').lower() in formats:
-        params= {
-            'url': resource['url'],
-            'serviceType': resource['format'].lower(),
-        }
-        if resource.get('default_srs'):
-            params['srs'] = resource['default_srs']
+
+    if is_map_viewer_format(resource):
+        viewer_url = config.get('ckanext.geodatagov.spatial_preview.url')
 
         url = '{viewer_url}?{params}'.format(
                 viewer_url=viewer_url,
-                params=urllib.urlencode(params))
+                params=get_map_viewer_params(resource))
 
         return p.toolkit.render_snippet("dataviewer/snippets/data_preview.html",
                data={'embed': False,
