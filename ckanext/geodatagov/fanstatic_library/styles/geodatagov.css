@@ -784,6 +784,9 @@ a {
   text-align: left;
   background-color: white;
 }
+.ie .dataset-resource-form .info-block {
+  padding-left: 0;
+}
 .ie7 .masthead .container .top-nav .primary {
   width: 920px;
 }
@@ -797,6 +800,13 @@ a {
 }
 .ie7 .dataset-map-expanded #dataset-map {
   width: 938px;
+}
+.ie7 .search-giant input {
+  width: 96.5%;
+}
+.ie7 .dataset-resource-form .info-block {
+  position: relative;
+  clear: both;
 }
 .ie8 .masthead .container .account-wrapper ul li a {
   white-space: nowrap;
