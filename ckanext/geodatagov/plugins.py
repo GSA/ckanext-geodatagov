@@ -1,8 +1,11 @@
 import hashlib
 import logging
 import paste.auth.auth_tkt
+import mimetypes
 from paste.auth.auth_tkt import maybe_encode, encode_ip_timestamp
 from pylons import request
+
+mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
 
 ####  Monkey Patch libraris to make fips work ####
 
