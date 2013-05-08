@@ -83,8 +83,12 @@ this.ckan.module('location-autocomplete', function (jQuery, _) {
       // Save the location to the ext_location field when selecting and publish
       // the change so the map can update the bbox shown
       this.el.on('change', function(e){
-        if (module._locationsRegistry[e.val] && module._locationsRegistry[e.val].geom){
-          var geom = module._locationsRegistry[e.val].geom;
+        dropdownChange(e.val);
+      });
+
+      function dropdownChange(value) {
+        if (value && module._locationsRegistry[value] && module._locationsRegistry[value].geom){
+          var geom = module._locationsRegistry[value].geom;
 
           var minx = Math.min(geom['coordinates'][0][2][0], geom['coordinates'][0][0][0]);
           var miny = Math.min(geom['coordinates'][0][2][1], geom['coordinates'][0][0][1]);
@@ -93,18 +97,36 @@ this.ckan.module('location-autocomplete', function (jQuery, _) {
 
           var bbox = [minx, miny, maxx, maxy].join()
 
-          $('#ext_location').val(module._locationsRegistry[e.val].text);
+          $('#ext_location').val(module._locationsRegistry[value].text);
           $('#ext_prev_extent').val('');
           $('#ext_bbox').val(bbox);
 
           module.form.submit();
         }
-      });
+      }
 
       if (this.options.tags && select2 && select2.search) {
         // find the "fake" input created by select2 and add the keypress event.
         // This is not part of the plugins API and so may break at any time.
         select2.search.on('keydown', this._onKeydown);
+      }
+
+      // Please forgive me for this horrible hack for IE<9
+      // Basically module.el.on('change') doesn't trigger and module.el.val()
+      // doesn't return a value... so this is what I came up with... I makes me
+      // feel dirty knowing that this piece of code exists in the world.
+      if ($('html').hasClass('ie9') || $('html').hasClass('ie8') || $('html').hasClass('ie7')) {
+        var ie_current_value = module.el.val() || 'Enter location...';
+        setInterval(function() {
+          var element = $('input', module.el.parent());
+          if (typeof element[0] != 'undefined' && element[0].value) {
+            var check = element[0].value;
+            if (check != ie_current_value) {
+              ie_current_value = check;
+              dropdownChange(check);
+            }
+          }
+        }, 100);
       }
     },
 
