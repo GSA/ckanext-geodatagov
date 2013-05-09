@@ -369,24 +369,10 @@ a {
 .masthead .container .top-nav .secondary ul li.active a {
   background-color: #3090b8;
 }
-.masthead .container .top-nav .secondary ul li.home {
-  margin-right: 10px;
-}
 .masthead .container .top-nav .secondary ul li.home a {
-  background: transparent url("../images/geo-icon.png") 20px 50% no-repeat;
-  padding-left: 65px;
+  padding-left: 20px;
   padding-right: 20px;
   font-size: 21px;
-}
-.masthead .container .top-nav .secondary ul li.home a span {
-  margin-left: 5px;
-  text-transform: uppercase;
-  font-size: 9px;
-  line-height: 1;
-  vertical-align: 10px;
-  color: black;
-  background-color: white;
-  padding: 0 2px;
 }
 .flash-messages {
   padding: 10px;

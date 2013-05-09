@@ -78,13 +78,10 @@
             {% endblock %}
             <ul class="nav" data-module="geodatagov-top-nav">
               {% set nav_items = [
-                { 'url': h.url_for('home'),
-                  'label': _('Geospatial Data <span>Beta</span>'),
-                  'selected': (c.controller == 'home'),
-                  'class': 'home' },
                 { 'url': h.url_for('search'),
-                  'label': _('Datasets'),
-                  'check': '/dataset' },
+                  'label': _('Data Catalog'),
+                  'check': '/dataset',
+                  'class': 'home' },
                 { 'url': h.url_for('organizations_index'),
                   'label': _('Organizations'),
                   'selected': (c.controller == 'organization') },
