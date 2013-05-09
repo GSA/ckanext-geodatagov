@@ -402,17 +402,6 @@ a {
 .footer-nav img {
   margin: 20px 0;
 }
-.footer-nav .attribution-link {
-  position: absolute;
-  bottom: 25px;
-  right: 0;
-  width: 148px;
-  height: 26px;
-  background-image: url("../images/powered-by.png");
-}
-.footer-nav .attribution-link span {
-  display: none;
-}
 .homepage .wrapper {
   border-top-width: 0;
   background-image: none;
