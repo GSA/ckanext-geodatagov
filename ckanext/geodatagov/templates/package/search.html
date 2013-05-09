@@ -8,11 +8,6 @@
   </div>
 {% endblock %}
 
-{% block toolbar %}
-  {{ super() }}
-  {% snippet "snippets/datasets_disclaimer.html" %}
-{% endblock %}
-
 {% block primary_content %}
   {% if request.params.collection_package_id %}
     <div class="module">
