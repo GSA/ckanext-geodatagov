@@ -95,9 +95,30 @@ def resource_show(context, data_dict):
     return resource
 
 
+def group_catagory_tag_update(context, data_dict):
+    p.toolkit.check_access('group_catagory_tag_update')
+    package_id = data_dict.get('id')
+    group_id = data_dict.get('group_id')
+    categories = data_dict.get('categories')
 
+    model = context['model']
+    group = model.Group.get(group_id)
+    if not group:
+        raise
+    key = '__category_tag_%s' % group.id
 
+    pkg_dict = p.toolkit.get_action('package_show')(context, {'id': package_id})
 
+    extras = pkg_dict['extras']
+    new_extras = []
+    for extra in extras:
+        if extra.get('key') != key:
+            new_extras.append(extra)
+    if categories:
+        new_extras.append({'key': key, 'value': json.dumps(categories)})
 
+    pkg_dict['extras'] = new_extras
 
+    pkg_dict = p.toolkit.get_action('package_update')(context, pkg_dict)
 
+    return data_dict

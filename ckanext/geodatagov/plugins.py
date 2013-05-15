@@ -200,10 +200,25 @@ class Demo(p.SingletonPlugin):
     p.implements(p.IConfigurer)
     p.implements(p.IPackageController, inherit=True)
     p.implements(p.ITemplateHelpers)
-    p.implements(p.IActions)
+    p.implements(p.IActions, inherit=True)
     p.implements(p.IAuthFunctions)
     p.implements(p.IFacets, inherit=True)
-    p.implements(p.IActions)
+
+    ACTIONS = ['package_update', 'dataset_update']
+
+    def before_action(self, action_name, context, data_dict):
+        if action_name in self.ACTIONS:
+            pkg_dict = p.toolkit.get_action('package_show')(context, {'id': data_dict['id']})
+            cats = {}
+            for extra in pkg_dict['extras']:
+                if extra['key'].startswith('__category_tag_'):
+                        cats[extra['key']] = extra['value']
+            extras = data_dict['extras']
+            for item in extras:
+                if item['key'] in cats:
+                    del cats[item['key']]
+            for cat in cats:
+                extras.append({'key': cat, 'value': cats[cat]})
 
     def update_config(self, config):
         # add template directory
@@ -243,6 +258,18 @@ class Demo(p.SingletonPlugin):
         group = model.Group.get(org_name)
         if group and ('organization_type' in group.extras):
             pkg_dict['organization_type'] = group.extras['organization_type']
+
+        # category tags
+        cats = {}
+        for extra in pkg_dict:
+            if extra.startswith('__category_tag_'):
+                cat = pkg_dict[extra]
+                if cat:
+                    try:
+                        cats['vocab_%s' % extra] = json.loads(cat)
+                    except ValueError:
+                        pass
+        pkg_dict.update(cats)
 
         return pkg_dict
 
@@ -291,6 +318,7 @@ class Demo(p.SingletonPlugin):
             'location_search': geodatagov_logic.location_search,
             'organization_list': geodatagov_logic.organization_list,
             'group_show': geodatagov_logic.group_show,
+            'group_catagory_tag_update': geodatagov_logic.group_catagory_tag_update
         }
 
     ## IAuthFunctions
@@ -303,6 +331,7 @@ class Demo(p.SingletonPlugin):
             'related_create': geodatagov_auth.related_create,
             'related_update': geodatagov_auth.related_update,
             'user_create': geodatagov_auth.user_create,
+            'group_catagory_tag_update': geodatagov_auth.group_catagory_tag_update,
         }
 
     ## IFacets
@@ -334,11 +363,15 @@ class Demo(p.SingletonPlugin):
 
     def group_facets(self, facets_dict, organization_type, package_type):
 
+        # get the categories key
+        group_id = p.toolkit.c.group_dict['id']
+        key = 'vocab___category_tag_%s' % group_id
         if not package_type:
             return OrderedDict([('organization_type', 'Organization Types'),
                                 ('tags','Tags'),
                                 ('res_format', 'Formats'),
                                 ('organization', 'Organizations'),
+                                (key, 'Categories'),
                                ])
         else:
             return facets_dict
