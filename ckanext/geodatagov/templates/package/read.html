@@ -72,6 +72,16 @@
       </section>
     {% endif %}
   {% endif %}
+
+  {% set graphic_preview_file =h.get_pkg_dict_extra(pkg, 'graphic-preview-file', None) %}
+  {% if graphic_preview_file and graphic_preview_file.lower() == 'http' %}
+    <section id="dataset-graphic-preview" class="resources module-content">
+      <h3>Graphic Preview</h3>
+      {% set graphic_preview_desc =h.get_pkg_dict_extra(pkg, 'graphic-preview-description', 'Graphic Preview') %}
+      <img src="{{ h.get_pkg_dict_extra(pkg, 'graphic-preview-file') }}" alt="{{ graphic_preview_desc }}" title="{{ graphic_preview_desc }}" />
+    </section>
+  {% endif %}
+
 {% endblock %}
 
 {% block package_additional_info %}

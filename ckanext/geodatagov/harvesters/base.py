@@ -71,6 +71,8 @@ class GeoDataGovHarvester(SpatialHarvester):
 
         package_dict['extras'].append({'key': 'tags', 'value': ', '.join(tags)})
 
+        package_dict['extras'].append({'key': 'metadata_type', 'value': 'geospatial'})
+
         if not package_dict.get('resources'):
             self._save_object_error('No resources invalid metadata', harvest_object, 'Import')
             return None
