@@ -839,3 +839,18 @@ a {
 .ie8 .organization-type[data-organization-type="commercial"] {
   background-image: url("../images/organization-type/commercial.png");
 }
+.select2-default {
+  color: #595959 !important;
+}
+input::-webkit-input-placeholder {
+  color: #595959;
+}
+input::-moz-placeholder {
+  color: #595959;
+}
+input:-ms-input-placeholder {
+  color: #595959;
+}
+input:-moz-placeholder {
+  color: #595959;
+}
