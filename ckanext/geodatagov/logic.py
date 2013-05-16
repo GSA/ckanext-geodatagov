@@ -5,6 +5,10 @@ import ckan.plugins as p
 from ckan.logic import side_effect_free
 from ckan.logic.action import get as core_get
 from ckanext.geodatagov.plugins import change_resource_details
+import ckan.lib.munge as munge
+import ckan.plugins as p
+from ckanext.geodatagov.harvesters.arcgis import _slugify
+import ckan.logic.schema as schema
 
 log = logging.getLogger(__name__)
 
@@ -94,10 +98,116 @@ def resource_show(context, data_dict):
     change_resource_details(resource)
     return resource
 
+MAPPING = {"title": "title",
+           "theme": "extras__theme",
+           "accessLevel": "extras__access-level",
+           "identifier": "id",
+           "organizationId": "owner_org",
+           "organizationName": "owner_name",
+           "description": "notes",
+           "keyword" : "extras__tags",
+           "person": "extras__person",
+           "accrualPeriodicity": "extras__frequency-of-update",
+           "spatial": "extras__spatial-text",
+           "references": "extras__references",
+           "dataDictionary": "extras__data-dictiionary",
+           "temporal": "extras__dataset-reference-date",
+           "modified": "extras__metadata-date",
+           "mbox": "extras__contact-email",
+           "granularity": "extras__granularity",
+           "license": "extras__licence",
+           "dataQuality": "extras__data-quality"}
 
+def create_data_dict(record):
+    data_dict = {"extras":[{"key": "metadata-source", "value": "dms"},
+                           {"key": "resource-type", "value": "Dataset"},
+                          ],
+                 "resources": []}
+    extras = data_dict["extras"]
 
+    distributions = record['distribution']
 
+    for distribution in distributions:
+        data_dict['resources'].append({'url': distribution['accessURL'],
+                                      'format': distribution['format']})
 
+    for key, value in record.items():
+        new_key = MAPPING.get(key)
+        if not new_key:
+            continue
+        if not value:
+            continue
 
+        if new_key.startswith('extras__'):
+            extras.append({"key": new_key[8:], "value": value})
+        else:
+            data_dict[new_key] = value
+
+    return data_dict
+
+def group_catagory_tag_update(context, data_dict):
+    p.toolkit.check_access('group_catagory_tag_update')
+    package_id = data_dict.get('id')
+    group_id = data_dict.get('group_id')
+    categories = data_dict.get('categories')
+
+    model = context['model']
+    group = model.Group.get(group_id)
+    if not group:
+        raise
+    key = '__category_tag_%s' % group.id
+
+    pkg_dict = p.toolkit.get_action('package_show')(context, {'id': package_id})
+
+    extras = pkg_dict['extras']
+    new_extras = []
+    for extra in extras:
+        if extra.get('key') != key:
+            new_extras.append(extra)
+    if categories:
+        new_extras.append({'key': key, 'value': json.dumps(categories)})
+
+    pkg_dict['extras'] = new_extras
+
+    pkg_dict = p.toolkit.get_action('package_update')(context, pkg_dict)
+
+    return data_dict
+
+def datajson_create(context, data_dict):
+    model = context['model']
+    new_package = create_data_dict(data_dict)
+    owner_org = model.Group.get(new_package['owner_org'])
+    group_name = new_package.pop('owner_name', None)
+
+    new_package['name'] = _slugify(new_package['title'])[:80]
+    existing_package = model.Package.get(new_package['name'])
+    if existing_package:
+        new_package['name'] = new_package['name'] + '-' + new_package['id'].lower()
+
+    if not owner_org:
+        p.toolkit.get_action('organization_create')(
+            context,
+            {'name': new_package['owner_org'], 'title': group_name})
+
+    context['schema'] = schema.default_create_package_schema()
+    context['schema']['id'] = [p.toolkit.get_validator('not_empty')]
+
+    return p.toolkit.get_action('package_create')(context, new_package)
+
+def datajson_update(context, data_dict):
+    new_package = create_data_dict(data_dict)
+    model = context['model']
+    old_package = p.toolkit.get_action('package_show')(
+        {'model': model, 'ignore_auth': True}, {"id":new_package['id']})
+    old_resources = old_package['resources']
+    new_package.pop('owner_org', None)
+    new_package.pop('owner_name', None)
+    for num, resource in enumerate(new_package['resources']):
+        try:
+            old_id = old_resources[num]['id']
+            resource['id'] = old_id
+        except IndexError:
+            pass
+    p.toolkit.get_action('package_update')(context, new_package)
 
 
