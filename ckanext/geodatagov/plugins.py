@@ -309,7 +309,6 @@ class Demo(p.SingletonPlugin):
 
     def get_actions(self):
 
-
         from ckanext.geodatagov import logic as geodatagov_logic
 
         return {
@@ -318,7 +317,9 @@ class Demo(p.SingletonPlugin):
             'location_search': geodatagov_logic.location_search,
             'organization_list': geodatagov_logic.organization_list,
             'group_show': geodatagov_logic.group_show,
-            'group_catagory_tag_update': geodatagov_logic.group_catagory_tag_update
+            'group_catagory_tag_update': geodatagov_logic.group_catagory_tag_update,
+            'datajson_create': geodatagov_logic.datajson_create,
+            'datajson_update': geodatagov_logic.datajson_update,
         }
 
     ## IAuthFunctions
