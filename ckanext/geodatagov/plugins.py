@@ -312,7 +312,8 @@ class Demo(p.SingletonPlugin):
         if package_type != 'dataset':
             return facets_dict
 
-        return OrderedDict([('tags','Tags'),
+        return OrderedDict([('metadata_type','Metadata Type'),
+                            ('tags','Tags'),
                             ('res_format', 'Formats'),
                             ('groups', 'Groups'),
                             ('organization_type', 'Organization Types'),
@@ -322,7 +323,8 @@ class Demo(p.SingletonPlugin):
     def organization_facets(self, facets_dict, organization_type, package_type):
 
         if not package_type:
-            return OrderedDict([('tags','Tags'),
+            return OrderedDict([('metadata_type','Metadata Type'),
+                                ('tags','Tags'),
                                 ('res_format', 'Formats'),
                                 ('groups', 'Groups'),
                                 ('harvest_source_title', 'Harvest Source'),
@@ -335,7 +337,8 @@ class Demo(p.SingletonPlugin):
     def group_facets(self, facets_dict, organization_type, package_type):
 
         if not package_type:
-            return OrderedDict([('organization_type', 'Organization Types'),
+            return OrderedDict([('metadata_type','Metadata Type'),
+                                ('organization_type', 'Organization Types'),
                                 ('tags','Tags'),
                                 ('res_format', 'Formats'),
                                 ('organization', 'Organizations'),
