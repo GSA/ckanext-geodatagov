@@ -62,21 +62,17 @@
             {% endif %}
           </div>
         {% endblock %}
+        <form class="site-wide-search" action="{% url_for controller='package', action='search' %}" method="get">
+          <label for="field-sitewide-search" class="hide">{{ _('Search Datasets') }}</label>
+          <input id="field-sitewide-search" type="text" name="q" placeholder="{{ _('Search datasets...') }}" />
+          <button class="btn-search" type="submit">{{ _('Search') }}</button>
+        </form>
       </hgroup>
 
       <hgroup class="top-nav">
         {% include 'snippets/root_nav.html' %}
         {% block header_site_navigation %}
           <nav class="secondary">
-            {% block header_site_search %}
-              <form class="section site-search simple-input" action="{% url_for controller='package', action='search' %}" method="get">
-                <div class="field">
-                  <label for="field-sitewide-search">{{ _('Search Datasets') }}</label>
-                  <input id="field-sitewide-search" type="text" name="q" placeholder="{{ _('Search datasets...') }}" />
-                  <button class="btn-search" type="submit">{{ _('Search') }}</button>
-                </div>
-              </form>
-            {% endblock %}
             <ul class="nav" data-module="geodatagov-top-nav">
               {% set nav_items = [
                 { 'url': h.url_for('search'),
