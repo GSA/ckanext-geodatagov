@@ -1,0 +1,14 @@
+{% extends "page.html" %}
+
+{% block breadcrumb_content %}
+  <li class="active">{{ h.nav_link(_('Map Viewer'), controller='ckanext.geodatagov.controllers:ViewController', action='show') }}</li>
+{% endblock %}
+
+{% block primary %}
+
+  {# TODO: remove sidebar #}
+  <iframe src="{{ c.viewer_url }}" frameborder="0" width="100%" data-module="data-viewer">
+    <p>{{ _('Your browser does not support iframes.') }}</p>
+  </iframe>
+
+{% endblock %}
