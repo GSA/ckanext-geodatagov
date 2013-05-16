@@ -109,3 +109,17 @@ def is_web_format(resource):
         if (format in WEB_FORMATS):
             return True
     return False
+
+def get_homepage_stats():
+    '''Return a few key stats'''
+    return (
+        ('Datasets', 50000, '#'),
+        ('Collection Datasets', 10000, ''),
+        ('Applications', 100, ''),
+    )
+
+def get_latest_datasets(limit=4):
+    '''Return a list of the latest datasets on the site.'''
+    response = p.toolkit.get_action('package_search')(
+            data_dict={'sort': 'metadata_modified desc', 'rows': limit})
+    return response['results']

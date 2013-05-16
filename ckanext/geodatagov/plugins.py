@@ -303,6 +303,8 @@ class Demo(p.SingletonPlugin):
                 'get_collection_package': geodatagov_helpers.get_collection_package,
                 'resource_preview_custom': geodatagov_helpers.resource_preview_custom,
                 'is_web_format': geodatagov_helpers.is_web_format,
+                'get_homepage_stats': geodatagov_helpers.get_homepage_stats,
+                'get_latest_datasets': geodatagov_helpers.get_latest_datasets,
                 }
 
     ## IActions

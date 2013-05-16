@@ -23,6 +23,44 @@
           <p>Data.gov is currently transitioning the geospatial catalog from <a href="http://geo.data.gov">Geo.data.gov</a> to this site. You will see additional functionality and data sources coming to this site through June 2013, while the two sites operate in parallel. If you have comments or suggestions on this site, please <a href="http://www.data.gov/contact-us">contact us</a>.</p>
         </div>
       </div>
+      <div id="hp-stats">
+        {% set stats = h.get_homepage_stats() %}
+        <div class="split">
+          <div class="box module module-narrow module-shallow">
+            <h3 class="module-heading">
+              <i class="icon-bar-chart"></i>
+              {{ _('Quick stats') }}
+            </h3>
+            <table class="table table-hover">
+              <col width="20">
+              <col width="80">
+              <col width="20">
+              {% for stat, value, url in stats %}
+                <tr>
+                  <td>{{ value }}</td>
+                  <th scope="row">{{ _(stat) }}</th>
+                  <td class="more">
+                    {% if url %}
+                      <a href="{{ url }}">more</a>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endfor %}
+            </table>
+          </div>
+        </div>
+        {% set datasets = h.get_latest_datasets() %}
+        <div class="split">
+          <div class="box module module-narrow module-shallow">
+            <h3 class="module-heading">
+              <a href="{{ h.url_for(controller='package', action='search') }}" class="pull-right">{{ _('more') }}</a>
+              <i class="icon-sitemap"></i>
+              {{ _('Latest datasets') }}
+            </h3>
+            {% snippet 'snippets/package_list.html', packages=datasets, list_class="unstyled dataset-list", item_class="dataset-item module-content", truncate=120 %}
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 {% endblock %}

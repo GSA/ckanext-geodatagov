@@ -10,6 +10,7 @@
     background: url("@{geoLocalThemeURL}images/banner.jpg");
     height: 301px;
     overflow: hidden;
+    .border-radius(0 0 3px 3px);
   }
   .intro {
     color: #FFF;
@@ -43,5 +44,57 @@
   margin: 10px;
   .alert {
     margin: 0;
+  }
+}
+
+#hp-stats {
+  .clearfix;
+  margin: 10px 0;
+  .split {
+    float: left;
+    width: 449px;
+    margin: 0 10px;
+  }
+  .module-heading {
+    .border-radius(3px 3px 0 0);
+    a {
+      font-weight: 300;
+    }
+  }
+  .dataset-item {
+    border-top: 1px solid #DDD;
+    .dataset-content {
+      padding-bottom: 0;
+    }
+    &:first-child {
+      border-top-width: 0;
+    }
+  }
+  .module {
+    margin: 0;
+    table {
+      margin-bottom: 0;
+      tr:first-child {
+        th, td {
+          border-top-width: 0;
+        }
+      }
+      th, td {
+        padding: 7px 15px;
+      }
+      th {
+        font-weight: 300;
+        color: #666;
+      }
+      td {
+        font-weight: bold;
+        &.more {
+          text-align: right;
+          a {
+            font-weight: 300;
+          }
+        }
+      }
+    }
   }
 }

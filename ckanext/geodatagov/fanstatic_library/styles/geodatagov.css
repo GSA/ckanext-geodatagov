@@ -413,6 +413,10 @@ a {
   background: url("../images/banner.jpg");
   height: 301px;
   overflow: hidden;
+  -webkit-border-radius: 0 0 3px 3px;
+  -moz-border-radius: 0 0 3px 3px;
+  -o-border-radius: 0 0 3px 3px;
+  border-radius: 0 0 3px 3px;
 }
 .homepage .intro {
   color: #FFF;
@@ -451,6 +455,69 @@ a {
 }
 #hp-message .alert {
   margin: 0;
+}
+#hp-stats {
+  *zoom: 1;
+  margin: 10px 0;
+}
+#hp-stats:before,
+#hp-stats:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+#hp-stats:after {
+  clear: both;
+}
+#hp-stats .split {
+  float: left;
+  width: 449px;
+  margin: 0 10px;
+}
+#hp-stats .module-heading {
+  -webkit-border-radius: 3px 3px 0 0;
+  -moz-border-radius: 3px 3px 0 0;
+  -o-border-radius: 3px 3px 0 0;
+  border-radius: 3px 3px 0 0;
+}
+#hp-stats .module-heading a {
+  font-weight: 300;
+}
+#hp-stats .dataset-item {
+  border-top: 1px solid #DDD;
+}
+#hp-stats .dataset-item .dataset-content {
+  padding-bottom: 0;
+}
+#hp-stats .dataset-item:first-child {
+  border-top-width: 0;
+}
+#hp-stats .module {
+  margin: 0;
+}
+#hp-stats .module table {
+  margin-bottom: 0;
+}
+#hp-stats .module table tr:first-child th,
+#hp-stats .module table tr:first-child td {
+  border-top-width: 0;
+}
+#hp-stats .module table th,
+#hp-stats .module table td {
+  padding: 7px 15px;
+}
+#hp-stats .module table th {
+  font-weight: 300;
+  color: #666;
+}
+#hp-stats .module table td {
+  font-weight: bold;
+}
+#hp-stats .module table td.more {
+  text-align: right;
+}
+#hp-stats .module table td.more a {
+  font-weight: 300;
 }
 .format-label[data-format="ISO-19139"],
 .format-label[data-format*="ISO-19139"] {
