@@ -106,6 +106,9 @@ RESOURCE_MAPPING = {
     'xyz': ('XYZ', 'XYZ'),
     'image/png': ('PNG', 'PNG Image File'),
     'png': ('PNG', 'PNG Image File'),
+    'web map application': ('ArcGIS Online Map', 'ArcGIS Online Map'),
+    'arcgis map preview': ('ArcGIS Map Preview', 'ArcGIS Map Preview'),
+    'arcgis map service': ('ArcGIS Map Service', 'ArcGIS Map Service'),
 }
 
 
@@ -203,6 +206,7 @@ class Demo(p.SingletonPlugin):
     p.implements(p.IActions, inherit=True)
     p.implements(p.IAuthFunctions)
     p.implements(p.IFacets, inherit=True)
+    p.implements(p.IRoutes, inherit=True)
 
     UPDATE_CATEGORY_ACTIONS = ['package_update', 'dataset_update']
     ROLLUP_SAVE_ACTIONS = ['package_create', 'dataset_create', 'package_update', 'dataset_update']
@@ -237,14 +241,22 @@ class Demo(p.SingletonPlugin):
                                'value': json.dumps(extras_rollup)})
             data_dict['extras'] = new_extras
 
+    ## IRoutes
+    def before_map(self, map):
+        controller = 'ckanext.geodatagov.controllers:ViewController'
+        map.connect('map_viewer', '/viewer',controller=controller, action='show')
 
+        return map
 
+    ## IConfigurer
     def update_config(self, config):
         # add template directory
         p.toolkit.add_template_directory(config, 'templates')
         p.toolkit.add_public_directory(config, 'public')
         p.toolkit.add_resource('fanstatic_library', 'geodatagov')
 
+
+    ## IPackageController
 
     def before_view(self, pkg_dict):
 
@@ -333,6 +345,8 @@ class Demo(p.SingletonPlugin):
                 'get_collection_package': geodatagov_helpers.get_collection_package,
                 'resource_preview_custom': geodatagov_helpers.resource_preview_custom,
                 'is_web_format': geodatagov_helpers.is_web_format,
+                'is_map_viewer_format' : geodatagov_helpers.is_map_viewer_format,
+                'get_map_viewer_params': geodatagov_helpers.get_map_viewer_params,
                 }
 
     ## IActions
@@ -372,7 +386,8 @@ class Demo(p.SingletonPlugin):
         if package_type != 'dataset':
             return facets_dict
 
-        return OrderedDict([('tags','Tags'),
+        return OrderedDict([('metadata_type','Metadata Type'),
+                            ('tags','Tags'),
                             ('res_format', 'Formats'),
                             ('groups', 'Groups'),
                             ('organization_type', 'Organization Types'),
@@ -382,7 +397,8 @@ class Demo(p.SingletonPlugin):
     def organization_facets(self, facets_dict, organization_type, package_type):
 
         if not package_type:
-            return OrderedDict([('tags','Tags'),
+            return OrderedDict([('metadata_type','Metadata Type'),
+                                ('tags','Tags'),
                                 ('res_format', 'Formats'),
                                 ('groups', 'Groups'),
                                 ('harvest_source_title', 'Harvest Source'),
@@ -398,7 +414,8 @@ class Demo(p.SingletonPlugin):
         group_id = p.toolkit.c.group_dict['id']
         key = 'vocab___category_tag_%s' % group_id
         if not package_type:
-            return OrderedDict([('organization_type', 'Organization Types'),
+            return OrderedDict([('metadata_type','Metadata Type'),
+                                ('organization_type', 'Organization Types'),
                                 ('tags','Tags'),
                                 ('res_format', 'Formats'),
                                 ('organization', 'Organizations'),

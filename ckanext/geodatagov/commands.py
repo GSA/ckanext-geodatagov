@@ -239,14 +239,17 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
 
         for num, package_id in enumerate(collected_ids - existing_package_ids):
             context.pop('package', None)
+            context.pop('group', None)
             new_package = to_import[package_id]
             logic.get_action('datajson_create')(context, new_package)
         for package_id in collected_ids & existing_package_ids:
             context.pop('package', None)
+            context.pop('group', None)
             new_package = to_import[package_id]
             logic.get_action('datajson_update')(context, new_package)
         for package_id in existing_package_ids - collected_ids:
             context.pop('package', None)
+            context.pop('group', None)
             logic.get_action('package_delete')(context, {"id":package_id})
 
 
