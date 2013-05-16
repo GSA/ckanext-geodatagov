@@ -204,10 +204,14 @@ class Demo(p.SingletonPlugin):
     p.implements(p.IAuthFunctions)
     p.implements(p.IFacets, inherit=True)
 
-    ACTIONS = ['package_update', 'dataset_update']
+    UPDATE_CATEGORY_ACTIONS = ['package_update', 'dataset_update']
+    ROLLUP_SAVE_ACTIONS = ['package_create', 'dataset_create', 'package_update', 'dataset_update']
+
+    # source ignored as queried diretly
+    EXTRAS_ROLLUP_KEY_IGNORE = ["metadata-source", "tags"]
 
     def before_action(self, action_name, context, data_dict):
-        if action_name in self.ACTIONS:
+        if action_name in self.UPDATE_CATEGORY_ACTIONS:
             pkg_dict = p.toolkit.get_action('package_show')(context, {'id': data_dict['id']})
             cats = {}
             for extra in pkg_dict['extras']:
@@ -219,6 +223,21 @@ class Demo(p.SingletonPlugin):
                     del cats[item['key']]
             for cat in cats:
                 extras.append({'key': cat, 'value': cats[cat]})
+
+        ### make sure rollup happens after any other actions
+        if action_name in self.ROLLUP_SAVE_ACTIONS:
+            extras_rollup = {}
+            new_extras = []
+            for extra in data_dict['extras']:
+                if extra['key'] in self.EXTRAS_ROLLUP_KEY_IGNORE:
+                    new_extras.append(extra)
+                else:
+                    extras_rollup[extra['key']] = extra['value']
+            new_extras.append({'key': 'extras_rollup',
+                               'value': json.dumps(extras_rollup)})
+            data_dict['extras'] = new_extras
+
+
 
     def update_config(self, config):
         # add template directory
@@ -286,6 +305,17 @@ class Demo(p.SingletonPlugin):
 
 
     def after_show(self, context, data_dict):
+
+        current_extras = data_dict.get('extras', [])
+        new_extras =[]
+        for extra in data_dict['extras']:
+            if extra['key'] == 'extras_rollup':
+                rolledup_extras = json.loads(extra['value'])
+                for key, value in rolledup_extras.iteritems():
+                    new_extras.append({"key": key, "value": value})
+            else:
+                new_extras.append(extra)
+        data_dict['extras'] = new_extras
 
         if 'resources' in data_dict:
             for resource in data_dict['resources']:

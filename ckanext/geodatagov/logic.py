@@ -187,11 +187,12 @@ def datajson_create(context, data_dict):
     if not owner_org:
         p.toolkit.get_action('organization_create')(
             context,
-            {'name': new_package['owner_org'], 'title': group_name})
+            {'name': new_package['owner_org'], 'title': group_name,
+             'extras': [{'key': 'organization_type', 'value': "Federal Government"}]})
 
     context['schema'] = schema.default_create_package_schema()
     context['schema']['id'] = [p.toolkit.get_validator('not_empty')]
-
+    context['return_id_only'] = True
     return p.toolkit.get_action('package_create')(context, new_package)
 
 def datajson_update(context, data_dict):
@@ -208,6 +209,6 @@ def datajson_update(context, data_dict):
             resource['id'] = old_id
         except IndexError:
             pass
+    context['return_id_only'] = True
     p.toolkit.get_action('package_update')(context, new_package)
-
 
