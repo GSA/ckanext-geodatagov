@@ -146,7 +146,7 @@ def create_data_dict(record):
     return data_dict
 
 def group_catagory_tag_update(context, data_dict):
-    p.toolkit.check_access('group_catagory_tag_update')
+    p.toolkit.check_access('group_catagory_tag_update', context)
     package_id = data_dict.get('id')
     group_id = data_dict.get('group_id')
     categories = data_dict.get('categories')
