@@ -1,21 +1,20 @@
-
-this.ckan.module('geodatagov-top-nav', function($, _) {
+this.ckan.module('geodatagov-site-wide-search', function($, _) {
   return {
-    options: {},
+    options: {
+      base_url: 'http://www.data.gov/search/node/'
+    },
     initialize: function() {
-      var html = $('html');
-      var page = window.location.pathname;
-      $('[data-check]', this.el).each(function() {
-        var $this = $(this);
-        if ($this.data('check') == page) {
-          $this.addClass('active');
-        }
+      var el = this.el;
+      var options = this.options;
+      $("#field-sitewide-search").change(function(){
+        el.attr('action', options.base_url + this.value);
       });
-      if (html.hasClass('ie7') || html.hasClass('ie8') || html.hasClass('ie9')) {
-        $('input, textarea').placeholder();
-      }
+      this.el.submit(function(){
+        window.location.href = $(this).attr('action');
+        return false;
+      });
     }
-  };
+  }
 });
 
 this.ckan.module('geodatagov-search-helper-message', function($, _) {
