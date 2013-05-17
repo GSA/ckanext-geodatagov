@@ -239,7 +239,7 @@ a {
   width: 104px;
   height: 28px;
   border-width: 0;
-  line-height: 9000px;
+  color: transparent;
 }
 .masthead .container .top-nav {
   clear: both;
