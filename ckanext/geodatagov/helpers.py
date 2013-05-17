@@ -126,7 +126,7 @@ def resource_preview_custom(resource, pkg_id):
 
     return h.resource_preview(resource, pkg_id)
 
-WEB_FORMATS = ('html', 'data')
+WEB_FORMATS = ('html', 'data', 'esri rest', 'gov', 'org', '')
 
 def is_web_format(resource):
     if (resource):
