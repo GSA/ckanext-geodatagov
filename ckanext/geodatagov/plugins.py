@@ -232,7 +232,7 @@ class Demo(p.SingletonPlugin):
         if action_name in self.ROLLUP_SAVE_ACTIONS:
             extras_rollup = {}
             new_extras = []
-            for extra in data_dict['extras']:
+            for extra in data_dict.get('extras'):
                 if extra['key'] in self.EXTRAS_ROLLUP_KEY_IGNORE:
                     new_extras.append(extra)
                 else:
@@ -320,7 +320,7 @@ class Demo(p.SingletonPlugin):
 
         current_extras = data_dict.get('extras', [])
         new_extras =[]
-        for extra in data_dict['extras']:
+        for extra in data_dict.get('extras'):
             if extra['key'] == 'extras_rollup':
                 rolledup_extras = json.loads(extra['value'])
                 for key, value in rolledup_extras.iteritems():

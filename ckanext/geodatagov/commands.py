@@ -185,33 +185,6 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                 }
             )
 
-    def create_data_dict(self, record):
-        data_dict = {"extras":[{"key": "metadata-source", "value": "dms"},
-                               {"key": "resource-type", "value": "Dataset"},
-                              ],
-                     "resources": []}
-        extras = data_dict["extras"]
-
-        distributions = record['distribution']
-
-        for distribution in distributions:
-            data_dict['resources'].append({'url': distribution['accessURL'],
-                                          'format': distribution['format']})
-
-        for key, value in record.items():
-            new_key = MAPPING.get(key)
-            if not new_key:
-                continue
-            if not value:
-                continue
-
-            if new_key.startswith('extras__'):
-                extras.append({"key": new_key[8:], "value": value})
-            else:
-                data_dict[new_key] = value
-
-        return data_dict
-
 
     def import_dms(self, url):
 
