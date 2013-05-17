@@ -2,6 +2,7 @@
 {% set format = res.format.lower() or 'data' %}
 {% set is_web_format = h.is_web_format(res) %}
 {% set is_dropdown_resource = h.is_dropdown_resource(res) %}
+{% set is_map_resource = h.is_map_resource(res) %}
 {% set tooltip = _("ZIP files may contain data and documentation in one or more formats. In Data.gov’s Geospatial catalog, most of the files are multi-part shapefiles.") if format == 'zip' %}
 
 <li class="resource-item"{% if tooltip %} title="{{ tooltip }}"{% endif %}>
@@ -42,10 +43,14 @@
         </ul>
       </div>
     {% else %}
+      {% set resource_url = url if is_map_resource else res.url %}
       <div class="btn-group">
-        <a href="{{ res.url }}" class="btn btn-primary"{% if is_web_format %} target="_blank"{% endif %}>
-          {% if is_web_format %}
+        <a href="{{ resource_url }}" class="btn btn-primary"{% if is_web_format %} target="_blank"{% endif %}>
+          {% if is_map_resource %}
             <i class="icon-globe"></i>
+            {{ _('Preview Map') }}
+          {% elif is_web_format %}
+            <i class="icon-external-link"></i>
             {{ _('Visit page') }}
           {% else %}
             <i class="icon-download-alt"></i>

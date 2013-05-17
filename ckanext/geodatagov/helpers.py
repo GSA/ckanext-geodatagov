@@ -143,3 +143,13 @@ def is_dropdown_resource(resource):
         if (format in DROPDOWN_FORMATS):
             return True
     return False
+
+MAP_FORMATS = ('wms', 'kml', 'georss', 'web map application', 'esri rest')
+
+def is_map_resource(resource):
+    if (resource):
+        format = resource.get('format', 'data').lower()
+        if (format in MAP_FORMATS):
+            return True
+    return False
+
