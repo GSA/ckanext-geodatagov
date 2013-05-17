@@ -9,9 +9,7 @@
   {% if res.url %}
     <li>
       <a class="btn btn-primary resource-url-analytics resource-type-{{ res.resource_type }}" href="{{ res.url }}"{% if is_web_format %} target="_blank"{% endif %}>
-        {% if is_map_resource %}
-          <i class="icon-globe"></i> {{ _('Advanced map preview') }}
-        {% elif is_web_format %}
+        {% if is_web_format %}
           <i class="icon-external-link"></i> {{ _('Visit page') }}
         {% else %}
           <i class="icon-download-alt"></i> {{ _('Download') }}
