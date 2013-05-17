@@ -144,7 +144,8 @@ def is_dropdown_resource(resource):
             return True
     return False
 
-MAP_FORMATS = ('wms', 'kml', 'georss', 'web map application', 'esri rest')
+# "web map application" is deprecated in favour of "arcgis online map"
+MAP_FORMATS = ('wms', 'kml', 'kmz', 'georss', 'web map application', 'arcgis online map')
 
 def is_map_resource(resource):
     if (resource):
