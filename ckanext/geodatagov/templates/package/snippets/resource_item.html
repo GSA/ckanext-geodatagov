@@ -1,6 +1,7 @@
 {% set url = h.url_for(controller='package', action='resource_read', id=pkg.name, resource_id=res.id) %}
 {% set format = res.format.lower() or 'data' %}
 {% set is_web_format = h.is_web_format(res) %}
+{% set is_dropdown_resource = h.is_dropdown_resource(res) %}
 {% set tooltip = _("ZIP files may contain data and documentation in one or more formats. In Data.gov’s Geospatial catalog, most of the files are multi-part shapefiles.") if format == 'zip' %}
 
 <li class="resource-item"{% if tooltip %} title="{{ tooltip }}"{% endif %}>
@@ -18,16 +19,40 @@
     {% endif %}
   </p>
   {% block resource_item_explore %}
-    <div class="btn-group">
-      <a href="{{ res.url }}" class="btn btn-primary"{% if is_web_format %} target="_blank"{% endif %}>
-        {% if is_web_format %}
-          <i class="icon-globe"></i>
-          {{ _('Visit page') }}
-        {% else %}
-          <i class="icon-download-alt"></i>
-          {{ _('Download') }}
-        {% endif %}
-      </a>
-    </div>
+    {% if is_dropdown_resource %}
+      <div class="dropdown btn-group">
+        <a href="#" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+          <i class="icon-share-alt"></i>
+          {{ _('Explore') }}
+          <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li>
+            <a href="{{ url }}">
+              <i class="icon-bar-chart"></i>
+              {{ _('Preview') }}
+            </a>
+          </li>
+          <li>
+            <a href="{{ res.url }}" class="resource-url-analytics" target="_blank">
+              <i class="icon-download"></i>
+              {{ _('Download') }}
+            </a>
+          </li>
+        </ul>
+      </div>
+    {% else %}
+      <div class="btn-group">
+        <a href="{{ res.url }}" class="btn btn-primary"{% if is_web_format %} target="_blank"{% endif %}>
+          {% if is_web_format %}
+            <i class="icon-globe"></i>
+            {{ _('Visit page') }}
+          {% else %}
+            <i class="icon-download-alt"></i>
+            {{ _('Download') }}
+          {% endif %}
+        </a>
+      </div>
+    {% endif %}
   {% endblock %}
 </li>

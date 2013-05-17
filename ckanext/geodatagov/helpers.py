@@ -134,3 +134,12 @@ def is_web_format(resource):
         if (format in WEB_FORMATS):
             return True
     return False
+
+DROPDOWN_FORMATS = ('csv', 'xls', 'wms', 'kml', 'jpeg', 'jpg')
+
+def is_dropdown_resource(resource):
+    if (resource):
+        format = resource.get('format', 'data').lower()
+        if (format in DROPDOWN_FORMATS):
+            return True
+    return False
