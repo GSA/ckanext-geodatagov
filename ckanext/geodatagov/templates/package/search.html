@@ -2,6 +2,7 @@
 
 {% block add_action_content %}
   {{ super() }}
+  <a href="{{ h.url_for('organizations_index') }}" class="btn btn-primary">{{ _('Organizations') }}</a>
   <a href="#" class="btn btn-primary" data-module="geodatagov-search-helper-message"><i class="icon-question-sign"></i></a>
   <div id="search-helper-message">
     To find datasets, enter your search terms in the search box below or browse through the categories on the left.  As you browse, you will be refining and narrowing your search.  To broaden your search again, click on the "clear all" link at the top of any category or on the "X" to the right of any single term.

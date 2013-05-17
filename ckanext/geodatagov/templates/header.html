@@ -72,27 +72,9 @@
       <hgroup class="top-nav">
         {% include 'snippets/root_nav.html' %}
         {% block header_site_navigation %}
-          <nav class="secondary">
-            <ul class="nav" data-module="geodatagov-top-nav">
-              {% set nav_items = [
-                { 'url': h.url_for('search'),
-                  'label': _('Data Catalog'),
-                  'check': '/dataset',
-                  'class': 'home' },
-                { 'url': h.url_for('organizations_index'),
-                  'label': _('Organizations'),
-                  'selected': (c.controller == 'organization') },
-                { 'url': h.url_for('group_index'),
-                  'label': _('Groups'),
-                  'selected': (c.controller == 'group') },
-              ] %}
-              {% for nav_item in nav_items %}
-                <li class="{{ 'active' if nav_item.selected }} {{ nav_item.class }}"{% if nav_item.check %} data-check="{{ nav_item.check }}"{% endif %}>
-                  <a href="{{ nav_item.url }}">{{ nav_item.label|safe }}</a>
-                </li>
-              {% endfor %}
-            </ul>
-          </nav>
+          <div class="secondary">
+            <span>{{ _('Data Catalog') }}</span>
+          </div>
         {% endblock %}
       </hgroup>
 
