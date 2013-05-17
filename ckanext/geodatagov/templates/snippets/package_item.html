@@ -59,9 +59,9 @@ Example:
           {% for resource in package.resources %}
             {% set format = resource.format or 'HTML' %}
             {% set is_web_format = h.is_web_format(resource) %}
-            {% set is_map_resource = h.is_map_resource(resource) %}
+            {% set is_map_format = h.is_map_format(resource) %}
             {% if loop.index < resource_limit %}
-              {% set url = h.url_for(controller='package', action='resource_read', id=package.name, resource_id=resource.id) if is_map_resource else resource.url %}
+              {% set url = h.url_for(controller='package', action='resource_read', id=package.name, resource_id=resource.id) if is_map_format else resource.url %}
               <li>
                 <a href="{{ url }}" class="label" data-format="{{ format|lower }}"{% if is_web_format %} target="_blank"{% endif %}>{{ format }}</a>
               </li>

@@ -2,7 +2,7 @@
 
 {% block resource_actions_inner %}
   {% set is_web_format = h.is_web_format(res) %}
-  {% set is_map_resource = h.is_map_resource(res) %}
+  {% set is_map_format = h.is_map_format(res) %}
   {% if h.check_access('package_update', {'id':pkg.id }) %}
     <li>{% link_for _('Edit'), controller='package', action='resource_edit', id=pkg.name, resource_id=res.id, class_='btn', icon='wrench' %}</li>
   {% endif %}

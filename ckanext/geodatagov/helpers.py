@@ -126,31 +126,26 @@ def resource_preview_custom(resource, pkg_id):
 
     return h.resource_preview(resource, pkg_id)
 
-WEB_FORMATS = ('html', 'data', 'esri rest', 'gov', 'org', '')
+types = {
+    'web': ('html', 'data', 'esri rest', 'gov', 'org', ''),
+    'preview': ('csv', 'xls', 'txt', 'jpg', 'jpeg', 'png', 'gif'),
+    # "web map application" is deprecated in favour of "arcgis online map"
+    'map': ('wms', 'kml', 'kmz', 'georss', 'web map application', 'arcgis online map'),
+}
+
+def is_type_format(type, resource):
+    if resource and type in types:
+        format = resource.get('format', 'data').lower()
+        if format in types[type]:
+            return True
+    return False
+
 
 def is_web_format(resource):
-    if (resource):
-        format = resource.get('format', 'data').lower()
-        if (format in WEB_FORMATS):
-            return True
-    return False
+    return is_type_format('web', resource)
 
-DROPDOWN_FORMATS = ('csv', 'xls')
+def is_preview_format(resource):
+    return is_type_format('preview', resource)
 
-def is_dropdown_resource(resource):
-    if (resource):
-        format = resource.get('format', 'data').lower()
-        if (format in DROPDOWN_FORMATS):
-            return True
-    return False
-
-# "web map application" is deprecated in favour of "arcgis online map"
-MAP_FORMATS = ('wms', 'kml', 'kmz', 'georss', 'web map application', 'arcgis online map')
-
-def is_map_resource(resource):
-    if (resource):
-        format = resource.get('format', 'data').lower()
-        if (format in MAP_FORMATS):
-            return True
-    return False
-
+def is_map_format(resource):
+    return is_type_format('map', resource)
