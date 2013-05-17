@@ -135,7 +135,7 @@ def is_web_format(resource):
             return True
     return False
 
-DROPDOWN_FORMATS = ('csv', 'xls', 'wms', 'kml', 'jpeg', 'jpg')
+DROPDOWN_FORMATS = ('csv', 'xls', 'wms', 'kml')
 
 def is_dropdown_resource(resource):
     if (resource):
