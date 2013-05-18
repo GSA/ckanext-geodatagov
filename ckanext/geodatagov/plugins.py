@@ -169,11 +169,11 @@ class DataGovHarvest(ckanext.harvest.plugin.Harvest):
 
 def get_filename_and_extension(resource):
     url = resource.get('url').rstrip('/')
-    url = urlparse.urlparse(url).path
     if '?' in url:
         return '', ''
     if 'URL' in url:
         return '', ''
+    url = urlparse.urlparse(url).path
     split = url.split('/')
     last_part = split[-1]
     ending = last_part.split('.')[-1].lower()
