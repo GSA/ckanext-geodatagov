@@ -10,6 +10,7 @@ from ckanext.geodatagov.harvesters.base import GeoDataGovHarvester
 from ckanext.geodatagov.harvesters.base import GeoDataGovCSWHarvester
 from ckanext.geodatagov.harvesters.base import GeoDataGovWAFHarvester
 from ckanext.geodatagov.harvesters.base import GeoDataGovDocHarvester
+from ckanext.geodatagov.harvesters.base import GeoDataGovGeoportalHarvester
 from ckanext.geodatagov.harvesters.waf_collection import WAFCollectionHarvester
 from ckanext.geodatagov.harvesters.z3950 import Z3950Harvester
 from ckanext.geodatagov.harvesters.arcgis import ArcGISHarvester

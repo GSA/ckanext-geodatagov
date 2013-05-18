@@ -32,6 +32,7 @@ setup(
     geodatagov_csw_harvester=ckanext.geodatagov.harvesters:GeoDataGovCSWHarvester
     geodatagov_waf_harvester=ckanext.geodatagov.harvesters:GeoDataGovWAFHarvester
     geodatagov_doc_harvester=ckanext.geodatagov.harvesters:GeoDataGovDocHarvester
+    geodatagov_geoportal_harvester=ckanext.geodatagov.harvesters:GeoDataGovGeoportalHarvester
     waf_harvester_collection=ckanext.geodatagov.harvesters:WAFCollectionHarvester
     arcgis_harvester=ckanext.geodatagov.harvesters:ArcGISHarvester
     z3950_harvester=ckanext.geodatagov.harvesters:Z3950Harvester
