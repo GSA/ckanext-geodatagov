@@ -10,6 +10,13 @@
 .clearfix:after {
   clear: both;
 }
+.hide-text {
+  font: 0/0 a;
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
+}
 body,
 .main,
 [role=main],
@@ -82,6 +89,9 @@ a {
 }
 .btn-primary:hover {
   background: #1b3354 !important;
+}
+.faded {
+  color: #777;
 }
 .pre-header {
   background: #0a3163 url("http://www.data.gov/sites/all/themes/datagov/images/preheader-bg.jpg") repeat-x center top;
@@ -235,11 +245,15 @@ a {
   background: url("http://www.data.gov/sites/all/themes/datagov/images/search-box.jpg");
 }
 .masthead .container .site-wide-search button {
+  font: 0/0 a;
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
   background: url("http://www.data.gov/sites/all/themes/datagov/images/search-button.jpg");
   width: 104px;
   height: 28px;
   border-width: 0;
-  line-height: 9000px;
 }
 .masthead .container .top-nav {
   clear: both;
@@ -286,6 +300,10 @@ a {
 .masthead .container .top-nav .primary ul li a.root {
   border-left: 1px solid #294B78;
   border-right: 1px solid #0B3064;
+}
+.masthead .container .top-nav .primary ul li.active a {
+  background-color: #5881b0;
+  border-left-color: #5881b0;
 }
 .masthead .container .top-nav .primary ul li:first-child a.root {
   border-left-width: 0;
@@ -352,37 +370,13 @@ a {
   background-image: linear-gradient(to bottom, #5ea0d2, #033162);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff5ea0d2', endColorstr='#ff033162', GradientType=0);
-  font-family: 'Open Sans';
-  font-weight: 600;
+  font-family: 'Georgia';
   height: 50px;
-}
-.masthead .container .top-nav .secondary ul {
-  *zoom: 1;
-}
-.masthead .container .top-nav .secondary ul:before,
-.masthead .container .top-nav .secondary ul:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-.masthead .container .top-nav .secondary ul:after {
-  clear: both;
-}
-.masthead .container .top-nav .secondary ul li {
-  float: left;
-}
-.masthead .container .top-nav .secondary ul li a {
   line-height: 50px;
-  padding: 0 15px;
+  text-transform: uppercase;
 }
-.masthead .container .top-nav .secondary ul li a:hover,
-.masthead .container .top-nav .secondary ul li.active a {
-  background-color: #5ea0d2;
-}
-.masthead .container .top-nav .secondary ul li.home {
-  margin-right: 40px;
-}
-.masthead .container .top-nav .secondary ul li.home a {
+.masthead .container .top-nav .secondary span {
+  display: block;
   padding-left: 20px;
   padding-right: 20px;
   font-size: 21px;

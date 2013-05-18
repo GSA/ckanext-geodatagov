@@ -84,7 +84,8 @@ RESOURCE_MAPPING = {
     'application/msaccess': ('Acesss', 'Access Database'),
     'access': ('Acesss', 'Access Database'),
     'image/jpeg': ('JPEG', 'JPEG Image File'),
-    'jpeg': ('JPEG', 'JPEG Image File'),
+    'jpg': ('JPG', 'JPG Image File'),
+    'jpeg': ('JPG', 'JPG Image File'),
     'audio/prs.sid': ('MrSID', 'MrSID'),
     'mrsid': ('MrSID', 'MrSID'),
     'kml': ('KML', 'KML File'),
@@ -345,6 +346,8 @@ class Demo(p.SingletonPlugin):
                 'get_collection_package': geodatagov_helpers.get_collection_package,
                 'resource_preview_custom': geodatagov_helpers.resource_preview_custom,
                 'is_web_format': geodatagov_helpers.is_web_format,
+                'is_preview_format': geodatagov_helpers.is_preview_format,
+                'is_map_format': geodatagov_helpers.is_map_format,
                 'is_map_viewer_format' : geodatagov_helpers.is_map_viewer_format,
                 'get_map_viewer_params': geodatagov_helpers.get_map_viewer_params,
                 }

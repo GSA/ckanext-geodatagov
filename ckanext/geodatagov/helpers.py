@@ -126,11 +126,26 @@ def resource_preview_custom(resource, pkg_id):
 
     return h.resource_preview(resource, pkg_id)
 
-WEB_FORMATS = ('html', 'data')
+types = {
+    'web': ('html', 'data', 'esri rest', 'gov', 'org', ''),
+    'preview': ('csv', 'xls', 'txt', 'jpg', 'jpeg', 'png', 'gif'),
+    # "web map application" is deprecated in favour of "arcgis online map"
+    'map': ('wms', 'kml', 'kmz', 'georss', 'web map application', 'arcgis online map'),
+}
 
-def is_web_format(resource):
-    if (resource):
+def is_type_format(type, resource):
+    if resource and type in types:
         format = resource.get('format', 'data').lower()
-        if (format in WEB_FORMATS):
+        if format in types[type]:
             return True
     return False
+
+
+def is_web_format(resource):
+    return is_type_format('web', resource)
+
+def is_preview_format(resource):
+    return is_type_format('preview', resource)
+
+def is_map_format(resource):
+    return is_type_format('map', resource)
