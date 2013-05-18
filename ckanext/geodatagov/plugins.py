@@ -226,7 +226,7 @@ class Demo(p.SingletonPlugin):
             for extra in pkg_dict.get('extras', []):
                 if extra['key'].startswith('__category_tag_'):
                         cats[extra['key']] = extra['value']
-            extras = data_dict['extras']
+            extras = data_dict.get('extras', [])
             for item in extras:
                 if item['key'] in cats:
                     del cats[item['key']]
