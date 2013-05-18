@@ -1,4 +1,5 @@
 import hashlib
+import urlparse
 import logging
 import paste.auth.auth_tkt
 import mimetypes
@@ -168,7 +169,10 @@ class DataGovHarvest(ckanext.harvest.plugin.Harvest):
 
 def get_filename_and_extension(resource):
     url = resource.get('url').rstrip('/')
+    url = urlparse.urlparse(url).path
     if '?' in url:
+        return '', ''
+    if 'URL' in url:
         return '', ''
     split = url.split('/')
     last_part = split[-1]
