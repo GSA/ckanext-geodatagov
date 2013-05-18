@@ -119,7 +119,7 @@ def split_tags(tag):
     tags = []
     for tag in tag.split(','):
         tags.extend(tag.split('>'))
-    return [tag.strip() for tag in tags]
+    return [tag.strip().lower() for tag in tags]
 
 ##copied from harvest but deals withe single item list keys like validation
 def harvest_source_convert_from_config(key,data,errors,context):
@@ -223,7 +223,7 @@ class Demo(p.SingletonPlugin):
         if action_name in self.UPDATE_CATEGORY_ACTIONS:
             pkg_dict = p.toolkit.get_action('package_show')(context, {'id': data_dict['id']})
             cats = {}
-            for extra in pkg_dict['extras']:
+            for extra in pkg_dict.get('extras', []):
                 if extra['key'].startswith('__category_tag_'):
                         cats[extra['key']] = extra['value']
             extras = data_dict['extras']
@@ -237,7 +237,7 @@ class Demo(p.SingletonPlugin):
         if action_name in self.ROLLUP_SAVE_ACTIONS:
             extras_rollup = {}
             new_extras = []
-            for extra in data_dict.get('extras'):
+            for extra in data_dict.get('extras', []):
                 if extra['key'] in self.EXTRAS_ROLLUP_KEY_IGNORE:
                     new_extras.append(extra)
                 else:
@@ -325,7 +325,7 @@ class Demo(p.SingletonPlugin):
 
         current_extras = data_dict.get('extras', [])
         new_extras =[]
-        for extra in data_dict.get('extras'):
+        for extra in current_extras:
             if extra['key'] == 'extras_rollup':
                 rolledup_extras = json.loads(extra['value'])
                 for key, value in rolledup_extras.iteritems():
@@ -354,6 +354,7 @@ class Demo(p.SingletonPlugin):
                 'is_map_format': geodatagov_helpers.is_map_format,
                 'is_map_viewer_format' : geodatagov_helpers.is_map_viewer_format,
                 'get_map_viewer_params': geodatagov_helpers.get_map_viewer_params,
+                'render_datetime_datagov': geodatagov_helpers.render_datetime_datagov,
                 }
 
     ## IActions

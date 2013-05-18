@@ -14,6 +14,13 @@ except ImportError, e:
     log.critical('Harvester not available %s' % str(e))
 
 
+def render_datetime_datagov(date_str):
+    try:
+        value = h.render_datetime(date_str)
+    except (ValueError, TypeError):
+        return date_str
+    return value
+
 def get_validation_profiles():
     return VALIDATION_PROFILES
 

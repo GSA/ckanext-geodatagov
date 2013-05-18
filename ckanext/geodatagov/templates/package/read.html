@@ -102,7 +102,7 @@
         </tr>
         <tr>
           <th scope="row" class="dataset-label">Metadata Date</th>
-          <td>{{ h.render_datetime(h.get_pkg_dict_extra(c.pkg_dict, 'metadata-date')) or h.get_pkg_dict_extra(c.pkg_dict, 'metadata-date') or 'Unknown' }}</td>
+          <td>{{ h.render_datetime_datagov(h.get_pkg_dict_extra(c.pkg_dict, 'metadata-date')) or h.get_pkg_dict_extra(c.pkg_dict, 'metadata-date') or 'Unknown' }}</td>
         </tr>
         <tr>
           <th scope="row" class="dataset-label">Reference Date(s)</th>
