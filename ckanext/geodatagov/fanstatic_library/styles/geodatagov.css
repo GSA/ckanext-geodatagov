@@ -10,6 +10,13 @@
 .clearfix:after {
   clear: both;
 }
+.hide-text {
+  font: 0/0 a;
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
+}
 body,
 .main,
 [role=main],
@@ -82,6 +89,9 @@ a {
 }
 .btn-primary:hover {
   background: #1b3354 !important;
+}
+.faded {
+  color: #777;
 }
 .pre-header {
   background: #0a3163 url("http://www.data.gov/sites/all/themes/datagov/images/preheader-bg.jpg") repeat-x center top;
@@ -235,11 +245,15 @@ a {
   background: url("http://www.data.gov/sites/all/themes/datagov/images/search-box.jpg");
 }
 .masthead .container .site-wide-search button {
+  font: 0/0 a;
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
   background: url("http://www.data.gov/sites/all/themes/datagov/images/search-button.jpg");
   width: 104px;
   height: 28px;
   border-width: 0;
-  color: transparent;
 }
 .masthead .container .top-nav {
   clear: both;
@@ -286,6 +300,10 @@ a {
 .masthead .container .top-nav .primary ul li a.root {
   border-left: 1px solid #294B78;
   border-right: 1px solid #0B3064;
+}
+.masthead .container .top-nav .primary ul li.active a {
+  background-color: #5881b0;
+  border-left-color: #5881b0;
 }
 .masthead .container .top-nav .primary ul li:first-child a.root {
   border-left-width: 0;

@@ -2,8 +2,8 @@
 
 {% block add_action_content %}
   {{ super() }}
-  <a href="{{ h.url_for('organizations_index') }}" class="btn btn-primary">{{ _('Organizations') }}</a>
-  <a href="https://explore.data.gov" target="_blank" class="btn btn-primary">{{ _('Interactive Datasets') }}</a>
+  <a href="{{ h.url_for('organizations_index') }}" class="btn">{{ _('Organizations') }}</a>
+  <a href="https://explore.data.gov/catalog/next-gen" target="_blank" class="btn">{{ _('Interactive Datasets') }}</a>
   <a href="#" class="btn btn-primary" data-module="geodatagov-search-helper-message"><i class="icon-question-sign"></i></a>
   <div id="search-helper-message">
     To find datasets, enter your search terms in the search box below or browse through the categories on the left.  As you browse, you will be refining and narrowing your search.  To broaden your search again, click on the "clear all" link at the top of any category or on the "X" to the right of any single term.
@@ -92,6 +92,17 @@
           {% endtrans %}
         {%- endif %}
       </small>
+    </div>
+  </section>
+
+  <section class="module">
+    <div class="module-content">
+      <p class="faded"><small><strong>Note:</strong> Only datasets
+marked as 'Federal' are subject to the U.S. Federal Government and
+Data.gov's Data Policy. Non-federal participants (e.g. Universities, State
+and Local governments) maintain their own data policies. It is important
+that users understand the data policies of participating entities in order
+to best utilize these datasets.</small></p>
     </div>
   </section>
 

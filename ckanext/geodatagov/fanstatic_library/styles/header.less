@@ -104,11 +104,11 @@
       background: url("@{geoRemoteThemeURL}images/search-box.jpg");
     }
     button {
+      .hide-text;
       background: url("@{geoRemoteThemeURL}images/search-button.jpg");
       width: 104px;
       height: 28px;
       border-width: 0;
-      line-height: 9000px;
     }
   }
   .top-nav {
@@ -146,6 +146,10 @@
         a.root {
           border-left: 1px solid #294B78;
           border-right: 1px solid #0B3064;
+        }
+        &.active a {
+          background-color: @geoHeaderLiteColor;
+          border-left-color: @geoHeaderLiteColor;
         }
         &:first-child a.root {
           border-left-width: 0;

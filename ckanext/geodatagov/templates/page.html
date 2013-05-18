@@ -1,10 +1,5 @@
 {% ckan_extends %}
 
-{% block add_action_content %}
-  {{ super() }}
-  <a href="{{ h.url_for('organizations_index') }}" class="btn btn-primary">{{ _('Organizations') }}</a>
-{% endblock %}
-
 {% block flash %}
   {% set flash_messages = h.flash.pop_messages() | list %}
   {% if flash_messages %}
