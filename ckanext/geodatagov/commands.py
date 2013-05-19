@@ -249,8 +249,8 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         delete from harvest_object where package_id in (select id from package where state = 'to_delete');
 
         delete from package where id in (select id from package where state = 'to_delete'); commit;'''
+        model.Session.execute(sql)
         print str(datetime.datetime.now()) + ' Finished delete'
-        moo = model.Session.execute(sql)
 
 
 #set([u'feed', u'webService', u'issued', u'modified', u'references', u'keyword', u'size', u'landingPage', u'title', u'temporal', u'theme', u'spatial', u'dataDictionary', u'description', u'format', u'granularity', u'accessLevel', u'accessURL', u'publisher', u'language', u'license', u'systemOfRecords', u'person', u'accrualPeriodicity', u'dataQuality', u'distribution', u'identifier', u'mbox'])
