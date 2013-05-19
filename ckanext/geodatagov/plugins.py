@@ -190,11 +190,11 @@ def change_resource_details(resource):
         resource_format = extension
     if resource_format in formats:
         resource['format'] = RESOURCE_MAPPING[resource_format][0]
-        if resource.get('name', '') in ['Unnamed resource', '']:
+        if resource.get('name', '') in ['Unnamed resource', '', None]:
             resource['name'] = RESOURCE_MAPPING[resource_format][1]
             if filename:
                 resource['name'] = resource['name']
-    elif resource.get('name', '') in ['Unnamed resource', '']:
+    elif resource.get('name', '') in ['Unnamed resource', '', None]:
         if extension:
             resource['format'] = extension.upper()
         resource['name'] = 'Web Page'
