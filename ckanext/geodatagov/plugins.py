@@ -190,11 +190,11 @@ def change_resource_details(resource):
         resource_format = extension
     if resource_format in formats:
         resource['format'] = RESOURCE_MAPPING[resource_format][0]
-        if resource.get('name') == 'Unnamed resource':
+        if resource.get('name', '') in ['Unnamed resource', '']:
             resource['name'] = RESOURCE_MAPPING[resource_format][1]
             if filename:
                 resource['name'] = resource['name']
-    elif resource.get('name') == 'Unnamed resource':
+    elif resource.get('name', '') in ['Unnamed resource', '']:
         if extension:
             resource['format'] = extension.upper()
         resource['name'] = 'Web Page'
@@ -302,7 +302,9 @@ class Demo(p.SingletonPlugin):
                 cat = pkg_dict[extra]
                 if cat:
                     try:
-                        cats['vocab_%s' % extra] = json.loads(cat)
+                        cat_list = json.loads(cat)
+                        cats['vocab_%s' % extra] = cat_list
+                        cats['vocab_category_all'] = cat_list
                     except ValueError:
                         pass
         pkg_dict.update(cats)
