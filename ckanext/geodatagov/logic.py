@@ -62,6 +62,17 @@ def group_show(context, data_dict):
 
     return core_get.group_show(context, data_dict)
 
+def package_show_rest(context, data_dict):
+
+    data_dict = core_get.package_show_rest(context, data_dict)
+    extras = data_dict.get('extras', {})
+    rollup = extras.pop('extras_rollup')
+    if rollup:
+        rollup = json.loads(rollup)
+        for key, value in rollup.items():
+            extras[key] = value
+    return data_dict
+
 def organization_show(context, data_dict):
 
     context.update({'limits': {'packages': 2}})
