@@ -250,7 +250,7 @@ class Demo(p.SingletonPlugin):
     def before_map(self, map):
         controller = 'ckanext.geodatagov.controllers:ViewController'
         map.connect('map_viewer', '/viewer',controller=controller, action='show')
-
+        map.redirect('/', '/dataset')
         return map
 
     ## IConfigurer

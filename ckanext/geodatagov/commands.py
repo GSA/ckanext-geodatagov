@@ -3,6 +3,7 @@ import os
 import sys
 import re
 import csv
+import datetime
 import json
 import urllib
 import lxml.etree
@@ -31,6 +32,7 @@ class GeoGovCommand(cli.CkanCommand):
         paster geodatagov import-orgs <data> -c <config>
         paster geodatagov post-install-dbinit -c <config>
         paster geodatagov import-dms -c <config>
+        paster geodatagov clean-deleted -c <config>
     '''
     summary = __doc__.split('\n')[0]
     usage = __doc__
@@ -64,14 +66,11 @@ class GeoGovCommand(cli.CkanCommand):
                 return
 
             self.import_organizations(self.args[1])
-
         if cmd == 'import-dms':
             if not len(self.args) in [2]:
                 print GeoGovCommand.__doc__
                 return
             self.import_dms(self.args[1])
-
-
         if cmd == 'post-install-dbinit':
             f = open('/usr/lib/ckan/src/ckanext-geodatagov/what_to_alter.sql')
             print "running what_to_alter.sql"
@@ -81,6 +80,8 @@ class GeoGovCommand(cli.CkanCommand):
             test = model.Session.execute(f.read())
             model.Session.commit()
             print "Success"
+        if cmd == 'clean-deleted':
+            self.clean_deleted()
 
     def get_user_org_mapping(self, location):
         user_org_mapping = open(location)
@@ -225,6 +226,31 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             context.pop('group', None)
             logic.get_action('package_delete')(context, {"id":package_id})
 
+
+    def clean_deleted(self):
+        print str(datetime.datetime.now()) + ' Starting delete'
+        sql = '''begin; update package set state = 'to_delete' where state <> 'active' and revision_id in (select id from revision where timestamp < now() - interval '1 day');
+        delete from package_role where package_id in (select id from package where state = 'to_delete' );
+        delete from user_object_role where id not in (select user_object_role_id from package_role) and context = 'Package';
+        delete from resource_revision where resource_group_id in (select id from resource_group where package_id in (select id from package where state = 'to_delete'));
+        delete from resource_group_revision where package_id in (select id from package where state = 'to_delete');
+        delete from package_tag_revision where package_id in (select id from package where state = 'to_delete');
+        delete from member_revision where table_id in (select id from package where state = 'to_delete');
+        delete from package_extra_revision where package_id in (select id from package where state = 'to_delete');
+        delete from package_revision where id in (select id from package where state = 'to_delete');
+        delete from package_tag where package_id in (select id from package where state = 'to_delete');
+        delete from resource where resource_group_id in (select id from resource_group where package_id in (select id from package where state = 'to_delete'));
+        delete from package_extra where package_id in (select id from package where state = 'to_delete');
+        delete from member where table_id in (select id from package where state = 'to_delete');
+        delete from resource_group where package_id  in (select id from package where state = 'to_delete');
+
+        delete from harvest_object_error hoe using harvest_object ho where ho.id = hoe.harvest_object_id and package_id  in (select id from package where state = 'to_delete');
+        delete from harvest_object_extra hoe using harvest_object ho where ho.id = hoe.harvest_object_id and package_id  in (select id from package where state = 'to_delete');
+        delete from harvest_object where package_id in (select id from package where state = 'to_delete');
+
+        delete from package where id in (select id from package where state = 'to_delete'); commit;'''
+        print str(datetime.datetime.now()) + ' Finished delete'
+        moo = model.Session.execute(sql)
 
 
 #set([u'feed', u'webService', u'issued', u'modified', u'references', u'keyword', u'size', u'landingPage', u'title', u'temporal', u'theme', u'spatial', u'dataDictionary', u'description', u'format', u'granularity', u'accessLevel', u'accessURL', u'publisher', u'language', u'license', u'systemOfRecords', u'person', u'accrualPeriodicity', u'dataQuality', u'distribution', u'identifier', u'mbox'])

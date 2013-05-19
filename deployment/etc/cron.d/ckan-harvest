@@ -1,1 +1,2 @@
 */3 * * * * root ckan --plugin=ckanext-harvest harvester run -c /etc/ckan/production.ini >> /var/log/harvester_run.log 2>&1
+1 1 * * * root ckan --plugin=ckanext-geodatagov geodatagov clean-deleted -c /etc/ckan/production.ini >> /var/log/clean_deleted.log 2>&1
