@@ -411,7 +411,6 @@ class Demo(p.SingletonPlugin):
         return {
             'related_create': geodatagov_auth.related_create,
             'related_update': geodatagov_auth.related_update,
-            'user_create': geodatagov_auth.user_create,
             'group_catagory_tag_update': geodatagov_auth.group_catagory_tag_update,
         }
 
