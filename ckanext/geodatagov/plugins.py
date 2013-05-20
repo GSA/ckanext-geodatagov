@@ -222,6 +222,9 @@ class Demo(p.SingletonPlugin):
     def before_action(self, action_name, context, data_dict):
         if action_name in self.UPDATE_CATEGORY_ACTIONS:
             pkg_dict = p.toolkit.get_action('package_show')(context, {'id': data_dict['id']})
+            groups = data_dict.get('groups', [])
+            groups.extend(pkg_dict.get('groups', []))
+            data_dict['groups'] = groups
             cats = {}
             for extra in pkg_dict.get('extras', []):
                 if extra['key'].startswith('__category_tag_'):
