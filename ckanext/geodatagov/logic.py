@@ -123,6 +123,7 @@ MAPPING = {"title": "title",
            "references": "extras__references",
            "dataDictionary": "extras__data-dictiionary",
            "temporal": "extras__dataset-reference-date",
+           "issued": "extras__issued",
            "modified": "extras__metadata-date",
            "mbox": "extras__contact-email",
            "granularity": "extras__granularity",
@@ -140,7 +141,8 @@ def create_data_dict(record):
 
     for distribution in distributions:
         data_dict['resources'].append({'url': distribution['accessURL'],
-                                      'format': distribution['format']})
+                                      'format': distribution['format'],
+                                      'size_text': distribution.get('size') })
 
     for key, value in record.items():
         new_key = MAPPING.get(key)
