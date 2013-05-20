@@ -1,7 +1,8 @@
 {% block header %}
+  <a href="#content" class="hide">{{ _('Skip to content') }}</a>
   <header class="pre-header">
     <div class="container">
-      <a href="http://whitehouse.gov/"><img src="http://www.data.gov/sites/all/themes/datagov/images/usa-flag.gif" alt="{{ _('A little American flag') }}"></a>
+      <a href="http://whitehouse.gov/"><img src="http://www.data.gov/sites/all/themes/datagov/images/usa-flag.gif" alt="{{ _('WhiteHouse.gov') }}"></a>
       {{ _('An Official Web Site of the United States Government') }}
     </div>
   </header>
@@ -61,41 +62,19 @@
             {% endif %}
           </div>
         {% endblock %}
+        <form class="site-wide-search" action="http://www.data.gov/search/node/" method="get" data-module="geodatagov-site-wide-search">
+          <label for="field-sitewide-search" class="hide">{{ _('Search Data.gov') }}</label>
+          <input id="field-sitewide-search" type="text" name="q" placeholder="{{ _('Search Data.gov') }}" />
+          <button class="btn-search" type="submit">{{ _('Search') }}</button>
+        </form>
       </hgroup>
 
       <hgroup class="top-nav">
         {% include 'snippets/root_nav.html' %}
         {% block header_site_navigation %}
-          <nav class="secondary">
-            {% block header_site_search %}
-              <form class="section site-search simple-input" action="{% url_for controller='package', action='search' %}" method="get">
-                <div class="field">
-                  <label for="field-sitewide-search">{{ _('Search Datasets') }}</label>
-                  <input id="field-sitewide-search" type="text" name="q" placeholder="{{ _('Search datasets...') }}" />
-                  <button class="btn-search" type="submit">{{ _('Search') }}</button>
-                </div>
-              </form>
-            {% endblock %}
-            <ul class="nav" data-module="geodatagov-top-nav">
-              {% set nav_items = [
-                { 'url': h.url_for('home'),
-                  'label': _('Geospatial Data <span>Beta</span>'),
-                  'selected': (c.controller == 'home'),
-                  'class': 'home' },
-                { 'url': h.url_for('search'),
-                  'label': _('Datasets'),
-                  'check': '/dataset' },
-                { 'url': h.url_for('organizations_index'),
-                  'label': _('Organizations'),
-                  'selected': (c.controller == 'organization') },
-              ] %}
-              {% for nav_item in nav_items %}
-                <li class="{{ 'active' if nav_item.selected }} {{ nav_item.class }}"{% if nav_item.check %} data-check="{{ nav_item.check }}"{% endif %}>
-                  <a href="{{ nav_item.url }}">{{ nav_item.label|safe }}</a>
-                </li>
-              {% endfor %}
-            </ul>
-          </nav>
+          <div class="secondary">
+            <span>{{ _('Data Catalog') }}</span>
+          </div>
         {% endblock %}
       </hgroup>
 

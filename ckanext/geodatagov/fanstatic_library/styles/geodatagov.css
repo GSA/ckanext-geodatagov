@@ -10,6 +10,13 @@
 .clearfix:after {
   clear: both;
 }
+.hide-text {
+  font: 0/0 a;
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
+}
 body,
 .main,
 [role=main],
@@ -82,6 +89,9 @@ a {
 }
 .btn-primary:hover {
   background: #1b3354 !important;
+}
+.faded {
+  color: #777;
 }
 .pre-header {
   background: #0a3163 url("http://www.data.gov/sites/all/themes/datagov/images/preheader-bg.jpg") repeat-x center top;
@@ -166,7 +176,7 @@ a {
 }
 .masthead .container .account-wrapper {
   float: right;
-  padding: 10px;
+  padding: 6px 10px;
 }
 .masthead .container .account-wrapper .not-authed a {
   color: #284a7a;
@@ -178,9 +188,6 @@ a {
 .masthead .container .account-wrapper .not-authed a span {
   text-decoration: underline;
 }
-.masthead .container .account-wrapper .authed {
-  padding: 7px;
-}
 .masthead .container .account-wrapper .authed .gravatar {
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
@@ -190,8 +197,6 @@ a {
 }
 .masthead .container .account-wrapper ul {
   *zoom: 1;
-  margin-top: 5px;
-  margin-right: 5px;
 }
 .masthead .container .account-wrapper ul:before,
 .masthead .container .account-wrapper ul:after {
@@ -204,21 +209,51 @@ a {
 }
 .masthead .container .account-wrapper ul li {
   float: left;
-  margin-left: 5px;
+  border-left: 1px solid #c0cfe1;
 }
 .masthead .container .account-wrapper ul li a {
   display: block;
-  padding: 2px 5px;
-  color: white;
-  background-color: #5881b0;
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  -o-border-radius: 2px;
-  border-radius: 2px;
+  padding: 0 5px;
+  color: #5881b0;
 }
 .masthead .container .account-wrapper ul li a:hover {
-  background-color: #446891;
+  color: #446891;
+  background-color: #e2e9f2;
   text-decoration: none;
+}
+.masthead .container .site-wide-search {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  margin: 7px 10px;
+}
+.masthead .container .site-wide-search input {
+  margin: 0;
+  border-width: 0;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  -o-box-shadow: none;
+  box-shadow: none;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  -o-border-radius: 0;
+  border-radius: 0;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  width: 166px;
+  padding-left: 29px;
+  background: url("http://www.data.gov/sites/all/themes/datagov/images/search-box.jpg");
+}
+.masthead .container .site-wide-search button {
+  font: 0/0 a;
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
+  background: url("http://www.data.gov/sites/all/themes/datagov/images/search-button.jpg");
+  width: 104px;
+  height: 28px;
+  border-width: 0;
 }
 .masthead .container .top-nav {
   clear: both;
@@ -265,6 +300,10 @@ a {
 .masthead .container .top-nav .primary ul li a.root {
   border-left: 1px solid #294B78;
   border-right: 1px solid #0B3064;
+}
+.masthead .container .top-nav .primary ul li.active a {
+  background-color: #5881b0;
+  border-left-color: #5881b0;
 }
 .masthead .container .top-nav .primary ul li:first-child a.root {
   border-left-width: 0;
@@ -317,76 +356,33 @@ a {
   width: 180px;
   float: left;
 }
+.masthead .container .top-nav .primary .dropdown.communities {
+  margin-left: -217px;
+}
 .masthead .container .top-nav .primary .dropdown .dropdown {
   left: 180px;
   margin-top: -35px;
   width: 290px;
 }
-.masthead .container .top-nav .site-search {
-  float: right;
-  margin: 9px 18px;
-}
-.masthead .container .top-nav .site-search input {
-  border-width: 0;
-  font-family: 'Open Sans';
-  font-weight: 600;
-  padding: 6px 10px;
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  -o-border-radius: 0;
-  border-radius: 0;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  -o-box-shadow: none;
-  box-shadow: none;
-}
 .masthead .container .top-nav .secondary {
-  background-color: #4ba9d0;
-  font-family: 'Open Sans';
-  font-weight: 600;
+  background-color: #3a74a5;
+  background-image: -moz-linear-gradient(top, #5ea0d2, #033162);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#5ea0d2), to(#033162));
+  background-image: -webkit-linear-gradient(top, #5ea0d2, #033162);
+  background-image: -o-linear-gradient(top, #5ea0d2, #033162);
+  background-image: linear-gradient(to bottom, #5ea0d2, #033162);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff5ea0d2', endColorstr='#ff033162', GradientType=0);
+  font-family: 'Georgia';
   height: 50px;
-}
-.masthead .container .top-nav .secondary ul {
-  *zoom: 1;
-}
-.masthead .container .top-nav .secondary ul:before,
-.masthead .container .top-nav .secondary ul:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-.masthead .container .top-nav .secondary ul:after {
-  clear: both;
-}
-.masthead .container .top-nav .secondary ul li {
-  float: left;
-}
-.masthead .container .top-nav .secondary ul li a {
   line-height: 50px;
-  padding: 0 15px;
+  text-transform: uppercase;
 }
-.masthead .container .top-nav .secondary ul li a:hover,
-.masthead .container .top-nav .secondary ul li.active a {
-  background-color: #3090b8;
-}
-.masthead .container .top-nav .secondary ul li.home {
-  margin-right: 10px;
-}
-.masthead .container .top-nav .secondary ul li.home a {
-  background: transparent url("../images/geo-icon.png") 20px 50% no-repeat;
-  padding-left: 65px;
+.masthead .container .top-nav .secondary span {
+  display: block;
+  padding-left: 20px;
   padding-right: 20px;
   font-size: 21px;
-}
-.masthead .container .top-nav .secondary ul li.home a span {
-  margin-left: 5px;
-  text-transform: uppercase;
-  font-size: 9px;
-  line-height: 1;
-  vertical-align: 10px;
-  color: black;
-  background-color: white;
-  padding: 0 2px;
 }
 .flash-messages {
   padding: 10px;
@@ -415,17 +411,6 @@ a {
 }
 .footer-nav img {
   margin: 20px 0;
-}
-.footer-nav .attribution-link {
-  position: absolute;
-  bottom: 25px;
-  right: 0;
-  width: 148px;
-  height: 26px;
-  background-image: url("../images/powered-by.png");
-}
-.footer-nav .attribution-link span {
-  display: none;
 }
 .homepage .wrapper {
   border-top-width: 0;
@@ -729,7 +714,10 @@ a {
   background-color: #719f83;
 }
 #dataset-search {
-  margin-bottom: 5px;
+  margin-bottom: 0;
+}
+#dataset-search .results {
+  margin-top: 5px;
 }
 .control-order-by {
   position: relative;
@@ -743,6 +731,9 @@ a {
 }
 .secondary .module {
   margin: 10px 0;
+}
+.secondary .module .module-content.empty {
+  font-size: 13px;
 }
 .secondary .module .nav-item > a {
   font-size: 13px;
@@ -863,4 +854,19 @@ a {
 .ie7 .organization-type[data-organization-type="commercial"],
 .ie8 .organization-type[data-organization-type="commercial"] {
   background-image: url("../images/organization-type/commercial.png");
+}
+.select2-default {
+  color: #595959 !important;
+}
+input::-webkit-input-placeholder {
+  color: #595959;
+}
+input::-moz-placeholder {
+  color: #595959;
+}
+input:-ms-input-placeholder {
+  color: #595959;
+}
+input:-moz-placeholder {
+  color: #595959;
 }

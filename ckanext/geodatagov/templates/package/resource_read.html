@@ -2,6 +2,7 @@
 
 {% block resource_actions_inner %}
   {% set is_web_format = h.is_web_format(res) %}
+  {% set is_map_format = h.is_map_format(res) %}
   {% if h.check_access('package_update', {'id':pkg.id }) %}
     <li>{% link_for _('Edit'), controller='package', action='resource_edit', id=pkg.name, resource_id=res.id, class_='btn', icon='wrench' %}</li>
   {% endif %}
@@ -9,7 +10,7 @@
     <li>
       <a class="btn btn-primary resource-url-analytics resource-type-{{ res.resource_type }}" href="{{ res.url }}"{% if is_web_format %} target="_blank"{% endif %}>
         {% if is_web_format %}
-          <i class="icon-globe"></i> {{ _('Visit page') }}
+          <i class="icon-external-link"></i> {{ _('Visit page') }}
         {% else %}
           <i class="icon-download-alt"></i> {{ _('Download') }}
         {% endif %}
@@ -22,6 +23,16 @@
 {% endblock %}
 
 {% block data_preview %}
+  {% if h.is_map_viewer_format(c.resource) %}
+    <div class="actions" style="padding-right: 40px">
+      <li>
+        <a class="btn btn-success" href="/viewer?{{ h.get_map_viewer_params(c.resource) }}">
+            <i class="icon-globe"></i> {{ _('View in Advanced Viewer') }}
+        </a>
+      </li>
+    </div>
+  {% endif %}
+
   {{ h.resource_preview_custom(c.resource, c.package.id) }}
 {% endblock %}
 

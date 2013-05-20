@@ -2,6 +2,8 @@
 
 {% block add_action_content %}
   {{ super() }}
+  <a href="{{ h.url_for('organizations_index') }}" class="btn">{{ _('Organizations') }}</a>
+  <a href="https://explore.data.gov/catalog/next-gen" target="_blank" class="btn">{{ _('Interactive Datasets') }}</a>
   <a href="#" class="btn btn-primary" data-module="geodatagov-search-helper-message"><i class="icon-question-sign"></i></a>
   <div id="search-helper-message">
     To find datasets, enter your search terms in the search box below or browse through the categories on the left.  As you browse, you will be refining and narrowing your search.  To broaden your search again, click on the "clear all" link at the top of any category or on the "X" to the right of any single term.
@@ -20,7 +22,8 @@
       <form id="dataset-search" class="dataset-search clearfix" method="get" data-module="select-switch">
         {% set search_placeholder = 'Search collection...' if request.params.collection_package_id else 'Search datasets...' %}
         <span class="control-group search-giant">
-          <input type="text" class="search" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ search_placeholder }}" />
+          <label for="search-big" class="hide">{{ _('Search datasets') }}</label>
+          <input id="search-big" type="text" class="search" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ search_placeholder }}" />
           <button type="submit" value="search">{{ _('Submit') }}</button>
         </span>
 
@@ -31,36 +34,36 @@
         {%- endif %}
 
         <div id="dataset-search-ext">{% block dataset_search_ext %}{% endblock %}</div>
-      </form>
-      <div class="results">
-        {{ h.snippet('snippets/sort_by.html', sort=c.sort_by_selected) }}
-        <strong>
-          {% snippet 'snippets/search_result_text.html', query=c.q, count=c.page.item_count, type='dataset' %}
-        </strong>
-        <div class="filter-list">
-          {% for field in c.fields_grouped %}
-            {% if field != 'collection_package_id' %}
-              <span class="facet">{{ c.facet_titles.get(field) }}:</span>
-               {% set search_facets_items = c.search_facets.get(field)['items'] %}
-              {% for value in c.fields_grouped[field] %}
-                <span class="filtered pill">
-                  {%- if c.translated_fields and c.translated_fields.has_key((field,value)) -%}
-                    {{ c.translated_fields[(field,value)] }}
-                  {%- else -%}
-                    {{ h.list_dict_filter(search_facets_items , 'name', 'display_name', value) }}
-                  {%- endif %}
-                  <a href="{{ c.remove_field(field, value) }}" class="remove" title="{{ _('Remove') }}"><i class="icon-remove"></i></a>
-                </span>
-              {% endfor %}
-            {% endif %}
-          {% endfor %}
+        <div class="results">
+          {{ h.snippet('snippets/sort_by.html', sort=c.sort_by_selected) }}
+          <strong>
+            {% snippet 'snippets/search_result_text.html', query=c.q, count=c.page.item_count, type='dataset' %}
+          </strong>
+          <div class="filter-list">
+            {% for field in c.fields_grouped %}
+              {% if field != 'collection_package_id' %}
+                <span class="facet">{{ c.facet_titles.get(field) }}:</span>
+                 {% set search_facets_items = c.search_facets.get(field)['items'] %}
+                {% for value in c.fields_grouped[field] %}
+                  <span class="filtered pill">
+                    {%- if c.translated_fields and c.translated_fields.has_key((field,value)) -%}
+                      {{ c.translated_fields[(field,value)] }}
+                    {%- else -%}
+                      {{ h.list_dict_filter(search_facets_items , 'name', 'display_name', value) }}
+                    {%- endif %}
+                    <a href="{{ c.remove_field(field, value) }}" class="remove" title="{{ _('Remove') }}"><i class="icon-remove"></i></a>
+                  </span>
+                {% endfor %}
+              {% endif %}
+            {% endfor %}
+          </div>
+          {% if request.params and c.page.item_count == 0 %}
+            {% trans %}
+              <p class="extra">Please try another search.</p>
+            {% endtrans %}
+          {% endif %}
         </div>
-        {% if request.params and c.page.item_count == 0 %}
-          {% trans %}
-            <p class="extra">Please try another search.</p>
-          {% endtrans %}
-        {% endif %}
-      </div>
+      </form>
 
       {% if c.query_error %}
         {% trans %}
@@ -75,6 +78,7 @@
 
   <section class="module">
     <div class="module-content">
+      <p>
       <small>
         {% set api_link = h.link_to(_('API'), h.url_for(controller='api', action='get_api', ver=3)) %}
         {% set api_doc_link = h.link_to(_('API Docs'), 'http://docs.ckan.org/{0}/{1}/api.html'.format(request.environ.CKAN_LANG, g.ckan_doc_version)) %}
@@ -89,6 +93,14 @@
           {% endtrans %}
         {%- endif %}
       </small>
+      </p>
+      <p class="faded"><small><strong>Note:</strong> Only datasets
+marked as 'Federal' are subject to the U.S. Federal Government and
+Data.gov's <a href="http://www.data.gov/data-policy">Data Policy</a>.
+Non-federal participants (e.g. Universities, State
+and Local governments) maintain their own data policies. It is important
+that users understand the data policies of participating entities in order
+to best utilize these datasets.</small></p>
     </div>
   </section>
 
@@ -103,6 +115,7 @@
       <a href="{{ h.remove_url_param(['ext_bbox','ext_prev_extent', 'ext_location']) }}" class="action">{{ _('Clear') }}</a>
     </h2>
     <div id="dataset-map-edit">
+      <label for="field-location" class="hide">{{ _('Filter by location') }}</label>
       <input type="text" id="field-location" placeholder="{{ _('Enter location...') }}"
              value="{{ request.params.ext_location }}"
              data-module="location-autocomplete"

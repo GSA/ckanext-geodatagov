@@ -335,6 +335,7 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
 
         extras = [dict(key='guid',value=harvest_object.guid),
                   dict(key='metadata_source',value='arcgis'),
+                  dict(key='metadata_type',value='geospatial'),
                   dict(key='tags',value=tags)]
 
         extent = content.get('extent')

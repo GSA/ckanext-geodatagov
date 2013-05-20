@@ -65,3 +65,10 @@
 {% endif %}
 
 {% endblock extra_config %}
+
+
+{% block delete_button %}
+  {% set locale = h.dump_json({'content': _('Warning: Apart from deleting this source, this command will remove all its datasets, as well as all previous job reports. Are you sure you want to continue?')}) %}
+    <a class="btn btn-danger pull-left" href="{% url_for 'harvest_delete', id=data.name %}?clear=True" data-module="confirm-action" data-module-i18n="{{ locale }}">{% block delete_button_text %}{{ _('Delete') }}{% endblock %}</a>
+
+{% endblock %}

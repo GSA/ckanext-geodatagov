@@ -1,6 +1,8 @@
 {% set url = h.url_for(controller='package', action='resource_read', id=pkg.name, resource_id=res.id) %}
 {% set format = res.format.lower() or 'data' %}
 {% set is_web_format = h.is_web_format(res) %}
+{% set is_preview_format = h.is_preview_format(res) %}
+{% set is_map_format = h.is_map_format(res) %}
 {% set tooltip = _("ZIP files may contain data and documentation in one or more formats. In Data.gov’s Geospatial catalog, most of the files are multi-part shapefiles.") if format == 'zip' %}
 
 <li class="resource-item"{% if tooltip %} title="{{ tooltip }}"{% endif %}>
@@ -18,11 +20,18 @@
     {% endif %}
   </p>
   {% block resource_item_explore %}
+    {% set resource_url = url if is_map_format or is_preview_format else res.url %}
     <div class="btn-group">
-      <a href="{{ res.url }}" class="btn btn-primary"{% if is_web_format %} target="_blank"{% endif %}>
-        {% if is_web_format %}
+      <a href="{{ resource_url }}" class="btn btn-primary"{% if is_web_format %} target="_blank"{% endif %}>
+        {% if is_map_format %}
           <i class="icon-globe"></i>
+          {{ _('View Map') }}
+        {% elif is_web_format %}
+          <i class="icon-external-link"></i>
           {{ _('Visit page') }}
+        {% elif is_preview_format %}
+          <i class="icon-search"></i>
+          {{ _('Preview') }}
         {% else %}
           <i class="icon-download-alt"></i>
           {{ _('Download') }}

@@ -9,17 +9,10 @@
         <li><a href="http://www.data.gov/whats-new">{{ _('What\'s New') }}</a></li>
       </ul>
     </li>
-    <li>
-      <a href="https://explore.data.gov/" class="root">{{ _('Data') }}<i class="icon-caret-down"></i></a>
-      <ul class="unstyled dropdown">
-        <li><a href="http://explore.data.gov/catalog/raw">{{ _('Raw Data') }}</a></li>
-        <li class="active"><a href="{{ h.url('home') }}">{{ _('Geo Data') }}</a></li>
-        <li><a href="http://www.data.gov/gallery">{{ _('Gallery') }}</a></li>
-        <li><a href="http://explore.data.gov/catalog/tools">{{ _('Tools') }}</a></li>
-        <li><a href="http://explore.data.gov/catalog/next-gen">{{ _('Interactive') }}</a></li>
-      </ul>
-    </li>
     <li class="active">
+      <a href="/dataset" class="root">{{ _('Data') }}</a>
+    </li>
+    <li>
       <a href="http://www.data.gov/metric" class="root">{{ _('Metrics') }}<i class="icon-caret-down"></i></a>
       <ul class="unstyled dropdown">
         <li class="sub-dropdown">
@@ -62,8 +55,9 @@
     <li><a href="http://www.data.gov/blogs" class="root">{{ _('Blogs') }}</a></li>
     <li>
       <a href="http://www.data.gov/communities" class="root">{{ _('Communities') }}<i class="icon-caret-down"></i></a>
-      <div class="dropdown wide">
+      <div class="dropdown wide communities">
         <ul class="unstyled">
+          <li><a href="http://www.data.gov/community/food">{{ _('Agriculture') }}</a></li>
           <li><a href="http://www.data.gov/community/business">{{ _('Business') }}</a></li>
           <li><a href="http://www.data.gov/community/cities">{{ _('Cities') }}</a></li>
           <li><a href="http://www.data.gov/community/consumer">{{ _('Consumer') }}</a></li>
@@ -72,9 +66,9 @@
           <li><a href="http://www.data.gov/community/education">{{ _('Education') }}</a></li>
           <li><a href="http://www.data.gov/community/energy">{{ _('Energy') }}</a></li>
           <li><a href="http://www.data.gov/community/ethics">{{ _('Ethics') }}</a></li>
-          <li><a href="http://www.data.gov/community/health-0">{{ _('Health') }}</a></li>
         </ul>
         <ul class="unstyled">
+          <li><a href="http://www.data.gov/community/health-0">{{ _('Health') }}</a></li>
           <li><a href="http://www.data.gov/community/law">{{ _('Law') }}</a></li>
           <li><a href="http://www.data.gov/community/manufacturing">{{ _('Manufacturing') }}</a></li>
           <li><a href="http://www.data.gov/community/ocean">{{ _('Ocean') }}</a></li>

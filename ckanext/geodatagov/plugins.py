@@ -1,4 +1,5 @@
 import hashlib
+import urlparse
 import logging
 import paste.auth.auth_tkt
 import mimetypes
@@ -84,7 +85,8 @@ RESOURCE_MAPPING = {
     'application/msaccess': ('Access', 'Access Database'),
     'access': ('Access', 'Access Database'),
     'image/jpeg': ('JPEG', 'JPEG Image File'),
-    'jpeg': ('JPEG', 'JPEG Image File'),
+    'jpg': ('JPG', 'JPG Image File'),
+    'jpeg': ('JPG', 'JPG Image File'),
     'audio/prs.sid': ('MrSID', 'MrSID'),
     'mrsid': ('MrSID', 'MrSID'),
     'kml': ('KML', 'KML File'),
@@ -106,6 +108,9 @@ RESOURCE_MAPPING = {
     'xyz': ('XYZ', 'XYZ'),
     'image/png': ('PNG', 'PNG Image File'),
     'png': ('PNG', 'PNG Image File'),
+    'web map application': ('ArcGIS Online Map', 'ArcGIS Online Map'),
+    'arcgis map preview': ('ArcGIS Map Preview', 'ArcGIS Map Preview'),
+    'arcgis map service': ('ArcGIS Map Service', 'ArcGIS Map Service'),
 }
 
 
@@ -114,7 +119,7 @@ def split_tags(tag):
     tags = []
     for tag in tag.split(','):
         tags.extend(tag.split('>'))
-    return [tag.strip() for tag in tags]
+    return [tag.strip().lower() for tag in tags]
 
 ##copied from harvest but deals withe single item list keys like validation
 def harvest_source_convert_from_config(key,data,errors,context):
@@ -166,6 +171,9 @@ def get_filename_and_extension(resource):
     url = resource.get('url').rstrip('/')
     if '?' in url:
         return '', ''
+    if 'URL' in url:
+        return '', ''
+    url = urlparse.urlparse(url).path
     split = url.split('/')
     last_part = split[-1]
     ending = last_part.split('.')[-1].lower()
@@ -182,11 +190,11 @@ def change_resource_details(resource):
         resource_format = extension
     if resource_format in formats:
         resource['format'] = RESOURCE_MAPPING[resource_format][0]
-        if resource.get('name') == 'Unnamed resource':
+        if resource.get('name', '') in ['Unnamed resource', '', None]:
             resource['name'] = RESOURCE_MAPPING[resource_format][1]
             if filename:
                 resource['name'] = resource['name']
-    elif resource.get('name') == 'Unnamed resource':
+    elif resource.get('name', '') in ['Unnamed resource', '', None]:
         if extension:
             resource['format'] = extension.upper()
         resource['name'] = 'Web Page'
@@ -209,12 +217,57 @@ class Demo(p.SingletonPlugin):
     p.implements(p.IConfigurable)
     p.implements(p.IPackageController, inherit=True)
     p.implements(p.ITemplateHelpers)
-    p.implements(p.IActions)
+    p.implements(p.IActions, inherit=True)
     p.implements(p.IAuthFunctions)
     p.implements(p.IFacets, inherit=True)
+<<<<<<< HEAD
     p.implements(p.IActions)
     edit_url = None
 
+=======
+    p.implements(p.IRoutes, inherit=True)
+
+    UPDATE_CATEGORY_ACTIONS = ['package_update', 'dataset_update']
+    ROLLUP_SAVE_ACTIONS = ['package_create', 'dataset_create', 'package_update', 'dataset_update']
+
+    # source ignored as queried diretly
+    EXTRAS_ROLLUP_KEY_IGNORE = ["metadata-source", "tags"]
+
+    def before_action(self, action_name, context, data_dict):
+        if action_name in self.UPDATE_CATEGORY_ACTIONS:
+            pkg_dict = p.toolkit.get_action('package_show')(context, {'id': data_dict['id']})
+            cats = {}
+            for extra in pkg_dict.get('extras', []):
+                if extra['key'].startswith('__category_tag_'):
+                        cats[extra['key']] = extra['value']
+            extras = data_dict.get('extras', [])
+            for item in extras:
+                if item['key'] in cats:
+                    del cats[item['key']]
+            for cat in cats:
+                extras.append({'key': cat, 'value': cats[cat]})
+
+        ### make sure rollup happens after any other actions
+        if action_name in self.ROLLUP_SAVE_ACTIONS:
+            extras_rollup = {}
+            new_extras = []
+            for extra in data_dict.get('extras', []):
+                if extra['key'] in self.EXTRAS_ROLLUP_KEY_IGNORE:
+                    new_extras.append(extra)
+                else:
+                    extras_rollup[extra['key']] = extra['value']
+            new_extras.append({'key': 'extras_rollup',
+                               'value': json.dumps(extras_rollup)})
+            data_dict['extras'] = new_extras
+
+    ## IRoutes
+    def before_map(self, map):
+        controller = 'ckanext.geodatagov.controllers:ViewController'
+        map.connect('map_viewer', '/viewer',controller=controller, action='show')
+        map.redirect('/', '/dataset')
+        return map
+
+    ## IConfigurer
     def update_config(self, config):
         # add template directory
         p.toolkit.add_template_directory(config, 'templates')
@@ -228,6 +281,8 @@ class Demo(p.SingletonPlugin):
     @classmethod
     def saml2_user_edit_url(cls):
         return cls.edit_url
+
+    ## IPackageController
 
     def before_view(self, pkg_dict):
 
@@ -261,6 +316,26 @@ class Demo(p.SingletonPlugin):
         if group and ('organization_type' in group.extras):
             pkg_dict['organization_type'] = group.extras['organization_type']
 
+        title_string = pkg_dict.get('title_string')
+        if title_string:
+            pkg_dict['title_string'] = title_string.strip().lower()
+
+        # category tags
+        cats = {}
+        for extra in pkg_dict:
+            if extra.startswith('__category_tag_'):
+                cat = pkg_dict[extra]
+                if cat:
+                    try:
+                        cat_list = json.loads(cat)
+                        cats['vocab_%s' % extra] = cat_list
+                        new_list = cats.get('vocab_category_all', [])
+                        new_list.extend(cat_list)
+                        cats['vocab_category_all'] = new_list
+                    except ValueError:
+                        pass
+        pkg_dict.update(cats)
+
         return pkg_dict
 
     def before_search(self, pkg_dict):
@@ -276,6 +351,17 @@ class Demo(p.SingletonPlugin):
 
 
     def after_show(self, context, data_dict):
+
+        current_extras = data_dict.get('extras', [])
+        new_extras =[]
+        for extra in current_extras:
+            if extra['key'] == 'extras_rollup':
+                rolledup_extras = json.loads(extra['value'])
+                for key, value in rolledup_extras.iteritems():
+                    new_extras.append({"key": key, "value": value})
+            else:
+                new_extras.append(extra)
+        data_dict['extras'] = new_extras
 
         if 'resources' in data_dict:
             for resource in data_dict['resources']:
@@ -293,14 +379,17 @@ class Demo(p.SingletonPlugin):
                 'get_collection_package': geodatagov_helpers.get_collection_package,
                 'resource_preview_custom': geodatagov_helpers.resource_preview_custom,
                 'is_web_format': geodatagov_helpers.is_web_format,
-
                 'saml2_user_edit_url': self.saml2_user_edit_url,
+                'is_preview_format': geodatagov_helpers.is_preview_format,
+                'is_map_format': geodatagov_helpers.is_map_format,
+                'is_map_viewer_format' : geodatagov_helpers.is_map_viewer_format,
+                'get_map_viewer_params': geodatagov_helpers.get_map_viewer_params,
+                'render_datetime_datagov': geodatagov_helpers.render_datetime_datagov,
                 }
 
     ## IActions
 
     def get_actions(self):
-
 
         from ckanext.geodatagov import logic as geodatagov_logic
 
@@ -310,14 +399,20 @@ class Demo(p.SingletonPlugin):
             'location_search': geodatagov_logic.location_search,
             'organization_list': geodatagov_logic.organization_list,
             'group_show': geodatagov_logic.group_show,
+            'group_catagory_tag_update': geodatagov_logic.group_catagory_tag_update,
+            'datajson_create': geodatagov_logic.datajson_create,
+            'datajson_update': geodatagov_logic.datajson_update,
+            'package_show_rest': geodatagov_logic.package_show_rest,
         }
 
     ## IAuthFunctions
 
     def get_auth_functions(self):
         return {
-            'related_create': related_create_auth_fn,
-            'related_update': related_update_auth_fn,
+            'related_create': geodatagov_auth.related_create,
+            'related_update': geodatagov_auth.related_update,
+            'user_create': geodatagov_auth.user_create,
+            'group_catagory_tag_update': geodatagov_auth.group_catagory_tag_update,
         }
 
     ## IFacets
@@ -327,17 +422,20 @@ class Demo(p.SingletonPlugin):
         if package_type != 'dataset':
             return facets_dict
 
-        return OrderedDict([('tags','Tags'),
+        return OrderedDict([('metadata_type','Dataset Type'),
+                            ('tags','Tags'),
                             ('res_format', 'Formats'),
                             ('groups', 'Groups'),
                             ('organization_type', 'Organization Types'),
                             ('organization', 'Organizations'),
+                            ('vocab_category_all', 'Community Categories'),
                            ])
 
     def organization_facets(self, facets_dict, organization_type, package_type):
 
         if not package_type:
-            return OrderedDict([('tags','Tags'),
+            return OrderedDict([('metadata_type','Dataset Type'),
+                                ('tags','Tags'),
                                 ('res_format', 'Formats'),
                                 ('groups', 'Groups'),
                                 ('harvest_source_title', 'Harvest Source'),
@@ -349,11 +447,16 @@ class Demo(p.SingletonPlugin):
 
     def group_facets(self, facets_dict, organization_type, package_type):
 
+        # get the categories key
+        group_id = p.toolkit.c.group_dict['id']
+        key = 'vocab___category_tag_%s' % group_id
         if not package_type:
-            return OrderedDict([('organization_type', 'Organization Types'),
+            return OrderedDict([('metadata_type','Dataset Type'),
+                                ('organization_type', 'Organization Types'),
                                 ('tags','Tags'),
                                 ('res_format', 'Formats'),
                                 ('organization', 'Organizations'),
+                                (key, 'Categories'),
                                ])
         else:
             return facets_dict

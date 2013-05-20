@@ -3,22 +3,26 @@ import os
 import sys
 import re
 import csv
+import datetime
 import json
 import urllib
 import lxml.etree
 import ckan
 import ckan.model as model
 import ckan.logic as logic
+import ckan.logic.schema as schema
+import ckan.lib.cli as cli
 import ckan.lib.cli as cli
 import requests
 import ckanext.harvest.model as harvest_model
 import xml.etree.ElementTree as ET
 import ckan.lib.munge as munge
+import ckan.plugins as p
+from ckanext.geodatagov.harvesters.arcgis import _slugify
 
 
 import logging
 log = logging.getLogger()
-
 
 class GeoGovCommand(cli.CkanCommand):
     '''
@@ -27,6 +31,8 @@ class GeoGovCommand(cli.CkanCommand):
         paster geodatagov import-harvest-source <harvest_source_data> -c <config>
         paster geodatagov import-orgs <data> -c <config>
         paster geodatagov post-install-dbinit -c <config>
+        paster geodatagov import-dms -c <config>
+        paster geodatagov clean-deleted -c <config>
     '''
     summary = __doc__.split('\n')[0]
     usage = __doc__
@@ -60,7 +66,11 @@ class GeoGovCommand(cli.CkanCommand):
                 return
 
             self.import_organizations(self.args[1])
-
+        if cmd == 'import-dms':
+            if not len(self.args) in [2]:
+                print GeoGovCommand.__doc__
+                return
+            self.import_dms(self.args[1])
         if cmd == 'post-install-dbinit':
             f = open('/usr/lib/ckan/src/ckanext-geodatagov/what_to_alter.sql')
             print "running what_to_alter.sql"
@@ -70,6 +80,8 @@ class GeoGovCommand(cli.CkanCommand):
             test = model.Session.execute(f.read())
             model.Session.commit()
             print "Success"
+        if cmd == 'clean-deleted':
+            self.clean_deleted()
 
     def get_user_org_mapping(self, location):
         user_org_mapping = open(location)
@@ -173,3 +185,77 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                              'value': row['type']}]
                 }
             )
+
+
+    def import_dms(self, url):
+
+        input_records = requests.get(url).json()
+        to_import = {}
+        for record in input_records:
+            to_import[record['identifier']] = record
+
+        user = logic.get_action('get_site_user')(
+            {'model': model, 'ignore_auth': True}, {}
+        )
+
+        collected_ids = set(to_import.keys())
+
+        existing_package_ids = set([row[0] for row in
+                       model.Session.query(model.Package.id).from_statement(
+                           '''select p.id
+                           from package p
+                           join package_extra pe on p.id = pe.package_id
+                           where pe.key = 'metadata-source' and pe.value = 'dms'
+                           and p.state = 'active' ''')])
+
+        context = {}
+        context['user'] = self.user_name
+
+        for num, package_id in enumerate(collected_ids - existing_package_ids):
+            context.pop('package', None)
+            context.pop('group', None)
+            new_package = to_import[package_id]
+            logic.get_action('datajson_create')(context, new_package)
+        for package_id in collected_ids & existing_package_ids:
+            context.pop('package', None)
+            context.pop('group', None)
+            new_package = to_import[package_id]
+            logic.get_action('datajson_update')(context, new_package)
+        for package_id in existing_package_ids - collected_ids:
+            context.pop('package', None)
+            context.pop('group', None)
+            logic.get_action('package_delete')(context, {"id":package_id})
+
+
+    def clean_deleted(self):
+        print str(datetime.datetime.now()) + ' Starting delete'
+        sql = '''begin; update package set state = 'to_delete' where state <> 'active' and revision_id in (select id from revision where timestamp < now() - interval '1 day');
+        delete from package_role where package_id in (select id from package where state = 'to_delete' );
+        delete from user_object_role where id not in (select user_object_role_id from package_role) and context = 'Package';
+        delete from resource_revision where resource_group_id in (select id from resource_group where package_id in (select id from package where state = 'to_delete'));
+        delete from resource_group_revision where package_id in (select id from package where state = 'to_delete');
+        delete from package_tag_revision where package_id in (select id from package where state = 'to_delete');
+        delete from member_revision where table_id in (select id from package where state = 'to_delete');
+        delete from package_extra_revision where package_id in (select id from package where state = 'to_delete');
+        delete from package_revision where id in (select id from package where state = 'to_delete');
+        delete from package_tag where package_id in (select id from package where state = 'to_delete');
+        delete from resource where resource_group_id in (select id from resource_group where package_id in (select id from package where state = 'to_delete'));
+        delete from package_extra where package_id in (select id from package where state = 'to_delete');
+        delete from member where table_id in (select id from package where state = 'to_delete');
+        delete from resource_group where package_id  in (select id from package where state = 'to_delete');
+
+        delete from harvest_object_error hoe using harvest_object ho where ho.id = hoe.harvest_object_id and package_id  in (select id from package where state = 'to_delete');
+        delete from harvest_object_extra hoe using harvest_object ho where ho.id = hoe.harvest_object_id and package_id  in (select id from package where state = 'to_delete');
+        delete from harvest_object where package_id in (select id from package where state = 'to_delete');
+
+        delete from package where id in (select id from package where state = 'to_delete'); commit;'''
+        model.Session.execute(sql)
+        print str(datetime.datetime.now()) + ' Finished delete'
+
+
+#set([u'feed', u'webService', u'issued', u'modified', u'references', u'keyword', u'size', u'landingPage', u'title', u'temporal', u'theme', u'spatial', u'dataDictionary', u'description', u'format', u'granularity', u'accessLevel', u'accessURL', u'publisher', u'language', u'license', u'systemOfRecords', u'person', u'accrualPeriodicity', u'dataQuality', u'distribution', u'identifier', u'mbox'])
+
+
+#{u'title': 6061, u'theme': 6061, u'accessLevel': 6061, u'publisher': 6061, u'identifier': 6061, u'description': 6060, u'accessURL': 6060, u'distribution': 6060, u'keyword': 6059, u'person': 6057, u'accrualPeriodicity': 6056, u'format': 6047, u'spatial': 6009, u'size': 5964, u'references': 5841, u'dataDictionary': 5841, u'temporal': 5830, u'modified': 5809, u'issued': 5793, u'mbox': 5547, u'granularity': 4434, u'license': 2048, u'dataQuality': 453}
+
+

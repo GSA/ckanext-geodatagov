@@ -1,4 +1,6 @@
 import re
+import logging
+import urlparse
 
 import requests
 from pylons import config
@@ -9,6 +11,8 @@ from ckan import plugins as p
 from ckan.logic.validators import boolean_validator
 from ckan.lib.navl.validators import ignore_empty
 from ckan.lib.navl.dictization_functions import Invalid
+from ckanext.harvest.model import HarvestObjectExtra as HOExtra
+from ckanext.spatial.harvesters.base import guess_standard
 
 from ckanext.spatial.validation import Validators
 
@@ -71,6 +75,8 @@ class GeoDataGovHarvester(SpatialHarvester):
 
         package_dict['extras'].append({'key': 'tags', 'value': ', '.join(tags)})
 
+        package_dict['extras'].append({'key': 'metadata_type', 'value': 'geospatial'})
+
         if not package_dict.get('resources'):
             self._save_object_error('No resources invalid metadata', harvest_object, 'Import')
             return None
@@ -119,7 +125,7 @@ class GeoDataGovHarvester(SpatialHarvester):
             if p and not node.text:
                 p.remove(node)
 
-        themekt = tree.xpath('//themekt')
+        themekt = tree.xpath('//placekt')
         for num, node in enumerate(themekt):
             p = node.getparent()
             ###remove all but first
@@ -165,3 +171,78 @@ class GeoDataGovDocHarvester(DocHarvester, GeoDataGovHarvester):
             'title': 'Single spatial metadata document',
             'description': 'A single FGDC or ISO 19139 .xml file'
             }
+
+class GeoDataGovGeoportalHarvester(CSWHarvester, GeoDataGovHarvester):
+    '''
+    A Harvester for CSW servers, with customizations for geo.data.gov
+    '''
+    def info(self):
+        return {
+            'name': 'geoportal',
+            'title': 'Geoportal Server',
+            'description': 'A Geoportal Server CSW endpoint',
+            }
+
+    def output_schema(self):
+        return 'csw'
+
+    def fetch_stage(self,harvest_object):
+
+        log = logging.getLogger(__name__ + '.geoportal.fetch')
+        log.debug('CswHarvester fetch_stage for object: %s', harvest_object.id)
+
+        url = harvest_object.source.url
+
+        identifier = harvest_object.guid
+
+        parts = urlparse.urlparse(url)
+        url = urlparse.urlunparse((
+            parts.scheme,
+            parts.netloc,
+            '/'.join(parts.path.rstrip('/').split('/')[:-2]),
+            None, None, None)
+        )
+        url = url.rstrip('/') + '/rest/document?id=%s' % identifier
+        try:
+            response = requests.get(url)
+            content = response.content
+        except Exception, e:
+            self._save_object_error('Error getting the record with GUID %s from %s' % 
+                                    (identifier, url), harvest_object)
+            return False
+
+        try:
+            # Save the fetch contents in the HarvestObject
+            # Contents come from csw_client already declared and encoded as utf-8
+            # Remove original XML declaration
+            content = re.sub('<\?xml(.*)\?>', '', content)
+            
+            document_format = guess_standard(content)
+            if document_format == 'iso':
+                harvest_object.content = content
+                harvest_object.save()
+            elif document_format == 'fgdc':
+                extra = HOExtra(
+                        object=harvest_object,
+                        key='original_document',
+                        value=content)
+                extra.save()
+
+                extra = HOExtra(
+                        object=harvest_object,
+                        key='original_format',
+                        value=document_format)
+                extra.save()
+            else:
+                harvest_object.report_status = 'ignored'
+                harvest_object.save()
+                return False
+        except Exception,e:
+            self._save_object_error('Error saving the harvest object for GUID %s [%r]' % \
+                                    (identifier, e), harvest_object)
+            return False
+
+        log.debug('XML content saved (len %s)', len(content))
+        return True
+
+
