@@ -714,7 +714,10 @@ a {
   background-color: #719f83;
 }
 #dataset-search {
-  margin-bottom: 5px;
+  margin-bottom: 0;
+}
+#dataset-search .results {
+  margin-top: 5px;
 }
 .control-order-by {
   position: relative;
