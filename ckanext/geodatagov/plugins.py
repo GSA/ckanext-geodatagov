@@ -295,6 +295,10 @@ class Demo(p.SingletonPlugin):
         if group and ('organization_type' in group.extras):
             pkg_dict['organization_type'] = group.extras['organization_type']
 
+        title_string = pkg_dict.get('title_string')
+        if title_string:
+            pkg_dict['title_string'] = title_string.strip().lower()
+
         # category tags
         cats = {}
         for extra in pkg_dict:
