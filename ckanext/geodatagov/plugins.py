@@ -305,7 +305,7 @@ class Demo(p.SingletonPlugin):
                         cat_list = json.loads(cat)
                         cats['vocab_%s' % extra] = cat_list
                         new_list = cats.get('vocab_category_all', [])
-                        new_list.append(cat_list)
+                        new_list.extend(cat_list)
                         cats['vocab_category_all'] = new_list
                     except ValueError:
                         pass
