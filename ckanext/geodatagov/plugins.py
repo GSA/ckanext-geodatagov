@@ -304,7 +304,9 @@ class Demo(p.SingletonPlugin):
                     try:
                         cat_list = json.loads(cat)
                         cats['vocab_%s' % extra] = cat_list
-                        cats['vocab_category_all'] = cat_list
+                        new_list = cats.get('vocab_category_all', [])
+                        new_list.append(cat_list)
+                        cats['vocab_category_all'] = new_list
                     except ValueError:
                         pass
         pkg_dict.update(cats)
@@ -403,6 +405,7 @@ class Demo(p.SingletonPlugin):
                             ('groups', 'Groups'),
                             ('organization_type', 'Organization Types'),
                             ('organization', 'Organizations'),
+                            ('vocab_category_all', 'Community Categories'),
                            ])
 
     def organization_facets(self, facets_dict, organization_type, package_type):
