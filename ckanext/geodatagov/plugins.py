@@ -405,6 +405,9 @@ class Demo(p.SingletonPlugin):
     ## IAuthFunctions
 
     def get_auth_functions(self):
+
+        from ckanext.geodatagov import auth as geodatagov_auth
+
         return {
             'related_create': geodatagov_auth.related_create,
             'related_update': geodatagov_auth.related_update,
