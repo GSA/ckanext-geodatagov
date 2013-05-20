@@ -184,7 +184,7 @@ def get_filename_and_extension(resource):
 
 def change_resource_details(resource):
     formats = RESOURCE_MAPPING.keys()
-    resource_format = resource.get('format', '').lower()
+    resource_format = resource.get('format', '').lower().lstrip('.')
     filename, extension = get_filename_and_extension(resource)
     if not resource_format:
         resource_format = extension
@@ -195,7 +195,7 @@ def change_resource_details(resource):
             if filename:
                 resource['name'] = resource['name']
     elif resource.get('name', '') in ['Unnamed resource', '', None]:
-        if extension:
+        if extension and not resource_format:
             resource['format'] = extension.upper()
         resource['name'] = 'Web Page'
 
@@ -233,6 +233,9 @@ class Demo(p.SingletonPlugin):
     def before_action(self, action_name, context, data_dict):
         if action_name in self.UPDATE_CATEGORY_ACTIONS:
             pkg_dict = p.toolkit.get_action('package_show')(context, {'id': data_dict['id']})
+            groups = data_dict.get('groups', [])
+            groups.extend(pkg_dict.get('groups', []))
+            data_dict['groups'] = groups
             cats = {}
             for extra in pkg_dict.get('extras', []):
                 if extra['key'].startswith('__category_tag_'):
