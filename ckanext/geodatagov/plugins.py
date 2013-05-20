@@ -220,11 +220,8 @@ class Demo(p.SingletonPlugin):
     p.implements(p.IActions, inherit=True)
     p.implements(p.IAuthFunctions)
     p.implements(p.IFacets, inherit=True)
-<<<<<<< HEAD
-    p.implements(p.IActions)
     edit_url = None
 
-=======
     p.implements(p.IRoutes, inherit=True)
 
     UPDATE_CATEGORY_ACTIONS = ['package_update', 'dataset_update']
