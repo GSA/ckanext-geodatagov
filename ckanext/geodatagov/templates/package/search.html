@@ -78,6 +78,7 @@
 
   <section class="module">
     <div class="module-content">
+      <p>
       <small>
         {% set api_link = h.link_to(_('API'), h.url_for(controller='api', action='get_api', ver=3)) %}
         {% set api_doc_link = h.link_to(_('API Docs'), 'http://docs.ckan.org/{0}/{1}/api.html'.format(request.environ.CKAN_LANG, g.ckan_doc_version)) %}
@@ -92,14 +93,11 @@
           {% endtrans %}
         {%- endif %}
       </small>
-    </div>
-  </section>
-
-  <section class="module">
-    <div class="module-content">
+      </p>
       <p class="faded"><small><strong>Note:</strong> Only datasets
 marked as 'Federal' are subject to the U.S. Federal Government and
-Data.gov's Data Policy. Non-federal participants (e.g. Universities, State
+Data.gov's <a href="http://www.data.gov/data-policy">Data Policy</a>.
+Non-federal participants (e.g. Universities, State
 and Local governments) maintain their own data policies. It is important
 that users understand the data policies of participating entities in order
 to best utilize these datasets.</small></p>

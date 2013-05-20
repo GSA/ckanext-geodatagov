@@ -356,6 +356,9 @@ a {
   width: 180px;
   float: left;
 }
+.masthead .container .top-nav .primary .dropdown.communities {
+  margin-left: -217px;
+}
 .masthead .container .top-nav .primary .dropdown .dropdown {
   left: 180px;
   margin-top: -35px;
@@ -725,6 +728,9 @@ a {
 }
 .secondary .module {
   margin: 10px 0;
+}
+.secondary .module .module-content.empty {
+  font-size: 13px;
 }
 .secondary .module .nav-item > a {
   font-size: 13px;
