@@ -184,7 +184,7 @@ def get_filename_and_extension(resource):
 
 def change_resource_details(resource):
     formats = RESOURCE_MAPPING.keys()
-    resource_format = resource.get('format', '').lower()
+    resource_format = resource.get('format', '').lower().lstrip('.')
     filename, extension = get_filename_and_extension(resource)
     if not resource_format:
         resource_format = extension
@@ -195,7 +195,7 @@ def change_resource_details(resource):
             if filename:
                 resource['name'] = resource['name']
     elif resource.get('name', '') in ['Unnamed resource', '', None]:
-        if extension:
+        if extension and not resource_format:
             resource['format'] = extension.upper()
         resource['name'] = 'Web Page'
 
