@@ -94,8 +94,7 @@ a {
   color: #777;
 }
 .disclaimer {
-  font-size: small;
-  margin-top: 10px;
+  padding-top: 10px;
   clear: both;
 }
 .pre-header {
