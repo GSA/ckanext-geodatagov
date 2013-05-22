@@ -93,6 +93,10 @@ a {
 .faded {
   color: #777;
 }
+.disclaimer {
+  font-size: small;
+  margin-top: 10px;
+}
 .pre-header {
   background: #0a3163 url("http://www.data.gov/sites/all/themes/datagov/images/preheader-bg.jpg") repeat-x center top;
   color: white;
