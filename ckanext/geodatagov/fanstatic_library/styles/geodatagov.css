@@ -96,6 +96,7 @@ a {
 .disclaimer {
   font-size: small;
   margin-top: 10px;
+  clear: both;
 }
 .pre-header {
   background: #0a3163 url("http://www.data.gov/sites/all/themes/datagov/images/preheader-bg.jpg") repeat-x center top;
