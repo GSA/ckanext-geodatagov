@@ -9,6 +9,21 @@
     To find datasets, enter your search terms in the search box below or browse through the categories on the left.  As you browse, you will be refining and narrowing your search.  To broaden your search again, click on the "clear all" link at the top of any category or on the "X" to the right of any single term.
   </div>
 {% endblock %}
+{% block breadcrumb_content %}
+
+  {{ super() }}
+      <p class="faded disclaimer"><small>
+      Note that only datasets marked as "Federal" are subject to the U.S.
+      Federal Government and Data.gov's <a href="http://www.data.gov/data-policy">Data Policy</a>.
+      Non-federal participants (e.g., universities, organizations, and tribal, state,
+      and local governments) maintain their own data policies. It is important
+      that users understand the data policies of participating entities in
+      order to best utilize these datasets. A description of this catalog and
+      information about the datasets presented and associated metrics is available
+      <a href="http://www.data.gov/newcataloginfo">here</a >.
+      </p>
+
+{% endblock %}
 
 {% block primary_content %}
   {% if request.params.collection_package_id %}
@@ -94,13 +109,6 @@
         {%- endif %}
       </small>
       </p>
-      <p class="faded"><small><strong>Note:</strong> Only datasets
-marked as 'Federal' are subject to the U.S. Federal Government and
-Data.gov's <a href="http://www.data.gov/data-policy">Data Policy</a>.
-Non-federal participants (e.g. Universities, State
-and Local governments) maintain their own data policies. It is important
-that users understand the data policies of participating entities in order
-to best utilize these datasets.</small></p>
     </div>
   </section>
 

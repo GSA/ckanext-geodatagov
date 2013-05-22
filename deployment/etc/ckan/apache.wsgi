@@ -13,5 +13,5 @@ fileConfig(config_filepath)
 _application = loadapp('config:%s' % config_filepath)
 def application(environ, start_response):
     environ.pop('REMOTE_USER', None)
+    environ['wsgi.url_scheme'] = environ.get('HTTP_X_SCHEME', 'https')
     return _application(environ, start_response)
-
