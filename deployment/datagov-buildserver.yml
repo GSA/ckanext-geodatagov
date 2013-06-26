@@ -50,7 +50,7 @@
       action: command chdir=/usr/lib/ckan/src/ckan/ ../../bin/python setup.py develop
 
     - name: get geodatagov
-      action: git repo=https://github.com/okfn/ckanext-geodatagov dest=/usr/lib/ckan/src/ckanext-geodatagov version=saml2
+      action: git repo=https://github.com/okfn/ckanext-geodatagov dest=/usr/lib/ckan/src/ckanext-geodatagov version=master
 
 #    - name: get harvest extension
 #      action: git repo=https://github.com/okfn/ckanext-harvest dest=/usr/lib/ckan/src/ckanext-harvest version=release-v2.0
