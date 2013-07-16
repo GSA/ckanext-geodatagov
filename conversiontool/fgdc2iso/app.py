@@ -6,7 +6,9 @@ import datetime
 import urlparse
 import urllib
 import cgi
+import uuid
 import tempfile
+import threading
 import java.lang.System as System
 import java.lang.Class as Class
 import java.io.File as JavaFile
@@ -20,8 +22,11 @@ import javax.xml.transform.stream.StreamResult as StreamResult
 import javax.xml.transform.stream.StreamSource as StreamSource
 import net.sf.saxon.trans.XPathException as XPathException
 import config
+import threading
 
 _transform = None
+
+rlock = threading.RLock()
 
 
 def transform(xmldoc, xslt=config.defualt_xslt):
@@ -43,11 +48,16 @@ def transform(xmldoc, xslt=config.defualt_xslt):
             print 'This is likely that your license file for saxon is '\
                   'missing or that there is a genuine error in the XSLT'
 
-    fid, path, = tempfile.mkstemp()
+    fid, path, = tempfile.mkstemp(prefix='tmp' + str(uuid.uuid4()))
     os.close(fid)
 
-    _transform.transform(StreamSource(StringReader(xmldoc)),
+    rlock.acquire()
+    try:
+        _transform.transform(StreamSource(StringReader(xmldoc)),
                          StreamResult(JavaFile(path)))
+    finally:
+        rlock.release()
+
     f = open(path)
     converted = f.read()
     f.close()
