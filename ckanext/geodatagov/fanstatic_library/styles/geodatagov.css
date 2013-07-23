@@ -232,32 +232,36 @@ a {
   margin: 7px 10px;
 }
 .masthead .container .site-wide-search input {
-  margin: 0;
-  border-width: 0;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  -o-box-shadow: none;
-  box-shadow: none;
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  -o-border-radius: 0;
-  border-radius: 0;
-  font-family: Verdana, Arial, Helvetica, sans-serif;
-  font-size: 11px;
-  width: 166px;
-  padding-left: 29px;
-  background: url("http://www.data.gov/sites/all/themes/datagov/images/search-box.jpg");
+    margin: 0;
+    border-width: 0;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    -o-box-shadow: none;
+    box-shadow: none;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    -o-border-radius: 0;
+    border-radius: 0;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    width: 184px;
+    padding-left: 11px;
+    background: url("http://www.data.gov/sites/all/themes/datagov/images/search-box-new.jpg");
 }
 .masthead .container .site-wide-search button {
-  font: 0/0 a;
-  color: transparent;
-  text-shadow: none;
-  background-color: transparent;
-  border: 0;
-  background: url("http://www.data.gov/sites/all/themes/datagov/images/search-button.jpg");
-  width: 104px;
-  height: 28px;
-  border-width: 0;
+    font: 0/0 a;
+    color: transparent;
+    text-shadow: none;
+    background-color: transparent;
+    border: 0;
+    background: url("http://www.data.gov/sites/all/themes/datagov/images/search_new.png");
+    background-repeat:no-repeat;
+    width: 25px;
+    height: 28px;
+    border-width: 0;
+    position:absolute;
+    top:1px;
+    right:2px;
 }
 .masthead .container .top-nav {
   clear: both;
@@ -873,4 +877,31 @@ input:-ms-input-placeholder {
 }
 input:-moz-placeholder {
   color: #595959;
+}
+.search-box-new {
+    position: absolute;
+    right: 245px;
+    margin: 27px 10px;
+}
+.search-box-new {
+    position: absolute;
+    right: 245px;
+    margin: 27px 10px;
+}
+input.search-new{
+    background: url("http://www.data.gov/sites/all/themes/datagov/images/search-box-new.jpg") repeat scroll 0 0 transparent;
+    border:0 none;
+    width:189px;
+}
+.search-box-new button{
+    background: url("http://www.data.gov/sites/all/themes/datagov/images/search_new.png") no-repeat scroll 0 0 transparent;
+    border: 0 none;
+    color: transparent;
+    font: 0px/0 a;
+    height: 28px;
+    text-shadow: none;
+    width: 25px;
+    position:absolute;
+    top:1px;
+    right:2px;
 }
