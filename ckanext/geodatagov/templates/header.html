@@ -62,6 +62,12 @@
             {% endif %}
           </div>
         {% endblock %}
+         <form class="search-box-new" method="get" action="{% url_for controller='package', action='search' %}">
+          <span class="control-group">
+            <input type="text" class="search-new" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search datasets...') }}" />
+            <button type="submit" value="{{ _('Search') }}">Submit</button>
+           </span>
+        </form>
         <form class="site-wide-search" action="http://www.data.gov/search/node/" method="get" data-module="geodatagov-site-wide-search">
           <label for="field-sitewide-search" class="hide">{{ _('Search Data.gov') }}</label>
           <input id="field-sitewide-search" type="text" name="q" placeholder="{{ _('Search Data.gov') }}" />
