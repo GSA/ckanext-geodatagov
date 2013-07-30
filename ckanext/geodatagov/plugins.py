@@ -341,6 +341,9 @@ class Demo(p.SingletonPlugin):
 
         fq = pkg_dict.get('fq', '')
 
+        if pkg_dict.get('sort') in (None, 'rank'):
+            pkg_dict['sort'] = 'metadata_modified desc'
+
         # only show collections on bulk update page and when the facet is explictely added
 
         if 'collection_package_id' not in fq and 'bulk_process' not in request.path:
