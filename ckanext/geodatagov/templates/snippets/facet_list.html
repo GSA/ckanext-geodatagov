@@ -49,7 +49,7 @@ hide_empty
           {% if title == 'Groups' %}
           {% set title = 'Communities' %}
           {% endif %}
-          {{ title }} &nbsp;
+          {{ title }}&nbsp;
           <a href="{{ h.remove_url_param(name, extras=extras, alternative_url=alternative_url) }}" class="action">{{ _('Clear All') }}</a>
       </h2>
 
