@@ -255,8 +255,9 @@ class Demo(p.SingletonPlugin):
                     new_extras.append(extra)
                 else:
                     extras_rollup[extra['key']] = extra['value']
-            new_extras.append({'key': 'extras_rollup',
-                               'value': json.dumps(extras_rollup)})
+            if extras_rollup:
+                new_extras.append({'key': 'extras_rollup',
+                                   'value': json.dumps(extras_rollup)})
             data_dict['extras'] = new_extras
 
     ## IRoutes
