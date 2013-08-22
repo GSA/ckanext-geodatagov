@@ -1,0 +1,89 @@
+{% extends "package/base.html" %}
+
+{% block subtitle %}{{ pkg.title or pkg.name }}{% endblock %}
+
+{% block links -%}
+    {{ super() }}
+    <link rel="alternate" type="application/rdf+xml" href="{{ h.url_for(controller='package', action='read', id=pkg.id, format='rdf', qualified=True) }}"/>
+{% endblock -%}
+
+{% block actions_content %}
+  {# NOTE: Not implemented in stage 1 #}
+  {# <li>{% link_for _('History'), controller='package', action='history', id=pkg.name, class_='btn', icon='undo' %}</li> #}
+  {% if h.check_access('package_update', {'id':pkg.id }) %}
+    <li>{% link_for _('Edit'), controller='package', action='edit', id=pkg.name, class_='btn btn-primary', icon='wrench' %}</li>
+  {% endif %}
+  <li>{{ h.follow_button('dataset', pkg.id) }}</li>
+{% endblock %}
+
+{% block primary_content %}
+  <article class="module prose">
+    {% block page_header %}
+      <header class="module-content page-header">
+        <ul class="nav nav-tabs">
+          {% block page_header_tabs %}
+            {{ h.build_nav_icon('dataset_read', _('Dataset'), id=pkg.name) }}
+            {{ h.build_nav_icon('dataset_activity', _('Activity Stream'), id=pkg.name) }}
+            {{ h.build_nav_icon('related_list', _('Related'), id=pkg.name) }}
+          {% endblock %}
+        </ul>
+      </header>
+    {% endblock %}
+
+    {% block package_revision_info %}
+      {% if c.pkg_revision_id %}
+        <div class="module info alert alert-info">
+          <p class="module-content">
+            {% set timestamp = h.render_datetime(c.pkg_revision_timestamp, with_hours=True) %}
+            {% set url = h.url(controller='package', action='read', id=pkg.name) %}
+
+            {% if c.pkg_revision_not_latest %}
+              {% trans timestamp=timestamp, url=url %}This is an old revision of this dataset, as edited at {{ timestamp }}. It may differ significantly from the <a href="{{ url }}">current revision</a>.{% endtrans %}
+            {% else %}
+              {% trans timestamp=timestamp %}This is the current revision of this dataset, as edited at {{ timestamp }}.{% endtrans %}
+            {% endif %}
+          </p>
+        </div>
+      {% endif %}
+    {% endblock %}
+
+    {% block primary_content_inner %}{% endblock %}
+  </article>
+{% endblock %}
+
+{% block secondary_content %}
+
+  {% block secondary_help_content %}{% endblock %}
+
+  {% block package_organization %}
+    {% if pkg.organization %}
+      {% snippet "snippets/organization.html", organization=pkg.organization %}
+    {% endif %}
+  {% endblock %}
+
+  {% block package_groups %}
+    {% if pkg.groups %}
+      <div class="module module-narrow">
+        <h2 class="module-heading"><i class="icon-folder-open"></i> {{ _('Groups') }}</h2>
+        <ul class="nav nav-simple">
+          {% for group in pkg.groups %}
+            <li class="nav-item">
+              <a href="{{ h.url_for(controller='group', action='read', id=group.name) }}">
+                {{ group.title or group.name }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+  {% endblock %}
+
+  {% block package_social %}
+    {% snippet "snippets/social.html" %}
+  {% endblock %}
+
+  {% block package_license %}
+    {% snippet "snippets/license.html", pkg_dict=pkg %}
+  {% endblock %}
+
+{% endblock %}

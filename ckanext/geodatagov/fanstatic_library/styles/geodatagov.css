@@ -905,3 +905,6 @@ input.search-new{
     top:1px;
     right:2px;
 }
+body{font-size:87.5px;}
+#dataset-map-attribution div a{text-decoration:underline;}
+.empty{color:#595959;}
