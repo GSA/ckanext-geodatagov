@@ -1,6 +1,6 @@
--e git+https://github.com/okfn/ckanext-harvest.git@release-v2.0#egg=ckanext-harvest
--e git+https://github.com/okfn/ckanext-spatial.git@master#egg=ckanext-spatial
--e git+https://github.com/okfn/ckanext-qa.git@release-v2.0#egg=ckanext-qa
+-e git+https://github.com/FuhuXia/ckanext-harvest.git@prod#egg=ckanext-harvest
+-e git+https://github.com/FuhuXia/ckanext-spatial.git@prod#egg=ckanext-spatial
+-e git+https://github.com/FuhuXia/ckanext-qa.git@prod#egg=ckanext-qa
 -e git+https://github.com/okfn/ckanext-googleanalytics.git@master#egg=ckanext-googleanalytics
 redis==2.7.2
 
