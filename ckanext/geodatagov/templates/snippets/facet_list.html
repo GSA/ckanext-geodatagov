@@ -42,20 +42,29 @@ hide_empty
       {% set nav_item_class = ' ' %}
       {% set wrapper_class = 'nav-facet nav-facet-tertiary' %}
     {% endif %}
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
+    <script src="/javascript/sorting.js" type="text/javascript"></script>	
+
     <section class="{{ wrapper_class or 'module module-narrow module-shallow' }}">
+
       <h2 class="module-heading">
         <i class="icon-medium icon-filter"></i>
         {% set title = title or h.get_facet_title(name) %}
           {% if title == 'Groups' %}
           {% set title = 'Communities' %}
           {% endif %}
-          {{ title }}&nbsp;
+          {{ title }} &nbsp;
+		  
+          <img src="/fanstatic/geodatagov/images/alpha.png" id="sortFacetAlpha"></img>
+		  <img src="/fanstatic/geodatagov/images/number.png" id="sortFacetCount"></img>
+		
           <a href="{{ h.remove_url_param(name, extras=extras, alternative_url=alternative_url) }}" class="action">{{ _('Clear All') }}</a>
       </h2>
 
       {% if items %}
         <nav>
-          <ul class="{{ nav_class or 'unstyled nav nav-simple nav-facet' }}">
+          <ul class="{{ nav_class or 'unstyled nav nav-simple nav-facet' }}" id="{{name}}">
             {% for item in items %}
               {% set href = h.remove_url_param(name, item.name, extras=extras, alternative_url=alternative_url) if item.active else h.add_url_param(new_params={name: item.name}, extras=extras, alternative_url=alternative_url) %}
               {% set label = label_function(item) if label_function else item.display_name %}
@@ -71,9 +80,9 @@ hide_empty
         </nav>
         <p class="module-footer">
           {% if h.get_param_int('_%s_limit' % name) %}
-            <a href="{{ h.remove_url_param('_%s_limit' % name, replace=0, extras=extras, alternative_url=alternative_url) }}" class="read-more">{{ _('Show More {facet_type}').format(facet_type=title) }}</a>
+            <a href="{{ h.remove_url_param('_%s_limit' % name, replace=0, extras=extras, alternative_url=alternative_url) }}" class="read-more" id="facet_read_more">{{ _('Show More {facet_type}').format(facet_type=title) }}</a>
           {% else %}
-            <a href="{{ h.remove_url_param('_%s_limit' % name, extras=extras, alternative_url=alternative_url) }}" class="read-more">{{ _('Show Only Popular {facet_type}').format(facet_type=title) }}</a>
+            <a href="{{ h.remove_url_param('_%s_limit' % name, extras=extras, alternative_url=alternative_url) }}" class="read-more" id="facet_read_more">{{ _('Show Only Popular {facet_type}').format(facet_type=title) }}</a>
           {% endif %}
         </p>
       {% else %}
