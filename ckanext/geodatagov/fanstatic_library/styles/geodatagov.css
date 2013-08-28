@@ -905,3 +905,7 @@ input.search-new{
     top:1px;
     right:2px;
 }
+
+.module-heading img {
+    cursor: pointer;
+}
