@@ -7,7 +7,7 @@ jQuery( document ).ready(function() {
 	var defaults = {
                  'metadata_type' : {'sortType': 'count', 'sort' : 'desc'},
                  'tags' : {'sortType': 'count', 'sort' : 'desc'},
-                 'res_format' : {'sortType': 'count', 'sort' : 'desc'},
+                 'res_format' : {'sortType': 'alpha', 'sort' : 'asc'},
                  'groups' : {'sortType': 'count', 'sort' : 'desc'},
                  'organization_type' : {'sortType': 'count', 'sort' : 'desc'},
                  'organization' : {'sortType': 'count', 'sort' : 'desc'},
