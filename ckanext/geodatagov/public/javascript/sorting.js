@@ -107,6 +107,8 @@ jQuery( document ).ready(function() {
 		   else
 		     url = url + '&_' + key + '_limit=0';
 		}
+		
+		url = url + '#' + key;
 			 
 		//original list
 		var mylist1 = $('ul.unstyled.nav.nav-simple.nav-facet#' + key);
@@ -123,6 +125,7 @@ jQuery( document ).ready(function() {
 	    var id = $(this).parent().parent().find('ul.unstyled.nav.nav-simple.nav-facet').attr('id');		
 		var url = $(this).parent().parent().find('p.module-footer a.read-more').attr('href');
 		var browserURL = window.location.href;
+		browserURL = browserURL.substring(0, browserURL.indexOf('#'));
 		
 		//original list
 		var mylist1 = $('ul.unstyled.nav.nav-simple.nav-facet#' + id);
@@ -175,6 +178,8 @@ jQuery( document ).ready(function() {
 		   }		   			  		
 		}
 		
+		browserURL = browserURL + '#' + id;
+		
 		url = url.replace('_' + id + '_sortCnt=asc', '');
 		url = url.replace('_' + id + '_sortCnt=desc', '');
 		url = url.replace('?&', '?');
@@ -191,6 +196,8 @@ jQuery( document ).ready(function() {
 		     url = url + '&_' + id + '_limit=0';
 		}
 		 
+		
+		
         imageChange('alphaSort', id, sort);		 
 		sortFacet(url, id, mylist1, sort, cnt, 'alphaSort');
         window.location.href = browserURL;
@@ -202,6 +209,7 @@ jQuery( document ).ready(function() {
 	    var id = $(this).parent().parent().find('ul.unstyled.nav.nav-simple.nav-facet').attr('id');		
 		var url = $(this).parent().parent().find('p.module-footer a.read-more').attr('href');
 		var browserURL = window.location.href;
+		browserURL = browserURL.substring(0, browserURL.indexOf('#'));
 		
 		//original list
 		var mylist1 = $('ul.unstyled.nav.nav-simple.nav-facet#' + id);
@@ -253,10 +261,12 @@ jQuery( document ).ready(function() {
 			   browserURL = browserURL + '&_'+ id + '_sortCnt=asc';			   
 		   }		   			  		
 		}
+		
       	
   	    url = url.replace('_' + id + '_sortAlpha=asc', '');
 		url = url.replace('_' + id + '_sortAlpha=desc', '');		
 		url = url.replace('?&', '?');
+		browserURL = browserURL + '#' + id;
 		browserURL = browserURL.replace('_' + id + '_sortAlpha=asc', '');
 		browserURL = browserURL.replace('_' + id + '_sortAlpha=desc', '');		 
 		browserURL = browserURL.replace('?&', '?');
