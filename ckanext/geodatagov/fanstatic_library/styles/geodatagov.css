@@ -908,4 +908,8 @@ input.search-new{
 
 .module-heading img {
     cursor: pointer;
+    cursor:hand;
+}
+.module-heading span {
+display:block;
 }
