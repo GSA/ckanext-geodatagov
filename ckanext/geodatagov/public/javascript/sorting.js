@@ -39,7 +39,7 @@ jQuery( document ).ready(function() {
 		
 		for(var i = 0; i < allVars.length; i++) {
 		   
-		   var sort = $.getUrlVar(allVars[i]);		   
+		   var sort = $.getUrlVar(allVars[i]).split('#')[0];		   
 		 
 		   if(sort == 'asc' || sort == 'desc') {
 		   
