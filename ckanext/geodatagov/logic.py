@@ -191,7 +191,6 @@ def datajson_create(context, data_dict):
     new_package = create_data_dict(data_dict)
     owner_org = model.Group.get(new_package['owner_org'])
     group_name = new_package.pop('owner_name', None)
-
     new_package['name'] = _slugify(new_package['title'])[:80]
     existing_package = model.Package.get(new_package['name'])
     if existing_package:
@@ -211,11 +210,18 @@ def datajson_create(context, data_dict):
 def datajson_update(context, data_dict):
     new_package = create_data_dict(data_dict)
     model = context['model']
+    owner_org = model.Group.get(new_package['owner_org'])
+    group_name = new_package.pop('owner_name', None)
     old_package = p.toolkit.get_action('package_show')(
         {'model': model, 'ignore_auth': True}, {"id":new_package['id']})
     old_resources = old_package['resources']
-    new_package.pop('owner_org', None)
-    new_package.pop('owner_name', None)
+
+    if not owner_org:
+        p.toolkit.get_action('organization_create')(
+            context,
+            {'name': new_package['owner_org'], 'title': group_name,
+             'extras': [{'key': 'organization_type', 'value': "Federal Government"}]})
+
     for num, resource in enumerate(new_package['resources']):
         try:
             old_id = old_resources[num]['id']
