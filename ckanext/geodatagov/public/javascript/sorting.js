@@ -11,7 +11,12 @@ jQuery( document ).ready(function() {
                  'groups' : {'sortType': 'count', 'sort' : 'desc'},
                  'organization_type' : {'sortType': 'count', 'sort' : 'desc'},
                  'organization' : {'sortType': 'count', 'sort' : 'desc'},
-                 'vocab_category_all' : {'sortType': 'count', 'sort' : 'desc'}
+                 'vocab_category_all' : {'sortType': 'count', 'sort' : 'desc'},
+		   'dataset_type' : {'sortType': 'count', 'sort' : 'desc'},
+		   'harvest_source_title' : {'sortType': 'count', 'sort' : 'desc'},
+		   'frequency' : {'sortType': 'count', 'sort' : 'desc'},
+		   'source_type' : {'sortType': 'count', 'sort' : 'desc'},
+                 'extras_progress' : {'sortType': 'count', 'sort' : 'desc'}				 
                 };
 				
 	$.extend({
@@ -63,6 +68,9 @@ jQuery( document ).ready(function() {
 			 paramArr.push(id);  	
 			 var url = $('#' + id).parent().parent().find('p.module-footer a.read-more').attr('href');
 			 
+			 if(typeof(url) == 'undefined')
+				return;				 
+			 
 			 if(url.indexOf('_' + id + '_limit=0') == -1)
 				url = url + '&_' + id + '_limit=0';
 			 
@@ -101,6 +109,9 @@ jQuery( document ).ready(function() {
 	
 		var url = $('#' + key).parent().parent().find('p.module-footer a.read-more').attr('href');
 	
+		if(typeof(url) == 'undefined')
+            return;	
+	
 		if(url.indexOf('_' + key + '_limit=0') == -1) {
 		   if(url.indexOf('?') == -1)
 		     url = url + '?_' + key + '_limit=0';
@@ -124,8 +135,15 @@ jQuery( document ).ready(function() {
 		//get id of current facet
 	    var id = $(this).parent().parent().find('ul.unstyled.nav.nav-simple.nav-facet').attr('id');		
 		var url = $(this).parent().parent().find('p.module-footer a.read-more').attr('href');
+		
+		if(typeof(url) == 'undefined')
+            return;	
+		
 		var browserURL = window.location.href;
-		browserURL = browserURL.substring(0, browserURL.indexOf('#'));
+		
+		if(browserURL.indexOf('#') != -1)
+		  browserURL = browserURL.substring(0, browserURL.indexOf('#'));
+		
 		
 		//original list
 		var mylist1 = $('ul.unstyled.nav.nav-simple.nav-facet#' + id);
@@ -183,9 +201,11 @@ jQuery( document ).ready(function() {
 		url = url.replace('_' + id + '_sortCnt=asc', '');
 		url = url.replace('_' + id + '_sortCnt=desc', '');
 		url = url.replace('?&', '?');
+		url = url.replace('&&', '&');
         browserURL = browserURL.replace('_' + id + '_sortCnt=asc', '');
 		browserURL = browserURL.replace('_' + id + '_sortCnt=desc', '');
 		browserURL = browserURL.replace('?&', '?');
+		browserURL = browserURL.replace('&&', '&');
 
 		$(this).parent().parent().find('p.module-footer a.read-more').attr('href', url);
 		
@@ -195,8 +215,6 @@ jQuery( document ).ready(function() {
 		   else
 		     url = url + '&_' + id + '_limit=0';
 		}
-		 
-		
 		
         imageChange('alphaSort', id, sort);		 
 		sortFacet(url, id, mylist1, sort, cnt, 'alphaSort');
@@ -208,8 +226,14 @@ jQuery( document ).ready(function() {
 		//get id of current facet
 	    var id = $(this).parent().parent().find('ul.unstyled.nav.nav-simple.nav-facet').attr('id');		
 		var url = $(this).parent().parent().find('p.module-footer a.read-more').attr('href');
+		
+	    if(typeof(url) == 'undefined')
+            return;		
+			
 		var browserURL = window.location.href;
-		browserURL = browserURL.substring(0, browserURL.indexOf('#'));
+		
+		if(browserURL.indexOf('#') != -1)
+		  browserURL = browserURL.substring(0, browserURL.indexOf('#'));
 		
 		//original list
 		var mylist1 = $('ul.unstyled.nav.nav-simple.nav-facet#' + id);
@@ -266,10 +290,12 @@ jQuery( document ).ready(function() {
   	    url = url.replace('_' + id + '_sortAlpha=asc', '');
 		url = url.replace('_' + id + '_sortAlpha=desc', '');		
 		url = url.replace('?&', '?');
+		url = url.replace('&&', '&');
 		browserURL = browserURL + '#' + id;
 		browserURL = browserURL.replace('_' + id + '_sortAlpha=asc', '');
 		browserURL = browserURL.replace('_' + id + '_sortAlpha=desc', '');		 
 		browserURL = browserURL.replace('?&', '?');
+		browserURL = browserURL.replace('&&', '&');
 		
 		$(this).parent().parent().find('p.module-footer a.read-more').attr('href', url);
 		
