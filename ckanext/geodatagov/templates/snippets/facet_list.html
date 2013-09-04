@@ -53,8 +53,12 @@ hide_empty
           {% if title == 'Groups' %}
           {% set title = 'Communities' %}
           {% endif %}
-          <span>{{ title }} &nbsp;</span>
-		  
+          {% if title == 'Progress' %}
+          {% set title = 'Status' %}
+          {% endif %}
+
+        <span>  {{ title }} &nbsp;
+	</span>	  
           <img src="/fanstatic/geodatagov/images/alpha.png" id="sortFacetAlpha"></img>
 		  <img src="/fanstatic/geodatagov/images/number.png" id="sortFacetCount"></img>
 		
