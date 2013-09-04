@@ -912,6 +912,6 @@ input.search-new{
 .module-heading span {
 display:block;
 }
-body{font-size:87.5px;}
+body{font-size:87.5%;}
 #dataset-map-attribution div a{text-decoration:underline;}
 .empty{color:#595959;}
