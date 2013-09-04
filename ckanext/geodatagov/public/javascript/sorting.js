@@ -15,8 +15,8 @@ jQuery( document ).ready(function() {
 		   'dataset_type' : {'sortType': 'count', 'sort' : 'desc'},
 		   'harvest_source_title' : {'sortType': 'count', 'sort' : 'desc'},
 		   'frequency' : {'sortType': 'count', 'sort' : 'desc'},
-		   'source_type' : {'sortType': 'count', 'sort' : 'desc'},
-                 'extras_progress' : {'sortType': 'count', 'sort' : 'desc'}				 
+		   'source_type' : {'sortType': 'count', 'sort' : 'desc'}
+                 //'extras_progress' : {'sortType': 'count', 'sort' : 'desc'}
                 };
 				
 	$.extend({
