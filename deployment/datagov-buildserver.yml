@@ -38,7 +38,8 @@
     - name: install fpm
       action: command gem install -v 0.4.21 fpm creates=/usr/bin/fpm 
     - name: get ckan version
-      action: git repo=https://github.com/okfn/ckan dest=/usr/lib/ckan/src/ckan version=release-datagov
+#     action: git repo=https://github.com/okfn/ckan        dest=/usr/lib/ckan/src/ckan version=release-datagov
+      action: git repo=https://github.com/FuhuXia/ckan.git dest=/usr/lib/ckan/src/ckan version=prod
     - name: get pip
       action: easy_install name=pip
 
@@ -74,6 +75,12 @@
 
     - name: install requirements for spatial
       action: pip requirements=/usr/lib/ckan/src/ckanext-spatial/pip-requirements.txt virtualenv=/usr/lib/ckan/
+
+    - name: get datajson extension
+      action: git repo=https://github.com/FuhuXia/ckanext-datajson dest=/usr/lib/ckan/src/ckanext-datajson version=dev
+
+    - name: run setup.py develop for datajson
+      action: command chdir=/usr/lib/ckan/src/ckanext-datajson/ ../../bin/python setup.py develop
 
     - name: remove psycopg2
       action: pip name=psycopg2 virtualenv=/usr/lib/ckan/ state=absent
