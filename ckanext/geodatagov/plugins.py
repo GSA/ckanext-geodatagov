@@ -434,6 +434,7 @@ class Demo(p.SingletonPlugin):
                             ('organization_type', 'Organization Types'),
                             ('organization', 'Organizations'),
                             ('vocab_category_all', 'Community Categories'),
+                            ('extras_progress', 'Progress'),
                            ])
 
     def organization_facets(self, facets_dict, organization_type, package_type):
@@ -445,7 +446,7 @@ class Demo(p.SingletonPlugin):
                                 ('groups', 'Groups'),
                                 ('harvest_source_title', 'Harvest Source'),
                                 ('capacity', 'Visibility'),
-                                ('dataset_type', 'Dataset Type'),
+                                ('dataset_type', 'Dataset Type'),								
                                ])
         else:
             return facets_dict
