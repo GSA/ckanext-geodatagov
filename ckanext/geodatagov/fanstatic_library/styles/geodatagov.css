@@ -905,7 +905,6 @@ input.search-new{
     top:1px;
     right:2px;
 }
-
 .module-heading img {
     cursor: pointer;
     cursor:hand;
@@ -913,3 +912,6 @@ input.search-new{
 .module-heading span {
 display:block;
 }
+body{font-size:87.5%;}
+#dataset-map-attribution div a{text-decoration:underline;}
+.empty{color:#595959;}

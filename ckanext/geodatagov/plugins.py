@@ -273,6 +273,7 @@ class Demo(p.SingletonPlugin):
         p.toolkit.add_template_directory(config, 'templates')
         p.toolkit.add_public_directory(config, 'public')
         p.toolkit.add_resource('fanstatic_library', 'geodatagov')
+        p.toolkit.add_resource('fanstatic_library', 'tracking')
 
     def configure(self, config):
         self.__class__.edit_url = config.get('saml2.user_edit')
@@ -446,7 +447,7 @@ class Demo(p.SingletonPlugin):
                                 ('groups', 'Groups'),
                                 ('harvest_source_title', 'Harvest Source'),
                                 ('capacity', 'Visibility'),
-                                ('dataset_type', 'Dataset Type'),								
+                                ('dataset_type', 'Dataset Type'),
                                ])
         else:
             return facets_dict

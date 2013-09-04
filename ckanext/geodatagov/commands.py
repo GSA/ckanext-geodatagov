@@ -216,9 +216,10 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             context.pop('group', None)
             new_package = to_import[package_id]
             try:
-                print 'Error with id ' + package_id
+                print str(datetime.datetime.now()) + ' Created id ' + package_id
                 logic.get_action('datajson_create')(context, new_package)
             except Exception, e:
+                print str(datetime.datetime.now()) + ' Error when creating id ' + package_id
                 print e
 
         for package_id in collected_ids & existing_package_ids:
@@ -228,7 +229,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             try:
                 logic.get_action('datajson_update')(context, new_package)
             except Exception, e:
-                print 'Error with id ' + package_id
+                print str(datetime.datetime.now()) + ' Error when updating id ' + package_id
                 print e
         for package_id in existing_package_ids - collected_ids:
             context.pop('package', None)
@@ -236,7 +237,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             try:
                 logic.get_action('package_delete')(context, {"id":package_id})
             except Exception, e:
-                print 'Error with id ' + package_id
+                print str(datetime.datetime.now()) + ' Error when deleting id ' + package_id
                 print e
 
 
