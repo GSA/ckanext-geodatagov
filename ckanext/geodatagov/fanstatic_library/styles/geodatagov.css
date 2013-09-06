@@ -915,3 +915,4 @@ display:block;
 body{font-size:87.5%;}
 #dataset-map-attribution div a{text-decoration:underline;}
 .empty{color:#595959;}
+#exitURL{position:absolute;right:15px;width:150px;color:#000;top:110px;}

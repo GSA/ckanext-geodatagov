@@ -44,3 +44,22 @@ this.ckan.module('geodatagov-search-helper-message', function($, _) {
     }
   };
 });
+jQuery(function($){
+    $(document).ready(function () {
+        var referralCookie = document.referrer.indexOf(window.location.origin);
+        if (referralCookie=='-1') {
+            referralCookie = document.referrer;
+            $.cookie('datagov', referralCookie,{ path: "/", expires: 2 });
+        }
+        var cookie = $.cookie("datagov");
+        if (cookie!=''){
+            $('#exitURL').css('display','block');
+        }
+    });
+});
+
+jQuery('#exitURL').click(function(){
+    var referralCookie = jQuery.cookie('datagov');
+    //jQuery.cookie('datagov', '');
+    window.location.replace(referralCookie);
+});
