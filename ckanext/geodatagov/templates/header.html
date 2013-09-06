@@ -18,6 +18,7 @@
         </div>
         {% block header_account %}
           <div class="account-wrapper">
+              <a id="exitURL" href="#" style="display:none;" class="btn">{{_('Back to Community')}}</a>
             {% if c.userobj %}
               <nav class="account avatar authed" data-module="me" data-me="{{ c.userobj.id }}">
                 <ul class="unstyled">
