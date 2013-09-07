@@ -57,11 +57,11 @@
 #    - name: run setup.py develop for harvest
 #      action: command chdir=/usr/lib/ckan/src/ckanext-harvest/ ../../bin/python setup.py develop
 #
-    - name: get spatial extension
-      action: git repo=https://github.com/okfn/ckanext-spatial dest=/usr/lib/ckan/src/ckanext-spatial version=master
-
-    - name: run setup.py develop for spatial
-      action: command chdir=/usr/lib/ckan/src/ckanext-spatial/ ../../bin/python setup.py develop
+#    - name: get spatial extension
+#      action: git repo=https://github.com/okfn/ckanext-spatial dest=/usr/lib/ckan/src/ckanext-spatial version=master
+#
+#    - name: run setup.py develop for spatial
+#      action: command chdir=/usr/lib/ckan/src/ckanext-spatial/ ../../bin/python setup.py develop
 
     - name: install requirements for geodatagov
       action: pip requirements=/usr/lib/ckan/src/ckanext-geodatagov/pip-requirements.txt virtualenv=/usr/lib/ckan/
@@ -134,6 +134,15 @@
 
     - name: horrible hacks to get libxml to work
       action: command sed -i 's/gml:doubleOrNilReasonList/string/g' /usr/lib/ckan/src/ckanext-spatial/ckanext/spatial/validation/xml/iso19139ngdc/schema/gml/basicTypes.xsd 
+
+    - name: get forked spatial
+      action: command chdir=/usr/lib/ckan/src/ckanext-spatial/ git remote add fork https://github.com/FuhuXia/ckanext-spatial
+
+    - name: fetch fork
+      action: command chdir=/usr/lib/ckan/src/ckanext-spatial/ git fetch fork
+
+    - name: get fork master branch
+      action: command chdir=/usr/lib/ckan/src/ckanext-spatial/ git checkout -b f_master fork/master
 
     - name: restart apache
       action: service name=httpd state=restarted
