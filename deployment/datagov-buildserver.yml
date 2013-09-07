@@ -112,6 +112,9 @@
         - etc/cron.daily/remove_old_sessions
         - etc/init/supervisor.conf
         - var/lib/tomcat6/webapps/fgdc2iso.war
+        - usr/lib/ckan/src/ckanext-spatial/ckanext/spatial/model/harvested_metadata.py
+        - usr/lib/ckan/src/ckanext-spatial/ckanext/spatial/harvesters/base.py
+        - usr/lib/ckan/src/ckanext-spatial/ckanext/spatial/harvesters/gemini.py
 
     - name: copy executables
       action: copy src=$item dest=/$item mode=744
@@ -134,15 +137,6 @@
 
     - name: horrible hacks to get libxml to work
       action: command sed -i 's/gml:doubleOrNilReasonList/string/g' /usr/lib/ckan/src/ckanext-spatial/ckanext/spatial/validation/xml/iso19139ngdc/schema/gml/basicTypes.xsd 
-
-    - name: get forked spatial
-      action: command chdir=/usr/lib/ckan/src/ckanext-spatial/ git remote add fork https://github.com/FuhuXia/ckanext-spatial
-
-    - name: fetch fork
-      action: command chdir=/usr/lib/ckan/src/ckanext-spatial/ git fetch fork
-
-    - name: get fork master branch
-      action: command chdir=/usr/lib/ckan/src/ckanext-spatial/ git checkout -b f_master fork/master
 
     - name: restart apache
       action: service name=httpd state=restarted
