@@ -57,6 +57,9 @@ jQuery(function($){
         if (cookie!=''){
             $('#exitURL').css('display','block');
         }
+        if (cookie==null){
+          $('#exitURL').css('display','none');
+          }
     });
 });
 
