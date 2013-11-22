@@ -112,9 +112,6 @@
         - etc/cron.daily/remove_old_sessions
         - etc/init/supervisor.conf
         - var/lib/tomcat6/webapps/fgdc2iso.war
-        - usr/lib/ckan/src/ckanext-spatial/ckanext/spatial/model/harvested_metadata.py
-        - usr/lib/ckan/src/ckanext-spatial/ckanext/spatial/harvesters/base.py
-        - usr/lib/ckan/src/ckanext-spatial/ckanext/spatial/harvesters/gemini.py
 
     - name: copy executables
       action: copy src=$item dest=/$item mode=744
