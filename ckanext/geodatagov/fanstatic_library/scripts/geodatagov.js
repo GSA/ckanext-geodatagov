@@ -47,9 +47,9 @@ this.ckan.module('geodatagov-search-helper-message', function($, _) {
 jQuery(function($){
     $(document).ready(function () {
         //var referralCookie = document.referrer.indexOf(window.location.origin);
-        var referralCookie  = document.referrer.indexOf('community');
-        //if (referralCookie=='-1') {
-        if (referralCookie>'0') {
+        var referralCookie  = document.referrer.indexOf('catalog');
+        if (referralCookie=='-1') {
+        //if (referralCookie>'0') {
             referralCookie = document.referrer;
             $.cookie('datagov', referralCookie,{ path: "/", expires: 2 });
         }

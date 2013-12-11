@@ -1,21 +1,41 @@
 {% block header %}
   <a href="#content" class="hide">{{ _('Skip to content') }}</a>
-  <header class="pre-header">
-    <div class="container">
+ <!-- <header class="pre-header">
+   <div class="container">
       <a href="http://whitehouse.gov/"><img src="http://www.data.gov/sites/all/themes/datagov/images/usa-flag.gif" alt="{{ _('WhiteHouse.gov') }}"></a>
       {{ _('An Official Web Site of the United States Government') }}
     </div>
-  </header>
+  </header>-->
   <header class="masthead">
     {% if g.debug and not g.debug_supress_header %}
       <div class="debug">Controller : {{ c.controller }}<br/>Action : {{ c.action }}</div>
     {% endif %}
  
     <div class="container">
-      <hgroup class="top">
-        <div class="logo">
-          <a href="http://www.data.gov/" class="root"><span>{{ _('data.gov') }}</span></a>
+     <div class="searchbox-row skip-navigation">   
+            <div class="skip-link">
+                <a href="#">Jump to Content</a>
+            </div> 
+            <div>
+                                <form action="http://data.gov/search-results/1/" class="search-form form-inline navbar-right navbar-nav  col-sm-6 col-md-6 col-lg-6" method="get" role="search">
+  <div class="input-group">
+          <label class="hide" for="search-header">Search for:</label>
+        
+    <input type="search" placeholder="Search Data.Gov 2.0" class="search-field form-control" name="q" value="" data-strings="{ &quot;targets&quot; : [&quot;Monthly House Price Indexes&quot;, &quot;Health Care Provider Charge Data&quot;, &quot;Credit Card Complaints&quot;, &quot;Manufacturing &amp; Trade Inventories &amp; Sales&quot;,&quot;Federal Student Loan Program Data&quot;]}" id="search-header">
+    <input type="hidden" value="site" name="group">
+      <span class="input-group-btn">
+      <button class="search-submit btn_new btn-default" type="submit">
+           <i class="fa fa-search"></i>
+           <span class="sr-only">Search</span>
+       </button>
+    </span>
+  </div>
+</form>
+                  
+            </div>
         </div>
+	 <hgroup class="top">
+       
         {% block header_account %}
           <div class="account-wrapper">
               <a id="exitURL" href="#" style="display:none;" class="btn">{{_('Back to Community')}}</a>
@@ -63,7 +83,7 @@
             {% endif %}
           </div>
         {% endblock %}
-         <form class="search-box-new" method="get" action="{% url_for controller='package', action='search' %}">
+        <!-- <form class="search-box-new" method="get" action="{% url_for controller='package', action='search' %}">
           <span class="control-group">
             <input type="text" class="search-new" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search datasets...') }}" />
             <button type="submit" value="{{ _('Search') }}">Submit</button>
@@ -73,20 +93,28 @@
           <label for="field-sitewide-search" class="hide">{{ _('Search Data.gov') }}</label>
           <input id="field-sitewide-search" type="text" name="q" placeholder="{{ _('Search Data.gov') }}" />
           <button class="btn-search" type="submit">{{ _('Search') }}</button>
-        </form>
-      </hgroup>
+        </form>-->
+ 	
+	</hgroup>
+   <hgroup class="top-nav">
+ <div class="logo">
+          <a href="http://www.data.gov/" class="root"><span>{{ _('data.gov') }}</span></a>
+        </div>
+       {% include 'snippets/root_nav.html' %}
+       {% block header_site_navigation %}
+      
+       {% endblock %}
 
-      <hgroup class="top-nav">
-        {% include 'snippets/root_nav.html' %}
-        {% block header_site_navigation %}
-          <div class="secondary">
-            <span>{{ _('Data Catalog') }}</span>
-          </div>
-        {% endblock %}
       </hgroup>
-
+	</div>
+<div class="header_new banner_new page-heading_new">
+    <div class="container">
+        <div class="page-header_new">
+          <h1>Data Catalog</h1>
+          
+                    
+        </div>
     </div>
-	<!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
-    <script src="/javascript/sorting.js" type="text/javascript"></script>-->
-  </header>
+</div>
+ </header>
 {% endblock %}
