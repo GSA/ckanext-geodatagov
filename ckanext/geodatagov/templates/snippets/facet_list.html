@@ -50,9 +50,6 @@ hide_empty
       <h2 class="module-heading" name="{{name}}">
         <i class="icon-medium icon-filter"></i>
         {% set title = title or h.get_facet_title(name) %}
-          {% if title == 'Groups' %}
-          {% set title = 'Communities' %}
-          {% endif %}
           {% if title == 'Progress' %}
           {% set title = 'Status' %}
           {% endif %}
