@@ -944,6 +944,7 @@ header .header_new.banner_new.page-heading_new  {
   font-size: 17.6px;
   padding-bottom: 0.2em;
   text-transform: uppercase;
+    font-weight:normal;
 }
 .header_new .container{margin-top:0px;}
 body .searchbox-row.skip-navigation {
