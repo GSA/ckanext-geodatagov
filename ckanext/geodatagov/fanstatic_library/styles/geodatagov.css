@@ -158,7 +158,7 @@ a {
   display: block;
   float: left;
   height: 55px;
-  background-image: url("http://dev-wp-datagov.reisys.com/wp-content/themes/roots-nextdatagov/assets/img/logo.png");
+  background-image: url("http://data.gov/wp-content/themes/roots-nextdatagov/assets/img/logo.png");
   width: 200px;
 }
 .masthead .container .logo a span {
@@ -1154,10 +1154,10 @@ footer.site-footer {
     text-indent:-9999em;
 }
 .svg .navbar-brand, .svg .logo-brand {
-    background: url("http://dev-wp-datagov.reisys.com/wp-content/themes/roots-nextdatagov/assets/img/logo.svg") no-repeat scroll 0 0 / contain  rgba(0, 0, 0, 0);
+    background: url("http://data.gov/wp-content/themes/roots-nextdatagov/assets/img/logo.svg") no-repeat scroll 0 0 / contain  rgba(0, 0, 0, 0);
 }
 .navbar-brand, .logo-brand {
-    background: url("http://dev-wp-datagov.reisys.com/wp-content/themes/roots-nextdatagov/assets/img/logo.png") no-repeat scroll center center / contain  rgba(0, 0, 0, 0);
+    background: url("http://data.gov/wp-content/themes/roots-nextdatagov/assets/img/logo.png") no-repeat scroll center center / contain  rgba(0, 0, 0, 0);
     margin-left: 15px;
     overflow: hidden;
     text-indent: -9999em;
