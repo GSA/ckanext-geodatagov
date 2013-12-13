@@ -1,7 +1,7 @@
 {% ckan_extends %}
 
 {% block footer_content %}
-  <nav class="footer-nav">
+  <!--<nav class="footer-nav">
     {% block footer_nav %}
       <ul class="unstyled">
         <li><a href="http://www.data.gov/about">{{ _('About') }}</a></li>
@@ -15,8 +15,73 @@
       </ul>
     {% endblock %}
     <img src="http://www.data.gov/sites/all/themes/datagov/images/datagov-footer-logo.png" alt="{{ _('Data.gov') }}">
-  </nav>
-  {#
+  </nav>-->
+<div class="row">
+
+
+
+    <div class="col-md-4 col-lg-4">
+        <form action="http://catalog.data.gov/dataset" class="search-form form-inline" method="get" role="search">
+            <div class="input-group">
+                <label for="search-footer" class="hide">Search for:</label>
+                <input type="search" placeholder="Search Data.Gov 2.0" class="search-field form-control" name="q" value="" id="search-footer">
+        <span class="input-group-btn">
+        <button class="search-submit btn_new btn-default" type="submit"> <i class="fa fa-search"></i> <span class="sr-only">Search</span> </button>
+        </span> </div>
+        </form>
+        <div class="footer-logo"> <a href="http://data.gov/" class="logo-brand">Data.Gov 2.0</a> </div>
+    </div>
+    <nav role="navigation" class="col-md-2 col-lg-2">
+        <ul class="nav" id="menu-primary-navigation-1">
+            <li class="menu-data"><a href="http://catalog.data.gov">Data</a></li>
+            <li class="dropdown menu-topics"><a href="/communities/" data-target="#" data-toggle="dropdown" class="dropdown-toggle">Topics <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li class="menu-agriculture"><a href="http://data.gov/food/">Agriculture</a></li>
+                    <li class="menu-consumer"><a href="http://data.gov/consumer/">Consumer</a></li>
+                    <li class="menu-education"><a href="http://data.gov/education/">Education</a></li>
+                    <li class="menu-energy"><a href="http://data.gov/energy/">Energy</a></li>
+                    <li class="menu-finance"><a href="http://data.gov/finance">Finance</a></li>
+                    <li class="menu-global-development"><a href="http://data.gov/development/">Global Development</a></li>
+                    <li class="menu-law"><a href="http://data.gov/law/">Law</a></li>
+                    <li class="menu-manufacturing"><a href="http://data.gov/manufacturing/">Manufacturing</a></li>
+                    <li class="menu-research"><a href="http://data.gov/research/">Research</a></li>
+                    <li class="menu-safety"><a href="http://data.gov/safety/">Safety</a></li>
+                </ul>
+            </li>
+            <li class="menu-developers"><a href="http://data.gov/developers/">Developers</a></li>
+            <li class="menu-highlights"><a href="http://data.gov/highlights">Highlights</a></li>
+            <li class="menu-open-gov"><a href="http://next.data.gov/open-gov">Open Gov</a></li>
+            <li class="menu-contact"><a href="http://data.gov/contact-engage/">Contact</a></li>
+
+        </ul>
+    </nav>
+    <nav role="navigation" class="col-md-2 col-lg-2">
+        <ul class="nav" id="menu-footer">
+            <li class="menu-privacy-policy"><a href="http://data.gov/privacy-policy">Privacy Policy</a></li>
+            <li class="menu-data-policy"><a href="http://data.gov/data-policy">Data Policy</a></li>
+            <li class="menu-faq"><a href="http://data.gov/faq">FAQ</a></li>
+            <li class="menu-glossary"><a href="http://data.gov/glossary">Glossary</a></li>
+            <li class="menu-media"><a href="http://data.gov/media-inquiries">Media</a></li>
+            <li class="menu-about"><a href="http://data.gov/about">About</a></li>
+            <li class="menu-accessibility"><a href="http://data.gov/accessibility">Accessibility</a></li>
+            <li class="menu-agency-participation"><a href="http://data.gov/metric">Agency Participation</a></li>
+            <li class="menu-data-publshers"><a href="http://data.gov/agencies/">Data Publshers</a></li>
+
+        </ul>
+    </nav>
+    <div class="col-md-3 col-md-offset-1 col-lg-3 col-lg-offset-1 social-nav">
+        <nav role="navigation">
+            <ul class="nav" id="menu-social_navigation">
+                <li><a href="https://twitter.com/usdatagov"><i class="fa fa-twitter"></i><span>Twitter</span></a></li>
+                <li><a href="http://github.com/GSA/data.gov/"><i class="fa fa-github"></i><span>Github</span></a></li>
+
+            </ul>
+        </nav>
+    </div>
+
+
+
+    {#
     {% block footer_lang %}
       {% snippet "snippets/language_selector.html" %}
     {% endblock %}

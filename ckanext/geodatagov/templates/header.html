@@ -11,13 +11,13 @@
       <div class="debug">Controller : {{ c.controller }}<br/>Action : {{ c.action }}</div>
     {% endif %}
  
-    <div class="container">
+  <div class="container">
      <div class="searchbox-row skip-navigation">   
             <div class="skip-link">
                 <a href="#">Jump to Content</a>
-            </div> 
-            <div>
-                                <form action="http://data.gov/search-results/1/" class="search-form form-inline navbar-right navbar-nav  col-sm-6 col-md-6 col-lg-6" method="get" role="search">
+            </div>
+     <div>
+  <form action="http://data.gov/search-results/1/" class="search-form form-inline navbar-right navbar-nav  col-sm-6 col-md-6 col-lg-6" method="get" role="search">
   <div class="input-group">
           <label class="hide" for="search-header">Search for:</label>
         
@@ -38,7 +38,6 @@
        
         {% block header_account %}
           <div class="account-wrapper">
-              <a id="exitURL" href="#" style="display:none;" class="btn">{{_('Back to Community')}}</a>
             {% if c.userobj %}
               <nav class="account avatar authed" data-module="me" data-me="{{ c.userobj.id }}">
                 <ul class="unstyled">
@@ -111,7 +110,7 @@
     <div class="container">
         <div class="page-header_new">
           <h1>Data Catalog</h1>
-          
+          <a id="exitURL" href="#" style="display:none;" class="btn">{{_('Back to Community')}}</a>
                     
         </div>
     </div>
