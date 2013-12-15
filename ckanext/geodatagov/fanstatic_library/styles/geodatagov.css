@@ -1185,7 +1185,7 @@ footer.site-footer {
     width: 970px;
 }
 .row .nav .dropdown-toggle .caret {
-    margin-top: 9px;
+    margin-top: 0px;
 }
 .fa-twitter:before {
     content:"\f099"
@@ -1237,3 +1237,7 @@ body {
 .secondary li.nav-item > a {
     color: #333333;
 }
+.masthead .container .top-nav .primary ul li ul li a:hover {
+    border-bottom: 0 none;
+}
+.nav .dropdown-toggle .caret{margin-top: -4px;}
