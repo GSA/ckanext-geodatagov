@@ -970,6 +970,7 @@ input.form-control {
 	display:block;
 	width:78%;
 	display:table-cell;
+    float: left;
 	/*height:36px;*/
 	padding:6px 12px 8px;
 	font-size:16px;
