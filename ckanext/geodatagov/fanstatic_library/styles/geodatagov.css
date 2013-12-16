@@ -1157,8 +1157,8 @@ footer.site-footer {
 .svg .navbar-brand, .svg .logo-brand {
     background: url("http://data.gov/wp-content/themes/roots-nextdatagov/assets/img/logo.svg") no-repeat scroll 0 0 / contain  rgba(0, 0, 0, 0);
 }
-.navbar-brand, .logo-brand {
-    background: url("../images/logo.png") no-repeat scroll left center / contain  rgba(0, 0, 0, 0);
+a.logo-brand {
+    background: url("../images/logo.png") no-repeat scroll left center;
     margin-left: 15px;
     overflow: hidden;
     text-indent: -9999em;
