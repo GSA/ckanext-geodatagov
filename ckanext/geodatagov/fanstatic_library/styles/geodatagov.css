@@ -187,7 +187,7 @@ a {
   font-weight: bold;
   padding-left: 16px;
   font-size: 12px;
-  background: transparent url("http://www.data.gov/sites/all/themes/datagov/images/icon-login.gif") 0 50% no-repeat;
+  background: transparent url("../images/icon-login.gif") 0 50% no-repeat;
 }
 .masthead .container .account-wrapper .not-authed a span {
   text-decoration: underline;
