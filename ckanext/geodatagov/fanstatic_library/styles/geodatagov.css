@@ -1110,8 +1110,8 @@ body .searchbox-row.skip-navigation {
 }
 .input-group-btn > .btn_new {
   position: relative;
-margin-left:-5px;
-margin-top:-4px;
+margin-left:-1px;
+margin-top:0px;
 }
 .input-group .form-control:last-child, .input-group-addon:last-child, .input-group-btn:last-child > .btn_new, .input-group-btn:last-child > .dropdown-toggle, .input-group-btn_new:first-child > .btn_new:not(:first-child) {
   border-bottom-left-radius: 0;
