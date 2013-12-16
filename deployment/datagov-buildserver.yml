@@ -36,6 +36,7 @@
         - mod_wsgi
         - tomcat6
         - cronie
+        - libselinux-python
     - name: install fpm
       action: command gem install -v 0.4.21 fpm creates=/usr/bin/fpm
 
