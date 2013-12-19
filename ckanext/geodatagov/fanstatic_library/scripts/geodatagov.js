@@ -44,27 +44,37 @@ this.ckan.module('geodatagov-search-helper-message', function($, _) {
     }
   };
 });
-jQuery(function($){
-    $(document).ready(function () {
-        //var referralCookie = document.referrer.indexOf(window.location.origin);
-        var referralCookie  = document.referrer.indexOf('catalog');
-        if (referralCookie=='-1') {
-        //if (referralCookie>'0') {
-            referralCookie = document.referrer;
-            $.cookie('datagov', referralCookie,{ path: "/", expires: 2 });
-        }
-        var cookie = $.cookie("datagov");
-        if (cookie!=''){
-            $('#exitURL').css('display','block');
-        }
-        if (cookie==null){
-          $('#exitURL').css('display','none');
-          }
-    });
-});
 
-jQuery('#exitURL').click(function(){
-    var referralCookie = jQuery.cookie('datagov');
-    //jQuery.cookie('datagov', '');
-    window.location.replace(referralCookie);
+$(document).ready(function () {
+    // show Back to Community link, only if we came from data.gov
+    if ('' !== document.referrer) {
+        var parts = document.referrer.split( '/' );
+
+        for(var i=0; i < parts.length; i++) {
+            if (parts[i].length > 6) {
+                var referrer = parts[i];
+                break;
+            }
+        }
+
+        if (typeof referrer !== 'undefined') {
+            if ((referrer.indexOf('datagov') > -1 || (referrer.indexOf('data.gov') > -1))
+                && (referrer.indexOf('catalog') < 0 || referrer.indexOf('ckan') < 0))
+            {
+                $.cookie('back2community', document.referrer,{ path: "/", expires: 2 });
+            }
+        }
+    }
+
+    var cookie = $.cookie('back2community');
+
+    if ('' !== cookie) {
+        $('#exitURL').click(function(){
+            window.location.replace(cookie);
+        });
+        $('#exitURL').attr('href', cookie);
+        $('#exitURL').show();
+    } else {
+        $('#exitURL').hide();
+    }
 });

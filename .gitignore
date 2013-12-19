@@ -1,3 +1,4 @@
+.idea
 syntax: glob
 *.pyc
 *.egg-info
