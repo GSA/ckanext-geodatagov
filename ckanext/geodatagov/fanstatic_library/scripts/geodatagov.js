@@ -66,15 +66,18 @@ $(document).ready(function () {
         }
     }
 
-    var cookie = $.cookie('back2community');
+    if (($('#exitURL').length > 0)) {
 
-    if ('' !== cookie) {
-        $('#exitURL').click(function(){
-            window.location.replace(cookie);
-        });
-        $('#exitURL').attr('href', cookie);
-        $('#exitURL').show();
-    } else {
-        $('#exitURL').hide();
+        var cookie = $.cookie('back2community');
+        
+        if ((typeof cookie !== 'undefined') && ('' !== cookie)) {
+            $('#exitURL').click(function(){
+                window.location.replace(cookie);
+            });
+            $('#exitURL').attr('href', cookie);
+            $('#exitURL').show();
+        } else {
+            $('#exitURL').hide();
+        }
     }
 });

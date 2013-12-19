@@ -2,7 +2,7 @@ $(function (){
   // Tracking
   var url = location.pathname;
   // remove any site root from url
-  console.log($('body').data('site-root'));
+//  console.log($('body').data('site-root'));
   url = url.substring($('body').data('locale-root'), url.length);
   // trim any trailing /
   url = url.replace(/\/*$/, '');
