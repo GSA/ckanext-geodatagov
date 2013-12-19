@@ -196,4 +196,42 @@
     - name: restart apache
       action: service name=httpd state=restarted
 
+    - name: packages for web part are installed
+      action: yum pkg={{item}} state=installed
+      with_items:
+        - memcached
+        - postgresql
+        - httpd
+        - mod_wsgi
+        - geos
+        - cronie
+        - python-psycopg2
+        - xmlsec1
+        - xmlsec1-openssl
+        - swig
+        - m2crypto
+
+    - name: after web installation script
+      action: command /tmp/after_web.sh
+
+    - name: packages for harvester part
+      action: yum pkg={{item}} state=installed
+      with_items:
+        - redis
+        - postgresql
+        - geos
+        - tomcat6
+        - geos
+        - cronie
+        - python-psycopg2
+        - xmlsec1
+        - xmlsec1-openssl
+        - swig
+        - m2crypto
+        - java-openjdk
+        - libxslt
+        - libxml2
+
+    - name: after web installation script
+      action: command /tmp/after_harvester.sh
 
