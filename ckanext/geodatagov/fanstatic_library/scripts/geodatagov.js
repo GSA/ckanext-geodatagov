@@ -46,7 +46,7 @@ this.ckan.module('geodatagov-search-helper-message', function($, _) {
 });
 
 $(document).ready(function () {
-    // show Back to Community link, only if we came from data.gov
+//    let's check if we just came from data.gov community
     if ('' !== document.referrer) {
         var parts = document.referrer.split( '/' );
 
@@ -57,21 +57,34 @@ $(document).ready(function () {
             }
         }
 
+        var fromDataGov = false;
+
         if (typeof referrer !== 'undefined') {
-            if ((referrer.indexOf('datagov') > -1 || (referrer.indexOf('data.gov') > -1))
-                && (referrer.indexOf('catalog') < 0 || referrer.indexOf('ckan') < 0))
-            {
-                $.cookie('back2community', document.referrer,{ path: "/", expires: 2 });
-            }
+            fromDataGov = ((referrer.indexOf('datagov') > -1 || (referrer.indexOf('data.gov') > -1))
+                && (referrer.indexOf('catalog') < 0 || referrer.indexOf('ckan') < 0));
+        }
+
+        if (fromDataGov &&
+            (document.URL.indexOf('/dataset/') > 0
+                || document.URL.indexOf('groups=') >0
+                || document.URL.indexOf('/group/') >0
+                || document.URL.indexOf('/organization/') >0))
+        {
+            $.cookie('back2community', document.referrer,{ path: "/", expires: 2 });
+        } else {
+//            if it is just search, we should remove this cookie
+            $.removeCookie('back2community');
         }
     }
 
+//    now let's show the button if needed
     if (($('#exitURL').length > 0)) {
 
         var cookie = $.cookie('back2community');
         
         if ((typeof cookie !== 'undefined') && ('' !== cookie)) {
             $('#exitURL').click(function(){
+                $.removeCookie('back2community');
                 window.location.replace(cookie);
             });
             $('#exitURL').attr('href', cookie);
