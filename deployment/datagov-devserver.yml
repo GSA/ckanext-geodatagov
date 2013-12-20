@@ -15,11 +15,11 @@
         - git
         - python-devel
         - ruby-devel
-        - postgresql-libs
-        - postgresql-devel
+        - postgresql92-libs
+        - postgresql92-devel
         - libxml2-devel
         - libxslt-devel
-        - postgresql
+        - postgresql92
         - rpmdevtools
         - gcc
         - gcc-c++
@@ -36,7 +36,47 @@
         - vim
         - python-psycopg2
 
-#SOLR setup
+#SOLR setup instructions
+
+# $ yum -y install tomcat6 tomcat6-webapps tomcat6-admin-webapps wget vim java-openjdk
+# $ chkconfig tomcat6 on
+# $ service tomcat6 start
+# $ cd ~
+# $ wget http://apache.cc.uoc.gr//commons/logging/binaries/commons-logging-1.1.3-bin.tar.gz
+# $ tar zxvf commons-logging-1.1.3-bin.tar.gz
+# $ cd commons-logging-1.1.3
+# $ cp commons-logging-*.jar /usr/share/tomcat6/lib/
+# $ cd ~
+# $ wget http://www.slf4j.org/dist/slf4j-1.7.5.tar.gz
+# $ tar zxvf slf4j-1.7.5.tar.gz
+# $ cd slf4j-1.7.5
+# $ cp slf4j-*.jar /usr/share/tomcat6/lib/
+# $ cd ~
+# $ wget http://archive.apache.org/dist/lucene/solr/4.2.1/solr-4.2.1.tgz
+# $ tar zxvf solr-4.2.1.tgz
+# $ cp ~/solr-4.2.1/dist/solr-4.2.1.war /usr/share/tomcat6/webapps/solr.war
+# $ mkdir /home/solr
+# $ cp -R ~/solr-4.2.1/example/solr/* /home/solr
+# $ cd /home/solr/collection1/conf/
+# $ rm schema.xml
+# $ wget https://raw.github.com/okfn/ckanext-geodatagov/master/solr/schema.xml
+# $ chown -R tomcat /home/solr
+# Edit your Solr web.xml file to let it know where your solar directory is located:
+# $ vim /usr/share/tomcat6/webapps/solr/WEB-INF/web.xml
+# Enable this:
+# <env-entry>
+#     <env-entry-name>solr/home</env-entry-name>
+#     <env-entry-value>/home/solr</env-entry-value>
+#     <env-entry-type>java.lang.String</env-entry-type>
+# </env-entry>
+# $ service iptables stop
+# $ chkconfig iptables off
+# $ service tomcat6 restart
+# Disable selinux:
+# $ vim /etc/sysconfig/selinux
+
+#SOLR ansible setup
+
 #     - name: Download solr 4.2.1
 #       get_url: url="http://archive.apache.org/dist/lucene/solr/4.2.1/solr-4.2.1.tgz" dest="/tmp/"
 # 
@@ -56,7 +96,41 @@
 #       action: service name=tomcat6 state=restarted
 
     
-#POSTGRESQL setup
+#POSTGRESQL setup instructions
+
+# $ yum remove postgresql postgresql-server postgis
+# $ rpm -i http://yum.postgresql.org/9.2/redhat/rhel-6-x86_64/pgdg-redhat92-9.2-7.noarch.rpm
+# $ rpm -i http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
+# $ yum install -y postgresql92 postgresql92-libs postgresql92-server postgis2_92 hdf5
+# $ yum update proj
+# $ service postgresql-9.2 initdb
+# 
+# $ vim /var/lib/pgsql/9.2/data/pg_hba.conf
+#   replace the first line under “local” with:
+# host    all     all             0.0.0.0/0               md5
+# 
+# $ vim /var/lib/pgsql/9.2/data/postgresql.conf
+#   change 'localhost' to '*'
+# 
+# $ service postgresql-9.2 start
+# $ chkconfig postgresql-9.2 on
+# 
+# $ su - postgres
+# $ psql
+# postgres=# CREATE ROLE "geo.gov" WITH LOGIN ENCRYPTED PASSWORD 'yourpass';
+# postgres=# CREATE DATABASE ckan WITH OWNER "geo.gov";
+# postgres=# \c ckan
+# ckan=# \i /usr/pgsql-9.2/share/contrib/postgis-2.1/postgis.sql
+# ckan=# \i /usr/pgsql-9.2/share/contrib/postgis-2.1/spatial_ref_sys.sql
+# ckan=# \i /usr/pgsql-9.2/share/contrib/postgis-2.1/rtpostgis.sql
+# ckan=# \i /usr/pgsql-9.2/share/contrib/postgis-2.1/topology.sql
+# ckan=# \q
+# 
+# $ gunzip -c /path/to/ckan2_tmp_dump.sql.gz | psql ckan
+# $ psql ckan
+# ckan=# ANALYZE;
+
+#POSTGRESQL ansible setup
 
 #     - name: make sure postgresql packages are installed
 #       action: yum pkg={{item}} state=installed
@@ -97,9 +171,13 @@
 #       sudo: yes
 #       sudo_user: postgres
 
+
 #CKAN setup
     - name: remove old code
       action: file path=/usr/lib/ckan/src state=absent
+
+    - name: create link of pg_config for postgresql9.2
+      action: command ln -s /usr/pgsql-9.2/bin/pg_config /usr/bin/pg_config
 
     - name: get ckan version
       action: git repo=https://github.com/okfn/ckan.git dest=/usr/lib/ckan/src/ckan version=dea7c1264677202f6b3effda49eb8fba358b2ec0
@@ -200,7 +278,7 @@
       action: yum pkg={{item}} state=installed
       with_items:
         - memcached
-        - postgresql
+        - postgresql92
         - httpd
         - mod_wsgi
         - geos
@@ -218,7 +296,7 @@
       action: yum pkg={{item}} state=installed
       with_items:
         - redis
-        - postgresql
+        - postgresql92
         - geos
         - tomcat6
         - geos
@@ -232,6 +310,25 @@
         - libxslt
         - libxml2
 
-    - name: after web installation script
-      action: command /tmp/after_harvester.sh
+#     - name: after harvester installation script
+#       action: command /tmp/after_harvester.sh
+
+# After CKAN installation
+# 
+# $ vim /etc/ckan/production.ini
+# Change the db and solr connection settings.
+# Remove saml2 extension from /etc/ckan/production.ini.
+# $ cd /etc/ckan
+# $ rm who.ini 
+# $ wget https://raw.github.com/okfn/ckan/master/ckan/config/who.ini
+# 
+# 
+# On web instance, run
+# $ service httpd restart
+# $ ckan db init
+# Note: If this fails you need to drop the ckan db and recreate it because it is already populated from the working harvester
+# $ /tmp/after_web.sh
+# 
+# On harvester instance, run
+# $ /tmp/after_harvester.sh
 
