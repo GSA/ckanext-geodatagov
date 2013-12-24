@@ -326,3 +326,9 @@
 # On harvester instance, run
 # $ /tmp/after_harvester.sh
 
+
+#pycsw setup
+    - name: get pycsw version
+      action: git repo=git@github.com:geopython/pycsw.git dest=/usr/lib/ckan/src/pycsw version=0061962493bdbc9c3011335d133cc11175eb975b
+
+
