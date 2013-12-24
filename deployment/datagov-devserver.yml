@@ -4,6 +4,7 @@
   tasks:
     - name: install epel
       action: command creates=/etc/yum.repos.d/epel.repo rpm -Uvh http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
+
     - name: make sure packages are installed
       action: yum pkg={{item}} state=installed
       with_items:
@@ -61,6 +62,7 @@
 # $ rm schema.xml
 # $ wget https://raw.github.com/okfn/ckanext-geodatagov/master/solr/schema.xml
 # $ chown -R tomcat /home/solr
+
 # Edit your Solr web.xml file to let it know where your solar directory is located:
 # $ vim /usr/share/tomcat6/webapps/solr/WEB-INF/web.xml
 # Enable this:
@@ -75,25 +77,64 @@
 # Disable selinux:
 # $ vim /etc/sysconfig/selinux
 
-#SOLR ansible setup
+#SOLR setup
 
-#     - name: Download solr 4.2.1
-#       get_url: url="http://archive.apache.org/dist/lucene/solr/4.2.1/solr-4.2.1.tgz" dest="/tmp/"
-# 
-#     - name: Unpack solr
-#       shell: "cd /tmp/ && tar -zxvf solr-4.2.1.tgz"
-# 
-#     - name: Deploy solr war
-#       shell: "mv /tmp/solr-4.2.1/dist/solr-4.2.1.war /var/lib/tomcat6/webapps/solr.war && rm -rf /tmp/solr-4.2.1"
-# 
-# #     - name: Download solr 4.2.1
-# #       get_url: url="https://raw.github.com/okfn/ckanext-geodatagov/dev/solr/schema.xml" dest="/tmp/"
-# 
-#     - name: register tomcat service
-#       shell: "chkconfig tomcat6 on"
-# 
-#     - name: restart tomcat
-#       action: service name=tomcat6 state=restarted
+    - name: make sure packages are installed
+      action: yum pkg={{item}} state=installed
+      with_items:
+        - tomcat6
+        - tomcat6-webapps
+        - tomcat6-admin-webapps
+        - wget
+        - vim
+        - git
+        - java-openjdk
+        - libselinux-python
+
+    - name: enabling tomcat service
+      command: chkconfig tomcat6 on
+
+    - name: starting tomcat service
+      command: service tomcat6 start
+
+    - name: Download Common Logging 1.1.3
+      get_url: url="http://apache.cc.uoc.gr//commons/logging/binaries/commons-logging-1.1.3-bin.tar.gz" dest="~/"
+
+    - name: Unpack common-logging
+      shell: "cd ~/ && tar -zxvf commons-logging-1.1.3-bin.tar.gz && cd commons-logging-1.1.3 && cp commons-logging-*.jar /usr/share/tomcat6/lib/"
+
+    - name: Download slf4j 1.7.5
+      get_url: url="http://www.slf4j.org/dist/slf4j-1.7.5.tar.gz" dest="~/"
+
+    - name: Unpack slf4j
+      shell: "cd ~/ && tar -zxvf slf4j-1.7.5.tar.gz && cd slf4j-1.7.5 && cp slf4j-*.jar /usr/share/tomcat6/lib/"
+
+    - name: Download solr 4.2.1
+      get_url: url="http://archive.apache.org/dist/lucene/solr/4.2.1/solr-4.2.1.tgz" dest="~/"
+
+    - name: Unpack solr
+      shell: "cd ~/ && tar -zxvf solr-4.2.1.tgz && cd solr-4.2.1/dist && cp solr-4.2.1.war /var/lib/tomcat6/webapps/solr.war"
+
+    - name: Setup solr home folder
+      shell: "mkdir /home/solr && cp -R ~/solr-4.2.1/example/solr/* /home/solr && cd /home/solr/collection1/conf/ && rm schema.xml && wget https://raw.github.com/okfn/ckanext-geodatagov/master/solr/schema.xml && chown -R tomcat /home/solr"
+
+    - name: restarting tomcat service
+      command: service tomcat6 restart
+
+    - name: copy needed solr config file
+      action: copy src=usr/share/tomcat6/webapps/solr/WEB-INF/web.xml dest=/usr/share/tomcat6/webapps/solr/WEB-INF/web.xml
+
+    - name: restarting tomcat service
+      command: service tomcat6 restart
+
+    - name: stop firewall
+      command: service iptables stop
+
+    - name: disable firewall service
+      command: chkconfig iptables off
+
+    - name: disable selinux
+      command: /usr/sbin/setenforce 0
 
     
 #POSTGRESQL setup instructions
