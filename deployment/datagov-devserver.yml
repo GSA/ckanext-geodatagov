@@ -333,9 +333,10 @@
       action: command chdir=/usr/lib/ckan/src/pycsw/ ../../bin/python setup.py install
 
     - name: copy pycsw configuration files
-      action: copy src={{item}} dest=/{{item}} mode=744
+      action: copy src={{item}} dest=/{{item}} mode=644
       with_items:
-        - etc/ckan/pycsw.cfg
+        - etc/ckan/pycsw-all.cfg
+        - etc/ckan/pycsw-collection.cfg
         - etc/ckan/pycsw.wsgi
         - etc/cron.d/ckan-pycsw
         # - etc/httpd/conf.d/ckan.conf
@@ -349,7 +350,7 @@
       sudo_user: postgres
 
     - name: create pycsw tables
-      action: command chdir=/usr/lib/ckan/src/ckanext-spatial /usr/lib/ckan/bin/paster ckan-pycsw setup -p /etc/ckan/pycsw.cfg
+      action: command chdir=/usr/lib/ckan/src/ckanext-spatial /usr/lib/ckan/bin/paster ckan-pycsw setup -p /etc/ckan/pycsw-collection.cfg
 
     - name: restart apache
       action: service name=httpd state=restarted
