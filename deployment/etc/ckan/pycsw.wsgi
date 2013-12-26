@@ -13,7 +13,7 @@ from pycsw import server
 def application(env, start_response):
     """WSGI wrapper"""
     
-    config = '/etc/ckan/pycsw.cfg'
+    config = env['PYCSW_CONFIG']
 
     if 'HTTP_HOST' in env and ':' in env['HTTP_HOST']:
         env['HTTP_HOST'] = env['HTTP_HOST'].split(':')[0]
