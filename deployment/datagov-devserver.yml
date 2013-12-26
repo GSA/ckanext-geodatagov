@@ -331,4 +331,11 @@
     - name: get pycsw version
       pip: name='git+https://github.com/geopython/pycsw.git#egg=pycsw' virtualenv=/usr/lib/ckan version=0061962493bdbc9c3011335d133cc11175eb975b
 
+    - name: copy pycsw configuration files
+      action: copy src={{item}} dest=/{{item}} mode=744
+      with_items:
+        - etc/ckan/pycsw.cfg
+        - etc/ckan/pycsw.wsgi
+        - etc/cron.d/ckan-pycsw
+#         - etc/httpd/conf.d/ckan.conf
 

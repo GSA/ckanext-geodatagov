@@ -2,7 +2,7 @@ from StringIO import StringIO
 import os
 import sys
 
-activate_this = os.path.join('@CKAN_HOME@/bin/activate_this.py')
+activate_this = os.path.join('/usr/lib/ckan/bin/activate_this.py')
 execfile(activate_this, {'__file__': activate_this})
 
 app_path = os.path.dirname(__file__)
@@ -13,7 +13,7 @@ from pycsw import server
 def application(env, start_response):
     """WSGI wrapper"""
     
-    config = '@PYCSW_CONFIG@'
+    config = '/etc/ckan/pycsw.cfg'
 
     if 'HTTP_HOST' in env and ':' in env['HTTP_HOST']:
         env['HTTP_HOST'] = env['HTTP_HOST'].split(':')[0]
