@@ -157,14 +157,12 @@
       shell: "psql -d ckan -f /usr/pgsql-9.2/share/contrib/postgis-2.1/topology.sql"
       sudo: yes
       sudo_user: postgres
-      
-#     - name: setup pg_hba.conf
-#       lineinfile: dest=/var/lib/pgsql/data/pg_hba.conf regexp=^local.* line='local   all         all                               trust'
 
 # After PostgreSQL installation:
 # $ gunzip -c /path/to/ckan2_tmp_dump.sql.gz | psql ckan
 # $ psql ckan
 # ckan=# ANALYZE; 
+
 
 #CKAN setup
     - name: remove old code
