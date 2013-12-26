@@ -326,10 +326,15 @@
 # On harvester instance, run
 # $ /tmp/after_harvester.sh
 
-
 #pycsw setup
     - name: get pycsw version
-      pip: name='git+https://github.com/geopython/pycsw.git#egg=pycsw' virtualenv=/usr/lib/ckan version=0061962493bdbc9c3011335d133cc11175eb975b
+      action: git repo=https://github.com/geopython/pycsw.git dest=/usr/lib/ckan/src/pycsw version=0061962493bdbc9c3011335d133cc11175eb975b
+
+    - name: run setup build for pycsw
+      action: command chdir=/usr/lib/ckan/src/pycsw/ ../../bin/python setup.py build
+
+    - name: run setup install for pycsw
+      action: command chdir=/usr/lib/ckan/src/pycsw/ ../../bin/python setup.py install
 
     - name: copy pycsw configuration files
       action: copy src={{item}} dest=/{{item}} mode=744
@@ -337,15 +342,19 @@
         - etc/ckan/pycsw.cfg
         - etc/ckan/pycsw.wsgi
         - etc/cron.d/ckan-pycsw
-#         - etc/httpd/conf.d/ckan.conf
+        # - etc/httpd/conf.d/ckan.conf
 
     - name: create pycsw database
       action: postgresql_db name=pycsw owner=geo.gov
 
     - name: install postgis for pycsw database
-      shell: "psql -d pycsw -c 'CREATE EXTENSION postgis;'"
+      command: psql -d pycsw -c "CREATE EXTENSION postgis;"
       sudo: yes
       sudo_user: postgres
 
     - name: create pycsw tables
-      action: command chdir=/usr/lib/ckan/src/ckanext-spatial virtualenv=/usr/lib/ckan paster ckan-pycsw setup -p /etc/ckan/pycsw.cfg
+      action: command chdir=/usr/lib/ckan/src/ckanext-spatial /usr/lib/ckan/bin/paster ckan-pycsw setup -p /etc/ckan/pycsw.cfg
+
+    - name: restart apache
+      action: service name=httpd state=restarted
+
