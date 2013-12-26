@@ -339,3 +339,13 @@
         - etc/cron.d/ckan-pycsw
 #         - etc/httpd/conf.d/ckan.conf
 
+    - name: create pycsw database
+      action: postgresql_db name=pycsw owner=geo.gov
+
+    - name: install postgis for pycsw database
+      shell: "psql -d pycsw -c 'CREATE EXTENSION postgis;'"
+      sudo: yes
+      sudo_user: postgres
+
+    - name: create pycsw tables
+      action: command chdir=/usr/lib/ckan/src/ckanext-spatial virtualenv=/usr/lib/ckan paster ckan-pycsw setup -p /etc/ckan/pycsw.cfg
