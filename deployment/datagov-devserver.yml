@@ -157,14 +157,12 @@
       shell: "psql -d ckan -f /usr/pgsql-9.2/share/contrib/postgis-2.1/topology.sql"
       sudo: yes
       sudo_user: postgres
-      
-#     - name: setup pg_hba.conf
-#       lineinfile: dest=/var/lib/pgsql/data/pg_hba.conf regexp=^local.* line='local   all         all                               trust'
 
 # After PostgreSQL installation:
 # $ gunzip -c /path/to/ckan2_tmp_dump.sql.gz | psql ckan
 # $ psql ckan
 # ckan=# ANALYZE; 
+
 
 #CKAN setup
     - name: remove old code
@@ -236,6 +234,7 @@
         - etc/ckan/who.ini
         - etc/ckan/apache.wsgi
         - etc/ckan/production.ini
+        - etc/ckan/development.ini
         - etc/supervisord.conf
         - etc/httpd/conf.d/ckan.conf
         - etc/cron.d/ckan-harvest
@@ -304,25 +303,55 @@
         - libxslt
         - libxml2
 
-#     - name: after harvester installation script
-#       action: command /tmp/after_harvester.sh
+    - name: point apache.wsgi to development.ini
+      action: command sed -i 's/production.ini/development.ini/g' /etc/ckan/apache.wsgi
+     
+    - name: remove default who.ini
+      action: file path=/etc/ckan/who.ini state=absent
 
-# After CKAN installation
-# 
-# $ vim /etc/ckan/production.ini
-# Change the db and solr connection settings.
-# Remove saml2 extension from /etc/ckan/production.ini.
-# $ cd /etc/ckan
-# $ rm who.ini 
-# $ wget https://raw.github.com/okfn/ckan/master/ckan/config/who.ini
-# 
-# 
-# On web instance, run
-# $ service httpd restart
-# $ ckan db init
-# Note: If this fails you need to drop the ckan db and recreate it because it is already populated from the working harvester
-# $ /tmp/after_web.sh
-# 
-# On harvester instance, run
-# $ /tmp/after_harvester.sh
+    - name: download default ckan who.ini
+      get_url: url="https://raw.github.com/okfn/ckan/master/ckan/config/who.ini" dest="/etc/ckan/who.ini"
+
+    - name: Initialize ckan db
+      action: command ckan db init
+
+    - name: after harvester installation script
+      action: command /tmp/after_web.sh
+
+    - name: after harvester installation script
+      action: command /tmp/after_harvester.sh
+
+
+#pycsw setup
+    - name: get pycsw version
+      action: git repo=https://github.com/geopython/pycsw.git dest=/usr/lib/ckan/src/pycsw version=0061962493bdbc9c3011335d133cc11175eb975b
+
+    - name: run setup build for pycsw
+      action: command chdir=/usr/lib/ckan/src/pycsw/ ../../bin/python setup.py build
+
+    - name: run setup install for pycsw
+      action: command chdir=/usr/lib/ckan/src/pycsw/ ../../bin/python setup.py install
+
+    - name: copy pycsw configuration files
+      action: copy src={{item}} dest=/{{item}} mode=644
+      with_items:
+        - etc/ckan/pycsw-all.cfg
+        - etc/ckan/pycsw-collection.cfg
+        - etc/ckan/pycsw.wsgi
+        - etc/cron.d/ckan-pycsw
+        # - etc/httpd/conf.d/ckan.conf
+
+    - name: create pycsw database
+      action: postgresql_db name=pycsw owner=geo.gov
+
+    - name: install postgis for pycsw database
+      command: psql -d pycsw -c "CREATE EXTENSION postgis;"
+      sudo: yes
+      sudo_user: postgres
+
+    - name: create pycsw tables
+      action: command chdir=/usr/lib/ckan/src/ckanext-spatial /usr/lib/ckan/bin/paster ckan-pycsw setup -p /etc/ckan/pycsw-collection.cfg
+
+    - name: restart apache
+      action: service name=httpd state=restarted
 
