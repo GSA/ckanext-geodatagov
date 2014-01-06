@@ -94,3 +94,46 @@ $(document).ready(function () {
         }
     }
 });
+//adding dynamic menu
+(function($) {
+
+    var url = '//next.data.gov/wp-content/plugins/datagov-custom/wp_download_links.php?callback=?';
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: false,
+        jsonpCallback: 'jsonCallback',
+        contentType: "application/json",
+        dataType: 'jsonp',
+        success: function(json) {
+            var menus = [];
+            var topmenus=[];
+            var topsecondarys=[];
+            $.each(json.Footer, function(i,menu){
+                menus.push('<li><a href="' +menu.link + '">' +menu.name + '</a></li>');
+            });
+            $.each(json.Primary, function(i,topmenu){
+                if(!topmenu.parent_id) {
+                    if(topmenu.name=='Topics'){
+                        topmenus.push('<li class="dropdown menu-topics"><a data-toggle="dropdown" class="dropdown-toggle">Topics<b class="caret"></b></a><ul class="dropdown-menu"></ul></li>');
+                    }else{
+                        topmenus.push('<li><a href="' +topmenu.link + '">' +topmenu.name + '</a></li>');
+                    }
+                }
+            });
+            $.each(json.Primary, function(i,topsecondary){
+                if(topsecondary.parent_id ) {
+                    topsecondarys.push('<li><a href="' +topsecondary.link + '">' +topsecondary.name + '</a></li>');
+                }
+            });
+            $('#menu-primary-navigation').append( topmenus.join('') );
+            $('#menu-primary-navigation .dropdown-menu').append( topsecondarys.join('') );
+            $('#menu-primary-navigation-1').append( topmenus.join('') );
+            $('#menu-footer').prepend(menus.join('') );
+            $('#menu-primary-navigation-1 .dropdown-menu').append( topsecondarys.join('') );
+        },
+        error: function(e) {
+            console.log(e.message);
+        }
+    });
+})(jQuery);

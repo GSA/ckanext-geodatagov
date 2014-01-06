@@ -34,7 +34,7 @@
     </div>
     <nav role="navigation" class="col-md-2 col-lg-2">
         <ul class="nav" id="menu-primary-navigation-1">
-            <li class="menu-data"><a href="http://catalog.data.gov">Data</a></li>
+       <!--     <li class="menu-data"><a href="http://catalog.data.gov">Data</a></li>
             <li class="dropdown menu-topics"><a href="http://www.data.gov/communities/" data-target="#" data-toggle="dropdown" class="dropdown-toggle">Topics <b class="caret"></b></a>
                 <ul class="dropdown-menu">
                     <li class="menu-agriculture"><a href="http://www.data.gov/food/">Agriculture</a></li>
@@ -63,13 +63,13 @@
             <li class="menu-highlights"><a href="http://www.data.gov/highlights">Highlights</a></li>
             <li class="menu-apps"><a class="local-link" href="http://www.data.gov/developer-apps-showcase">Apps</a></li>
             <li class="menu-developers"><a href="http://www.data.gov/developers/">Developers</a></li>
-            <li class="menu-contact"><a href="http://www.data.gov/contact/">Contact</a></li>
+            <li class="menu-contact"><a href="http://www.data.gov/contact/">Contact</a></li>-->
 
         </ul>
     </nav>
     <nav role="navigation" class="col-md-2 col-lg-2">
         <ul class="nav" id="menu-footer">
-            <li class="menu-about"><a class="local-link" href="http://www.data.gov/about">About</a></li>
+            <!--<li class="menu-about"><a class="local-link" href="http://www.data.gov/about">About</a></li>
             <li class="menu-open-government"><a class="local-link" href="http://www.data.gov/open-gov/">Open Government</a></li>
             <li class="menu-faq"><a class="local-link" href="http://www.data.gov/faq">FAQ</a></li>
             <li class="menu-media"><a class="local-link" href="http://www.data.gov/media-inquiries/">Media</a></li>
@@ -80,7 +80,16 @@
             <li class="menu-data-policy"><a class="local-link" href="http://www.data.gov/data-policy">Data Policy</a></li>
             <li class="menu-privacy-policy"><a class="local-link" href="http://www.data.gov/privacy-policy">Privacy Policy</a></li>
             <li class="menu-performance-gov"><a class="local-link" href="http://www.performance.gov">Performance.gov</a></li>
-            <li class="menu-usa-gov"><a class="local-link" href="http://www.usa.gov">USA.gov</a></li>
+            <li class="menu-usa-gov"><a class="local-link" href="http://www.usa.gov">USA.gov</a></li>-->
+            {% if c.userobj%}
+            <li class="local-link"> <a href="{{ h.url_for('/user/_logout') }}" title="{{ _('Log out') }}"></a> </li>
+            {% else %}
+            <li><a href="{{ h.url_for(controller='user', action='login') }}" class="local-link">
+                {{ _('Login') }}
+            </a>
+            </li>
+            {% endif  %}
+
         </ul>
     </nav>
     <div class="col-md-3 col-md-offset-1 col-lg-3 col-lg-offset-1 social-nav">
