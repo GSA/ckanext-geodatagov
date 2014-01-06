@@ -137,3 +137,16 @@ $(document).ready(function () {
         }
     });
 })(jQuery);
+// fix for dynamic menu to check current domain and assign menu
+
+jQuery(window).load(function(){
+    if (window.location.hostname==='catalog.data.gov'){
+        var linkRewriter = function(a, b) {
+            $('a[href*="' + a + '"]').each(function() {
+                $(this).attr('href', $(this).attr('href').replace(a, b));
+            });
+        }
+
+        linkRewriter("next.data.gov", "data.gov");
+    }
+});
