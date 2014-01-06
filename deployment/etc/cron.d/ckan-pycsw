@@ -2,4 +2,4 @@
 0 0 * * 0 /usr/lib/ckan/bin/paster --plugin=ckanext-spatial ckan-pycsw set_keywords -p /etc/ckan/pycsw-collection.cfg -u http://localhost/
 0 0 * * 0 /usr/lib/ckan/bin/paster --plugin=ckanext-spatial ckan-pycsw set_keywords -p /etc/ckan/pycsw-all.cfg -u http://localhost/
 # sync metadata records daily
-0 * * * * /usr/lib/ckan/bin/paster --plugin=ckanext-spatial ckan-pycsw load -p /etc/ckan/pycsw-collection.cfg -u http://localhost/
+0 * * * * /usr/lib/ckan/bin/paster --plugin=ckanext-spatial ckan-pycsw load -p /etc/ckan/pycsw-all.cfg -u http://localhost/

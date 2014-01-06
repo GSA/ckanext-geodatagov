@@ -312,6 +312,16 @@
     - name: download default ckan who.ini
       get_url: url="https://raw.github.com/okfn/ckan/master/ckan/config/who.ini" dest="/etc/ckan/who.ini"
 
+######################################################
+#Temporary fix until PR is merged on ckanext-spatial
+######################################################
+    - name: remove default ckan_pycsw.py
+      action: file path=/usr/lib/ckan/src/ckanext-spatial/bin/ckan_pycsw.py state=absent
+
+    - name: download default ckan who.ini
+      get_url: url="https://github.com/kalxas/ckanext-spatial/raw/bb4eaae1c03d16fc674ef135479ee854ce302d4c/bin/ckan_pycsw.py" dest="/usr/lib/ckan/src/ckanext-spatial/bin/ckan_pycsw.py"
+######################################################
+
     - name: Initialize ckan db
       action: command ckan db init
 
@@ -324,7 +334,7 @@
 
 #pycsw setup
     - name: get pycsw version
-      action: git repo=https://github.com/geopython/pycsw.git dest=/usr/lib/ckan/src/pycsw version=0061962493bdbc9c3011335d133cc11175eb975b
+      action: git repo=https://github.com/geopython/pycsw.git dest=/usr/lib/ckan/src/pycsw version=HEAD
 
     - name: run setup build for pycsw
       action: command chdir=/usr/lib/ckan/src/pycsw/ ../../bin/python setup.py build
@@ -350,7 +360,7 @@
       sudo_user: postgres
 
     - name: create pycsw tables
-      action: command chdir=/usr/lib/ckan/src/ckanext-spatial /usr/lib/ckan/bin/paster ckan-pycsw setup -p /etc/ckan/pycsw-collection.cfg
+      action: command chdir=/usr/lib/ckan/src/ckanext-spatial /usr/lib/ckan/bin/paster ckan-pycsw setup -p /etc/ckan/pycsw-all.cfg
 
     - name: restart apache
       action: service name=httpd state=restarted
