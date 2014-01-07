@@ -168,6 +168,14 @@ jQuery(window).load(function(){
         }
 
         linkRewriter("next.data.gov", "data.gov");
+    }else if (window.location.hostname==='staging.catalog.data.gov'){
+        var linkRewriter = function(a, b) {
+            $('a[href*="' + a + '"]').each(function() {
+                $(this).attr('href', $(this).attr('href').replace(a, b));
+            });
+        }
+
+        linkRewriter("next.data.gov", "staging.data.gov");
     }
 });
 if ($.browser.msie && $.browser.version == 10) {
