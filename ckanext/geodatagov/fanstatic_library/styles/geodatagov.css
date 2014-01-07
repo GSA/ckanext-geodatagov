@@ -1406,7 +1406,11 @@ color: #333;
 .yamm-fw .dropdown-menu li {
     display: inline-block;
 }
-.yamm-fw .dropdown-menu{min-width:965px;left:-435px !important;padding:10px 0;}
+.yamm-fw .dropdown-menu{
+    min-width:965px;
+    left:-435px !important;
+    padding:10px 0;
+}
 .leaflet-top, .leaflet-bottom{z-index:10;}
 .navbar-nav > .dropdown.open > a .caret {
     border-bottom-color: #777777;
