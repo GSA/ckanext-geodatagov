@@ -430,10 +430,10 @@ class Demo(p.SingletonPlugin):
         return OrderedDict([('metadata_type','Dataset Type'),
                             ('tags','Tags'),
                             ('res_format', 'Formats'),
-                            ('groups', 'Groups'),
+                            ('groups', 'Topics'),
                             ('organization_type', 'Organization Types'),
                             ('organization', 'Organizations'),
-                            ('vocab_category_all', 'Community Categories'),
+                            ('vocab_category_all', 'Topic Categories'),
                            ## ('extras_progress', 'Progress'),
                            ])
 
@@ -443,7 +443,7 @@ class Demo(p.SingletonPlugin):
             return OrderedDict([('metadata_type','Dataset Type'),
                                 ('tags','Tags'),
                                 ('res_format', 'Formats'),
-                                ('groups', 'Groups'),
+                                ('groups', 'Topics'),
                                 ('harvest_source_title', 'Harvest Source'),
                                 ('capacity', 'Visibility'),
                                 ('dataset_type', 'Dataset Type'),
