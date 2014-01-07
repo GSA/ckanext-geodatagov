@@ -99,16 +99,20 @@
           <td>{{ h.render_datetime_datagov(h.get_pkg_dict_extra(c.pkg_dict, 'metadata-date')) or h.get_pkg_dict_extra(c.pkg_dict, 'metadata-date') or 'Unknown' }}</td>
         </tr>
         <tr>
-          <th scope="row" class="dataset-label">Reference Date(s)</th>
-          <td>{{ h.get_reference_date(h.get_pkg_dict_extra(c.pkg_dict, 'dataset-reference-date')) or h.get_pkg_dict_extra(c.pkg_dict, 'dataset-reference-date') or 'Unknown' }}</td>
+          <th scope="row" class="dataset-label">Publisher</th>
+          <td>{{ h.get_pkg_dict_extra(c.pkg_dict, 'publisher', 'Unknown') }}</td>
         </tr>
         <tr>
-          <th scope="row" class="dataset-label">Responsible Party</th>
-          <td>{{ h.get_responsible_party(h.get_pkg_dict_extra(c.pkg_dict, 'responsible-party')) or 'Unknown' }}</td>
+          <th scope="row" class="dataset-label">Identifier</th>
+          <td>{{ h.get_pkg_dict_extra(c.pkg_dict, 'identifier', 'Unknown') }}</td>
         </tr>
         <tr>
-          <th scope="row" class="dataset-label">Contact Email</th>
-          <td>{{ h.get_pkg_dict_extra(c.pkg_dict, 'contact-email', 'Unknown') }}</td>
+          <th scope="row" class="dataset-label">Maintainer</th>
+          <td>{{ h.get_pkg_dict_extra(c.pkg_dict, 'maintainer', 'Unknown') }}</td>
+        </tr>
+        <tr>
+          <th scope="row" class="dataset-label">Maintainer Email</th>
+          <td>{{ h.get_pkg_dict_extra(c.pkg_dict, 'maintainer_email', 'Unknown') }}</td>
         </tr>
         {% if h.check_access('package_update',{'id':pkg_dict.id}) %}
           <tr class="toggle-more">
@@ -116,7 +120,7 @@
             <td class="dataset-details">{{ pkg_dict.state|capitalize }}</td>
           </tr>
         {% endif %}
-        {% for extra in h.sorted_extras(extras, auto_clean=true, exclude=['metadata-date', 'dataset-reference-date', 'responsible-party', 'contact-email', 'resource-type']) %}
+        {% for extra in h.sorted_extras(extras, auto_clean=true, exclude=['metadata-date', 'publisher', 'identifier', 'maintainer_email', 'maintainer', 'resource-type']) %}
           {% set key, value = extra %}
            {% if key == 'Data Dictiionary' %}
             {% set key = 'Data Dictionary'%}
