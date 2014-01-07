@@ -1425,5 +1425,6 @@ color: #333;
     .yamm-fw .dropdown-menu{min-width:970px;left:-425px !important;padding:10px 0;}
 }
 .ie8 .yamm-fw ul.topics li a i{width:70px;}
+.ie8 .yamm-fw .dropdown-menu{min-width:970px;left:-437px !important;padding:10px 0;}
 .ie9 .yamm-fw .dropdown-menu{min-width:970px;left:-427px !important;padding:10px 0;}
 .ie10 .yamm-fw .dropdown-menu{min-width:970px;left:-427px !important;padding:10px 0;}
