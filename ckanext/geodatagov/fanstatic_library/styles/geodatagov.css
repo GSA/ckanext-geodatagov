@@ -1010,7 +1010,7 @@ color:#999
 }
 .masthead{background-color:#fff;}
 ul#menu-primary-navigation.navbar-nav.nav > li > a {
-  color: #333333 !important;
+  /*color: #333333 !important;*/
   padding: 15px 10px;
 }
 ul#menu-primary-navigation li, .navbar-header .navbar-brand {
@@ -1400,9 +1400,18 @@ body {
     white-space: normal;
     width: 95px;
     display:block;
+    line-height: normal;
+color: #333;
 }
 .yamm-fw .dropdown-menu li {
     display: inline-block;
 }
-.yamm-fw .dropdown-menu{min-width:960px;left:-435px !important;}
+.yamm-fw .dropdown-menu{min-width:965px;left:-435px !important;padding:10px 0;}
 .leaflet-top, .leaflet-bottom{z-index:10;}
+.navbar-nav > .dropdown.open > a .caret {
+    border-bottom-color: #777777;
+    border-top-color: #777777;
+}
+.navbar-nav > .dropdown.open a.dropdown-toggle{color:#60a1d3 !important;}
+.yamm-fw ul.topics li a span:hover{color:#60a1d3;}
+.yamm-fw .topics li{color:#333;}
