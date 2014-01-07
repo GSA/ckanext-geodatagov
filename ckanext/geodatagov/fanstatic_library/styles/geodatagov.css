@@ -1424,3 +1424,4 @@ color: #333;
 @media screen and (-webkit-min-device-pixel-ratio:0) {
     .yamm-fw .dropdown-menu{min-width:970px;left:-425px !important;padding:10px 0;}
 }
+.ie8 .yamm-fw ul.topics li a i{width:70px;}
