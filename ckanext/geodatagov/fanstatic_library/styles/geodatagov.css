@@ -1242,3 +1242,167 @@ body {
     border-bottom: 0 none;
 }
 .nav .dropdown-toggle .caret{margin-top: -4px;}
+.menu-health a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-health.png') no-repeat
+}
+.menu-energy a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-energy.png') no-repeat
+}
+.menu-ethics a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-ethics.png') no-repeat
+}
+.menu-education a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-education.png') no-repeat
+}
+.menu-finance a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-finance.png') no-repeat
+}
+.menu-climate a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-climate.png') no-repeat
+}
+.menu-law a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-law.png') no-repeat
+}
+.menu-science a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-research.png') no-repeat
+}
+.menu-public a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-safety.png') no-repeat
+}
+.menu-agriculture a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-food.png') no-repeat
+}
+.menu-ocean a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-ocean.png') no-repeat
+}
+.menu-global a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-development.png') no-repeat
+}
+.menu-manufacturing a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-manufacturing.png') no-repeat
+}
+.menu-consumer a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-consumer.png') no-repeat
+}
+.menu-weather a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-weather.png') no-repeat
+}
+.menu-geospatial a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-geospatial.png') no-repeat
+}
+.menu-jobs a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-jobs-and-skills.png') no-repeat
+}
+.menu-business a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-business.png') no-repeat
+}
+.menu-counties a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-counties.png') no-repeat
+}
+.menu-states a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-states.png') no-repeat
+}
+.menu-cities a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-cities.png') no-repeat
+}
+.menu-developers a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-developers.png') no-repeat
+}
+.svg .menu-health a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-health.svg') no-repeat
+}
+.svg .menu-energy a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-energy.svg') no-repeat
+}
+.svg .menu-ethics a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-ethics.svg') no-repeat
+}
+.svg .menu-education a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-education.svg') no-repeat
+}
+.svg .menu-finance a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-finance.svg') no-repeat
+}
+.svg .menu-climate a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-climate.svg') no-repeat
+}
+.svg .menu-law a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-law.svg') no-repeat
+}
+.svg .menu-science a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-research.svg') no-repeat
+}
+.svg .menu-public a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-safety.svg') no-repeat
+}
+.svg .menu-agriculture a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-food.svg') no-repeat
+}
+.svg .menu-ocean a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-ocean.svg') no-repeat
+}
+.svg .menu-global a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-development.svg') no-repeat
+}
+.svg .menu-manufacturing a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-manufacturing.svg') no-repeat
+}
+.svg .menu-consumer a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-consumer.svg') no-repeat
+}
+.svg .menu-weather a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-weather.svg') no-repeat
+}
+.svg .menu-geospatial a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-geospatial.svg') no-repeat
+}
+.svg .menu-jobs a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-jobs-and-skills.svg') no-repeat
+}
+.svg .menu-business a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-business.svg') no-repeat
+}
+.svg .menu-counties a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-counties.svg') no-repeat
+}
+.svg .menu-states a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-states.svg') no-repeat
+}
+.svg .menu-cities a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-cities.svg') no-repeat
+}
+.svg .menu-developers a i {
+    background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-developers.svg') no-repeat
+}
+.yamm-fw ul.topics li a {
+    margin-bottom: 0;
+    margin-top: 1em;
+    padding: 3px 10px !important;
+    text-align:center;
+    margin-left:10px;
+    margin-right:10px;
+}
+.yamm-fw ul.topics li a i {
+    background-size: contain;
+    height: 50px;
+    line-height: 10px;
+    padding-top: 20px;
+    width: 50px;
+    background-position: center center !important;
+    clear:both;
+    display:inline-block;
+    text-align:center;
+    overflow:hidden;
+}
+.yamm-fw ul.topics li a span {
+    font-size: 14px;
+    text-transform: none;
+    white-space: normal;
+    width: 95px;
+    display:block;
+}
+.yamm-fw .dropdown-menu li {
+    display: inline-block;
+}
+.yamm-fw .dropdown-menu{min-width:960px;left:-435px !important;}
+.leaflet-top, .leaflet-bottom{z-index:10;}

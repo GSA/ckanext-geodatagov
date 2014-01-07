@@ -109,26 +109,46 @@ $(document).ready(function () {
             var menus = [];
             var topmenus=[];
             var topsecondarys=[];
+            var bottommenus=[];
             $.each(json.Footer, function(i,menu){
                 menus.push('<li><a href="' +menu.link + '">' +menu.name + '</a></li>');
             });
             $.each(json.Primary, function(i,topmenu){
                 if(!topmenu.parent_id) {
                     if(topmenu.name=='Topics'){
-                        topmenus.push('<li class="dropdown menu-topics"><a data-toggle="dropdown" class="dropdown-toggle">Topics<b class="caret"></b></a><ul class="dropdown-menu"></ul></li>');
-                    }else{
+                        topmenus.push('<li class="dropdown yamm-fw menu-topics"><a data-toggle="dropdown" class="dropdown-toggle">Topics<b class="caret"></b></a><ul class="dropdown-menu topics"></ul></li>');
+                    }
+                    else if(topmenu.name=='Data') {
+                        topmenus.push('<li class="active"><a href="/dataset">' +topmenu.name + '</a></li>');
+                    }
+                    else{
                         topmenus.push('<li><a href="' +topmenu.link + '">' +topmenu.name + '</a></li>');
                     }
                 }
             });
             $.each(json.Primary, function(i,topsecondary){
                 if(topsecondary.parent_id ) {
-                    topsecondarys.push('<li><a href="' +topsecondary.link + '">' +topsecondary.name + '</a></li>');
+                    var Menuclass = topsecondary.name;
+                    Menuclass = Menuclass.toLowerCase();
+                    topsecondarys.push('<li class="menu-' +Menuclass+ '"><a href="' +topsecondary.link + '"><i></i><span>' +topsecondary.name + '</span></a></li>');
+                }
+            });
+            $.each(json.Primary, function(i,bottommenu){
+                if(!bottommenu.parent_id) {
+                    if(bottommenu.name=='Topics'){
+                        bottommenus.push('<li class="dropdown menu-topics"><a data-toggle="dropdown" class="dropdown-toggle">Topics<b class="caret"></b></a><ul class="dropdown-menu topics"></ul></li>');
+                    }
+                    else if(bottommenu.name=='Data') {
+                        bottommenus.push('<li class="active"><a href="/dataset">' +bottommenu.name + '</a></li>');
+                    }
+                    else{
+                        bottommenus.push('<li><a href="' +bottommenu.link + '">' +bottommenu.name + '</a></li>');
+                    }
                 }
             });
             $('#menu-primary-navigation').append( topmenus.join('') );
             $('#menu-primary-navigation .dropdown-menu').append( topsecondarys.join('') );
-            $('#menu-primary-navigation-1').append( topmenus.join('') );
+            $('#menu-primary-navigation-1').append( bottommenus.join('') );
             $('#menu-footer').prepend(menus.join('') );
             $('#menu-primary-navigation-1 .dropdown-menu').append( topsecondarys.join('') );
         },
