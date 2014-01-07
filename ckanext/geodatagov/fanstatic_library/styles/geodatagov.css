@@ -1407,7 +1407,7 @@ color: #333;
     display: inline-block;
 }
 .yamm-fw .dropdown-menu{
-    min-width:965px;
+    min-width:970px;
     left:-435px !important;
     padding:10px 0;
 }
@@ -1419,3 +1419,8 @@ color: #333;
 .navbar-nav > .dropdown.open a.dropdown-toggle{color:#60a1d3 !important;}
 .yamm-fw ul.topics li a span:hover{color:#60a1d3;}
 .yamm-fw .topics li{color:#333;}
+#menu-primary-navigation-1 .dropdown-menu{font-size: 16px;}
+.navbar-nav > .dropdown.open > a{border-bottom:5px solid #dde5ed;}
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    .yamm-fw .dropdown-menu{min-width:970px;left:-425px !important;padding:10px 0;}
+}
