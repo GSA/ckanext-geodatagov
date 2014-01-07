@@ -170,3 +170,6 @@ jQuery(window).load(function(){
         linkRewriter("next.data.gov", "data.gov");
     }
 });
+if ($.browser.msie && $.browser.version == 10) {
+    $("html").addClass("ie10");
+}
