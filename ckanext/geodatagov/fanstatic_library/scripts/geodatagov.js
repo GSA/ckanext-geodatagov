@@ -61,7 +61,7 @@ $(document).ready(function () {
 
         if (typeof referrer !== 'undefined') {
             fromDataGov = ((referrer.indexOf('datagov') > -1 || (referrer.indexOf('data.gov') > -1))
-                && (referrer.indexOf('catalog') < 0 || referrer.indexOf('ckan') < 0));
+                && (referrer.indexOf('catalog') < 0) && (referrer.indexOf('ckan') < 0));
         }
 
         if (fromDataGov &&
