@@ -64,16 +64,17 @@ $(document).ready(function () {
                 && (referrer.indexOf('catalog') < 0) && (referrer.indexOf('ckan') < 0));
         }
 
-        if (fromDataGov &&
-            (document.URL.indexOf('/dataset/') > 0
+        if (fromDataGov) {
+            if (document.URL.indexOf('/dataset/') > 0
                 || document.URL.indexOf('groups=') >0
                 || document.URL.indexOf('/group/') >0
-                || document.URL.indexOf('/organization/') >0))
-        {
-            $.cookie('back2community', document.referrer,{ path: "/", expires: 2 });
-        } else {
+                || document.URL.indexOf('/organization/') >0)
+            {
+                $.cookie('back2community', document.referrer,{ path: "/", expires: 2 });
+            } else {
 //            if it is just search, we should remove this cookie
-            $.removeCookie('back2community');
+                $.removeCookie('back2community');
+            }
         }
     }
 
