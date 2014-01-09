@@ -1263,10 +1263,10 @@ body {
 .menu-law a i {
     background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-law.png') no-repeat
 }
-.menu-science a i {
+.menu-science-research a i {
     background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-research.png') no-repeat
 }
-.menu-public a i {
+.menu-public-safety a i {
     background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-safety.png') no-repeat
 }
 .menu-agriculture a i {
@@ -1275,7 +1275,7 @@ body {
 .menu-ocean a i {
     background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-ocean.png') no-repeat
 }
-.menu-global a i {
+.menu-global-development a i {
     background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-development.png') no-repeat
 }
 .menu-manufacturing a i {
@@ -1290,7 +1290,7 @@ body {
 .menu-geospatial a i {
     background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-geospatial.png') no-repeat
 }
-.menu-jobs a i {
+.menu-jobs-skills a i {
     background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-jobs-and-skills.png') no-repeat
 }
 .menu-business a i {
@@ -1329,10 +1329,10 @@ body {
 .svg .menu-law a i {
     background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-law.svg') no-repeat
 }
-.svg .menu-science a i {
+.svg .menu-science-research a i {
     background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-research.svg') no-repeat
 }
-.svg .menu-public a i {
+.svg .menu-public-safety a i {
     background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-safety.svg') no-repeat
 }
 .svg .menu-agriculture a i {
@@ -1341,7 +1341,7 @@ body {
 .svg .menu-ocean a i {
     background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-ocean.svg') no-repeat
 }
-.svg .menu-global a i {
+.svg .menu-global-development a i {
     background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-development.svg') no-repeat
 }
 .svg .menu-manufacturing a i {
@@ -1356,7 +1356,7 @@ body {
 .svg .menu-geospatial a i {
     background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-geospatial.svg') no-repeat
 }
-.svg .menu-jobs a i {
+.svg .menu-jobs-skills a i {
     background:url('//next.data.gov/wp-content/themes/roots-nextdatagov/assets/img/topic-jobs-and-skills.svg') no-repeat
 }
 .svg .menu-business a i {

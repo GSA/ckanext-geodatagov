@@ -6,7 +6,7 @@
     <li class="dropdown menu-topics"><a class="dropdown-toggle" data-toggle="dropdown">Topics<b class="caret"></b></a>
       <ul class="dropdown-menu topics">
         {% for menu_2 in menus['Primary'] if menu_2['parent_id'] == menu_1['id'] %}
-          <li class="menu-{{ menu_2['name'].lower() }}"><a href="{{ menu_2['link'] }}"><i></i><span>{{ menu_2['name'] }}</span></a></li>
+          <li class="menu-{{ menu_2['name'].lower().replace(" & ", "-").replace(" ", "-") }}"><a href="{{ menu_2['link'] }}"><i></i><span>{{ menu_2['name'] }}</span></a></li>
         {% endfor %}
       </ul>
     <li>
