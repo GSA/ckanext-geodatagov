@@ -388,6 +388,7 @@ class Demo(p.SingletonPlugin):
                 'is_map_viewer_format' : geodatagov_helpers.is_map_viewer_format,
                 'get_map_viewer_params': geodatagov_helpers.get_map_viewer_params,
                 'render_datetime_datagov': geodatagov_helpers.render_datetime_datagov,
+                'get_dynamic_menu': geodatagov_helpers.get_dynamic_menu,
                 }
 
     ## IActions
