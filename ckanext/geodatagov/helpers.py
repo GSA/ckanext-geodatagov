@@ -1,4 +1,5 @@
-import urllib
+import urllib, urllib2, json, re
+import os.path, time
 import logging
 
 from pylons import config
@@ -156,3 +157,40 @@ def is_preview_format(resource):
 
 def is_map_format(resource):
     return is_type_format('map', resource)
+
+def get_dynamic_menu():
+    # TODO not safe to use /tmp folder
+    filename = '/tmp/ckan_dynamic_menu.json'
+    url = 'http://next.data.gov/wp-content/plugins/datagov-custom/wp_download_links.php'
+    time_file = 0
+    time_current = time.time()
+    try:
+        time_file = os.path.getmtime(filename)
+    except:
+        pass
+
+    # check to see if file is older than 1 hour
+    if (time_current - time_file) < 3600:
+        file_obj = open(filename)
+        file_conent = file_obj.read()
+    else:
+        # it means file is old, or does not exist
+        # fetch new content
+        try:
+            resource = urllib2.urlopen(url)
+        except:
+            file_obj = open(filename)
+            file_conent = file_obj.read()
+        else:
+            file_obj = open(filename, 'w')
+            file_conent = resource.read()
+            file_obj.write(file_conent)
+
+    file_obj.close()
+    # remove jsonp wrapper "jsonCallback(JSON);"
+    re_obj = re.compile(r"^jsonCallback\((.*)\);$", re.DOTALL)
+    json_menu = re_obj.sub(r"\1", file_conent)
+
+    menus = json.loads(json_menu)
+
+    return menus

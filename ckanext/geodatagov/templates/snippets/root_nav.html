@@ -1,5 +1,20 @@
+{% set menus = h.get_dynamic_menu() %}
 <nav class="primary">
-
 <ul class="nav navbar-nav navbar-right" id="menu-primary-navigation">
+  {% for menu_1 in menus['Primary'] if not menu_1['parent_id'] %}
+    {% if menu_1['name'] == 'Data' %}
+      <li class="active"><a href="/dataset">Data</a></li>
+    {% elif menu_1['name'] == 'Topics' %}
+      <li class="dropdown yamm-fw menu-topics"><a class="dropdown-toggle" data-toggle="dropdown">Topics<b class="caret"></b></a>
+        <ul class="dropdown-menu topics">
+          {% for menu_2 in menus['Primary'] if menu_2['parent_id'] == menu_1['id'] %}
+            <li class="menu-{{ menu_2['name'].lower() }}"><a href="{{ menu_2['link'] }}"><i></i><span>{{ menu_2['name'] }}</span></a></li>
+          {% endfor %}
+        </ul>
+      <li>
+    {% else %}
+      <li><a href="{{ menu_1['link'] }}">{{ menu_1['name'] }}</a></li>
+    {% endif %}
+  {% endfor %}
 </ul>
 </nav>

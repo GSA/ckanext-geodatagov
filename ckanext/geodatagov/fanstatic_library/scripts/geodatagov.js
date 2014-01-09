@@ -95,69 +95,7 @@ $(document).ready(function () {
         }
     }
 });
-//adding dynamic menu
-(function($) {
 
-    var url = '//next.data.gov/wp-content/plugins/datagov-custom/wp_download_links.php?callback=?';
-    $.ajax({
-        type: 'GET',
-        url: url,
-        async: false,
-        jsonpCallback: 'jsonCallback',
-        contentType: "application/json",
-        dataType: 'jsonp',
-        success: function(json) {
-            var menus = [];
-            var topmenus=[];
-            var topsecondarys=[];
-            var bottommenus=[];
-            $.each(json.Footer, function(i,menu){
-                menus.push('<li><a href="' +menu.link + '">' +menu.name + '</a></li>');
-            });
-            $.each(json.Primary, function(i,topmenu){
-                if(!topmenu.parent_id) {
-                    if(topmenu.name=='Topics'){
-                        topmenus.push('<li class="dropdown yamm-fw menu-topics"><a data-toggle="dropdown" class="dropdown-toggle">Topics<b class="caret"></b></a><ul class="dropdown-menu topics"></ul></li>');
-                    }
-                    else if(topmenu.name=='Data') {
-                        topmenus.push('<li class="active"><a href="/dataset">' +topmenu.name + '</a></li>');
-                    }
-                    else{
-                        topmenus.push('<li><a href="' +topmenu.link + '">' +topmenu.name + '</a></li>');
-                    }
-                }
-            });
-            $.each(json.Primary, function(i,topsecondary){
-                if(topsecondary.parent_id ) {
-                    var Menuclass = topsecondary.name;
-                    Menuclass = Menuclass.toLowerCase();
-                    topsecondarys.push('<li class="menu-' +Menuclass+ '"><a href="' +topsecondary.link + '"><i></i><span>' +topsecondary.name + '</span></a></li>');
-                }
-            });
-            $.each(json.Primary, function(i,bottommenu){
-                if(!bottommenu.parent_id) {
-                    if(bottommenu.name=='Topics'){
-                        bottommenus.push('<li class="dropdown menu-topics"><a data-toggle="dropdown" class="dropdown-toggle">Topics<b class="caret"></b></a><ul class="dropdown-menu topics"></ul></li>');
-                    }
-                    else if(bottommenu.name=='Data') {
-                        bottommenus.push('<li class="active"><a href="/dataset">' +bottommenu.name + '</a></li>');
-                    }
-                    else{
-                        bottommenus.push('<li><a href="' +bottommenu.link + '">' +bottommenu.name + '</a></li>');
-                    }
-                }
-            });
-            $('#menu-primary-navigation').append( topmenus.join('') );
-            $('#menu-primary-navigation .dropdown-menu').append( topsecondarys.join('') );
-            $('#menu-primary-navigation-1').append( bottommenus.join('') );
-            $('#menu-footer').prepend(menus.join('') );
-            $('#menu-primary-navigation-1 .dropdown-menu').append( topsecondarys.join('') );
-        },
-        error: function(e) {
-            console.log(e.message);
-        }
-    });
-})(jQuery);
 // fix for dynamic menu to check current domain and assign menu
 
 jQuery(window).load(function(){

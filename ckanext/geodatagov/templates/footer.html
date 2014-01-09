@@ -20,13 +20,12 @@
     </div>
     <nav role="navigation" class="col-md-2 col-lg-2">
         <ul class="nav" id="menu-primary-navigation-1">
-
-
+        {% snippet "snippets/footer_menu_primary.html" %}
         </ul>
     </nav>
     <nav role="navigation" class="col-md-2 col-lg-2">
         <ul class="nav" id="menu-footer">
-
+            {% snippet "snippets/footer_menu.html" %}
             {% if c.userobj%}
             <li class="local-link"> <a href="{{ h.url_for('/user/_logout') }}" title="{{ _('Log out') }}"></a> </li>
             {% else %}
