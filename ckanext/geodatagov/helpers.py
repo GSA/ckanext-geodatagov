@@ -1,5 +1,5 @@
 import urllib, urllib2, json, re, HTMLParser
-import os.path, time
+import os, os.path, time
 import logging
 
 from pylons import config
@@ -177,10 +177,12 @@ def get_dynamic_menu():
         # it means file is old, or does not exist
         # fetch new content
         try:
-            resource = urllib2.urlopen(url)
+            resource = urllib2.urlopen(url, timeout=3)
         except:
             file_obj = open(filename)
             file_conent = file_obj.read()
+            # touch the file, so that it wont keep re-trying and slow down page loading
+            os.utime(filename, None)
         else:
             file_obj = open(filename, 'w')
             file_conent = resource.read()
