@@ -1428,7 +1428,9 @@ color: #333;
 .ie8 .yamm-fw .dropdown-menu{min-width:970px;left:-437px !important;padding:10px 0;}
 .ie9 .yamm-fw .dropdown-menu{min-width:970px;left:-427px !important;padding:10px 0;}
 .ie10 .yamm-fw .dropdown-menu{min-width:970px;left:-427px !important;padding:10px 0;}
-ul.topics{text-align: center;}
+ul.topics{
+    text-align: center;
+}
 .masthead .container .top-nav .primary ul li a:hover .caret {
     border-bottom-color: #777777;
     border-top-color: #777777;
