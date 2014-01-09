@@ -1,4 +1,4 @@
-import urllib, urllib2, json, re
+import urllib, urllib2, json, re, HTMLParser
 import os.path, time
 import logging
 
@@ -190,6 +190,9 @@ def get_dynamic_menu():
     # remove jsonp wrapper "jsonCallback(JSON);"
     re_obj = re.compile(r"^jsonCallback\((.*)\);$", re.DOTALL)
     json_menu = re_obj.sub(r"\1", file_conent)
+    # unescape &amp; or alike
+    html_parser =  HTMLParser.HTMLParser()
+    json_menu = html_parser.unescape(json_menu)
 
     menus = json.loads(json_menu)
 
