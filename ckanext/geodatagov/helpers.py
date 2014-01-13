@@ -161,7 +161,7 @@ def is_map_format(resource):
 def get_dynamic_menu():
     # TODO not safe to use /tmp folder
     filename = '/tmp/ckan_dynamic_menu.json'
-    url = 'http://next.data.gov/wp-content/plugins/datagov-custom/wp_download_links.php'
+    url = 'http://www.data.gov/wp-content/plugins/datagov-custom/wp_download_links.php'
     time_file = 0
     time_current = time.time()
     try:
