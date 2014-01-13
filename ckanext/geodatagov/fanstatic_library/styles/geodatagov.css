@@ -1408,7 +1408,7 @@ body {
 }
 .yamm-fw .dropdown-menu{
     min-width:970px;
-    left:-435px !important;
+    left:-518px !important;
     padding:10px 0;
 }
 .leaflet-top, .leaflet-bottom{z-index:10;}
@@ -1422,12 +1422,12 @@ body {
 #menu-primary-navigation-1 .dropdown-menu{font-size: 16px;}
 .navbar-nav > .dropdown.open > a{border-bottom:5px solid #dde5ed;}
 @media screen and (-webkit-min-device-pixel-ratio:0) {
-    .yamm-fw .dropdown-menu{min-width:970px;left:-425px !important;padding:10px 0;}
+    .yamm-fw .dropdown-menu{min-width:970px;left:-509px !important;padding:10px 0;}
 }
 .ie8 .yamm-fw ul.topics li a i{width:70px;}
-.ie8 .yamm-fw .dropdown-menu{min-width:970px;left:-437px !important;padding:10px 0;}
-.ie9 .yamm-fw .dropdown-menu{min-width:970px;left:-427px !important;padding:10px 0;}
-.ie10 .yamm-fw .dropdown-menu{min-width:970px;left:-427px !important;padding:10px 0;}
+.ie8 .yamm-fw .dropdown-menu{min-width:970px;left:-520px !important;padding:10px 0;}
+.ie9 .yamm-fw .dropdown-menu{min-width:970px;left:-511px !important;padding:10px 0;}
+.ie10 .yamm-fw .dropdown-menu{min-width:970px;left:-511px !important;padding:10px 0;}
 #menu-primary-navigation ul.topics{
     text-align: center;
 }
