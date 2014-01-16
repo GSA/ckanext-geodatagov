@@ -343,7 +343,7 @@ class Demo(p.SingletonPlugin):
         fq = pkg_dict.get('fq', '')
 
         if pkg_dict.get('sort') in (None, 'rank'):
-            pkg_dict['sort'] = 'metadata_modified desc'
+            pkg_dict['sort'] = 'views_recent desc'
 
         # only show collections on bulk update page and when the facet is explictely added
 
