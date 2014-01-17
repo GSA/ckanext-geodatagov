@@ -1072,20 +1072,24 @@ body .searchbox-row.skip-navigation {
     -moz-osx-font-smoothing:grayscale
 }
 .btn_new {
-    -moz-user-select: none;
-    background-image: none;
-    border: 1px solid rgba(0, 0, 0, 0);
-    border-radius: 4px;
-    cursor: pointer;
-    display: inline-block;
-    font-size: 16px;
-    font-weight: normal;
-    line-height: 1.42857;
-    margin-bottom: 0;
-    padding: 6px 12px;
-    text-align: center;
-    vertical-align: middle;
-    white-space: nowrap;
+    display:inline-block;
+    margin-bottom:0;
+    font-weight:normal;
+    text-align:center;
+    vertical-align:middle;
+    cursor:pointer;
+    background-image:none;
+    border:1px solid transparent;
+    white-space:nowrap;
+    padding:6px 12px;
+    font-size:14px;
+    line-height:1.428571429;
+    border-radius:4px;
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    -o-user-select:none;
+    user-select:none
 }
 .btn-default {
     background-color: #FFFFFF;
@@ -1441,3 +1445,9 @@ body {
 }
 .nav li.dropdown.open .caret, .nav li.dropdown.open.active .caret, .nav li.dropdown.open a:hover .caret, .nav li.dropdown.open a:focus .caret{ border-bottom-color: #777777;
     border-top-color: #777777;}
+.site-footer input[type='text']{
+    border-color:#ccc;
+}
+.masthead input[type='text']{
+    border-color:#ccc;
+}
