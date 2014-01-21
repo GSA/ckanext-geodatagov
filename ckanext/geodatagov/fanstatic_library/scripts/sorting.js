@@ -1,4 +1,16 @@
 jQuery( document ).ready(function() {
+
+       /**
+	* for all Show more/show less links modify link to take you to that facet
+	**/
+	$('a#facet_read_more').each( function() { 
+			var name = $(this).attr('name').split("sm_")[1];
+			var url = $(this).attr('href');
+			
+			if(url.indexOf('#') == -1)
+			  $(this).attr('href', url + '#' + name);
+		});
+
 	/**
 	* for Alphabatical sort set param 'sortType' to alpha
 	* for Count sort set param 'sortType' to count

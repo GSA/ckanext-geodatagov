@@ -447,7 +447,7 @@ class Demo(p.SingletonPlugin):
                                 ('groups', 'Topics'),
                                 ('harvest_source_title', 'Harvest Source'),
                                 ('capacity', 'Visibility'),
-                                ('dataset_type', 'Dataset Type'),
+                                ('dataset_type', 'Resource Type'),
                                ])
         else:
             return facets_dict
