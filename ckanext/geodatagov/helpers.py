@@ -1,5 +1,5 @@
 import urllib, urllib2, json, re, HTMLParser
-import os, os.path, time
+import os, time
 import logging
 
 from pylons import config
@@ -159,8 +159,7 @@ def is_map_format(resource):
     return is_type_format('map', resource)
 
 def get_dynamic_menu():
-    # TODO not safe to use /tmp folder
-    filename = '/tmp/ckan_dynamic_menu.json'
+    filename = os.path.join(os.path.dirname(__file__), 'dynamic_menu/menu.json')
     url = 'http://www.data.gov/wp-content/plugins/datagov-custom/wp_download_links.php'
     time_file = 0
     time_current = time.time()
@@ -176,15 +175,20 @@ def get_dynamic_menu():
     else:
         # it means file is old, or does not exist
         # fetch new content
+        if os.path.exists(filename):
+            sec_timeout = 5
+        else:
+            sec_timeout = 20 # longer urlopen timeout if there is no backup file.
+
         try:
-            resource = urllib2.urlopen(url, timeout=3)
+            resource = urllib2.urlopen(url, timeout=sec_timeout)
         except:
             file_obj = open(filename)
             file_conent = file_obj.read()
             # touch the file, so that it wont keep re-trying and slow down page loading
             os.utime(filename, None)
         else:
-            file_obj = open(filename, 'w')
+            file_obj = open(filename, 'w+')
             file_conent = resource.read()
             file_obj.write(file_conent)
 
