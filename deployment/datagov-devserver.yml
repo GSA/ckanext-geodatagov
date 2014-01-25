@@ -313,13 +313,20 @@
       get_url: url="https://raw.github.com/okfn/ckan/master/ckan/config/who.ini" dest="/etc/ckan/who.ini"
 
 ######################################################
-#Temporary fix until PR is merged on ckanext-spatial
+#Temporary fixes until PRs are merged on ckanext-spatial
 ######################################################
     - name: remove default ckan_pycsw.py
       action: file path=/usr/lib/ckan/src/ckanext-spatial/bin/ckan_pycsw.py state=absent
 
-    - name: download default ckan who.ini
-      get_url: url="https://github.com/kalxas/ckanext-spatial/raw/bb4eaae1c03d16fc674ef135479ee854ce302d4c/bin/ckan_pycsw.py" dest="/usr/lib/ckan/src/ckanext-spatial/bin/ckan_pycsw.py"
+    - name: download patched ckan_pycsw.py
+      get_url: url="https://github.com/kalxas/ckanext-spatial/raw/51-arcgis-pycsw/bin/ckan_pycsw.py" dest="/usr/lib/ckan/src/ckanext-spatial/bin/ckan_pycsw.py"
+
+    - name: download datajson2iso template
+      get_url: url="https://github.com/kalxas/ckanext-spatial/raw/51-arcgis-pycsw/ckanext/spatial/templates/ckanext/spatial/datajson2iso.xml" dest="/usr/lib/ckan/src/ckanext-spatial/ckanext/spatial/templates/ckanext/spatial/datajson2iso.xml"
+
+    - name: download arcgisjson2iso template
+      get_url: url="https://github.com/kalxas/ckanext-spatial/raw/51-arcgis-pycsw/ckanext/spatial/templates/ckanext/spatial/arcgisjson2iso.xml" dest="/usr/lib/ckan/src/ckanext-spatial/ckanext/spatial/templates/ckanext/spatial/arcgisjson2iso.xml"
+
 ######################################################
 
     - name: Initialize ckan db
