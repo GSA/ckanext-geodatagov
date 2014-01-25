@@ -328,6 +328,16 @@
       get_url: url="https://github.com/kalxas/ckanext-spatial/raw/51-arcgis-pycsw/ckanext/spatial/templates/ckanext/spatial/arcgisjson2iso.xml" dest="/usr/lib/ckan/src/ckanext-spatial/ckanext/spatial/templates/ckanext/spatial/arcgisjson2iso.xml"
 
 ######################################################
+#Harvester 500 error fix
+######################################################
+
+    - name: remove default view.py
+      action: file path=/usr/lib/ckan/src/ckanext-harvest/ckanext/harvest/controllers/view.py state=absent
+
+    - name: download patched view.py
+      get_url: url="https://github.com/kalxas/ckanext-harvest/raw/80-harvester-500-errors/ckanext/harvest/controllers/view.py" dest="/usr/lib/ckan/src/ckanext-harvest/ckanext/harvest/controllers/view.py"
+
+######################################################
 
     - name: Initialize ckan db
       action: command ckan db init
