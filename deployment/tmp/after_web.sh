@@ -14,3 +14,5 @@ fi
 
 service memcached start
 service httpd restart
+
+chown apache:apache -R /usr/lib/ckan/src/ckanext-geodatagov/ckanext/geodatagov/dynamic_menu
