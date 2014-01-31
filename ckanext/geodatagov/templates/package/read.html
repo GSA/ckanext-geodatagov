@@ -98,6 +98,14 @@
           <th scope="row" class="dataset-label">Metadata Date</th>
           <td>{{ h.render_datetime_datagov(h.get_pkg_dict_extra(c.pkg_dict, 'metadata-date')) or h.get_pkg_dict_extra(c.pkg_dict, 'metadata-date') or 'Unknown' }}</td>
         </tr>
+		<tr>
+          <th scope="row" class="dataset-label">Metadata Created Date</th>
+          <td>{{ h.render_datetime_datagov(c.pkg_dict.metadata_created) or 'Unknown' }}</td>
+        </tr>
+		<tr>
+          <th scope="row" class="dataset-label">Metadata Updated Date</th>
+          <td>{{ h.render_datetime_datagov(c.pkg_dict.metadata_modified) or 'Unknown' }}</td>
+        </tr>		
         {% if h.get_pkg_dict_extra(c.pkg_dict, 'identifier') %}
           {% set exclude_list = ['metadata-date', 'publisher', 'identifier', 'maintainer_email', 'maintainer', 'resource-type'] %}
           <tr>

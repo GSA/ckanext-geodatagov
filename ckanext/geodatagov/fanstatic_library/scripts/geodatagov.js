@@ -45,8 +45,27 @@ this.ckan.module('geodatagov-search-helper-message', function($, _) {
   };
 });
 
+function GetURLParameter(sParam) {
+    var sPageURL = window.location.search.substring(1);
+    var sURLVariables = sPageURL.split('&');
+    for (var i = 0; i < sURLVariables.length; i++)  {
+        var sParameterName = sURLVariables[i].split('=');
+        if (sParameterName[0] == sParam) 
+            return sParameterName[1];        		
+    }
+	
+    return 0;
+}
+
+
 $(document).ready(function () {
-//    let's check if we just came from data.gov community
+
+    var sort = GetURLParameter('sort');	
+	
+	if(sort != 0 )
+	   $("#field-order-by option[value='none']").remove();
+	
+    // let's check if we just came from data.gov community
     if ('' !== document.referrer) {
         var parts = document.referrer.split( '/' );
 
