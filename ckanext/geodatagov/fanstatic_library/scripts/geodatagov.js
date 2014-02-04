@@ -62,14 +62,14 @@ $(document).ready(function () {
 
     var sort = GetURLParameter('sort');	
 	
-	if(sort != 0 ) {
+	if(sort != 0 && sort != 'none') {
 	   $("#field-order-by option[value='none']").remove();
 	   var sortVal = decodeURIComponent(sort).replace(/\+/g, ' ');	   
 	   var sortTxt = $("#field-order-by option[value='" + sortVal + "']").text();
 	   $("#sort_option").html("Datasets ordered by " + sortTxt);
 	}
 	else {
-		$("#sort_option").html("Datasets ordered by Popularity");
+		$("#sort_option").html("Datasets ordered by Popular");
 	}
 	
     // let's check if we just came from data.gov community

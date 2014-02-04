@@ -45,6 +45,7 @@
         <div id="dataset-search-ext">{% block dataset_search_ext %}{% endblock %}</div>
         <div class="results">
           {{ h.snippet('snippets/sort_by.html', sort=c.sort_by_selected) }}
+  
           <strong>
             {% snippet 'snippets/search_result_text.html', query=c.q, count=c.page.item_count, type='dataset' %}
           </strong>
