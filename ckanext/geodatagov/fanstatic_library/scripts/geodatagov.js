@@ -61,15 +61,17 @@ function GetURLParameter(sParam) {
 $(document).ready(function () {
 
     var sort = GetURLParameter('sort');	
+    var q = GetURLParameter('q');	
 	
-	if(sort != 0 && sort != 'none') {
-	   $("#field-order-by option[value='none']").remove();
+	if(sort == 0 && q == 0)
+	   $("#sort_option").html("Datasets ordered by Popular");
+	else if(sort == 'none')
+	   $("#sort_option").html("Datasets ordered by Relevance");
+	else {
+	$("#field-order-by option[value='none']").remove();
 	   var sortVal = decodeURIComponent(sort).replace(/\+/g, ' ');	   
 	   var sortTxt = $("#field-order-by option[value='" + sortVal + "']").text();
 	   $("#sort_option").html("Datasets ordered by " + sortTxt);
-	}
-	else {
-		$("#sort_option").html("Datasets ordered by Popular");
 	}
 	
     // let's check if we just came from data.gov community
