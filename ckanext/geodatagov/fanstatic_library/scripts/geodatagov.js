@@ -65,8 +65,10 @@ $(document).ready(function () {
 	
 	if(sort == 0 && q == 0)
 	   $("#sort_option").html("Datasets ordered by Popular");
-	else if(sort == 'none')
+	else if(sort == 'none') {
 	   $("#sort_option").html("Datasets ordered by Relevance");
+	   $("#field-order-by").val('score desc, name asc');
+	}
 	else {
 	$("#field-order-by option[value='none']").remove();
 	   var sortVal = decodeURIComponent(sort).replace(/\+/g, ' ');	   
