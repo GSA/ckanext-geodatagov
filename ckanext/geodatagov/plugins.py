@@ -345,7 +345,7 @@ class Demo(p.SingletonPlugin):
         if pkg_dict.get('sort') in (None, 'rank'):
             pkg_dict['sort'] = 'views_recent desc'
 		
-		if pkg_dict.get('sort') in ('none'):
+        if pkg_dict.get('sort') in ('none'):
             pkg_dict['sort'] = 'score desc, name asc'
 
         # only show collections on bulk update page and when the facet is explictely added
