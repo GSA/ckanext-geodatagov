@@ -3,3 +3,5 @@
 0 0 * * 0 /usr/lib/ckan/bin/paster --plugin=ckanext-spatial ckan-pycsw set_keywords -p /etc/ckan/pycsw-all.cfg -u http://localhost/
 # sync metadata records daily
 0 * * * * /usr/lib/ckan/bin/paster --plugin=ckanext-spatial ckan-pycsw load -p /etc/ckan/pycsw-all.cfg -u http://localhost/
+# reindex FTS GIN every Sunday at 0400h
+0 4 * * 0 /usr/bin/pycsw-fts-reindex.py /etc/ckan/pycsw-all.cfg
