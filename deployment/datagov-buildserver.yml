@@ -79,6 +79,33 @@
     - name: install requirements for spatial
       action: pip requirements=/usr/lib/ckan/src/ckanext-spatial/pip-requirements.txt virtualenv=/usr/lib/ckan/
 
+######################################################
+#Temporary fixes until PRs are merged on ckanext-spatial
+######################################################
+    - name: remove default ckan_pycsw.py
+      action: file path=/usr/lib/ckan/src/ckanext-spatial/bin/ckan_pycsw.py state=absent
+
+    - name: download patched ckan_pycsw.py
+      get_url: url="https://github.com/kalxas/ckanext-spatial/raw/51-arcgis-pycsw/bin/ckan_pycsw.py" dest="/usr/lib/ckan/src/ckanext-spatial/bin/ckan_pycsw.py"
+
+    - name: download datajson2iso template
+      get_url: url="https://github.com/kalxas/ckanext-spatial/raw/51-arcgis-pycsw/ckanext/spatial/templates/ckanext/spatial/datajson2iso.xml" dest="/usr/lib/ckan/src/ckanext-spatial/ckanext/spatial/templates/ckanext/spatial/datajson2iso.xml"
+
+    - name: download arcgisjson2iso template
+      get_url: url="https://github.com/kalxas/ckanext-spatial/raw/51-arcgis-pycsw/ckanext/spatial/templates/ckanext/spatial/arcgisjson2iso.xml" dest="/usr/lib/ckan/src/ckanext-spatial/ckanext/spatial/templates/ckanext/spatial/arcgisjson2iso.xml"
+
+######################################################
+#Harvester 500 error fix
+######################################################
+
+    - name: remove default view.py
+      action: file path=/usr/lib/ckan/src/ckanext-harvest/ckanext/harvest/controllers/view.py state=absent
+
+    - name: download patched view.py
+      get_url: url="https://github.com/kalxas/ckanext-harvest/raw/80-harvester-500-errors/ckanext/harvest/controllers/view.py" dest="/usr/lib/ckan/src/ckanext-harvest/ckanext/harvest/controllers/view.py"
+
+######################################################
+
     - name: get datajson extension
       action: git repo=https://github.com/FuhuXia/ckanext-datajson dest=/usr/lib/ckan/src/ckanext-datajson version=dev
 
@@ -93,6 +120,15 @@
 
     - name: install supervisor
       action: pip name=supervisor virtualenv=/usr/lib/ckan/
+
+    - name: get pycsw version
+      action: git repo=https://github.com/geopython/pycsw.git dest=/usr/lib/ckan/src/pycsw version=1.8.0-rc1
+
+    - name: run setup build for pycsw
+      action: command chdir=/usr/lib/ckan/src/pycsw/ ../../bin/python setup.py build
+
+    - name: run setup install for pycsw
+      action: command chdir=/usr/lib/ckan/src/pycsw/ ../../bin/python setup.py install
 
     - name: remove old repo
       action: file path=/var/www/ckan-repo/master state=absent
@@ -119,6 +155,10 @@
         - etc/cron.daily/remove_old_sessions
         - etc/init/supervisor.conf
         - var/lib/tomcat6/webapps/fgdc2iso.war
+        - etc/ckan/pycsw-all.cfg
+        - etc/ckan/pycsw-collection.cfg
+        - etc/ckan/pycsw.wsgi
+        - etc/cron.d/ckan-pycsw
 
     - name: copy executables
       action: copy src=$item dest=/$item mode=744
@@ -126,6 +166,7 @@
         - usr/bin/ckan
         - tmp/after_web.sh
         - tmp/after_harvester.sh
+        - usr/lib/ckan/bin/pycsw-db-admin.py
 
     - name: create superviserctl symlink
       action: file src=/usr/lib/ckan/bin/supervisorctl dest=/usr/bin/supervisorctl state=link
@@ -146,10 +187,10 @@
       action: service name=httpd state=restarted
 
     - name: build rpm main 
-      action: command chdir=/var/www/ckan-repo/master/ fpm -t rpm -s dir --description='geo.data.gov web frontend' --after-install=/tmp/after_web.sh -n geo.data.gov.web --iteration $iteration -v $version -d memcached -d postgresql -d httpd -d mod_wsgi -d geos -d cronie -d python-psycopg2 -d xmlsec1 -d xmlsec1-openssl -d swig -d m2crypto --config-files /etc/ckan/who.ini --config-files /etc/ckan/production.ini --config-files /etc/httpd/conf.d/ckan.conf /usr/bin/ckan /usr/lib/ckan/ /etc/ckan/ /etc/httpd/conf.d/ckan.conf /etc/cron.daily/remove_old_sessions
+      action: command chdir=/var/www/ckan-repo/master/ fpm -t rpm -s dir --description='geo.data.gov web frontend' --after-install=/tmp/after_web.sh -n geo.data.gov.web --iteration $iteration -v $version -d memcached -d postgresql -d httpd -d mod_wsgi -d geos -d cronie -d python-psycopg2 -d xmlsec1 -d xmlsec1-openssl -d swig -d m2crypto --config-files /etc/ckan/who.ini --config-files /etc/ckan/production.ini --config-files /etc/httpd/conf.d/ckan.conf --config-files /etc/ckan/pycsw-all.cfg --config-files /etc/ckan/pycsw-collection.cfg /usr/bin/ckan /usr/lib/ckan/ /etc/ckan/ /etc/httpd/conf.d/ckan.conf /etc/cron.daily/remove_old_sessions
 
     - name: build rpm harvester 
-      action: command chdir=/var/www/ckan-repo/master/ fpm -t rpm -s dir --description='geo.data.gov harvester frontend' --after-install=/tmp/after_harvester.sh -n geo.data.gov.harvester --iteration $iteration -v $version -d geos -d postgresql -d redis -d python-psycopg2 -d tomcat6 -d java-openjdk -d libxslt -d libxml2 -d xmlsec1 -d xmlsec1-openssl -d swig -d m2crypto -d cronie --config-files /etc/ckan/who.ini --config-files /etc/ckan/production.ini /usr/bin/ckan /usr/lib/ckan/ /etc/ckan/ /etc/init/supervisor.conf /etc/supervisord.conf /usr/bin/supervisorctl /var/lib/tomcat6/webapps/fgdc2iso.war /etc/cron.d/ckan-harvest
+      action: command chdir=/var/www/ckan-repo/master/ fpm -t rpm -s dir --description='geo.data.gov harvester frontend' --after-install=/tmp/after_harvester.sh -n geo.data.gov.harvester --iteration $iteration -v $version -d geos -d postgresql -d redis -d python-psycopg2 -d tomcat6 -d java-openjdk -d libxslt -d libxml2 -d xmlsec1 -d xmlsec1-openssl -d swig -d m2crypto -d cronie --config-files /etc/ckan/who.ini --config-files /etc/ckan/production.ini --config-files /etc/ckan/pycsw-all.cfg --config-files /etc/ckan/pycsw-collection.cfg /usr/bin/ckan /usr/lib/ckan/ /etc/ckan/ /etc/init/supervisor.conf /etc/supervisord.conf /usr/bin/supervisorctl /var/lib/tomcat6/webapps/fgdc2iso.war /etc/cron.d/ckan-harvest /etc/cron.d/ckan-pycsw
 
     - name: create repo
       action: command createrepo /var/www/ckan-repo/master/
