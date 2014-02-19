@@ -64,8 +64,13 @@ CURSOR = CONN.cursor()
 
 if CMD == 'vacuumdb':
     try:
-        LOGGER.info('Running vacuumdb')
-        CURSOR.execute('vacuumdb')
+        LOGGER.info('Running vacuum')
+        old_isolation_level = CONN.isolation_level
+        CONN.set_isolation_level(0)
+        query = "VACUUM"
+        CURSOR.execute(query)
+        CONN.commit()
+        CONN.set_isolation_level(old_isolation_level)
     except Exception, err:
         LOGGER.error(err)
         raise
