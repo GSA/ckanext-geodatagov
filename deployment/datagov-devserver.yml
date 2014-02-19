@@ -366,7 +366,7 @@
         - etc/ckan/pycsw-collection.cfg
         - etc/ckan/pycsw.wsgi
         - etc/cron.d/ckan-pycsw
-        - usr/bin/pycsw-fts-reindex.py
+        - usr/bin/pycsw-db-admin.py
         # - etc/httpd/conf.d/ckan.conf
 
     - name: create pycsw database

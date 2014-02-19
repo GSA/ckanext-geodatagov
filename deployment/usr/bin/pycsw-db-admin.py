@@ -40,11 +40,16 @@ def _parse_db_connection_string(db_conn_str):
         'password': password
     }
 
-if len(sys.argv) < 2:
-    print 'Usage: %s /path/to/pycsw.cfg' % sys.argv[0]
+if len(sys.argv) < 3:
+    print 'Usage: %s <vacuumdb|reindex_fts> /path/to/pycsw.cfg' % sys.argv[0]
     sys.exit(1)
 
-CONFIG = _load_config(sys.argv[1])
+if sys.argv[1] not in ['vacuumdb', 'reindex_fts']:
+    print 'ERROR: Invalid command.  vacuumdb or reindex_fts required'
+    sys.exit(2)
+
+CMD = sys.argv[1]
+CONFIG = _load_config(sys.argv[2])
 DBC = _parse_db_connection_string(CONFIG.get('repository', 'database'))
 
 try:
@@ -57,12 +62,21 @@ except Exception, err:
 
 CURSOR = CONN.cursor()
 
-try:
-    LOGGER.info('Dropping FTS index')
-    CURSOR.execute('drop index fts_gin_idx')
-    LOGGER.info('Creating FTS index')
-    CURSOR.execute(
-        'create index fts_gin_idx on records using gin(anytext_tsvector)')
-except Exception, err:
-    LOGGER.error(err)
-    raise
+if CMD == 'vacuumdb':
+    try:
+        LOGGER.info('Running vacuumdb')
+        CURSOR.execute('vacuumdb')
+    except Exception, err:
+        LOGGER.error(err)
+        raise
+
+elif CMD == 'reindex_fts':
+    try:
+        LOGGER.info('Dropping FTS index')
+        CURSOR.execute('drop index fts_gin_idx')
+        LOGGER.info('Creating FTS index')
+        CURSOR.execute(
+            'create index fts_gin_idx on records using gin(anytext_tsvector)')
+    except Exception, err:
+        LOGGER.error(err)
+        raise
