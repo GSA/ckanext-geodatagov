@@ -351,7 +351,7 @@
 
 #pycsw setup
     - name: get pycsw version
-      action: git repo=https://github.com/geopython/pycsw.git dest=/usr/lib/ckan/src/pycsw version=1.8.0-beta2
+      action: git repo=https://github.com/geopython/pycsw.git dest=/usr/lib/ckan/src/pycsw version=1.8.0
 
     - name: run setup build for pycsw
       action: command chdir=/usr/lib/ckan/src/pycsw/ ../../bin/python setup.py build
@@ -366,6 +366,7 @@
         - etc/ckan/pycsw-collection.cfg
         - etc/ckan/pycsw.wsgi
         - etc/cron.d/ckan-pycsw
+        - usr/lib/ckan/bin/pycsw-db-admin.py
         # - etc/httpd/conf.d/ckan.conf
 
     - name: create pycsw database
