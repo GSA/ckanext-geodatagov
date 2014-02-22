@@ -118,11 +118,11 @@
           </tr>
           <tr>
             <th scope="row" class="dataset-label">Maintainer</th>
-            <td>{{ h.get_pkg_dict_extra(c.pkg_dict, 'maintainer', 'Unknown') }}</td>
+            <td>{{ pkg_dict.maintainer }}</td>
           </tr>
           <tr>
             <th scope="row" class="dataset-label">Maintainer Email</th>
-            <td>{{ h.get_pkg_dict_extra(c.pkg_dict, 'maintainer_email', 'Unknown') }}</td>
+            <td>{{ pkg_dict.maintainer_email }}</td>
           </tr>
         {% else %}
           {% set exclude_list = ['metadata-date', 'dataset-reference-date', 'responsible-party', 'contact-email', 'resource-type'] %}
