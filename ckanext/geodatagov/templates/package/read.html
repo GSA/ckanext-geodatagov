@@ -49,8 +49,10 @@
             <p class="description">
               <a href="/harvest/object/{{ harvest_object_id }}">Download Metadata</a>
               {% if ho_formats.object_format == 'ISO-19139' %}
-                &middot;
-                <a href="/harvest/object/{{ harvest_object_id }}/html">View Full Metadata</a>
+                {% if not h.get_pkg_dict_extra(c.pkg_dict, 'identifier') %}
+                  &middot;
+                  <a href="/harvest/object/{{ harvest_object_id }}/html">View Full Metadata</a>
+                {% endif %}
               {% endif %}
             </p>
           </li>
