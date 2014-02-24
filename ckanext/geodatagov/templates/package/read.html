@@ -43,8 +43,13 @@
         <ul class="resource-list">
           <li class="resource-item">
             <strong class="heading">
+            {% if h.get_pkg_dict_extra(c.pkg_dict, 'identifier') %}
+              <span class="format-label" property="dc:format" data-format="Data.json">Data.json</span>
+              Data.json Metadata
+            {% else %}
               <span class="format-label" property="dc:format" data-format="{{ ho_formats.object_format }}">{{ ho_formats.object_format }}</span>
               {{ ho_formats.object_format }} Metadata
+            {% endif %}
             </strong>
             <p class="description">
               <a href="/harvest/object/{{ harvest_object_id }}">Download Metadata</a>
