@@ -70,8 +70,14 @@ def get_harvest_object_formats(harvest_object_id):
             }
 
 def get_harvest_source_type(harvester_id):
-    package = p.toolkit.get_action('harvest_source_show')({}, {'id': harvester_id})
-    return package['source_type']
+    source_type = None
+    try:
+        package = p.toolkit.get_action('harvest_source_show')({}, {'id': harvester_id})
+        source_type =  package['source_type']
+    except:
+        pass
+
+    return source_type
 
 def get_collection_package(collection_package_id):
     package = p.toolkit.get_action('package_show')({}, {'id': collection_package_id})
