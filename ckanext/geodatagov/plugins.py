@@ -156,6 +156,7 @@ class DataGovHarvest(ckanext.harvest.plugin.Harvest):
                             ('frequency', 'Frequency'),
                             ('source_type','Type'),
                             ('organization', 'Organizations'),
+                            ('publisher', 'Subagencies'),							
                            ])
 
     def organization_facets(self, facets_dict, organization_type, package_type):
@@ -165,6 +166,7 @@ class DataGovHarvest(ckanext.harvest.plugin.Harvest):
 
         return OrderedDict([('frequency', 'Frequency'),
                             ('source_type','Type'),
+                            ('publisher', 'Subagencies'),
                            ])
 
 def get_filename_and_extension(resource):
@@ -438,6 +440,7 @@ class Demo(p.SingletonPlugin):
                             ('organization_type', 'Organization Types'),
                             ('organization', 'Organizations'),
                             ('vocab_category_all', 'Topic Categories'),
+                            ('publisher', 'Subagencies'),
                            ## ('extras_progress', 'Progress'),
                            ])
 
@@ -451,6 +454,7 @@ class Demo(p.SingletonPlugin):
                                 ('harvest_source_title', 'Harvest Source'),
                                 ('capacity', 'Visibility'),
                                 ('dataset_type', 'Resource Type'),
+                                ('publisher', 'Subagencies'),
                                ])
         else:
             return facets_dict
@@ -467,6 +471,7 @@ class Demo(p.SingletonPlugin):
                                 ('res_format', 'Formats'),
                                 ('organization', 'Organizations'),
                                 (key, 'Categories'),
+                                ('publisher', 'Subagencies'),
                                ])
         else:
             return facets_dict
