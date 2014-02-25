@@ -15,6 +15,7 @@
 {% block package_resources %}
 
   {% set collection_package_id = h.get_pkg_dict_extra(c.pkg_dict, 'collection_package_id', '') %}
+  {% set harvest_source_type = h.get_harvest_source_type(h.get_pkg_dict_extra(pkg, 'harvest_source_id', None)) %}
   {% if h.get_pkg_dict_extra(c.pkg_dict, 'collection_metadata', '') %}
     <section class="module-content">
       <h3>{{ _('Collection') }}</h3>
@@ -43,14 +44,21 @@
         <ul class="resource-list">
           <li class="resource-item">
             <strong class="heading">
+            {% if harvest_source_type == 'datajson' %}
+              <span class="format-label" property="dc:format" data-format="Data.json">Data.json</span>
+              Data.json Metadata
+            {% else %}
               <span class="format-label" property="dc:format" data-format="{{ ho_formats.object_format }}">{{ ho_formats.object_format }}</span>
               {{ ho_formats.object_format }} Metadata
+            {% endif %}
             </strong>
             <p class="description">
               <a href="/harvest/object/{{ harvest_object_id }}">Download Metadata</a>
               {% if ho_formats.object_format == 'ISO-19139' %}
-                &middot;
-                <a href="/harvest/object/{{ harvest_object_id }}/html">View Full Metadata</a>
+                {% if harvest_source_type != 'datajson' %}
+                  &middot;
+                  <a href="/harvest/object/{{ harvest_object_id }}/html">View Full Metadata</a>
+                {% endif %}
               {% endif %}
             </p>
           </li>
@@ -85,6 +93,7 @@
 {% endblock %}
 
 {% block package_additional_info %}
+{% set harvest_source_type = h.get_harvest_source_type(h.get_pkg_dict_extra(pkg, 'harvest_source_id', None)) %}
   <section class="module-content additional-info">
     <h3>{{ _('About this Dataset') }}</h3>
     <table class="table table-striped table-bordered table-condensed" data-module="table-toggle-more">
@@ -94,10 +103,12 @@
           <th scope="row" class="dataset-label">Resource Type</th>
           <td>{{ h.get_pkg_dict_extra(c.pkg_dict, 'resource-type', 'Unknown')|capitalize }}</td>
         </tr>
+        {% if harvest_source_type != 'datajson' %}
         <tr>
           <th scope="row" class="dataset-label">Metadata Date</th>
           <td>{{ h.render_datetime_datagov(h.get_pkg_dict_extra(c.pkg_dict, 'metadata-date')) or h.get_pkg_dict_extra(c.pkg_dict, 'metadata-date') or 'Unknown' }}</td>
         </tr>
+        {% endif %}
 		<tr>
           <th scope="row" class="dataset-label">Metadata Created Date</th>
           <td>{{ h.render_datetime_datagov(c.pkg_dict.metadata_created) or 'Unknown' }}</td>
@@ -106,7 +117,7 @@
           <th scope="row" class="dataset-label">Metadata Updated Date</th>
           <td>{{ h.render_datetime_datagov(c.pkg_dict.metadata_modified) or 'Unknown' }}</td>
         </tr>		
-        {% if h.get_pkg_dict_extra(c.pkg_dict, 'identifier') %}
+        {% if harvest_source_type == 'datajson' %}
           {% set exclude_list = ['metadata-date', 'publisher', 'identifier', 'maintainer_email', 'maintainer', 'resource-type'] %}
           <tr>
             <th scope="row" class="dataset-label">Publisher</th>
@@ -118,11 +129,11 @@
           </tr>
           <tr>
             <th scope="row" class="dataset-label">Maintainer</th>
-            <td>{{ h.get_pkg_dict_extra(c.pkg_dict, 'maintainer', 'Unknown') }}</td>
+            <td>{{ pkg_dict.maintainer }}</td>
           </tr>
           <tr>
             <th scope="row" class="dataset-label">Maintainer Email</th>
-            <td>{{ h.get_pkg_dict_extra(c.pkg_dict, 'maintainer_email', 'Unknown') }}</td>
+            <td>{{ pkg_dict.maintainer_email }}</td>
           </tr>
         {% else %}
           {% set exclude_list = ['metadata-date', 'dataset-reference-date', 'responsible-party', 'contact-email', 'resource-type'] %}

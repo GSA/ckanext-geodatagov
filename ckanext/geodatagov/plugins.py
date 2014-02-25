@@ -394,6 +394,7 @@ class Demo(p.SingletonPlugin):
                 'get_map_viewer_params': geodatagov_helpers.get_map_viewer_params,
                 'render_datetime_datagov': geodatagov_helpers.render_datetime_datagov,
                 'get_dynamic_menu': geodatagov_helpers.get_dynamic_menu,
+                'get_harvest_source_type': geodatagov_helpers.get_harvest_source_type,
                 }
 
     ## IActions
