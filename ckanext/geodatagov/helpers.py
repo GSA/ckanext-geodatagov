@@ -69,6 +69,10 @@ def get_harvest_object_formats(harvest_object_id):
             'original_format_type': format_type(original_format_name),
             }
 
+def get_harvest_source_type(harvester_id):
+    package = p.toolkit.get_action('harvest_source_show')({}, {'id': harvester_id})
+    return package['source_type']
+
 def get_collection_package(collection_package_id):
     package = p.toolkit.get_action('package_show')({}, {'id': collection_package_id})
     return package
