@@ -1479,69 +1479,69 @@ ul.topics li a i:hover {
 
 /*below are styles where we change icons to css */
 
-.menu-health a i:before{
+#menu-primary-navigation .menu-health a i:before{
     content: "\e016";
 }
-.menu-energy a i:before{
+#menu-primary-navigation .menu-energy a i:before{
     content: "\e008";
 }
-.menu-ethics a i:before{
+#menu-primary-navigation .menu-ethics a i:before{
     content: "\e009";
 }
-.menu-education a i:before{
+#menu-primary-navigation .menu-education a i:before{
     content: "\e007";
 }
-.menu-finance a i:before{
+#menu-primary-navigation .menu-finance a i:before{
     content: "\e00a";
 }
-.menu-climate a i:before{
+#menu-primary-navigation .menu-climate a i:before{
     content: "\e002"
 }
-.menu-law a i:before{
+#menu-primary-navigation .menu-law a i:before{
     content: "\e00f"
 }
-.menu-science-research a i:before{
+#menu-primary-navigation .menu-science-research a i:before{
     content: "\e012";
 }
-.menu-public-safety a i:before{
+#menu-primary-navigation .menu-public-safety a i:before{
     content: "\e013"
 }
-.menu-agriculture a i:before{
+#menu-primary-navigation .menu-agriculture a i:before{
     content: "\e00b"
 }
-.menu-ocean a i:before{
+#menu-primary-navigation .menu-ocean a i:before{
     content: "\e011"
 }
-.menu-global-development a i:before{
+#menu-primary-navigation .menu-global-development a i:before{
     content: "\e006"
 }
-.menu-manufacturing a i:before{
+#menu-primary-navigation .menu-manufacturing a i:before{
     content: "\e010";
 }
-.menu-consumer a i:before{
+#menu-primary-navigation .menu-consumer a i:before{
     content: "\e003"
 }
-.menu-weather a i:before{
+#menu-primary-navigation .menu-weather a i:before{
     content: "\e015";
 }
-.menu-geospatial a i:before{
+#menu-primary-navigation .menu-geospatial a i:before{
     content: "\e00c";
 }
-.menu-jobs-skills a i:before{
+#menu-primary-navigation .menu-jobs-skills a i:before{
     content: "\e00e";
 }
-.menu-business a i:before{
+#menu-primary-navigation .menu-business a i:before{
     content: "\e000";
 }
-.menu-counties a i:before{
+#menu-primary-navigation .menu-counties a i:before{
     content: "\e004";
 }
-.menu-states a i:before{
+#menu-primary-navigation .menu-states a i:before{
     content: "\e014";
 }
-.menu-cities a i:before{
+#menu-primary-navigation .menu-cities a i:before{
     content: "\e001";
 }
-.menu-developers a i:before{
+#menu-primary-navigation .menu-developers a i:before{
     content: "\e005";
 }
