@@ -147,7 +147,14 @@
           </tr>
           <tr>
             <th scope="row" class="dataset-label">Contact Email</th>
-            <td>{{ h.mail_to(h.get_pkg_dict_extra(c.pkg_dict, 'contact-email', 'Unknown')) }}</td>
+            <td>
+			 {% set contact_email = h.get_pkg_dict_extra(c.pkg_dict, 'contact-email', 'Unknown') %}
+			 {% if contact_email == 'Unknown'%}
+			  {{contact_email}}
+			 {% else %}
+              {{ h.mail_to(email_address=contact_email) }}	
+             {% endif %}	
+			</td>
           </tr>
         {% endif %}
 
