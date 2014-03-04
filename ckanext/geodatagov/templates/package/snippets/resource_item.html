@@ -35,7 +35,7 @@
     {% elif is_web_format %}
     <i class="icon-external-link"></i>
     {{ _('Visit page') }}
-    {% elif is_preview_format %}
+    {% elif is_preview_format and h.is_preview_available(res, pkg.id)  %}
     <i class="icon-search"></i>
     {{ _('Preview') }}
     {% else %}
