@@ -407,9 +407,20 @@ jQuery( document ).ready(function() {
                 }
             });
 
+			var read_more_url = $("a[name='sm_" + id + "']").attr('href');
+			var flag = false;
+			if(read_more_url.indexOf("_" + id + "_limit=0") != -1)
+			   flag = true;
+			
             $.each(listitems, function(idx, itm) {
-                if(cnt > 0)
+                if(cnt > 0) {
+				    if(flag == true) {
+					   var li_url = $(itm).find('a').attr('href');
+					   li_url = li_url.replace("_" + id + "_limit=0", "");
+					   $(itm).find('a').attr('href', li_url);
+					}
                     mylist1.append(itm);
+				}
                 cnt--;
             });
         });
