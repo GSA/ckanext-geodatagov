@@ -385,6 +385,7 @@ class Demo(p.SingletonPlugin):
                 'get_harvest_object_formats': geodatagov_helpers.get_harvest_object_formats,
                 'get_harvest_source_link': geodatagov_helpers.get_harvest_source_link,
                 'get_validation_profiles': geodatagov_helpers.get_validation_profiles,
+                'get_validation_schema': geodatagov_helpers.get_validation_schema,
                 'get_collection_package': geodatagov_helpers.get_collection_package,
                 'resource_preview_custom': geodatagov_helpers.resource_preview_custom,
                 'is_web_format': geodatagov_helpers.is_web_format,
