@@ -46,6 +46,7 @@ import json
 from ckan.logic.converters import convert_from_extras
 from ckan.lib.navl.validators import ignore_missing
 from sqlalchemy.util import OrderedDict
+import ckanext.geodatagov.commands as cs
 
 log = logging.getLogger(__name__)
 
@@ -149,7 +150,7 @@ class DataGovHarvest(ckanext.harvest.plugin.Harvest):
         return schema
 
     def dataset_facets(self, facets_dict, package_type):
-
+       
         if package_type <> 'harvest':
             return facets_dict
 
@@ -443,8 +444,8 @@ class Demo(p.SingletonPlugin):
                             ('groups', 'Topics'),
                             ('organization_type', 'Organization Types'),
                             ('organization', 'Organizations'),
-                            ('vocab_category_all', 'Topic Categories'),
-                            ('publisher', 'Subagencies'),
+							('publisher', 'Subagencies'),
+                            ('vocab_category_all', 'Topic Categories'),                            
                            ## ('extras_progress', 'Progress'),
                            ])
 
