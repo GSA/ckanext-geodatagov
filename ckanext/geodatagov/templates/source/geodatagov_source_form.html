@@ -28,6 +28,18 @@
            </div>
          </div>
 
+         <div class="control-group harvest-types">
+           <label class="control-label">Validation Schema</label>
+           <div class="controls">
+             {% for key, value in h.get_validation_schema() %}
+               {% set checked = key == (data.validator_schema or '')  %}
+               <label class="radio">
+                 <input type="radio" name="validator_schema" value="{{ key }}" {{ "checked " if checked }}>
+                 {{ value }}
+               </label>
+             {% endfor %}
+           </div>
+         </div>
 
 </fieldset>
 

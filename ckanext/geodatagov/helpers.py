@@ -28,6 +28,14 @@ def render_datetime_datagov(date_str):
 def get_validation_profiles():
     return VALIDATION_PROFILES
 
+def get_validation_schema():
+    try:
+        from ckanext.datajson.harvester_base import VALIDATION_SCHEMA
+    except ImportError:
+        return None
+
+    return VALIDATION_SCHEMA
+
 def get_harvest_object_formats(harvest_object_id):
     try:
         obj = p.toolkit.get_action('harvest_object_show')({}, {'id': harvest_object_id})
