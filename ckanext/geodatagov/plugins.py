@@ -150,7 +150,7 @@ class DataGovHarvest(ckanext.harvest.plugin.Harvest):
         return schema
 
     def dataset_facets(self, facets_dict, package_type):
-        cs.db_solr_sync()
+
         if package_type <> 'harvest':
             return facets_dict
 
@@ -158,7 +158,7 @@ class DataGovHarvest(ckanext.harvest.plugin.Harvest):
                             ('frequency', 'Frequency'),
                             ('source_type','Type'),
                             ('organization', 'Organizations'),
-                            ('publisher', 'Subagencies'),							
+                            #('publisher', 'Publisher'),							
                            ])
 
     def organization_facets(self, facets_dict, organization_type, package_type):
@@ -168,7 +168,7 @@ class DataGovHarvest(ckanext.harvest.plugin.Harvest):
 
         return OrderedDict([('frequency', 'Frequency'),
                             ('source_type','Type'),
-                            ('publisher', 'Subagencies'),
+                            #('publisher', 'Publisher'),
                            ])
 
 def get_filename_and_extension(resource):
@@ -392,7 +392,7 @@ class Demo(p.SingletonPlugin):
                 'is_web_format': geodatagov_helpers.is_web_format,
                 'saml2_user_edit_url': self.saml2_user_edit_url,
                 'is_preview_format': geodatagov_helpers.is_preview_format,
-		  'is_preview_available': geodatagov_helpers.is_preview_available,
+                'is_preview_available': geodatagov_helpers.is_preview_available,
                 'is_map_format': geodatagov_helpers.is_map_format,
                 'is_map_viewer_format' : geodatagov_helpers.is_map_viewer_format,
                 'get_map_viewer_params': geodatagov_helpers.get_map_viewer_params,
@@ -444,7 +444,7 @@ class Demo(p.SingletonPlugin):
                             ('groups', 'Topics'),
                             ('organization_type', 'Organization Types'),
                             ('organization', 'Organizations'),
-				('publisher', 'Subagencies'),
+                            ('publisher', 'Publisher'),
                             ('vocab_category_all', 'Topic Categories'),                            
                            ## ('extras_progress', 'Progress'),
                            ])
@@ -459,7 +459,7 @@ class Demo(p.SingletonPlugin):
                                 ('harvest_source_title', 'Harvest Source'),
                                 ('capacity', 'Visibility'),
                                 ('dataset_type', 'Resource Type'),
-                                ('publisher', 'Subagencies'),
+                                ('publisher', 'Publisher'),
                                ])
         else:
             return facets_dict
@@ -476,7 +476,7 @@ class Demo(p.SingletonPlugin):
                                 ('res_format', 'Formats'),
                                 ('organization', 'Organizations'),
                                 (key, 'Categories'),
-                                ('publisher', 'Subagencies'),
+                                #('publisher', 'Publisher'),
                                ])
         else:
             return facets_dict
