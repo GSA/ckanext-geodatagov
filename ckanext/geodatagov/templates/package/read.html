@@ -133,7 +133,14 @@
           </tr>
           <tr>
             <th scope="row" class="dataset-label">Maintainer Email</th>
-            <td>{{ pkg_dict.maintainer_email }}</td>
+            <td>
+             {% set maintainer_email = pkg_dict.maintainer_email %}
+			 {% if maintainer_email %}
+              {{ h.mail_to(email_address=pkg_dict.maintainer_email) }}
+             {% else %}
+              {{ maintainer_email }} 	
+             {% endif %}
+			</td>
           </tr>
         {% else %}
           {% set exclude_list = ['metadata-date', 'dataset-reference-date', 'responsible-party', 'contact-email', 'resource-type'] %}
@@ -147,7 +154,14 @@
           </tr>
           <tr>
             <th scope="row" class="dataset-label">Contact Email</th>
-            <td>{{ h.get_pkg_dict_extra(c.pkg_dict, 'contact-email', 'Unknown') }}</td>
+            <td>			 
+             {% set contact_email = h.get_pkg_dict_extra(c.pkg_dict, 'contact-email', 'Unknown') %}
+             {% if contact_email == 'Unknown'%}
+              {{contact_email}}
+             {% else %}
+              {{ h.mail_to(email_address=contact_email) }}	
+             {% endif %}
+            </td>
           </tr>
         {% endif %}
 

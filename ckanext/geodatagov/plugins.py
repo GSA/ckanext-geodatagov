@@ -5,6 +5,7 @@ import paste.auth.auth_tkt
 import mimetypes
 from paste.auth.auth_tkt import maybe_encode, encode_ip_timestamp
 from pylons import request
+import ckan.lib.datapreview as datapreview
 
 mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
 
@@ -45,6 +46,7 @@ import json
 from ckan.logic.converters import convert_from_extras
 from ckan.lib.navl.validators import ignore_missing
 from sqlalchemy.util import OrderedDict
+import ckanext.geodatagov.commands as cs
 
 log = logging.getLogger(__name__)
 
@@ -156,6 +158,7 @@ class DataGovHarvest(ckanext.harvest.plugin.Harvest):
                             ('frequency', 'Frequency'),
                             ('source_type','Type'),
                             ('organization', 'Organizations'),
+                            #('publisher', 'Publisher'),							
                            ])
 
     def organization_facets(self, facets_dict, organization_type, package_type):
@@ -165,6 +168,7 @@ class DataGovHarvest(ckanext.harvest.plugin.Harvest):
 
         return OrderedDict([('frequency', 'Frequency'),
                             ('source_type','Type'),
+                            #('publisher', 'Publisher'),
                            ])
 
 def get_filename_and_extension(resource):
@@ -382,11 +386,13 @@ class Demo(p.SingletonPlugin):
                 'get_harvest_object_formats': geodatagov_helpers.get_harvest_object_formats,
                 'get_harvest_source_link': geodatagov_helpers.get_harvest_source_link,
                 'get_validation_profiles': geodatagov_helpers.get_validation_profiles,
+                'get_validation_schema': geodatagov_helpers.get_validation_schema,
                 'get_collection_package': geodatagov_helpers.get_collection_package,
                 'resource_preview_custom': geodatagov_helpers.resource_preview_custom,
                 'is_web_format': geodatagov_helpers.is_web_format,
                 'saml2_user_edit_url': self.saml2_user_edit_url,
                 'is_preview_format': geodatagov_helpers.is_preview_format,
+                'is_preview_available': geodatagov_helpers.is_preview_available,
                 'is_map_format': geodatagov_helpers.is_map_format,
                 'is_map_viewer_format' : geodatagov_helpers.is_map_viewer_format,
                 'get_map_viewer_params': geodatagov_helpers.get_map_viewer_params,
@@ -438,7 +444,8 @@ class Demo(p.SingletonPlugin):
                             ('groups', 'Topics'),
                             ('organization_type', 'Organization Types'),
                             ('organization', 'Organizations'),
-                            ('vocab_category_all', 'Topic Categories'),
+                            ('publisher', 'Publisher'),
+                            ('vocab_category_all', 'Topic Categories'),                            
                            ## ('extras_progress', 'Progress'),
                            ])
 
@@ -452,6 +459,7 @@ class Demo(p.SingletonPlugin):
                                 ('harvest_source_title', 'Harvest Source'),
                                 ('capacity', 'Visibility'),
                                 ('dataset_type', 'Resource Type'),
+                                ('publisher', 'Publisher'),
                                ])
         else:
             return facets_dict
@@ -468,6 +476,8 @@ class Demo(p.SingletonPlugin):
                                 ('res_format', 'Formats'),
                                 ('organization', 'Organizations'),
                                 (key, 'Categories'),
+                                #('publisher', 'Publisher'),
                                ])
         else:
             return facets_dict
+
