@@ -86,6 +86,8 @@ class GeoGovCommand(cli.CkanCommand):
         if cmd == 'solr-tracking-update':
             start_date = self.args[1] if len(self.args) > 1 else None
             self.solr_tracking_update(start_date)
+        if cmd == 'db_solr_sync':
+		    self.db_solr_sync()
 
     def get_user_org_mapping(self, location):
         user_org_mapping = open(location)
@@ -321,3 +323,90 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
 #{u'title': 6061, u'theme': 6061, u'accessLevel': 6061, u'publisher': 6061, u'identifier': 6061, u'description': 6060, u'accessURL': 6060, u'distribution': 6060, u'keyword': 6059, u'person': 6057, u'accrualPeriodicity': 6056, u'format': 6047, u'spatial': 6009, u'size': 5964, u'references': 5841, u'dataDictionary': 5841, u'temporal': 5830, u'modified': 5809, u'issued': 5793, u'mbox': 5547, u'granularity': 4434, u'license': 2048, u'dataQuality': 453}
 
 
+    def db_solr_sync(self):
+
+        print str(datetime.datetime.now()) + ' Database Solr Sync fn'
+
+        url = config.get('solr_url') + "/select?q=*%3A*&wt=json&indent=true"
+        response = get_response(url)
+
+        if (response != 'error'):
+
+          sql = "delete from solr_pkg_ids;"
+          q = model.Session.execute(sql)
+          model.Session.commit()
+
+          f = response.read()
+          data = json.loads(f)
+          rows = data.get('response').get('numFound')
+
+          start = 0
+          chunk_size = 1000
+
+          for x in range(0, math.ceil(rows/chunk_size)+1):
+
+            if (x > 0):
+              start = (x*chunk_size) + 1
+
+            response = get_response(url + "&rows=" + str(chunk_size) + "&start=" + str(start))
+            f = response.read()
+            data = json.loads(f)
+            results = data.get('response').get('docs')
+
+            for x in range(0, len(results)):
+              sql = "insert into solr_pkg_ids values (:pkg_id, :metadata_mod_date, :revision_id);"
+              q = model.Session.execute(sql, {'pkg_id' : results[x]['id'], 'metadata_mod_date' : results[x]['metadata_modified'], 'revision_id' : results[x]['revision_id'] })
+              model.Session.commit()
+
+          print str(datetime.datetime.now()) + ' Starting Database to Solr Sync'
+
+          #sql = '''select id as id from package where id not in (select pkg_id from solr_pkg_ids) union all select pr.id as id from package_revision pr inner join solr_pkg_ids s on s.pkg_id = pr.id where to_char(pr.revision_timestamp, 'YYYY-MM-DD HH24:MI:SS.MS') <> to_char(s.metadata_modified_date, 'YYYY-MM-DD HH24:MI:SS.MS') and pr.current = 't';'''
+
+          sql = '''select id from package where id not in (select pkg_id from solr_pkg_ids) union all select id from package p inner join solr_pkg_ids s on s.pkg_id = p.id where p.revision_id <> s.revision_id;'''
+
+          q = model.Session.execute(sql)
+
+          for row in q:
+            try:
+              search.rebuild(row['id'])
+            except ckan.logic.NotFound:
+              print "Error: Not Found."
+            except KeyboardInterrupt:
+              print "Stopped."
+              return
+            except:
+              raise
+
+          print str(datetime.datetime.now()) + ' Starting Solr to Database Sync'
+
+          sql = '''select pkg_id from solr_pkg_ids where pkg_id not in (select id from package);'''
+
+          q = model.Session.execute(sql)
+
+          for row in q:
+            try:
+              search.clear(row[pkg_id])
+            except ckan.logic.NotFound:
+              print "Error: Not Found."
+            except KeyboardInterrupt:
+              print "Stopped."
+              return
+            except:
+              raise
+
+          print "All Sync Done."
+
+def get_response(url):
+    req = Request(url)
+    try:
+      response = urlopen(req)
+    except HTTPError as e:
+      print 'The server couldn\'t fulfill the request.'
+      print 'Error code: ', e.code
+      return 'error'
+    except URLError as e:
+      print 'We failed to reach a server.'
+      print 'Reason: ', e.reason
+      return 'error'
+    else:
+      return response
