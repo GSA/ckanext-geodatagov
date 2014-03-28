@@ -46,7 +46,7 @@ import json
 from ckan.logic.converters import convert_from_extras
 from ckan.lib.navl.validators import ignore_missing
 from sqlalchemy.util import OrderedDict
-import ckanext.geodatagov.commands as cs
+
 
 log = logging.getLogger(__name__)
 
