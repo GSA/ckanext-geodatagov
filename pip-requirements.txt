@@ -1,5 +1,5 @@
--e git+https://github.com/okfn/ckanext-harvest.git@b467f2838958d8ebe14b9b0958cf8fcb3c265b1f#egg=ckanext-harvest
--e git+https://github.com/FuhuXia/ckanext-spatial.git@dev#egg=ckanext-spatial
+-e git+https://github.com/GSA/ckanext-harvest.git@release-datagov#egg=ckanext-harvest
+-e git+https://github.com/GSA/ckanext-spatial.git@datagov#egg=ckanext-spatial
 -e git+https://github.com/okfn/ckanext-qa.git@release-v2.0#egg=ckanext-qa
 -e git+https://github.com/okfn/ckanext-googleanalytics.git@master#egg=ckanext-googleanalytics
 redis==2.7.2
@@ -8,5 +8,5 @@ redis==2.7.2
 ply==3.4
 
 
--e git+https://github.com/okfn/ckanext-saml2.git@master#egg=ckanext-saml2
+-e git+https://github.com/GSA/ckanext-saml2.git@master#egg=ckanext-saml2
 -e git+https://github.com/tobes/pysaml2.git@fixes#egg=pysaml2
