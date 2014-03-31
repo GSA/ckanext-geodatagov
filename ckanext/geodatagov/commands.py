@@ -19,7 +19,10 @@ import xml.etree.ElementTree as ET
 import ckan.lib.munge as munge
 import ckan.plugins as p
 from ckanext.geodatagov.harvesters.arcgis import _slugify
-
+from pylons import config
+from urllib2 import Request, urlopen, URLError, HTTPError
+import time
+import math
 
 import logging
 log = logging.getLogger()
@@ -343,7 +346,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
           start = 0
           chunk_size = 1000
 
-          for x in range(0, math.ceil(rows/chunk_size)+1):
+          for x in range(0, int(math.ceil(rows/chunk_size))+1):
 
             if (x > 0):
               start = (x*chunk_size) + 1
@@ -360,13 +363,49 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
 
           print str(datetime.datetime.now()) + ' Starting Database to Solr Sync'
 
-          #sql = '''select id as id from package where id not in (select pkg_id from solr_pkg_ids) union all select pr.id as id from package_revision pr inner join solr_pkg_ids s on s.pkg_id = pr.id where to_char(pr.revision_timestamp, 'YYYY-MM-DD HH24:MI:SS.MS') <> to_char(s.metadata_modified_date, 'YYYY-MM-DD HH24:MI:SS.MS') and pr.current = 't';'''
-
-          sql = '''select id from package where id not in (select pkg_id from solr_pkg_ids) union all select id from package p inner join solr_pkg_ids s on s.pkg_id = p.id where p.revision_id <> s.revision_id;'''
+          sql = '''WITH ts_table as
+                  ( 
+                    select p.id,
+                    to_char(max(ger.revision_timestamp),'YYYY-MM-DD HH24:MI:SS.MS') as ger_ts,  
+                    to_char(max(gr.revision_timestamp),'YYYY-MM-DD HH24:MI:SS.MS')  as gr_ts, 
+                    to_char(max(ptr.revision_timestamp),'YYYY-MM-DD HH24:MI:SS.MS') as ptr_ts, 
+                    to_char(max(per.revision_timestamp),'YYYY-MM-DD HH24:MI:SS.MS') as per_ts, 
+                    to_char(max(prr.revision_timestamp),'YYYY-MM-DD HH24:MI:SS.MS') as prr_ts, 
+                    to_char(max(pr.revision_timestamp),'YYYY-MM-DD HH24:MI:SS.MS') as pr_ts, 
+                    to_char(max(rg.revision_timestamp),'YYYY-MM-DD HH24:MI:SS.MS') as rg_ts, 
+                    to_char(max(rr.revision_timestamp),'YYYY-MM-DD HH24:MI:SS.MS') as rr_ts, 
+                    to_char(max(r.timestamp),'YYYY-MM-DD HH24:MI:SS.MS') as r_ts
+                    from package p
+                    left join group_extra_revision ger on ger.group_id = p.owner_org and ger.current = 't' and ger.state = 'active' 
+                    left join group_revision gr on p.owner_org = gr.id and gr.current = 't' and gr.state='active'
+                    left join package_tag_revision ptr on ptr.revision_id = p.revision_id and ptr.current = 't' and ptr.state = 'active'
+                    left join package_extra_revision per on per.revision_id = p.revision_id and per.current = 't' and per.state = 'active'
+                    left join package_relationship_revision prr on prr.revision_id = p.revision_id and prr.current = 't' and prr.state = 'active'
+                    left join package_revision pr on pr.revision_id = p.revision_id and pr.current = 't' and pr.state = 'active'
+                    left join resource_group_revision rg on rg.revision_id = p.revision_id and rg.current = 't' and rg.state = 'active'
+                    left join resource_revision rr on rr.revision_id = p.revision_id and rr.current = 't' and rr.state = 'active'
+                    left join revision r on r.id = p.revision_id and r.state = 'active'
+                    group by p.id
+                  )
+                  select sp.pkg_id as id
+                  from ts_table
+                  inner join solr_pkg_ids sp on sp.pkg_id = ts_table.id
+                  where 
+                  to_char(sp.metadata_modified_date,'YYYY-MM-DD HH24:MI:SS.MS') < ts_table.ger_ts
+                  or to_char(sp.metadata_modified_date,'YYYY-MM-DD HH24:MI:SS.MS') < ts_table.gr_ts
+                  or to_char(sp.metadata_modified_date,'YYYY-MM-DD HH24:MI:SS.MS') < ts_table.ptr_ts
+                  or to_char(sp.metadata_modified_date,'YYYY-MM-DD HH24:MI:SS.MS') < ts_table.per_ts
+                  or to_char(sp.metadata_modified_date,'YYYY-MM-DD HH24:MI:SS.MS') < ts_table.prr_ts
+                  or to_char(sp.metadata_modified_date,'YYYY-MM-DD HH24:MI:SS.MS') < ts_table.pr_ts
+                  or to_char(sp.metadata_modified_date,'YYYY-MM-DD HH24:MI:SS.MS') < ts_table.rg_ts
+                  or to_char(sp.metadata_modified_date,'YYYY-MM-DD HH24:MI:SS.MS') < ts_table.rr_ts
+                  or to_char(sp.metadata_modified_date,'YYYY-MM-DD HH24:MI:SS.MS') < ts_table.r_ts
+                  union all
+                  select id as id from package where id not in (select pkg_id from solr_pkg_ids); '''
 
           q = model.Session.execute(sql)
 
-          for row in q:
+          for row in q:           
             try:
               search.rebuild(row['id'])
             except ckan.logic.NotFound:
