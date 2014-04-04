@@ -14,7 +14,7 @@
   {{ super() }}
 
       <div class="faded disclaimer"><small>
-        Federal datasets are subject to the U.S. Federal Government <a href="https://www.data.gov/data-policy">Data Policy</a>. Non-federal participants (e.g., universities, organizations, and tribal, state, and local governments) maintain their own data policies. Data policies influence the usefulness of the data.</small>
+        Federal datasets are subject to the U.S. Federal Government <a href="//www.data.gov/data-policy">Data Policy</a>. Non-federal participants (e.g., universities, organizations, and tribal, state, and local governments) maintain their own data policies. Data policies influence the usefulness of the data.</small>
       </div>
 
 {% endblock %}
@@ -76,7 +76,7 @@
             {% endtrans %}
           {% endif %}
           {% if c.q != '' %}
-            <p class="extra"><b>You are searching in the list of datasets. Show results in <a href="https://www.data.gov/search-results/?group=site&q={{c.q}}">entire Data.gov site</a>.</b></p>
+            <p class="extra"><b>You are searching in the list of datasets. Show results in <a href="//www.data.gov/search-results/?group=site&q={{c.q}}">entire Data.gov site</a>.</b></p>
           {% endif %}
         </div>
       </form>
@@ -96,7 +96,7 @@
       {% snippet 'snippets/search_result_text.html', query=c.q, count=c.page.item_count, type='dataset' %}
     </b>
 	{% if c.q != '' %}
-      <p class="extra"><b>You are searching in the list of datasets. Show results in <a href="https://www.data.gov/search-results/?group=site&q={{c.q}}">entire Data.gov site</a>.</b></p>
+      <p class="extra"><b>You are searching in the list of datasets. Show results in <a href="//www.data.gov/search-results/?group=site&q={{c.q}}">entire Data.gov site</a>.</b></p>
     {% endif %}
 	</div>
   </section>
