@@ -48,7 +48,7 @@
   <div class="controls">
     <select id="field-private_datasets" name="private_datasets">
       {% for option in [(true, _('Private')), (false, _('Public'))] %}
-      <option value="{{ option[0] }}" {% if data.private_datasets and option[0]|lower == data.private_datasets.lower() %}selected="selected"{% endif %}>{{ option[1] }}</option>
+      <option value="{{ option[0] }}" {% if option[0]|lower == data.private_datasets|lower %}selected="selected"{% endif %}>{{ option[1] }}</option>
       {% endfor %}
     </select>
     <i class="icon-question-sign muted" title="{{ _('This will take effect the next time datasets are created or updated during a harvest job') }}" data-toggle="tooltip"></i>
