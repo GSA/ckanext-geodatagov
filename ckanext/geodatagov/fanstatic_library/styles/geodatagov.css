@@ -1402,6 +1402,12 @@ body {
 ul.topics li a i:hover {
     color: #606C7F;
 }
+
+.dropdown.yamm-fw.menu-topics {
+position: static
+}
+
+
 .yamm-fw ul.topics li a span {
     font-size: 14px;
     text-transform: none;
@@ -1415,7 +1421,7 @@ ul.topics li a i:hover {
 }
 .yamm-fw .dropdown-menu{
     min-width:970px;
-    left:-518px !important;
+    left:0 !important;
     padding:10px 0;
 }
 .leaflet-top, .leaflet-bottom{z-index:10;}
