@@ -328,112 +328,143 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
 
     def db_solr_sync(self):
 
-        print str(datetime.datetime.now()) + ' Database Solr Sync fn'
+        print str(datetime.datetime.now()) + ' Entering Database Solr Sync function.'
 
-        url = config.get('solr_url') + "/select?q=*%3A*&wt=json&indent=true"
+        url = config.get('solr_url') + "/select?q=*%3A*&sort=id+asc&fl=id&wt=json&indent=true"
         response = get_response(url)
-
+    
         if (response != 'error'):
-
-          sql = "delete from solr_pkg_ids;"
-          q = model.Session.execute(sql)
-          model.Session.commit()
-
+          
           f = response.read()
           data = json.loads(f)
           rows = data.get('response').get('numFound')
 
           start = 0
-          chunk_size = 1000
+          chunk_size = 1000         
 
+          print str(datetime.datetime.now()) + ' Starting Solr to Database Sync.'
+ 
           for x in range(0, int(math.ceil(rows/chunk_size))+1):
-
-            if (x > 0):
-              start = (x*chunk_size) + 1
-
+		  
+            if(x == 0):
+               start = 0
+			
+            print str(datetime.datetime.now()) + ' ' + url + "&rows=" + str(chunk_size) + "&start=" + str(start)			  
+			  
             response = get_response(url + "&rows=" + str(chunk_size) + "&start=" + str(start))
             f = response.read()
             data = json.loads(f)
             results = data.get('response').get('docs')
 
+            print str(datetime.datetime.now()) + ' Fetched ' + str(start) + ' - ' + str(start + int(data.get('responseHeader').get('params').get('rows')) - 1) + ' of ' + str(rows)			
+			
             for x in range(0, len(results)):
-              sql = "insert into solr_pkg_ids values (:pkg_id, :metadata_mod_date, :revision_id);"
-              q = model.Session.execute(sql, {'pkg_id' : results[x]['id'], 'metadata_mod_date' : results[x]['metadata_modified'], 'revision_id' : results[x]['revision_id'] })
-              model.Session.commit()
+                 sql = '''select count(id) as count from package where id = :pkg_id;'''
+                 q = model.Session.execute(sql, {'pkg_id' : results[x]['id']})            
+                 for row in q:
+                   if(row['count'] == 0):
+                      try:
+                        print str(datetime.datetime.now()) + ' Clearing Package Id: ' + results[x]['id']
+                        search.clear(results[x]['id'])
+                      except ckan.logic.NotFound:
+                        print str(datetime.datetime.now()) + " Error: Not Found."
+                      except KeyboardInterrupt:
+                        print str(datetime.datetime.now()) + " Stopped."
+                        return
+                      except:
+                        raise
+						
+            start = int(data.get('responseHeader').get('params').get('start')) + chunk_size
 
-          print str(datetime.datetime.now()) + ' Starting Database to Solr Sync'
-
-          sql = '''WITH ts_table as
-                  ( 
-                    select p.id,
-                    to_char(max(ger.revision_timestamp),'YYYY-MM-DD HH24:MI:SS.MS') as ger_ts,  
-                    to_char(max(gr.revision_timestamp),'YYYY-MM-DD HH24:MI:SS.MS')  as gr_ts, 
-                    to_char(max(ptr.revision_timestamp),'YYYY-MM-DD HH24:MI:SS.MS') as ptr_ts, 
-                    to_char(max(per.revision_timestamp),'YYYY-MM-DD HH24:MI:SS.MS') as per_ts, 
-                    to_char(max(prr.revision_timestamp),'YYYY-MM-DD HH24:MI:SS.MS') as prr_ts, 
-                    to_char(max(pr.revision_timestamp),'YYYY-MM-DD HH24:MI:SS.MS') as pr_ts, 
-                    to_char(max(rg.revision_timestamp),'YYYY-MM-DD HH24:MI:SS.MS') as rg_ts, 
-                    to_char(max(rr.revision_timestamp),'YYYY-MM-DD HH24:MI:SS.MS') as rr_ts, 
-                    to_char(max(r.timestamp),'YYYY-MM-DD HH24:MI:SS.MS') as r_ts
-                    from package p
-                    left join group_extra_revision ger on ger.group_id = p.owner_org and ger.current = 't' and ger.state = 'active' 
-                    left join group_revision gr on p.owner_org = gr.id and gr.current = 't' and gr.state='active'
-                    left join package_tag_revision ptr on ptr.revision_id = p.revision_id and ptr.current = 't' and ptr.state = 'active'
-                    left join package_extra_revision per on per.revision_id = p.revision_id and per.current = 't' and per.state = 'active'
-                    left join package_relationship_revision prr on prr.revision_id = p.revision_id and prr.current = 't' and prr.state = 'active'
-                    left join package_revision pr on pr.revision_id = p.revision_id and pr.current = 't' and pr.state = 'active'
-                    left join resource_group_revision rg on rg.revision_id = p.revision_id and rg.current = 't' and rg.state = 'active'
-                    left join resource_revision rr on rr.revision_id = p.revision_id and rr.current = 't' and rr.state = 'active'
-                    left join revision r on r.id = p.revision_id and r.state = 'active'
-                    group by p.id
-                  )
-                  select sp.pkg_id as id
-                  from ts_table
-                  inner join solr_pkg_ids sp on sp.pkg_id = ts_table.id
-                  where 
-                  to_char(sp.metadata_modified_date,'YYYY-MM-DD HH24:MI:SS.MS') < ts_table.ger_ts
-                  or to_char(sp.metadata_modified_date,'YYYY-MM-DD HH24:MI:SS.MS') < ts_table.gr_ts
-                  or to_char(sp.metadata_modified_date,'YYYY-MM-DD HH24:MI:SS.MS') < ts_table.ptr_ts
-                  or to_char(sp.metadata_modified_date,'YYYY-MM-DD HH24:MI:SS.MS') < ts_table.per_ts
-                  or to_char(sp.metadata_modified_date,'YYYY-MM-DD HH24:MI:SS.MS') < ts_table.prr_ts
-                  or to_char(sp.metadata_modified_date,'YYYY-MM-DD HH24:MI:SS.MS') < ts_table.pr_ts
-                  or to_char(sp.metadata_modified_date,'YYYY-MM-DD HH24:MI:SS.MS') < ts_table.rg_ts
-                  or to_char(sp.metadata_modified_date,'YYYY-MM-DD HH24:MI:SS.MS') < ts_table.rr_ts
-                  or to_char(sp.metadata_modified_date,'YYYY-MM-DD HH24:MI:SS.MS') < ts_table.r_ts
-                  union all
-                  select id as id from package where id not in (select pkg_id from solr_pkg_ids); '''
-
+          print str(datetime.datetime.now()) + ' Solr to Database Sync Complete.'          			
+          print str(datetime.datetime.now()) + ' Starting Database to Solr Sync.' 
+			
+          url = config.get('solr_url') + "/select?fl=id%2Cmetadata_modified&wt=json&indent=true"
+			
+          sql = '''select p.id, replace(to_char(greatest(max(r.timestamp), 
+                  max(r2.timestamp), 
+                  max(r3.timestamp), 
+                  max(r4.timestamp), 
+                  max(r5.timestamp), 
+                  max(r6.timestamp), 
+                  max(r7.timestamp), 
+                  max(r8.timestamp), 
+                  max(r9.timestamp),
+                  max(ger.revision_timestamp),  
+                  max(gr.revision_timestamp), 
+                  max(ptr.revision_timestamp), 
+                  max(per.revision_timestamp), 
+                  max(prr.revision_timestamp), 
+                  max(prv.revision_timestamp), 
+                  max(rgr.revision_timestamp), 
+                  max(rr.revision_timestamp)), 'YYYY-MM-DDT HH24:MI:SS.MS'), ' ', '') || 'Z' as modified_dt
+                   from package p
+                   left join package_revision prv on prv.id = p.id and prv.current = 't' and prv.state = 'active'
+                   left join revision r on r.id = p.revision_id
+                   left join package_extra pe on pe.package_id = p.id 
+                   left join package_extra_revision per on per.package_id = p.id and per.current = 't' and per.state = 'active'
+                   left join revision r2 on pe.revision_id = r2.id
+                   left join package_relationship pr on pr.subject_package_id = p.id 
+                   left join package_relationship_revision prr on prr.subject_package_id = p.id and prr.current = 't' and prr.state = 'active'
+                   left join revision r3 on pr.revision_id = r3.id
+                   left join package_relationship pre on pre.object_package_id = p.id 
+                   left join package_relationship_revision prr1 on prr1.object_package_id = p.id and prr1.current = 't' and prr1.state = 'active'
+                   left join revision r4 on pre.revision_id = r4.id
+                   left join resource_group rg on rg.package_id = p.id 
+                   left join resource_group_revision rgr on rgr.package_id = p.id and rgr.current = 't' and rgr.state = 'active'
+                   left join revision r5 on rg.revision_id = r5.id
+                   left join resource_group rg1 on rg1.package_id = p.id 
+                   left join resource rs on rs.resource_group_id = rg1.id 
+                   left join resource_revision rr on rr.resource_group_id = rg1.id and rr.current = 't' and rr.state = 'active'
+                   left join revision r6 on rs.revision_id = r6.id
+                   left join package_tag pt on pt.package_id = p.id 
+                   left join package_tag_revision ptr on ptr.package_id = p.id and ptr.current = 't' and ptr.state = 'active'
+                   left join revision r7 on pt.revision_id = r7.id
+                   left join group_extra ge on ge.group_id = p.owner_org
+                   left join group_extra_revision ger on ger.group_id = p.owner_org and ger.current = 't' and ger.state = 'active' 
+                   left join revision r8 on r8.id = ge.revision_id
+                   left join public.group g on g.id = p.owner_org
+                   left join group_revision gr on gr.id = p.owner_org and gr.current = 't' and gr.state = 'active'
+                   left join revision r9 on r9.id = g.revision_id
+                   group by p.id order by p.id;'''            
+			
           q = model.Session.execute(sql)
-
-          for row in q:           
-            try:
-              search.rebuild(row['id'])
-            except ckan.logic.NotFound:
-              print "Error: Not Found."
-            except KeyboardInterrupt:
-              print "Stopped."
-              return
-            except:
-              raise
-
-          print str(datetime.datetime.now()) + ' Starting Solr to Database Sync'
-
-          sql = '''select pkg_id from solr_pkg_ids where pkg_id not in (select id from package);'''
-
-          q = model.Session.execute(sql)
-
+			
           for row in q:
-            try:
-              search.clear(row[pkg_id])
-            except ckan.logic.NotFound:
-              print "Error: Not Found."
-            except KeyboardInterrupt:
-              print "Stopped."
-              return
-            except:
-              raise
+            print str(datetime.datetime.now()) + " Checking Id: " +  row['id'] + "\n" + url +	"&q=id%3A" + row['id']	  
+            response = get_response(url + "&q=id%3A" + row['id']) 
+            f = response.read()
+            data = json.loads(f)
+            count = data.get('response').get('numFound')			
 
-          print "All Sync Done."
+            if(count == 0):
+              try:
+                print str(datetime.datetime.now()) + ' Building Id: ' + row['id']
+                search.rebuild(row['id'])
+              except ckan.logic.NotFound:
+                print "Error: Not Found."
+              except KeyboardInterrupt:
+                print "Stopped."
+                return
+              except:
+                raise
+            else: 
+              results = data.get('response').get('docs')
+              if(results[0]['metadata_modified'] != row['modified_dt']):
+                try:
+                  print str(datetime.datetime.now()) + ' Rebuilding Id: ' + row['id']
+                  print str(datetime.datetime.now()) + ' Modified Date from Solr: ' + results[0]['metadata_modified']
+                  print str(datetime.datetime.now()) + ' Modified Date from Db: ' + row['modified_dt']				  
+                  search.rebuild(row['id'])
+                except ckan.logic.NotFound:
+                  print "Error: Not Found."
+                except KeyboardInterrupt:
+                  print "Stopped."
+                  return
+                except:
+                  raise
+			
+          print str(datetime.datetime.now()) + " All Sync Done."
 
 def get_response(url):
     req = Request(url)
