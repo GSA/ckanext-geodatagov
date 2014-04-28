@@ -1435,7 +1435,7 @@ position: static
 #menu-primary-navigation-1 .dropdown-menu{font-size: 16px;}
 .navbar-nav > .dropdown.open > a{border-bottom:5px solid #dde5ed;}
 @media screen and (-webkit-min-device-pixel-ratio:0) {
-    .yamm-fw .dropdown-menu{min-width:970px;left:-509px !important;padding:10px 0;}
+    .yamm-fw .dropdown-menu{min-width:970px;padding:10px 0;}
 }
 .ie8 .yamm-fw ul.topics li a i{width:70px;}
 .ie8 .yamm-fw .dropdown-menu{min-width:970px;left:-511px !important;padding:10px 0;}
@@ -1485,7 +1485,7 @@ position: static
 /*below are styles where we change icons to css */
 
 #menu-primary-navigation .menu-health a i:before{
-    content: "\e016";
+    content: "\e00d";
 }
 #menu-primary-navigation .menu-energy a i:before{
     content: "\e008";
@@ -1503,37 +1503,37 @@ position: static
     content: "\e002"
 }
 #menu-primary-navigation .menu-law a i:before{
-    content: "\e00f"
+    content: "\e010"
 }
 #menu-primary-navigation .menu-science-research a i:before{
-    content: "\e012";
+    content: "\e013";
 }
 #menu-primary-navigation .menu-public-safety a i:before{
-    content: "\e013"
+    content: "\e014"
 }
 #menu-primary-navigation .menu-agriculture a i:before{
     content: "\e00b"
 }
 #menu-primary-navigation .menu-ocean a i:before{
-    content: "\e011"
+    content: "\e012"
 }
 #menu-primary-navigation .menu-global-development a i:before{
     content: "\e006"
 }
 #menu-primary-navigation .menu-manufacturing a i:before{
-    content: "\e010";
+    content: "\e011";
 }
 #menu-primary-navigation .menu-consumer a i:before{
     content: "\e003"
 }
 #menu-primary-navigation .menu-weather a i:before{
-    content: "\e015";
+    content: "\e016";
 }
 #menu-primary-navigation .menu-geospatial a i:before{
     content: "\e00c";
 }
 #menu-primary-navigation .menu-jobs-skills a i:before{
-    content: "\e00e";
+    content: "\e00f";
 }
 #menu-primary-navigation .menu-business a i:before{
     content: "\e000";
@@ -1542,7 +1542,7 @@ position: static
     content: "\e004";
 }
 #menu-primary-navigation .menu-states a i:before{
-    content: "\e014";
+    content: "\e015";
 }
 #menu-primary-navigation .menu-cities a i:before{
     content: "\e001";
