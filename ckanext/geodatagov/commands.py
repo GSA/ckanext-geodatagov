@@ -427,7 +427,11 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
           
           print str(datetime.datetime.now()) + ' Starting Database to Solr Sync'           
           
-          sql = '''Select id from package where id not in (select pkg_id from solr_pkg_ids); '''
+          #sql = '''Select id from package where id not in (select pkg_id from solr_pkg_ids); '''
+          sql = '''Select p.id as id from package p
+                   left join solr_pkg_ids sp on sp.pkg_id = p.id
+                   where sp.pkg_id is null; '''
+          
           q = model.Session.execute(sql)
           for row in q:
             try:
