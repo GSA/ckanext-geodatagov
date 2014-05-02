@@ -375,7 +375,7 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
             format = 'ArcGIS MAP Preview'
 
         if not resource_url:
-            self._save_object_error('Validation Error: url not in record')
+            self._save_object_error('Validation Error: url not in record', harvest_object, 'Import')
             return False
 
         if not resource_url.startswith('http'):
