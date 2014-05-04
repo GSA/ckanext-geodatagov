@@ -298,7 +298,7 @@
       action: file path=/etc/ckan/who.ini state=absent
 
     - name: download default ckan who.ini
-      get_url: url="https://raw.github.com/okfn/ckan/master/ckan/config/who.ini" dest="/etc/ckan/who.ini"
+      get_url: url="https://raw.githubusercontent.com/GSA/ckan/release-datagov/ckan/config/who.ini" dest="/etc/ckan/who.ini"
 
     - name: Initialize ckan db
       action: command ckan db init
@@ -309,6 +309,8 @@
     - name: after harvester installation script
       action: command /tmp/after_harvester.sh
 
+# After CKAN installation:
+# $ ckan search-index rebuild
 
 #pycsw setup
     - name: get pycsw version
