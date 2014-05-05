@@ -5,6 +5,9 @@
     - name: install epel
       action: command creates=/etc/yum.repos.d/epel.repo rpm -Uvh http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
 
+    - name: install postgres repository
+      action: command rpm -Uvh http://yum.postgresql.org/9.2/redhat/rhel-6-x86_64/pgdg-redhat92-9.2-7.noarch.rpm
+
     - name: make sure packages are installed
       action: yum pkg={{item}} state=installed
       with_items:
@@ -298,7 +301,7 @@
       action: file path=/etc/ckan/who.ini state=absent
 
     - name: download default ckan who.ini
-      get_url: url="https://raw.githubusercontent.com/GSA/ckan/release-datagov/ckan/config/who.ini" dest="/etc/ckan/who.ini"
+      get_url: url="https://github.com/ckan/ckan/raw/366f1620da29ffaecf7e39d400b5223c8a56417e/ckan/config/who.ini" dest="/etc/ckan/who.ini"
 
     - name: Initialize ckan db
       action: command ckan db init
