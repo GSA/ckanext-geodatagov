@@ -212,7 +212,7 @@ def preview_response(url):
     try:
       response = urlopen(req)
     except HTTPError as e:
-      log.error("The server couldn\'t fulfill the request. Error code: " + e.code)
+      log.error("The server couldn\'t fulfill the request. Error code: " + str(e.code))
       return False
     except URLError as e:
       log.error("We failed to reach a server. Reason: " + e.reason)
