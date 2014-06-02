@@ -1,4 +1,4 @@
-import json
+import json, hashlib, datetime, uuid, time
 import logging
 
 import ckan.plugins as p
@@ -8,6 +8,7 @@ from ckanext.geodatagov.plugins import change_resource_details
 import ckan.lib.munge as munge
 import ckan.plugins as p
 from ckanext.geodatagov.harvesters.arcgis import _slugify
+from ckanext.harvest.model import HarvestJob, HarvestObject
 import ckan.logic.schema as schema
 
 log = logging.getLogger(__name__)
@@ -130,6 +131,14 @@ MAPPING = {"title": "title",
            "license": "extras__licence",
            "dataQuality": "extras__data-quality"}
 
+ORG_MAPPING = { 'national-park-service':'nps-gov',
+                'u-s-fish-and-wildlife-service':'fws-gov',
+                'u-s-geological-survey':'usgs-gov',
+                'bureau-of-land-management':'blm-gov',
+                'bureau-of-ocean-energy-management':'boem-gov',
+                'office-of-surface-mining':'osmre-gov',
+                'bureau-of-reclamation':'usbr-gov'}
+
 def create_data_dict(record):
     data_dict = {"extras":[{"key": "metadata-source", "value": "dms"},
                            {"key": "resource-type", "value": "Dataset"},
@@ -231,3 +240,90 @@ def datajson_update(context, data_dict):
     context['return_id_only'] = True
     p.toolkit.get_action('package_update')(context, new_package)
 
+def doi_create(context, data_dict):
+    model = context['model']
+    new_package = data_dict
+    source_hash = hashlib.sha1(json.dumps(data_dict, sort_keys=True)).hexdigest()
+    new_package["extras"].append({"key": "source_hash", "value": source_hash})
+    new_package["extras"].append({"key": "metadata-source", "value": "doi"})
+    new_package["extras"].append({"key": "source_doi_import_identifier", "value": True})
+    owner_org = model.Group.get(ORG_MAPPING.get(new_package['organization']['name']))
+    if not owner_org:
+        print str(datetime.datetime.now()) + ' Fail to import doi id ' + new_package['id'] + '. Organization ' + new_package['organization']['name'] + ' does not exist.'
+        return
+    new_package['owner_org'] = owner_org.name
+    group_name = new_package.pop('owner_name', None)
+    new_package['name'] = _slugify(new_package['title'])[:80]
+    existing_package = model.Package.get(new_package['name'])
+    if existing_package:
+        # new_package['name'] = new_package['name'] + '-' + str(int(time.time()))
+        print str(datetime.datetime.now()) + ' Fail to import doi id ' + new_package['id'] + '. Found same title: ' + new_package['name']
+        return
+
+    resources = []
+    for resource in new_package['resources']:
+        resource.pop('resource_group_id', None)
+        resource.pop('revision_id', None)
+        resource.pop('id', None)
+        resources.append(resource)
+    new_package['resources'] = resources
+
+    obj = HarvestObject(
+        guid=uuid.uuid4().hex,
+        job=context['harvest_job'],
+        content=context['harvestobj'])
+    obj.save()
+    new_package["extras"].append({"key": "harvest_object_id", "value": obj.id})
+
+    context['schema'] = schema.default_create_package_schema()
+    context['schema']['id'] = [p.toolkit.get_validator('not_empty')]
+    context['return_id_only'] = True
+    p.toolkit.get_action('package_create')(context, new_package)
+    print str(datetime.datetime.now()) + ' Imported doi id ' + new_package['id']
+
+def doi_update(context, data_dict):
+    model = context['model']
+    new_package = data_dict
+    source_hash = hashlib.sha1(json.dumps(data_dict, sort_keys=True)).hexdigest()
+    old_package = p.toolkit.get_action('package_show')(
+        {'model': model, 'ignore_auth': True}, {"id":new_package['id']})
+    for extra in old_package['extras']:
+        if extra['key'] == 'source_hash':
+            old_source_hash = extra['value']
+            break
+    else:
+       old_source_hash = None
+
+    if source_hash == old_source_hash and old_package.get('state') =='active':
+        print str(datetime.datetime.now()) + ' No change for doi id ' + new_package['id']
+        return
+
+    new_package["extras"].append({"key": "source_hash", "value": source_hash})
+    new_package["extras"].append({"key": "metadata-source", "value": "doi"})
+    new_package["extras"].append({"key": "source_doi_import_identifier", "value": True})
+    new_package.pop("name", None)
+    owner_org = model.Group.get(ORG_MAPPING.get(new_package['organization']['name']))
+    if not owner_org:
+        print str(datetime.datetime.now()) + ' Fail to update doi id ' + new_package['id'] + '. Organization ' + new_package['organization']['name'] + ' does not exist.'
+        return
+    new_package['owner_org'] = owner_org.name
+    group_name = new_package.pop('owner_name', None)
+
+    resources = []
+    for resource in new_package['resources']:
+        resource.pop('resource_group_id', None)
+        resource.pop('revision_id', None)
+        resource.pop('id', None)
+        resources.append(resource)
+    new_package['resources'] = resources
+
+    obj = HarvestObject(
+        guid=uuid.uuid4().hex,
+        job=context['harvest_job'],
+        content=context['harvestobj'])
+    obj.save()
+    new_package["extras"].append({"key": "harvest_object_id", "value": obj.id})
+
+    context['return_id_only'] = True
+    p.toolkit.get_action('package_update')(context, new_package)
+    print str(datetime.datetime.now()) + ' Updated doi id ' + new_package['id']
