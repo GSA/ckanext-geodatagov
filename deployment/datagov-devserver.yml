@@ -140,22 +140,22 @@
 
     - name: create ckan database
       action: postgresql_db name=ckan owner=geo.gov
-      
+
     - name: install postgis script
       shell: "psql -d ckan -f /usr/pgsql-9.2/share/contrib/postgis-2.1/postgis.sql"
       sudo: yes
       sudo_user: postgres
-      
+
     - name: install postgis script
       shell: "psql -d ckan -f /usr/pgsql-9.2/share/contrib/postgis-2.1/spatial_ref_sys.sql"
       sudo: yes
       sudo_user: postgres
-      
+
     - name: install postgis script
       shell: "psql -d ckan -f /usr/pgsql-9.2/share/contrib/postgis-2.1/rtpostgis.sql"
       sudo: yes
       sudo_user: postgres
-      
+
     - name: install postgis script
       shell: "psql -d ckan -f /usr/pgsql-9.2/share/contrib/postgis-2.1/topology.sql"
       sudo: yes
@@ -296,7 +296,7 @@
 
     - name: point apache.wsgi to development.ini
       action: command sed -i 's/production.ini/development.ini/g' /etc/ckan/apache.wsgi
-     
+
     - name: remove default who.ini
       action: file path=/etc/ckan/who.ini state=absent
 
@@ -317,13 +317,19 @@
 
 #pycsw setup
     - name: get pycsw version
-      action: git repo=https://github.com/geopython/pycsw.git dest=/usr/lib/ckan/src/pycsw version=1.8.0
+      action: git repo=https://github.com/geopython/pycsw.git dest=/usr/lib/ckan/src/pycsw version=datagov
 
     - name: run setup build for pycsw
       action: command chdir=/usr/lib/ckan/src/pycsw/ ../../bin/python setup.py build
 
     - name: run setup install for pycsw
       action: command chdir=/usr/lib/ckan/src/pycsw/ ../../bin/python setup.py install
+
+    - name: install pyproj
+      action: pip name=pyproj virtualenv=/usr/lib/ckan/
+
+    - name: install geolinks
+      action: pip name=geolinks virtualenv=/usr/lib/ckan/
 
     - name: copy pycsw configuration files
       action: copy src={{item}} dest=/{{item}} mode=644
