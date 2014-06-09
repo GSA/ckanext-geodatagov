@@ -238,7 +238,10 @@ def is_map_format(resource):
 
 def get_dynamic_menu():
     filename = os.path.join(os.path.dirname(__file__), 'dynamic_menu/menu.json')
-    url = 'http://www.data.gov/wp-content/plugins/datagov-custom/wp_download_links.php'
+    url = config.get('ckanext.geodatagov.dynamic_menu.url', '')
+    if not url:
+        url = config.get('ckanext.geodatagov.dynamic_menu.url_default', '')
+
     time_file = 0
     time_current = time.time()
     try:
