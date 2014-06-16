@@ -38,6 +38,7 @@
 
 {% block resource_content %}
   {% block resource_read_title %}<h1 class="page-heading">{{ h.resource_display_name(res) | truncate(50) }}</h1>{% endblock %}
+  {% block five_star %} {{ h.qa_stars(c.resource.id) }} {% endblock %}
   {% block resource_read_url %}
     {% if res.url %}
       <p class="muted ellipsis">{{ _('URL:') }} <a href="{{ res.url }}">{{ res.url }}</a></p>
