@@ -1,6 +1,7 @@
 -e git+https://github.com/GSA/ckanext-harvest.git@release-datagov#egg=ckanext-harvest
 -e git+https://github.com/GSA/ckanext-spatial.git@datagov#egg=ckanext-spatial
--e git+https://github.com/okfn/ckanext-qa.git@release-v2.0#egg=ckanext-qa
+-e git+https://github.com/GSA/ckanext-archiver.git@datagov#egg=ckanext-qa
+-e git+https://github.com/GSA/ckanext-qa.git@datagov#egg=ckanext-qa
 -e git+https://github.com/okfn/ckanext-googleanalytics.git@master#egg=ckanext-googleanalytics
 redis==2.7.2
 
