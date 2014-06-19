@@ -1420,3 +1420,14 @@ position: static
 #menu-primary-navigation .menu-developers a i:before{
     content: "\e005";
 }
+.module-ratings {
+  float: right;
+  margin-top: 0;
+  width: 300px;
+}
+.module-content:last-child {
+  clear: both;
+  margin-bottom: 0;
+  padding-bottom: 20px;
+}
+.ckanext-datapreview{clear:both;}
