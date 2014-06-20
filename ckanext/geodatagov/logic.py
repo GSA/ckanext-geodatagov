@@ -256,9 +256,7 @@ def doi_create(context, data_dict):
     new_package['name'] = _slugify(new_package['title'])[:80]
     existing_package = model.Package.get(new_package['name'])
     if existing_package:
-        # new_package['name'] = new_package['name'] + '-' + str(int(time.time()))
-        print str(datetime.datetime.now()) + ' Fail to import doi id ' + new_package['id'] + '. Found same title: ' + new_package['name']
-        return
+        new_package['name'] = new_package['name'] + '-' + str(int(time.time()))
 
     resources = []
     for resource in new_package['resources']:
