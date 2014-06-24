@@ -15,6 +15,7 @@ import ckan.logic.schema as schema
 import ckan.lib.cli as cli
 import requests
 import ckanext.harvest.model as harvest_model
+from ckanext.harvest.model import HarvestSource, HarvestJob
 import xml.etree.ElementTree as ET
 import ckan.lib.munge as munge
 import ckan.plugins as p
@@ -35,6 +36,7 @@ class GeoGovCommand(cli.CkanCommand):
         paster geodatagov import-orgs <data> -c <config>
         paster geodatagov post-install-dbinit -c <config>
         paster geodatagov import-dms -c <config>
+        paster geodatagov import-doi -c <config>
         paster geodatagov clean-deleted -c <config>
     '''
     summary = __doc__.split('\n')[0]
@@ -74,6 +76,8 @@ class GeoGovCommand(cli.CkanCommand):
                 print GeoGovCommand.__doc__
                 return
             self.import_dms(self.args[1])
+        if cmd == 'import-doi':
+            self.import_doi()
         if cmd == 'post-install-dbinit':
             f = open('/usr/lib/ckan/src/ckanext-geodatagov/what_to_alter.sql')
             print "running what_to_alter.sql"
@@ -245,6 +249,135 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                 print str(datetime.datetime.now()) + ' Error when deleting id ' + package_id
                 print e
 
+    def import_doi(self):
+        doi_url = config.get('ckanext.geodatagov.doi.url', '')
+        if not doi_url:
+            print 'ckanext.geodatagov.doi.url not defined in config.'
+            return
+
+        url_list =  doi_url + 'api/search/dataset?qjson={"fl":"id,extras_harvest_object_id","q":"harvest_object_id:[\\\"\\\"%20TO%20*],%20metadata_type:geospatial","sort":"id%20asc","start":0,"limit":0}'
+        url_dataset = doi_url + 'api/action/package_show?id='
+        url_harvestobj = doi_url + 'harvest/object/'
+
+        try:
+            requested = requests.get(url_list, verify=False).json()
+        except Exception, e:
+            print str(datetime.datetime.now()) + ' Error when accessing doi list at ' + url_list
+            print e
+        total = requested['count']
+        pagination = 1000
+        to_import = {}
+        for page in xrange(0, int(math.ceil(float(total)/pagination)) + 1):
+            url_list_dataset = ""
+            input_records = []
+            start = page * pagination
+            url_list_dataset = url_list.replace('"limit":0', '"limit":1000')
+            url_list_dataset = url_list_dataset.replace('"start":0', '"start":' + str(start))
+            try:
+                input_records = requests.get(url_list_dataset, verify=False).json()
+            except Exception, e:
+                print str(datetime.datetime.now()) + ' Error when accessing doi list at ' + url_list
+                print e
+            input_records = input_records['results']
+            for record in input_records:
+                to_import[record['id']] = record['extras']['harvest_object_id']
+
+        collected_ids = set(to_import.keys())
+
+        existing_ids = set([row[0] for row in
+                       model.Session.query(model.Package.id).from_statement(
+                           '''select p.id
+                           from package p
+                           join package_extra pe on p.id = pe.package_id
+                           where pe.key = 'metadata-source' and pe.value = 'doi' ''')])
+
+        context = {}
+        user = logic.get_action('get_site_user')(
+            {'model': model, 'ignore_auth': True}, {}
+        )
+        context['user'] = self.user_name
+
+        source_name = 'import-doi'
+        source_pkg = model.Package.get(source_name)
+        if not source_pkg:
+            log.error('Harvest source %s does not exist', source_name)
+            return
+        source_id =  source_pkg.id
+        source = HarvestSource.get(source_id)
+        if not source:
+            log.error('Harvest source %s does not exist', source_id)
+            return
+
+        # Check if the source is active
+        if not source.active:
+            log.warn('Harvest job cannot be created for inactive source %s', source_id)
+            raise Exception('Can not create jobs on inactive sources')
+
+        job = HarvestJob()
+        job.source = source
+        job.save()
+        context['harvest_job'] = job
+
+        print str(datetime.datetime.now()) + ' Start to import doi datasets.'
+        print 'Datasets found on remote doi server: ' + str(len(collected_ids)) + ', on local: ' + str(len(existing_ids)) + '.'
+
+        ids_to_add = collected_ids - existing_ids
+        print 'Datasets to be added as new: ' + str(len(ids_to_add)) + '.'
+        for num, doi_id in enumerate(ids_to_add):
+            context.pop('package', None)
+            context.pop('group', None)
+            try:
+                new_package = self.get_doi_package(url_dataset + doi_id)
+                new_harvestobj = self.get_doi_harvestobj(url_harvestobj + to_import[doi_id])
+            except Exception, e:
+                print str(datetime.datetime.now()) + ' Error when downlaoding doi id ' + doi_id + ' and harvest object ' + to_import[doi_id]
+                print e
+
+            context['harvestobj'] = new_harvestobj
+            try:
+                logic.get_action('doi_create')(context, new_package)
+            except Exception, e:
+                print str(datetime.datetime.now()) + ' Error when importing doi id ' + doi_id
+                print e
+
+        ids_to_update = collected_ids & existing_ids
+        print 'Datasets to check for update: ' + str(len(ids_to_update)) + '.'
+        for num, doi_id in enumerate(ids_to_update):
+            context.pop('package', None)
+            context.pop('group', None)
+            try:
+                new_package = self.get_doi_package(url_dataset + doi_id)
+                new_harvestobj = self.get_doi_harvestobj(url_harvestobj + to_import[doi_id])
+            except Exception, e:
+                print str(datetime.datetime.now()) + ' Error when downlaoding doi id ' + doi_id + ' and harvest object ' + to_import[doi_id]
+                print e
+            context['harvestobj'] = new_harvestobj
+            try:
+                logic.get_action('doi_update')(context, new_package)
+            except Exception, e:
+                print str(datetime.datetime.now()) + ' Error when updating doi id ' + doi_id
+                print e
+
+        ids_to_delete = existing_ids - collected_ids
+        print 'Datasets to be deleted: ' + str(len(ids_to_delete)) + '.'
+        for num, doi_id in enumerate(ids_to_delete):
+            context.pop('package', None)
+            context.pop('group', None)
+            try:
+                logic.get_action('package_delete')(context, {"id":doi_id})
+                print str(datetime.datetime.now()) + ' Deleted doi id ' + doi_id
+            except Exception, e:
+                print str(datetime.datetime.now()) + ' Error when deleting doi id ' + doi_id
+                print e
+
+    def get_doi_package(self, url_dataset):
+        dataset = requests.get(url_dataset, verify=False).json()
+        dataset = dataset['result']
+        return dataset
+
+    def get_doi_harvestobj(self, url_harvestobj):
+        harvestobj = requests.get(url_harvestobj, verify=False)
+        return harvestobj.text
 
     def clean_deleted(self):
         print str(datetime.datetime.now()) + ' Starting delete'

@@ -416,6 +416,8 @@ class Demo(p.SingletonPlugin):
             'group_catagory_tag_update': geodatagov_logic.group_catagory_tag_update,
             'datajson_create': geodatagov_logic.datajson_create,
             'datajson_update': geodatagov_logic.datajson_update,
+            'doi_create': geodatagov_logic.doi_create,
+            'doi_update': geodatagov_logic.doi_update,
             'package_show_rest': geodatagov_logic.package_show_rest,
         }
 
