@@ -106,7 +106,7 @@
         {% if harvest_source_type != 'datajson' %}
         <tr>
           <th scope="row" class="dataset-label">Metadata Date</th>
-          <td>{{ h.render_datetime_datagov(h.get_pkg_dict_extra(c.pkg_dict, 'metadata-date')) or h.get_pkg_dict_extra(c.pkg_dict, 'metadata-date') or 'Unknown' }}</td>
+          <td><span property="dct:issued">{{ h.render_datetime_datagov(h.get_pkg_dict_extra(c.pkg_dict, 'metadata-date')) or h.get_pkg_dict_extra(c.pkg_dict, 'metadata-date') or 'Unknown' }}</span></td>
         </tr>
         {% endif %}
 		<tr>
@@ -115,32 +115,34 @@
         </tr>
 		<tr>
           <th scope="row" class="dataset-label">Metadata Updated Date</th>
-          <td>{{ h.render_datetime_datagov(c.pkg_dict.metadata_modified) or 'Unknown' }}</td>
+          <td><span property="dct:modified">{{ h.render_datetime_datagov(c.pkg_dict.metadata_modified) or 'Unknown' }}</span></td>
         </tr>		
         {% if harvest_source_type == 'datajson' %}
           {% set exclude_list = ['metadata-date', 'publisher', 'identifier', 'maintainer_email', 'maintainer', 'resource-type'] %}
           <tr>
             <th scope="row" class="dataset-label">Publisher</th>
-            <td>{{ h.get_pkg_dict_extra(c.pkg_dict, 'publisher', 'Unknown') }}</td>
+            <td><span property="dct:publisher">{{ h.get_pkg_dict_extra(c.pkg_dict, 'publisher', 'Unknown') }}<span></td>
           </tr>
           <tr>
             <th scope="row" class="dataset-label">Identifier</th>
-            <td>{{ h.get_pkg_dict_extra(c.pkg_dict, 'identifier', 'Unknown') }}</td>
+            <td><span property="dct:identifier">{{ h.get_pkg_dict_extra(c.pkg_dict, 'identifier', 'Unknown') }}</span></td>
           </tr>
           <tr>
             <th scope="row" class="dataset-label">Maintainer</th>
-            <td>{{ pkg_dict.maintainer }}</td>
+            <td><span property="dcat:contactPoint">{{ pkg_dict.maintainer }}</span></td>
           </tr>
           <tr>
             <th scope="row" class="dataset-label">Maintainer Email</th>
-            <td>
+            <td><div typeof="foaf:Person">
+              <span property="foaf:mbox">
              {% set maintainer_email = pkg_dict.maintainer_email %}
-			 {% if maintainer_email %}
+              {% if maintainer_email %}
               {{ h.mail_to(email_address=pkg_dict.maintainer_email) }}
              {% else %}
               {{ maintainer_email }} 	
              {% endif %}
-			</td>
+              </span></div>
+            </td>
           </tr>
         {% else %}
           {% set exclude_list = ['metadata-date', 'dataset-reference-date', 'responsible-party', 'contact-email', 'resource-type'] %}
@@ -150,17 +152,19 @@
           </tr>
           <tr>
             <th scope="row" class="dataset-label">Responsible Party</th>
-            <td>{{ h.get_responsible_party(h.get_pkg_dict_extra(c.pkg_dict, 'responsible-party')) or 'Unknown' }}</td>
+            <td><span property="dct:publisher">{{ h.get_responsible_party(h.get_pkg_dict_extra(c.pkg_dict, 'responsible-party')) or 'Unknown' }}</span></td>
           </tr>
           <tr>
             <th scope="row" class="dataset-label">Contact Email</th>
-            <td>			 
+            <td><div typeof="foaf:Person">
+              <span property="foaf:mbox">
              {% set contact_email = h.get_pkg_dict_extra(c.pkg_dict, 'contact-email', 'Unknown') %}
              {% if contact_email == 'Unknown'%}
               {{contact_email}}
              {% else %}
               {{ h.mail_to(email_address=contact_email) }}	
              {% endif %}
+             </span></div>
             </td>
           </tr>
         {% endif %}
