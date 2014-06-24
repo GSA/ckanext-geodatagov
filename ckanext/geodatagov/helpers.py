@@ -236,18 +236,20 @@ def is_preview_format(resource):
 def is_map_format(resource):
     return is_type_format('map', resource)
 
-def get_file_size(res_url):
+def get_file_size(res_url):    
     req = urllib2.Request(res_url)
     try:
       response = urllib2.urlopen(req)
-    except HTTPError as e:
+    except HTTPError as e:      
       print 'The server couldn\'t fulfill the request.'
       print 'Error code: ', e.code
       return '0'
-    except URLError as e:
+    except URLError as e:      
       print 'We failed to reach a server.'
       print 'Reason: ', e.reason
       return '0'
+    except:      
+      return '0'    
     else:
       meta = response.info()   
       if(len(meta.getheaders("Content-Length")) > 0):
