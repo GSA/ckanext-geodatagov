@@ -75,6 +75,12 @@
     - name: install requirements for spatial
       action: pip requirements=/usr/lib/ckan/src/ckanext-spatial/pip-requirements.txt virtualenv=/usr/lib/ckan/
 
+    - name: install requirements for archiver
+      action: pip requirements=/usr/lib/ckan/src/ckanext-archiver/pip-requirements.txt virtualenv=/usr/lib/ckan/
+
+    - name: install requirements for qa
+      action: pip requirements=/usr/lib/ckan/src/ckanext-qa/pip-requirements.txt virtualenv=/usr/lib/ckan/
+
     - name: get datajson extension
       action: git repo=https://github.com/GSA/ckanext-datajson dest=/usr/lib/ckan/src/ckanext-datajson version=catalog
 
