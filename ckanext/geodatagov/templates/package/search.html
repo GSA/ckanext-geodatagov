@@ -92,10 +92,12 @@
     {{ c.page.pager(q=c.q) }}
 	
 	<div style="text-align:center; margin-top:20px;">
+	{% if c.page.item_count > 0 %}
 	<b>
       {% snippet 'snippets/search_result_text.html', query=c.q, count=c.page.item_count, type='dataset' %}
     </b>
-	{% if c.q != '' %}
+	{% endif %}
+	{% if c.q != '' and c.page.item_count > 0 %}
       <p class="extra"><b>You are searching in the list of datasets. Show results in <a href="//www.data.gov/search-results/?group=site&q={{c.q}}">entire Data.gov site</a>.</b></p>
     {% endif %}
 	</div>
