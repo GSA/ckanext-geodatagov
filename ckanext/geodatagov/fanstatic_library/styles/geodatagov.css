@@ -1431,3 +1431,4 @@ position: static
   padding-bottom: 20px;
 }
 .ckanext-datapreview{clear:both;}
+.muted.ellipsis{white-space:normal;}
