@@ -239,7 +239,7 @@ def is_map_format(resource):
 def get_file_size(res_url):    
     req = urllib2.Request(res_url)
     try:
-      response = urllib2.urlopen(req)
+      response = urllib2.urlopen(req, timeout = 1)
     except HTTPError as e:      
       print 'The server couldn\'t fulfill the request.'
       print 'Error code: ', e.code
