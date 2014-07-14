@@ -210,12 +210,12 @@ def preview_response(url):
     
     req = Request(url)
     try:
-      response = urlopen(req)
+      response = urlopen(req, timeout = 1)
     except HTTPError as e:
       log.error("The server couldn\'t fulfill the request. Error code: " + str(e.code))
       return False
     except URLError as e:
-      log.error("We failed to reach a server. Reason: " + e.reason)
+      log.error("We failed to reach a server. Reason: " + str(e.reason))
       return False
     else:
       f = response.read()
@@ -236,7 +236,7 @@ def is_preview_format(resource):
 def is_map_format(resource):
     return is_type_format('map', resource)
 
-def get_file_size(res_url):    
+'''def get_file_size(res_url):    
     req = urllib2.Request(res_url)
     try:
       response = urllib2.urlopen(req, timeout = 1)
@@ -255,7 +255,8 @@ def get_file_size(res_url):
       if(len(meta.getheaders("Content-Length")) > 0):
         return str(float(meta.getheaders("Content-Length")[0])/1000) + ' KB'
     
-    return '0'    
+    return '0'
+    '''   
     
 def get_dynamic_menu():
     filename = os.path.join(os.path.dirname(__file__), 'dynamic_menu/menu.json')

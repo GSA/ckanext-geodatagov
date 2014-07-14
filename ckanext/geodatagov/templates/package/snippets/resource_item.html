@@ -3,7 +3,7 @@
 {% set is_web_format = h.is_web_format(res) %}
 {% set is_preview_format = h.is_preview_format(res) %}
 {% set is_map_format = h.is_map_format(res) %}
-{% set filesize = h.get_file_size(res.url) %}
+{% set filesize = res.size %}
 {% set tooltip = _("ZIP files may contain data and documentation in one or more formats. In Data.gov’s Geospatial catalog, most of the files are multi-part shapefiles.") if format == 'zip' %}
 <li class="resource-item"{% if tooltip %} title="{{ tooltip }}"{% endif %}>
 {% block resource_item_title %}
@@ -19,14 +19,16 @@
     </a>
   {% endif %}
 {% endblock %}
+
+
 <p class="description">
     {% if res.description %}
     {{ h.markdown_extract(res.description, extract_length=80) }}
     {% else %}
     &nbsp;
     {% endif %}
-	{% if filesize != '0' and not is_map_format and not is_web_format and not is_preview_format and not h.is_preview_available(res, pkg.id) %}	
-	  &nbsp;( {{ filesize }} )
+	{% if filesize != 0 and filesize != None and  not is_map_format and not is_web_format %}	
+	  &nbsp;( {{ filesize|float/1000 }} KB )
 	{% endif %}
 </p>
 {% block resource_item_explore %}

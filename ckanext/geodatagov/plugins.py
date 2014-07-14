@@ -399,7 +399,7 @@ class Demo(p.SingletonPlugin):
                 'render_datetime_datagov': geodatagov_helpers.render_datetime_datagov,
                 'get_dynamic_menu': geodatagov_helpers.get_dynamic_menu,
                 'get_harvest_source_type': geodatagov_helpers.get_harvest_source_type,
-                'get_file_size': geodatagov_helpers.get_file_size,
+                #'get_file_size': geodatagov_helpers.get_file_size,
                 }
 
     ## IActions
