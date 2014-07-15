@@ -400,6 +400,7 @@ class Demo(p.SingletonPlugin):
                 'get_dynamic_menu': geodatagov_helpers.get_dynamic_menu,
                 'get_harvest_source_type': geodatagov_helpers.get_harvest_source_type,
                 'get_file_size': geodatagov_helpers.get_file_size,
+                'convert_resource_format':geodatagov_helpers.convert_resource_format,
                 }
 
     ## IActions

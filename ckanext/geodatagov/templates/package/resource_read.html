@@ -57,6 +57,7 @@
 
 {% block resource_additional_information %}
   {% if res %}
+  {% set format = h.convert_resource_format(res.mimetype_inner or res.mimetype or res.format) %}
     <section class="module">
       <div class="module-content">
         <h2>{{ _('About this Resource') }}</h2>
@@ -76,7 +77,7 @@
             </tr>
             <tr>
               <th scope="row">{{ _('Format') }}</th>
-              <td>{{ "asdf" }}</td>
+              <td>{{ format }}</td>
             </tr>
             <tr>
               <th scope="row">{{ _('License') }}</th>

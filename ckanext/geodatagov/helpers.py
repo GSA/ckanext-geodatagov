@@ -305,3 +305,73 @@ def get_dynamic_menu():
     menus = json.loads(json_menu)
 
     return menus
+
+# Copied from ./ckanext/geodatagov/plugins.py
+RESOURCE_MAPPING = {
+    'text/html': ('HTML', 'Web Page'),
+    'html': ('HTML', 'Web Page'),
+    'application/zip': ('ZIP', 'Zip File'),
+    'zip': ('ZIP', 'Zip File'),
+    'application/xml': ('XML', 'XML File'),
+    'xml': ('XML', 'XML File'),
+    'application/x-netcdf': ('NetCDF', 'NetCDF File'),
+    'NetCDF': ('NetCDF', 'NetCDF File'),
+    'application/x-httpd-php': ('HTML', 'Web Page'),
+    'application/pdf': ('PDF', 'PDF File'),
+    'pdf': ('PDF', 'PDF File'),
+    'application/x-msdos-program': ('EXE', 'Windows Executable Program'),
+    'exe': ('EXE', 'Windows Executable Program'),
+    'arcgis_rest': ('Esri REST', 'Esri Rest API Endpoint'),
+    'esri rest': ('Esri REST', 'Esri Rest API Endpoint'),
+    'application/vnd.ms-excel': ('Excel', 'Excel Document'),
+    'excel': ('Excel', 'Excel Document'),
+    'application/x-tar': ('TAR', 'TAR Compressed File'),
+    'tar': ('TAR', 'TAR Compressed File'),
+    'wms': ('WMS', 'Web Mapping Service'),
+    'application/rar': ('RAR', 'RAR Compressed File'),
+    'rar': ('RAR', 'RAR Compressed File'),
+    'application/x-qgis': ('QGIS', 'QGIS File'),
+    'qgis': ('QGIS', 'QGIS File'),
+    'wfs': ('WFS', 'Web Feature Service'),
+    'text/plain': ('TXT', 'Text File'),
+    'txt': ('TXT', 'Text File'),
+    'application/msaccess': ('Access', 'Access Database'),
+    'access': ('Access', 'Access Database'),
+    'image/jpeg': ('JPEG', 'JPEG Image File'),
+    'jpg': ('JPG', 'JPG Image File'),
+    'jpeg': ('JPG', 'JPG Image File'),
+    'audio/prs.sid': ('MrSID', 'MrSID'),
+    'mrsid': ('MrSID', 'MrSID'),
+    'kml': ('KML', 'KML File'),
+    'image/tiff': ('TIFF', 'TIFF Image File'),
+    'tiff': ('TIFF', 'TIFF Image File'),
+    'kmz': ('KMZ', 'KMZ File'),
+    'wcs': ('WCS', 'Web Coverage Service'),
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ('OpenXML', 'OpenXML'),
+    'openXML': ('OpenXML', 'OpenXML'),
+    'text/x-perl': ('Perl', 'Perl Script'),
+    'perl': ('Perl', 'Perl Script'),
+    'application/msword': ('DOC', 'Microsoft Word File'),
+    'doc': ('DOC', 'Microsoft Word File'),
+    'text/csv': ('CSV', 'Comma Separated Values File'),
+    'csv': ('CSV', 'Comma Separated Values File'),
+    'image/x-ms-bmp': ('BMP', 'Bitmap Image File'),
+    'bmp': ('BMP', 'Bitmap Image File'),
+    'chemical/x-xyz': ('XYZ', 'XYZ'),
+    'xyz': ('XYZ', 'XYZ'),
+    'image/png': ('PNG', 'PNG Image File'),
+    'png': ('PNG', 'PNG Image File'),
+    'web map application': ('ArcGIS Online Map', 'ArcGIS Online Map'),
+    'arcgis map preview': ('ArcGIS Map Preview', 'ArcGIS Map Preview'),
+    'arcgis map service': ('ArcGIS Map Service', 'ArcGIS Map Service'),
+}
+
+def convert_resource_format(format):
+    if format: format = format.lower()
+    formats = RESOURCE_MAPPING.keys()
+    if format in formats:
+        format = RESOURCE_MAPPING[format][1]
+    else:
+        format = 'Web Page'
+
+    return format
