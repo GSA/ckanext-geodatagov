@@ -71,10 +71,12 @@
               <th scope="row">{{ _('Created') }}</th>
               <td>{{ h.render_datetime(res.created) or _('unknown') }}</td>
             </tr>
+            {% if not res.no_real_name %}
             <tr>
               <th scope="row">{{ _('Name') }}</th>
               <td>{{ res.name or _('Web Page') }}</td>
             </tr>
+            {% endif %}
             <tr>
               <th scope="row">{{ _('Format') }}</th>
               <td>{{ format }}</td>
@@ -84,7 +86,7 @@
               <td>{% snippet "snippets/license.html", pkg_dict=pkg, text_only=True %}</td>
             </tr>
             {% for key, value in h.format_resource_items(res.items()) %}
-              {% if key not in ['format'] %}
+              {% if key not in ['format', 'no real name'] %}
               <tr class="toggle-more"><th scope="row">{{ key }}</th><td>{{ value }}</td></tr>
               {% endif %}
             {% endfor %}
