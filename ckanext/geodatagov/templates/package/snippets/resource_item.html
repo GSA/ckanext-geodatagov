@@ -27,9 +27,11 @@
     {% else %}
     &nbsp;
     {% endif %}
+	{#
 	{% if filesize != 0 and filesize != None and  not is_map_format and not is_web_format %}	
 	  &nbsp;( {{ filesize|float/1000 }} KB )
 	{% endif %}
+	#}
 </p>
 {% block resource_item_explore %}
 {% set resource_url = url if is_map_format or is_preview_format else res.url %}
