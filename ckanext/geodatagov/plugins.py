@@ -192,6 +192,8 @@ def change_resource_details(resource):
     filename, extension = get_filename_and_extension(resource)
     if not resource_format:
         resource_format = extension
+    if resource.get('name', '') in ['Unnamed resource', '', None]:
+        resource['no_real_name'] = True
     if resource_format in formats:
         resource['format'] = RESOURCE_MAPPING[resource_format][0]
         if resource.get('name', '') in ['Unnamed resource', '', None]:
@@ -400,6 +402,7 @@ class Demo(p.SingletonPlugin):
                 'get_dynamic_menu': geodatagov_helpers.get_dynamic_menu,
                 'get_harvest_source_type': geodatagov_helpers.get_harvest_source_type,
                 #'get_file_size': geodatagov_helpers.get_file_size,
+                'convert_resource_format':geodatagov_helpers.convert_resource_format,
                 }
 
     ## IActions
