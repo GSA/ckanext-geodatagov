@@ -303,7 +303,11 @@ def get_dynamic_menu():
     html_parser =  HTMLParser.HTMLParser()
     json_menu = html_parser.unescape(json_menu)
 
-    menus = json.loads(json_menu)
+    menus = ''
+    try:
+        menus = json.loads(json_menu)
+    except:
+        pass
 
     return menus
 
