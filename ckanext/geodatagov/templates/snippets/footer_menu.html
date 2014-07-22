@@ -1,4 +1,4 @@
 {% set menus = h.get_dynamic_menu() %}
-{% for menu in menus['Footer'] if menu['name'] != 'Log In' %}
+{% for menu in menus['footer_navigation'] if menu['name'] != 'Log In' %}
   <li><a href="{{ menu['link'] }}">{{ menu['name'] }}</a></li>
 {% endfor %}
