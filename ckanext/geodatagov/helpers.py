@@ -301,13 +301,18 @@ def get_dynamic_menu():
     json_menu = re_obj.sub(r"\1", file_conent)
     # unescape &amp; or alike
     html_parser =  HTMLParser.HTMLParser()
-    json_menu = html_parser.unescape(json_menu)
-
-    menus = ''
+    json_menu = None
     try:
-        menus = json.loads(json_menu)
+        json_menu = html_parser.unescape(json_menu)
     except:
         pass
+
+    menus = ''
+    if json_menu:
+        try:
+            menus = json.loads(json_menu)
+        except:
+            pass
 
     return menus
 
