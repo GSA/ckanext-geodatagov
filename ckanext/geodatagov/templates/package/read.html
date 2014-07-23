@@ -181,6 +181,9 @@
            {% if key == 'Data Dictiionary' %}
             {% set key = 'Data Dictionary'%}
            {% endif %}
+           {% if key in ['Access Constraints', 'Spatial', 'Licence'] %}
+            {% set value = h.remove_extra_chars(value) %}
+           {% endif %}
            {% if duplicate_key_check != key %}
             <tr rel="dc:relation" resource="_:extra{{ i }}" class="toggle-more">
               <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key) }}</th>
