@@ -145,7 +145,7 @@
             </td>
           </tr>
         {% else %}
-          {% set exclude_list = ['metadata-date', 'dataset-reference-date', 'responsible-party', 'contact-email', 'resource-type'] %}
+          {% set exclude_list = ['metadata-date', 'dataset-reference-date', 'responsible-party', 'contact-email', 'resource-type', 'spatial'] %}
           <tr>
             <th scope="row" class="dataset-label">Reference Date(s)</th>
             <td>{{ h.get_reference_date(h.get_pkg_dict_extra(c.pkg_dict, 'dataset-reference-date')) or h.get_pkg_dict_extra(c.pkg_dict, 'dataset-reference-date') or 'Unknown' }}</td>
