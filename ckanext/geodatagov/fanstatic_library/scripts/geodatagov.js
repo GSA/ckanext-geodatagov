@@ -101,9 +101,15 @@ $(document).ready(function () {
                 || document.URL.indexOf('/organization/') >0)
             {
                 $.cookie('back2community', document.referrer,{ path: "/", expires: 2 });
+                if ((matches = document.location.hash.match(/#topic=([\S_-]+)/)) && (typeof matches[1] !== 'undefined')) {
+                    $.cookie('community_hash', matches[1],{ path: "/", expires: 2 });
+                }
+
             } else {
 //            if it is just search, we should remove this cookie
                 $.removeCookie('back2community');
+                $.removeCookie('community_hash');
+
             }
         }
     }
