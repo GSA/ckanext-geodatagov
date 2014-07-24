@@ -34,6 +34,7 @@ body,
     -moz-border-radius: 0 0 3px 3px;
     -o-border-radius: 0 0 3px 3px;
     border-radius: 0 0 3px 3px;
+    border-top:0px;
 }
 .masthead,
 .site-footer {
@@ -1432,3 +1433,17 @@ position: static
 }
 .ckanext-datapreview{clear:both;}
 .muted.ellipsis{white-space:normal;}
+aside.secondary{margin-left:15px !important;border:1px solid #ccc;border-right:0px;}
+.wrapper {
+    background: url("../../../../base/images/nav.png") repeat-y scroll 16px 0 #ffffff;
+
+}
+.toolbar .add_action {
+    right: 10px;
+    top: -50px;
+}
+.toolbar .breadcrumb {
+    position: absolute;
+    right: 400px;
+    top: -50px;
+}
