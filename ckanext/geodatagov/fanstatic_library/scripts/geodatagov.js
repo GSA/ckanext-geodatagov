@@ -152,7 +152,39 @@ jQuery(window).load(function(){
 
         linkRewriter("next.data.gov", "staging.data.gov");
     }
+    (function($) {
+
+
+        var jsonp=$('nav.primary').attr('jsonpsrc');
+        var json = $.parseJSON(jsonp);
+
+        var comm_menus=[];
+        var community = $.cookie('community_hash');
+
+        $.each(json[community], function(i,comm_menu){
+            if (comm_menu.link === '#'){
+                comm_menus.push('<li><a href="' +comm_menu.link + '">' +comm_menu.name + '</a><ul class="dropdown-menu">');
+                $.each(json[community], function(i,comm_menu){
+                    if(comm_menu.parent_id ) {
+                        comm_menus.push('<li><a href="' +comm_menu.link + '">' +comm_menu.name + '</a></li>');
+                    }
+                });
+                comm_menus.push('</ul></li>');
+            }
+
+            else if(!comm_menu.parent_id){
+                comm_menus.push('<li><a href="' +comm_menu.link + '">' +comm_menu.name + '</a></li>');
+            }
+
+        });
+
+
+
+        $('#menu-community').append( comm_menus.join('') );
+
+    })(jQuery);
 });
 if ($.browser.msie && $.browser.version == 10) {
     $("html").addClass("ie10");
 }
+
