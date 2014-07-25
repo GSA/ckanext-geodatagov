@@ -1,5 +1,5 @@
 {% set menus = h.get_dynamic_menu() %}
-<nav class="primary">
+<nav class="primary" jsonpsrc='{{ menus['source'] }}'>
 <ul class="nav navbar-nav navbar-right" id="menu-primary-navigation">
   {% for menu_1 in menus['Primary'] if not menu_1['parent_id'] %}
     {% if menu_1['name'] == 'Data' %}

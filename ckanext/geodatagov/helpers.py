@@ -304,6 +304,7 @@ def get_dynamic_menu():
     json_menu = html_parser.unescape(json_menu)
 
     menus = json.loads(json_menu)
+    menus['source'] = json_menu
 
     return menus
 
