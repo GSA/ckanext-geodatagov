@@ -95,7 +95,7 @@ $(document).ready(function () {
         }
 
         if (fromDataGov) {
-            if (document.URL.indexOf('/dataset/') > 0
+            if (document.URL.indexOf('/dataset') > 0
                 || document.URL.indexOf('groups=') >0
                 || document.URL.indexOf('/group/') >0
                 || document.URL.indexOf('/organization/') >0)
