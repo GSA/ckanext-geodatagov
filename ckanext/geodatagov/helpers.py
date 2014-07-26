@@ -271,8 +271,8 @@ def get_dynamic_menu():
     except:
         pass
 
-    # check to see if file is older than 1 hour
-    if (time_current - time_file) < 3600:
+    # check to see if file is older than .5 hour
+    if (time_current - time_file) < 3600/2:
         file_obj = open(filename)
         file_conent = file_obj.read()
     else:
