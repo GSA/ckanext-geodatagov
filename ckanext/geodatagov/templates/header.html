@@ -107,21 +107,22 @@
     <div class="header_new banner_new page-heading_new">
         <div class="container">
             <div class="page-header_new">
-                <div class="heading"> <h1>Data Catalog</h1></div>
+                <div class="main-heading"> <h1>Data Catalog</h1></div>
 
                 <div class="toolbar">
+                    <div class="add_action">
+                        <a href="{{ h.url_for('organizations_index') }}" class="btn">{{ _('Organizations') }}</a>
+                        <a href="http://www.data.gov/catalog-help/" class="btn btn-primary question" data-module="geodatagov-search-helper-message"><i class="icon-question-sign"></i></a>
+                        <div id="search-helper-message">
+                            To find datasets, enter your search terms in the search box below or browse through the categories on the left.  As you browse, you will be refining and narrowing your search.  To broaden your search again, click on the "clear all" link at the top of any category or on the "X" to the right of any single term. </div>
+                    </div>
                     {% block breadcrumb %}
                     <ol class="breadcrumb">
                         <li class="home"><a href="{{ h.url(controller='package', action='search') }}"><i class="icon-home"></i><span> {{ _('Home') }}</span></a></li>
                         <li class="active">{{ h.nav_link(_('Datasets'), controller='package', action='search', highlight_actions = 'new index') }}</li>
                     </ol>
                     {% endblock %}
-                    <div class="add_action">
-                        <a href="{{ h.url_for('organizations_index') }}" class="btn">{{ _('Organizations') }}</a>
-                        <a href="http://www.data.gov/catalog-help/" class="btn btn-primary" data-module="geodatagov-search-helper-message"><i class="icon-question-sign"></i></a>
-                        <div id="search-helper-message">
-                            To find datasets, enter your search terms in the search box below or browse through the categories on the left.  As you browse, you will be refining and narrowing your search.  To broaden your search again, click on the "clear all" link at the top of any category or on the "X" to the right of any single term. </div>
-                    </div>
+
                 </div>
             </div>
         </div>
