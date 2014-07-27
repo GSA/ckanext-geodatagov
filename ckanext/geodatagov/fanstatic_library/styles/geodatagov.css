@@ -1465,7 +1465,7 @@ aside.secondary{margin-left:15px !important;border:1px solid #ccc;border-right:0
 }
 .control-group.search-giant {
     float: left;
-    width: 80%;
+    width: 73%;
 }
 .form-select.control-group.control-order-by > label{
     display:block;
@@ -1518,3 +1518,4 @@ aside.secondary{margin-left:15px !important;border:1px solid #ccc;border-right:0
     background:none;
 }
 #menu-community{margin-top:5px;}
+.results strong, .is-search-title{display:inline-block;}
