@@ -1354,6 +1354,18 @@ position: static
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale
 }
+@charset "UTF-8";
+[class^="topic-"] a i:before, [class*=" topic-"] a i:before {
+    font-family: "datagov-icons" !important;
+    font-style: normal !important;
+    font-weight: normal !important;
+    font-variant: normal !important;
+    text-transform: none !important;
+    speak: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale
+}
 
 /*below are styles where we change icons to css */
 
@@ -1478,7 +1490,9 @@ aside.secondary{margin-left:15px !important;border:1px solid #ccc;border-right:0
     display: none;
 }
 #sort_option {
-    display: none;
+    /*display: none;*/
+    clear:both;
+    margin-bottom: 10px;
 }
 .page-header_new .toolbar .add_action{position:static;float:right;}
 .page-header_new .toolbar .breadcrumb{float:right;margin-right:15px;margin-top:5px;}
