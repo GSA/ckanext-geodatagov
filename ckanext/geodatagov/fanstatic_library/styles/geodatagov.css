@@ -1441,7 +1441,7 @@ aside.secondary{margin-left:15px !important;border:1px solid #ccc;border-right:0
 
 }
 #content .toolbar .add_action {
-    position: static !important;
+   /* position: static !important;*/
 }
 .sub-nav.banner-nav {
     background-color: #eef7ff;
@@ -1577,7 +1577,7 @@ font-weight:lighter;
 .topic-geospatial a i:before{
     content: "\e00c";
 }
-.topic-jobs-skills a i:before{
+.topic-jobs-and-skills a i:before{
     content: "\e00f";
 }
 .topic-business a i:before{
