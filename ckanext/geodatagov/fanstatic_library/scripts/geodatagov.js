@@ -217,3 +217,7 @@ setTimeout(function() {
     jQuery("#menu-community a[href*='catalog']").addClass('active');
 }, 5000);
 if(window.location.host.indexOf('/organization/')){$('#dataset-search').css('margin-top',0)}
+if(window.location.host.indexOf('/harvest?')){$('#dataset-search').css('margin-top',0)}
+if(window.location.host.indexOf('/harvest/')){$('#dataset-search').css('margin-top',0)}
+
+
