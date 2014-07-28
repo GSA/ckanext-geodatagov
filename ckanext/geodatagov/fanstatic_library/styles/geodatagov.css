@@ -1523,3 +1523,6 @@ aside.secondary{margin-left:15px !important;border:1px solid #ccc;border-right:0
 }
 .page-header_new .toolbar{background: none !important;}
 .toolbar .btn.question{background-color:transparent;}
+.ie10 .page-header_new .toolbar .breadcrumb a {
+font-weight:lighter;
+}
