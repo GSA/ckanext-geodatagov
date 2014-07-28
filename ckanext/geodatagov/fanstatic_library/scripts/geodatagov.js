@@ -151,6 +151,8 @@ jQuery(window).load(function(){
         }
 
         linkRewriter("next.data.gov", "staging.data.gov");
+        jQuery("#menu-community a[href*='catalog']").addClass('active');
+
     }
     (function($) {
 
@@ -188,4 +190,3 @@ jQuery(window).load(function(){
 if ($.browser.msie && $.browser.version == 10) {
     $("html").addClass("ie10");
 }
-jQuery("#menu-community a[href*='catalog']").addClass('active');
