@@ -160,7 +160,7 @@ jQuery(window).load(function(){
 
         var comm_menus=[];
         var community = $.cookie('community_hash');
-        if ((typeof cookie !== 'undefined') && ('' !== cookie)) {
+        if ((typeof community !== 'undefined') && ('' !== community)) {
         $.each(json[community], function(i,comm_menu){
             if (comm_menu.link === '#'){
                 comm_menus.push('<li><a href="' +comm_menu.link + '">' +comm_menu.name + '</a><ul class="dropdown-menu">');
