@@ -131,6 +131,18 @@ $(document).ready(function () {
         }
         var cookie_comm = $.cookie('community_hash').replace("_navigation","")+'-';
         var cookie_class='topic-'+$.cookie('community_hash').replace("_navigation","");
+        if (cookie_comm==='jobs-and-skills-')
+        {
+            cookie_comm='jobs & skills';
+        }else if(cookie_comm==='development-'){
+            cookie_comm='Global development';
+        }
+        else if(cookie_comm==='research-'){
+            cookie_comm='science & research';
+        }
+        else if(cookie_comm==='food-'){
+            cookie_comm='agriculture';
+        }
         if ((typeof cookie_comm !== 'undefined') && ('' !== cookie_comm)) {
 
             $('.topic_url').attr('href', cookie_comm);
@@ -139,7 +151,7 @@ $(document).ready(function () {
             $('.topic_name').show();
 
         }else{
-
+            $('.category-header').hide();
         }
     }
 });

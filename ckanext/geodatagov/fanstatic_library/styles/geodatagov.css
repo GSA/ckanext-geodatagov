@@ -1551,19 +1551,19 @@ font-weight:lighter;
 .topic-law a i:before{
     content: "\e010"
 }
-.topic-science-research a i:before{
+.topic-research a i:before{
     content: "\e013";
 }
-.topic-public-safety a i:before{
+.topic-safety a i:before{
     content: "\e014"
 }
-.topic-agriculture a i:before{
+.topic-food a i:before{
     content: "\e00b"
 }
 .topic-ocean a i:before{
     content: "\e012"
 }
-.topic-global-development a i:before{
+.topic-development a i:before{
     content: "\e006"
 }
 .topic-manufacturing a i:before{
@@ -1595,4 +1595,7 @@ font-weight:lighter;
 }
 .topic-developers a i:before{
     content: "\e005";
+}
+.main-heading .category-header a i{
+    font-size:35px;
 }
