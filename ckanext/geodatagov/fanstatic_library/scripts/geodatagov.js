@@ -199,7 +199,7 @@ jQuery(window).load(function(){
             }
 
 
-            $('.topic_url').attr('href', cookie_comm);
+            $('.topic_url').attr('href', '//data.gov/'+cookie_comm);
             $('.topic_name').html(cookie_comm);
             $('.category-header').addClass(cookie_class);
             $('.topic_name').show();
