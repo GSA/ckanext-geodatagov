@@ -1447,7 +1447,6 @@ aside.secondary{margin-left:15px !important;border:1px solid #ccc;border-right:0
     background-color: #eef7ff;
     border-bottom: 1px solid #bfd4e1;
     border-top: 1px solid #fff;
-    min-height: 50px;
 }
 .sub-nav.banner-nav .nav{margin-bottom:0px;}
 .sub-nav.banner-nav .nav > li > a {
@@ -1519,3 +1518,6 @@ aside.secondary{margin-left:15px !important;border:1px solid #ccc;border-right:0
 }
 #menu-community{margin-top:5px;}
 .results strong, .is-search-title{display:inline-block;}
+.active_jquery_menu.active {
+    border-bottom: 5px solid #ccc;
+}
