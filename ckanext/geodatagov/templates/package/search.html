@@ -14,7 +14,7 @@
         {% set search_placeholder = 'Search collection...' if request.params.collection_package_id else 'Search datasets...' %}
         <span class="control-group search-giant">
           <label for="search-big" class="hide">{{ _('Search datasets') }}</label>
-          <input id="search-big" type="text" class="search" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ search_placeholder }}" />
+          <input id="search-big" type="text" class="search" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ search_placeholder }}" onblur="if(value=='') value = 'Search datasets...'" onfocus="if(value=='Search datasets...') value = ''"/>
           <button type="submit" value="search">{{ _('Submit') }}</button>
         </span>
         {{ h.snippet('snippets/sort_by.html', sort=c.sort_by_selected) }}
