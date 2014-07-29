@@ -1613,3 +1613,8 @@ font-weight:lighter;
 .main-heading .category-header a i{
     font-size:35px;
 }
+.main-heading .category-header a div {
+    float: left;
+    text-align: left;
+    vertical-align: middle;
+}
