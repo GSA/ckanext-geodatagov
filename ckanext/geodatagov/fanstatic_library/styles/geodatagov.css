@@ -1640,3 +1640,13 @@ margin-top:0px
     float:none !important ;
     }
     }
+
+.navbar-nav > li > .dropdown-menu {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    margin-top: 0;
+}
+.sub-nav.banner-nav nav li a:hover, .subnav.banner nav li a.active {
+    background-color: #eef7ff;
+    border-bottom: 5px solid #bfd4e1;
+}
