@@ -187,15 +187,15 @@ jQuery(window).load(function(){
             var cookie_class='topic-'+$.cookie('community_hash').replace("_navigation","");
             if (cookie_comm==='jobs-and-skills-')
             {
-                cookie_comm='jobs & skills';
+                cookie_comm='jobs & skills - ';
             }else if(cookie_comm==='development-'){
-                cookie_comm='Global development';
+                cookie_comm='Global development - ';
             }
             else if(cookie_comm==='research-'){
-                cookie_comm='science & research';
+                cookie_comm='science & research - ';
             }
             else if(cookie_comm==='food-'){
-                cookie_comm='agriculture';
+                cookie_comm='agriculture - ';
             }
 
 
