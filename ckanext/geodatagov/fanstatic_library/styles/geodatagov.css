@@ -1487,7 +1487,7 @@ aside.secondary{margin-left:15px !important;border:1px solid #ccc;border-right:0
     border-radius:0px;
 }
 .filter-list .facet {
-    display: none;
+    display: block;
 }
 #sort_option {
     /*display: none;*/
