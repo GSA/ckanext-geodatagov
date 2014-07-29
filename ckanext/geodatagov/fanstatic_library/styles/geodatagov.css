@@ -1624,3 +1624,11 @@ font-weight:lighter;
 #menu-community .active {
     border-bottom: 5px solid #ccc;
 }
+.add_action .btn-primary{float:right;}
+.control-group {
+    margin-bottom: 5px;
+}
+#dataset-search .results {
+margin-top:0px
+}
+.wrapper .btn-group.actions{top:-40px;}
