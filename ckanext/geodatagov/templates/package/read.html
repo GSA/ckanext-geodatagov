@@ -118,7 +118,7 @@
           <td><span property="dct:modified">{{ h.render_datetime_datagov(c.pkg_dict.metadata_modified) or 'Unknown' }}</span></td>
         </tr>		
         {% if harvest_source_type == 'datajson' %}
-          {% set exclude_list = ['metadata-date', 'publisher', 'identifier', 'maintainer_email', 'maintainer', 'resource-type'] %}
+          {% set exclude_list = ['metadata-date', 'publisher', 'identifier', 'maintainer_email', 'maintainer', 'resource-type', 'spatial'] %}
           <tr>
             <th scope="row" class="dataset-label">Publisher</th>
             <td><span property="dct:publisher">{{ h.get_pkg_dict_extra(c.pkg_dict, 'publisher', 'Unknown') }}<span></td>
