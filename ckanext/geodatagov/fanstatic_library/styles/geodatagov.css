@@ -1649,5 +1649,10 @@ margin-top:0px
 }
 .sub-nav.banner-nav nav li a:hover, .subnav.banner nav li a.active {
     background-color: #eef7ff;
-    border-bottom: 5px solid #bfd4e1;
+}
+.sub-nav.banner-nav .dropdown-menu li a {
+    padding: 0.75em 1em;
+}
+.sub-nav.banner-nav .nav.navbar-nav li a {
+    padding-bottom: 9px;
 }
