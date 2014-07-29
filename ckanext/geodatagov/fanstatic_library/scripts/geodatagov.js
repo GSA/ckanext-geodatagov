@@ -184,6 +184,7 @@ jQuery(window).load(function(){
 
         $('#menu-community').append( comm_menus.join('') );
             var cookie_comm = $.cookie('community_hash').replace("_navigation","")+' -';
+            var cookie_url= $.cookie('community_hash').replace("_navigation","");
             var cookie_class='topic-'+$.cookie('community_hash').replace("_navigation","");
             if (cookie_comm==='jobs-and-skills -')
             {
@@ -199,7 +200,7 @@ jQuery(window).load(function(){
             }
 
 
-            $('.topic_url').attr('href', '//data.gov/'+cookie_comm);
+            $('.topic_url').attr('href', '//data.gov/'+cookie_url);
             $('.topic_name').html(cookie_comm);
             $('.category-header').addClass(cookie_class);
             $('.topic_name').show();
