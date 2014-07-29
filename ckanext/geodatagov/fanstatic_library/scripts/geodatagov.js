@@ -219,8 +219,8 @@ window.onload=function(){
     jQuery("#menu-community a[href*='catalog']").addClass('active');
 
 }
-if(window.location.host.indexOf('/organization/')){$('#dataset-search').css('margin-top',0)}
-if(window.location.host.indexOf('/harvest?')){$('#dataset-search').css('margin-top',-20)}
+/*if(window.location.host.indexOf('/organization/')){$('#dataset-search').css('margin-top',0)}
+if(window.location.host.indexOf('/harvest')){$('#dataset-search').css('margin-top',-20)}
 if(window.location.host.indexOf('/harvest/')){$('#dataset-search').css('margin-top',-20)}
-
+*/
 
