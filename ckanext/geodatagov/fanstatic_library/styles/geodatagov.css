@@ -1618,3 +1618,6 @@ font-weight:lighter;
     text-align: left;
     vertical-align: middle;
 }
+#menu-community .active {
+    border-bottom: 5px solid #ccc;
+}

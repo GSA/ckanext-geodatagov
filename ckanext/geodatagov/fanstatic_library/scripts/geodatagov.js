@@ -213,9 +213,11 @@ jQuery(window).load(function(){
 if ($.browser.msie && $.browser.version == 10) {
     $("html").addClass("ie10");
 }
-setTimeout(function() {
+window.onload=function(){
+
     jQuery("#menu-community a[href*='catalog']").addClass('active');
-}, 5000);
+
+}
 if(window.location.host.indexOf('/organization/')){$('#dataset-search').css('margin-top',0)}
 if(window.location.host.indexOf('/harvest?')){$('#dataset-search').css('margin-top',0)}
 if(window.location.host.indexOf('/harvest/')){$('#dataset-search').css('margin-top',0)}
