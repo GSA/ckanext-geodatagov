@@ -1507,6 +1507,7 @@ aside.secondary{margin-left:15px !important;border:1px solid #ccc;border-right:0
     border: 0 none;
     box-shadow: none;
     color: white !important;
+    float:none;
 }
 .question .icon-question-sign{font-size:32px;}
 .main-heading {
@@ -1632,3 +1633,9 @@ font-weight:lighter;
 margin-top:0px
 }
 .wrapper .btn-group.actions{top:-40px;}
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+.page-header_new .toolbar .breadcrumb a{font-weight: lighter;}
+    .btn-primary.question {
+    float:none !important ;
+    }
+    }
