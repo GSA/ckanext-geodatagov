@@ -219,7 +219,7 @@ window.onload=function(){
 
 }
 if(window.location.host.indexOf('/organization/')){$('#dataset-search').css('margin-top',0)}
-if(window.location.host.indexOf('/harvest?')){$('#dataset-search').css('margin-top',0)}
-if(window.location.host.indexOf('/harvest/')){$('#dataset-search').css('margin-top',0)}
+if(window.location.host.indexOf('/harvest?')){$('#dataset-search').css('margin-top',-20)}
+if(window.location.host.indexOf('/harvest/')){$('#dataset-search').css('margin-top',-20)}
 
 
