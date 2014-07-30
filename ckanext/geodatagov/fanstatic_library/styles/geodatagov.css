@@ -1652,7 +1652,12 @@ margin-top:0px
 }
 .sub-nav.banner-nav .dropdown-menu li a {
     padding: 0.75em 1em;
+    font-size:16px;
 }
 .sub-nav.banner-nav .nav.navbar-nav li a {
     padding-bottom: 9px;
+}
+#menu-community.nav .open > a, #menu-community.nav .open > a:hover, #menu-community.nav .open > a:focus {
+    background-color: #eee;
+    border-color: #428bca;
 }
