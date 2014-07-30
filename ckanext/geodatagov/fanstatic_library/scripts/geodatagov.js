@@ -171,7 +171,6 @@ jQuery(window).load(function(){
                     if(comm_menu.parent_id ) {
                         if(parent_id === comm_menu.parent_id){
                         comm_menus.push('<li><a href="' +comm_menu.link + '">' +comm_menu.name + '</a></li>');
-
                         }
                     }
 
@@ -181,6 +180,10 @@ jQuery(window).load(function(){
 
             else if(!comm_menu.parent_id){
                 comm_menus.push('<li><a href="' +comm_menu.link + '">' +comm_menu.name + '</a></li>');
+            }
+            else if(comm_menu.name==='Data'){
+                comm_menus.push('<li><a href="' +comm_menu.link + '" class="active">' +comm_menu.name + '</a></li>');
+
             }
 
         });
@@ -200,10 +203,17 @@ jQuery(window).load(function(){
             else if(cookie_comm==='research -'){
                 cookie_comm='science & research - ';
             }
-            else if(cookie_comm==='food -'){
+            else if(cookie_comm==='food - '){
                 cookie_comm='agriculture - ';
             }
-
+            else if(cookie_comm==='coastalflooding - '){
+                cookie_comm='Climate - Coastal Flooding - ';
+                cookie_class='climate';
+            }
+            else if(cookie_comm==='foodresilience - '){
+                cookie_comm='Climate - Food Resilience - ';
+                cookie_class='climate';
+            }
 
             $('.topic_url').attr('href', '//data.gov/'+cookie_url);
             $('.topic_name').html(cookie_comm);
@@ -224,8 +234,4 @@ window.onload=function(){
     jQuery("#menu-community a[href*='catalog']").addClass('active');
 
 }
-/*if(window.location.host.indexOf('/organization/')){$('#dataset-search').css('margin-top',0)}
-if(window.location.host.indexOf('/harvest')){$('#dataset-search').css('margin-top',-20)}
-if(window.location.host.indexOf('/harvest/')){$('#dataset-search').css('margin-top',-20)}
-*/
 
