@@ -165,11 +165,16 @@ jQuery(window).load(function(){
         if ((typeof community !== 'undefined') && ('' !== community)) {
         $.each(json[community], function(i,comm_menu){
             if (comm_menu.link.indexOf("/#")>-1){
+                var parent_id = comm_menu.id;
                 comm_menus.push('<li><a href="#" class="dropdown-toggle" data-toggle="dropdown">' +comm_menu.name + '<b class="caret"></b></a><ul class="dropdown-menu topics">');
                 $.each(json[community], function(i,comm_menu){
                     if(comm_menu.parent_id ) {
+                        if(parent_id === comm_menu.parent_id){
                         comm_menus.push('<li><a href="' +comm_menu.link + '">' +comm_menu.name + '</a></li>');
+
+                        }
                     }
+
                 });
                 comm_menus.push('</ul></li>');
             }
