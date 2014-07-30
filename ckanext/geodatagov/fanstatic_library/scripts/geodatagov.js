@@ -205,7 +205,7 @@ jQuery(window).load(function(){
             else if(cookie_comm==='research -'){
                 cookie_comm='science & research - ';
             }
-            else if(cookie_comm==='food - '){
+            else if(cookie_comm==='food -'){
                 cookie_comm='agriculture - ';
             }
             else if(cookie_comm==='coastalflooding -'){
