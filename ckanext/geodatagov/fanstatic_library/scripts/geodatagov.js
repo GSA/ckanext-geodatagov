@@ -208,11 +208,11 @@ jQuery(window).load(function(){
             else if(cookie_comm==='food - '){
                 cookie_comm='agriculture - ';
             }
-            else if(cookie_comm==='coastalflooding - '){
+            else if(cookie_comm==='coastalflooding -'){
                 cookie_comm='Climate - Coastal Flooding - ';
                 cookie_class='climate';
             }
-            else if(cookie_comm==='foodresilience - '){
+            else if(cookie_comm==='foodresilience -'){
                 cookie_comm='Climate - Food Resilience - ';
                 cookie_class='climate';
             }
