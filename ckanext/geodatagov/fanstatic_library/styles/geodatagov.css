@@ -1647,7 +1647,7 @@ margin-top:0px
     border-top-right-radius: 0;
     margin-top: 0;
 }
-.sub-nav.banner-nav nav li a:hover, .subnav.banner nav li a.active {
+.sub-nav.banner-nav nav li a:hover, .sub-nav.banner-nav nav li a.active {
     background-color: #eef7ff;
 }
 .sub-nav.banner-nav .dropdown-menu li a {
@@ -1660,4 +1660,9 @@ margin-top:0px
 #menu-community.nav .open > a, #menu-community.nav .open > a:hover, #menu-community.nav .open > a:focus {
     background-color: #eee;
     border-color: #428bca;
+}
+.ie8 .sub-nav.banner-nav nav li a:hover, .ie8 .sub-nav.banner-nav nav li a.active
+.ie9 .sub-nav.banner-nav nav li a:hover, .ie9 .sub-nav.banner-nav nav li a.active
+{
+    background-color: #eef7ff !important;
 }
