@@ -210,11 +210,11 @@ jQuery(window).load(function(){
             }
             else if(cookie_comm==='coastalflooding -'){
                 cookie_comm='Climate - Coastal Flooding - ';
-                cookie_class='climate';
+                cookie_class='topic-climate';
             }
             else if(cookie_comm==='foodresilience -'){
                 cookie_comm='Climate - Food Resilience - ';
-                cookie_class='climate';
+                cookie_class='topic-climate';
             }
 
             $('.topic_url').attr('href', '//data.gov/'+cookie_url);
