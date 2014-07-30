@@ -179,12 +179,14 @@ jQuery(window).load(function(){
             }
 
             else if(!comm_menu.parent_id){
-                comm_menus.push('<li><a href="' +comm_menu.link + '">' +comm_menu.name + '</a></li>');
-            }
-            else if(comm_menu.name==='Data'){
-                comm_menus.push('<li><a href="' +comm_menu.link + '" class="active">' +comm_menu.name + '</a></li>');
+                if(comm_menu.name==='Data'){
+                    comm_menus.push('<li><a href="' +comm_menu.link + '" class="active">' +comm_menu.name + '</a></li>');
 
+                }else{
+                comm_menus.push('<li><a href="' +comm_menu.link + '">' +comm_menu.name + '</a></li>');
+                }
             }
+
 
         });
 
@@ -230,8 +232,8 @@ if ($.browser.msie && $.browser.version == 10) {
     $("html").addClass("ie10");
 }
 window.onload=function(){
-
-    jQuery("#menu-community a[href*='catalog']").addClass('active');
-
+    if (!jQuery("#menu-community a[href*='catalog']").hasClass('active')) {
+         jQuery("#menu-community a[href*='catalog']").addClass('active');
+    }
 }
 
