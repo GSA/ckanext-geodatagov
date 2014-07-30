@@ -1473,7 +1473,7 @@ aside.secondary{margin-left:15px !important;border:1px solid #ccc;border-right:0
     background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
     border: 0 none;
     float: right;
-    width: 500px;
+    width: 330px;
 }
 .control-group.search-giant {
     float: left;
@@ -1501,6 +1501,7 @@ aside.secondary{margin-left:15px !important;border:1px solid #ccc;border-right:0
     font-weight: lighter;
     margin-left: 26px;
     margin-top:8px;
+    line-height:30px;
 }
 .toolbar .pill{border-radius:0px;background-color:#a2a2a2;}
 .btn-primary.question {
@@ -1514,7 +1515,7 @@ aside.secondary{margin-left:15px !important;border:1px solid #ccc;border-right:0
 .question .icon-question-sign{font-size:32px;}
 .main-heading {
     float: left;
-    width: 400px;
+    width: 590px;
     padding:10px 0;
 }
 .page-header_new .toolbar .breadcrumb a {
