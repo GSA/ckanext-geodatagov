@@ -1535,7 +1535,7 @@ aside.secondary{margin-left:15px !important;border:1px solid #ccc;border-right:0
     text-decoration: none;
     background:none;
 }
-#menu-community{margin-top:5px;}
+#menu-community{/*margin-top:5px;*/}
 .results strong, .is-search-title{display:inline-block;}
 .active_jquery_menu.active {
     border-bottom: 5px solid #ccc;
