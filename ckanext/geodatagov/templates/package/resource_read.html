@@ -57,7 +57,7 @@
 
 {% block resource_additional_information %}
   {% if res %}
-  {% set format = h.convert_resource_format(res.mimetype_inner or res.mimetype or res.format) %}
+  {% set format = h.convert_resource_format(res.format or res.mimetype or res.mimetype_inner) %}
     <section class="module">
       <div class="module-content">
         <h2>{{ _('About this Resource') }}</h2>
