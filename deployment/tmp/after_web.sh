@@ -12,6 +12,12 @@ then
      ln -s /usr/lib64/libxmlsec1-openssl.so.1.2.16 /usr/lib64/libxmlsec1-openssl.so
 fi
 
+# no spiders on dev servers
+if [ -f /etc/ckan/robots.txt ];
+then
+    cp -f /etc/ckan/robots.txt /usr/lib/ckan/src/ckan/ckan/public/robots.txt
+fi
+
 service memcached start
 service httpd restart
 
