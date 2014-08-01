@@ -271,8 +271,8 @@ def get_dynamic_menu():
     except:
         pass
 
-    # check to see if file is older than 1 hour
-    if (time_current - time_file) < 3600:
+    # check to see if file is older than .5 hour
+    if (time_current - time_file) < 3600/2:
         file_obj = open(filename)
         file_conent = file_obj.read()
     else:
@@ -301,10 +301,19 @@ def get_dynamic_menu():
     json_menu = re_obj.sub(r"\1", file_conent)
     # unescape &amp; or alike
     html_parser =  HTMLParser.HTMLParser()
-    json_menu = html_parser.unescape(json_menu)
+    json_menu_clean = None
+    try:
+        json_menu_clean = html_parser.unescape(json_menu)
+    except:
+        pass
 
-    menus = json.loads(json_menu)
-    menus['source'] = json_menu
+    menus = ''
+    if json_menu_clean:
+        try:
+            menus = json.loads(json_menu_clean)
+            menus['source'] = json_menu_clean
+        except:
+            pass
 
     return menus
 
