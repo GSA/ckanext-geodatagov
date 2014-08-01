@@ -165,18 +165,28 @@ jQuery(window).load(function(){
         if ((typeof community !== 'undefined') && ('' !== community)) {
         $.each(json[community], function(i,comm_menu){
             if (comm_menu.link.indexOf("/#")>-1){
+                var parent_id = comm_menu.id;
                 comm_menus.push('<li><a href="#" class="dropdown-toggle" data-toggle="dropdown">' +comm_menu.name + '<b class="caret"></b></a><ul class="dropdown-menu topics">');
                 $.each(json[community], function(i,comm_menu){
                     if(comm_menu.parent_id ) {
+                        if(parent_id === comm_menu.parent_id){
                         comm_menus.push('<li><a href="' +comm_menu.link + '">' +comm_menu.name + '</a></li>');
+                        }
                     }
+
                 });
                 comm_menus.push('</ul></li>');
             }
 
             else if(!comm_menu.parent_id){
+                if(comm_menu.name==='Data'){
+                    comm_menus.push('<li><a href="' +comm_menu.link + '" class="active">' +comm_menu.name + '</a></li>');
+
+                }else{
                 comm_menus.push('<li><a href="' +comm_menu.link + '">' +comm_menu.name + '</a></li>');
+                }
             }
+
 
         });
 
@@ -198,7 +208,14 @@ jQuery(window).load(function(){
             else if(cookie_comm==='food -'){
                 cookie_comm='agriculture - ';
             }
-
+            else if(cookie_comm==='coastalflooding -'){
+                cookie_comm='Climate - Coastal Flooding - ';
+                cookie_class='topic-climate';
+            }
+            else if(cookie_comm==='foodresilience -'){
+                cookie_comm='Climate - Food Resilience - ';
+                cookie_class='topic-climate';
+            }
 
             $('.topic_url').attr('href', '//data.gov/'+cookie_url);
             $('.topic_name').html(cookie_comm);
@@ -215,12 +232,8 @@ if ($.browser.msie && $.browser.version == 10) {
     $("html").addClass("ie10");
 }
 window.onload=function(){
-
-    jQuery("#menu-community a[href*='catalog']").addClass('active');
-
+    if (!jQuery("#menu-community a[href*='catalog']").hasClass('active')) {
+         jQuery("#menu-community a[href*='catalog']").addClass('active');
+    }
 }
-/*if(window.location.host.indexOf('/organization/')){$('#dataset-search').css('margin-top',0)}
-if(window.location.host.indexOf('/harvest')){$('#dataset-search').css('margin-top',-20)}
-if(window.location.host.indexOf('/harvest/')){$('#dataset-search').css('margin-top',-20)}
-*/
 
