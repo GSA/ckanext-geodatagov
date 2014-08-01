@@ -34,6 +34,7 @@ body,
     -moz-border-radius: 0 0 3px 3px;
     -o-border-radius: 0 0 3px 3px;
     border-radius: 0 0 3px 3px;
+    border-top:0px;
 }
 .masthead,
 .site-footer {
@@ -86,7 +87,8 @@ a {
 }
 .btn-primary {
     color: white !important;
-    background: #284a7a !important;
+    /*background: #284a7a !important;*/:w
+
 }
 .btn-primary:hover {
     background: #1b3354 !important;
@@ -586,8 +588,8 @@ a {
 .dataset-map-expanded #dataset-map {
     position: absolute;
     width: 968px;
-    height: 384px;
-    top: -384px;
+    height: 383px;
+    top: -385px;
     left: -1px;
     background-color: white;
     border: 1px solid #CCC;
@@ -743,7 +745,7 @@ a {
     position: relative;
     bottom: 0;
     float: right;
-    margin-top: 5px;
+    margin-top: -7px;
     margin-left: 10px;
 }
 .control-order-by select {
@@ -931,13 +933,14 @@ body{font-size:87.5%;}
 header .header_new.banner_new.page-heading_new  {
     background-color: #4679B2;
     color: #FFFFFF;
+    padding:12px 0;
 }
 .header_new.banner_new.page-heading_new {
     border-bottom: 0 none;
 }
 .page-header_new  {
     border-bottom: medium none;
-    margin: 44px 0 22px;
+   /* margin: 44px 0 22px;*/
     padding-bottom: 0;
 }
 .page-header_new  h1 {
@@ -1351,6 +1354,18 @@ position: static
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale
 }
+@charset "UTF-8";
+[class^="topic-"] a i:before, [class*=" topic-"] a i:before {
+    font-family: "datagov-icons" !important;
+    font-style: normal !important;
+    font-weight: normal !important;
+    font-variant: normal !important;
+    text-transform: none !important;
+    speak: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale
+}
 
 /*below are styles where we change icons to css */
 
@@ -1432,3 +1447,217 @@ position: static
 }
 .ckanext-datapreview{clear:both;}
 .muted.ellipsis{white-space:normal;}
+aside.secondary{margin-left:15px !important;border:1px solid #ccc;border-right:0px;}
+.wrapper {
+    background: url("../../../../base/images/nav.png") repeat-y scroll 16px 0 #ffffff;
+
+}
+#content .toolbar .add_action {
+    position: static !important;
+    float: right;
+}
+.sub-nav.banner-nav {
+    background-color: #eef7ff;
+    border-bottom: 1px solid #bfd4e1;
+    border-top: 1px solid #fff;
+}
+.sub-nav.banner-nav .nav{margin-bottom:0px;}
+.sub-nav.banner-nav .nav > li > a {
+    color: #333;
+    display: block;
+    font-size: 16px;
+    padding: 10px 15px;
+    position: relative;
+}
+.page-header_new .toolbar {
+    background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
+    border: 0 none;
+    float: right;
+    width: 500px;
+}
+.control-group.search-giant {
+    float: left;
+    width: 73%;
+}
+.form-select.control-group.control-order-by > label{
+    display:block;
+}
+.search-giant input{
+    background:#f6f6f6;
+    border-radius:0px;
+}
+.filter-list .facet {
+    display: block;
+}
+#sort_option {
+    /*display: none;*/
+    clear:both;
+    margin-bottom: 10px;
+}
+.page-header_new .toolbar .add_action{position:static;float:right;}
+.page-header_new .toolbar .breadcrumb{float:right;margin-right:15px;margin-top:5px;}
+.new-results {
+    font-size: 35px;
+    font-weight: lighter;
+    margin-left: 26px;
+    margin-top:8px;
+}
+.toolbar .pill{border-radius:0px;background-color:#a2a2a2;}
+.btn-primary.question {
+    background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
+    border: 0 none;
+    box-shadow: none;
+    color: white !important;
+    float:none !important;
+
+}
+.question .icon-question-sign{font-size:32px;}
+.main-heading {
+    float: left;
+    width: 400px;
+    padding:10px 0;
+}
+.page-header_new .toolbar .breadcrumb a {
+    color: #fff;
+    font-weight: normal;
+}
+.page-header_new .btn-primary:hover {background:none !important;}
+.page-header_new .btn.btn_new {
+    background: none repeat scroll 0 0 #fff;
+    border-radius: 0;
+    color: #4679b2;
+    font-size: 18px;
+}
+.page-header_new .main-heading h1{margin:0;padding:0px;line-height:40px;}
+#menu-community.nav > li > a:hover, #menu-community.nav > li > a:focus {
+    border-bottom: 5px solid #ccc;
+    text-decoration: none;
+    background:none;
+}
+#menu-community{margin-top:5px;}
+.results strong, .is-search-title{display:inline-block;}
+.active_jquery_menu.active {
+    border-bottom: 5px solid #ccc;
+}
+.page-header_new .toolbar{background: none !important;}
+.toolbar .btn.question{background-color:transparent;}
+.ie10 .page-header_new .toolbar .breadcrumb a {
+font-weight:lighter;
+}
+.module .module-content .dataset-search {
+   /* margin-top: -20px;
+*/}
+.module-content:first-child {
+    padding-top: 1px;
+}
+.topic-health a i:before{
+    content: "\e00d";
+}
+.topic-energy a i:before{
+    content: "\e008";
+}
+.topic-ethics a i:before{
+    content: "\e009";
+}
+.topic-education a i:before{
+    content: "\e007";
+}
+.topic-finance a i:before{
+    content: "\e00a";
+}
+.topic-climate a i:before{
+    content: "\e002"
+}
+.topic-law a i:before{
+    content: "\e010"
+}
+.topic-research a i:before{
+    content: "\e013";
+}
+.topic-safety a i:before{
+    content: "\e014"
+}
+.topic-food a i:before{
+    content: "\e00b"
+}
+.topic-ocean a i:before{
+    content: "\e012"
+}
+.topic-development a i:before{
+    content: "\e006"
+}
+.topic-manufacturing a i:before{
+    content: "\e011";
+}
+.topic-consumer a i:before{
+    content: "\e003"
+}
+.topic-weather a i:before{
+    content: "\e016";
+}
+.topic-geospatial a i:before{
+    content: "\e00c";
+}
+.topic-jobs-and-skills a i:before{
+    content: "\e00f";
+}
+.topic-business a i:before{
+    content: "\e000";
+}
+.topic-counties a i:before{
+    content: "\e004";
+}
+.topic-states a i:before{
+    content: "\e015";
+}
+.topic-cities a i:before{
+    content: "\e001";
+}
+.topic-developers a i:before{
+    content: "\e005";
+}
+.main-heading .category-header a i{
+    font-size:35px;
+}
+.main-heading .category-header a div {
+    float: left;
+    text-align: left;
+    vertical-align: middle;
+}
+#menu-community .active {
+    border-bottom: 5px solid #ccc;
+}
+.add_action .btn-primary{float:right;}
+.control-group {
+    margin-bottom: 5px;
+}
+#dataset-search .results {
+margin-top:0px
+}
+.wrapper .btn-group.actions{top:-40px;}
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+.page-header_new .toolbar .breadcrumb a{font-weight: lighter;}
+    .btn-primary.question {
+    float:none !important ;
+    }
+    }
+
+.navbar-nav > li > .dropdown-menu {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    margin-top: 0;
+}
+.sub-nav.banner-nav nav li a:hover, .subnav.banner nav li a.active {
+    background-color: #eef7ff;
+}
+.sub-nav.banner-nav .dropdown-menu li a {
+    padding: 0.75em 1em;
+    font-size:16px;
+}
+.sub-nav.banner-nav .nav.navbar-nav li a {
+    padding-bottom: 9px;
+}
+#menu-community.nav .open > a, #menu-community.nav .open > a:hover, #menu-community.nav .open > a:focus {
+    background-color: #eee;
+    border-color: #428bca;
+}

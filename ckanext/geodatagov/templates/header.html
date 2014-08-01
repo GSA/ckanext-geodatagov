@@ -1,117 +1,147 @@
 {% block header %}
-  <a href="#content" class="hide">{{ _('Skip to content') }}</a>
- <!-- <header class="pre-header">
-   <div class="container">
-      <a href="http://whitehouse.gov/"><img src="http://www.data.gov/sites/all/themes/datagov/images/usa-flag.gif" alt="{{ _('WhiteHouse.gov') }}"></a>
-      {{ _('An Official Web Site of the United States Government') }}
-    </div>
-  </header>-->
-  <header class="masthead">
-    {% if g.debug and not g.debug_supress_header %}
-      <div class="debug">Controller : {{ c.controller }}<br/>Action : {{ c.action }}</div>
-    {% endif %}
- 
+<a href="#content" class="hide">{{ _('Skip to content') }}</a>
+<!-- <header class="pre-header">
   <div class="container">
-     <div class="searchbox-row skip-navigation">   
+     <a href="http://whitehouse.gov/"><img src="http://www.data.gov/sites/all/themes/datagov/images/usa-flag.gif" alt="{{ _('WhiteHouse.gov') }}"></a>
+     {{ _('An Official Web Site of the United States Government') }}
+   </div>
+ </header>-->
+<header class="masthead">
+    {% if g.debug and not g.debug_supress_header %}
+    <div class="debug">Controller : {{ c.controller }}<br/>Action : {{ c.action }}</div>
+    {% endif %}
+
+    <div class="container">
+        <div class="searchbox-row skip-navigation">
             <div class="skip-link">
                 <a href="#">Jump to Content</a>
             </div>
-     <div>
-  <form action="/dataset" class="search-form form-inline navbar-right navbar-nav  col-sm-6 col-md-6 col-lg-6" method="get" role="search">
-  <div class="input-group">
-          <label class="hide" for="search-header">Search for:</label>
-        
-<input type="search" placeholder="Search Data.Gov" class="search-field form-control" name="q" value="Search Data.Gov" id="search-header" onblur="if(value=='') value = 'Search Data.Gov'" onfocus="if(value=='Search Data.Gov') value = ''">      <span class="input-group-btn">
+            <div>
+                <form action="/dataset" class="search-form form-inline navbar-right navbar-nav  col-sm-6 col-md-6 col-lg-6" method="get" role="search">
+                    <div class="input-group">
+                        <label class="hide" for="search-header">Search for:</label>
+
+                        <input type="search" placeholder="Search Data.Gov" class="search-field form-control" name="q" value="Search Data.Gov" id="search-header" onblur="if(value=='') value = 'Search Data.Gov'" onfocus="if(value=='Search Data.Gov') value = ''">      <span class="input-group-btn">
       <button class="search-submit btn_new btn-default" type="submit">
-           <i class="fa fa-search"></i>
-           <span class="sr-only">Search</span>
-       </button>
+          <i class="fa fa-search"></i>
+          <span class="sr-only">Search</span>
+      </button>
     </span>
-  </div>
-</form>
-                  
+                    </div>
+                </form>
+
             </div>
         </div>
-	 <hgroup class="top">
-       
-        {% block header_account %}
-          <div class="account-wrapper">
-            {% if c.userobj %}
-              <nav class="account avatar authed" data-module="me" data-me="{{ c.userobj.id }}">
-                <ul class="unstyled">
-                  {% if c.userobj.sysadmin %}
-                    <li>
-                      <a href="{{ h.url_for(controller='admin', action='index') }}" title="{{ _('Sysadmin settings') }}">
-                        <i class="icon-legal"></i>
-                      </a>
-                    </li>
-                  {% endif %}
-                  <li>
-                    <a href="{{ h.url_for(controller='user', action='read', id=c.userobj.name) }}" class="image" title="{{ _('View profile') }}">
-                      {{ h.gravatar((c.userobj.email_hash if c and c.userobj else ''), size=16) }}
-                      {{ c.userobj.display_name }}
-                    </a>
-                  </li>
-                  <li class="notifications {% if c.new_activities > 0 %}notifications-important{% endif %}">
-                    {% set notifications_tooltip = ngettext('Dashboard (%(num)d new item)', 'Dashboard (%(num)d new items)', c.new_activities) %}
-                    <a href="{{ h.url_for(controller='user', action='dashboard') }}" title="{{ notifications_tooltip }}">
-                      <i class="icon-dashboard"></i>
-                      <span>{{ c.new_activities }}</span>
-                    </a>
-                  </li>
-                  <li>
-                  <a href="{{ h.saml2_user_edit_url() }}" title="{{ _('Edit settings') }}">
-                      <i class="icon-cog"></i>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="{{ h.url_for('/user/_logout') }}" title="{{ _('Log out') }}">
-                      <i class="icon-signout"></i>
-                    </a>
-                  </li>
-                </ul>
-              </nav>
-            {% else %}
-              <!---<div class="not-authed">
-                <a href="{{ h.url_for(controller='user', action='login') }}">
-                  <span>{{ _('Login') }}</span>
-                </a>
-              </div>-->
-            {% endif %}
-          </div>
-        {% endblock %}
-        <!-- <form class="search-box-new" method="get" action="{% url_for controller='package', action='search' %}">
-          <span class="control-group">
-            <input type="text" class="search-new" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search datasets...') }}" />
-            <button type="submit" value="{{ _('Search') }}">Submit</button>
-           </span>
-        </form>
-        <form class="site-wide-search" action="http://www.data.gov/search/node/" method="get" data-module="geodatagov-site-wide-search">
-          <label for="field-sitewide-search" class="hide">{{ _('Search Data.gov') }}</label>
-          <input id="field-sitewide-search" type="text" name="q" placeholder="{{ _('Search Data.gov') }}" />
-          <button class="btn-search" type="submit">{{ _('Search') }}</button>
-        </form>-->
- 	
-	</hgroup>
-   <hgroup class="top-nav">
- <div class="logo">
-          <a href="http://www.data.gov/" class="root"><span>{{ _('data.gov') }}</span></a>
-        </div>
-       {% include 'snippets/root_nav.html' %}
-       {% block header_site_navigation %}
-      
-       {% endblock %}
+        <hgroup class="top">
 
-      </hgroup>
-	</div>
-<div class="header_new banner_new page-heading_new">
-    <div class="container">
-        <div class="page-header_new">
-          <h1>Data Catalog</h1>
-          <a id="exitURL" href="#" style="display:none;" class="btn">{{_('Back to Topic')}}</a>
-                    
+            {% block header_account %}
+            <div class="account-wrapper">
+                {% if c.userobj %}
+                <nav class="account avatar authed" data-module="me" data-me="{{ c.userobj.id }}">
+                    <ul class="unstyled">
+                        {% if c.userobj.sysadmin %}
+                        <li>
+                            <a href="{{ h.url_for(controller='admin', action='index') }}" title="{{ _('Sysadmin settings') }}">
+                                <i class="icon-legal"></i>
+                            </a>
+                        </li>
+                        {% endif %}
+                        <li>
+                            <a href="{{ h.url_for(controller='user', action='read', id=c.userobj.name) }}" class="image" title="{{ _('View profile') }}">
+                                {{ h.gravatar((c.userobj.email_hash if c and c.userobj else ''), size=16) }}
+                                {{ c.userobj.display_name }}
+                            </a>
+                        </li>
+                        <li class="notifications {% if c.new_activities > 0 %}notifications-important{% endif %}">
+                            {% set notifications_tooltip = ngettext('Dashboard (%(num)d new item)', 'Dashboard (%(num)d new items)', c.new_activities) %}
+                            <a href="{{ h.url_for(controller='user', action='dashboard') }}" title="{{ notifications_tooltip }}">
+                                <i class="icon-dashboard"></i>
+                                <span>{{ c.new_activities }}</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ h.saml2_user_edit_url() }}" title="{{ _('Edit settings') }}">
+                                <i class="icon-cog"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ h.url_for('/user/_logout') }}" title="{{ _('Log out') }}">
+                                <i class="icon-signout"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                {% else %}
+                <!---<div class="not-authed">
+                  <a href="{{ h.url_for(controller='user', action='login') }}">
+                    <span>{{ _('Login') }}</span>
+                  </a>
+                </div>-->
+                {% endif %}
+            </div>
+            {% endblock %}
+            <!-- <form class="search-box-new" method="get" action="{% url_for controller='package', action='search' %}">
+              <span class="control-group">
+                <input type="text" class="search-new" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search datasets...') }}" />
+                <button type="submit" value="{{ _('Search') }}">Submit</button>
+               </span>
+            </form>
+            <form class="site-wide-search" action="http://www.data.gov/search/node/" method="get" data-module="geodatagov-site-wide-search">
+              <label for="field-sitewide-search" class="hide">{{ _('Search Data.gov') }}</label>
+              <input id="field-sitewide-search" type="text" name="q" placeholder="{{ _('Search Data.gov') }}" />
+              <button class="btn-search" type="submit">{{ _('Search') }}</button>
+            </form>-->
+
+        </hgroup>
+        <hgroup class="top-nav">
+            <div class="logo">
+                <a href="http://www.data.gov/" class="root"><span>{{ _('data.gov') }}</span></a>
+            </div>
+            {% include 'snippets/root_nav.html' %}
+            {% block header_site_navigation %}
+
+            {% endblock %}
+
+        </hgroup>
+    </div>
+    <div class="header_new banner_new page-heading_new">
+        <div class="container">
+            <div class="page-header_new">
+                <div class="main-heading">
+                    <h1><span class="category-header ">
+<a href="#" class="topic_url">
+    <div><i></i></div>
+    <span class="topic_name"></span>
+</a>
+</span> Data Catalog </h1>
+
+                </div>
+
+                <div class="toolbar">
+                    <div class="add_action">
+                        <a href="{{ h.url_for('organizations_index') }}" class="btn btn_new">{{ _('Organizations') }}</a>
+                        <a href="http://www.data.gov/catalog-help/" class="btn btn-primary question" data-module="geodatagov-search-helper-message"><i class="icon-question-sign"></i></a>
+                        <div id="search-helper-message">
+                            To find datasets, enter your search terms in the search box below or browse through the categories on the left.  As you browse, you will be refining and narrowing your search.  To broaden your search again, click on the "clear all" link at the top of any category or on the "X" to the right of any single term. </div>
+                    </div>
+                    {% block breadcrumb %}
+                    <ol class="breadcrumb">
+                        <li class="home"><a href="{{ h.url(controller='package', action='search') }}"><i class="icon-home"></i><span> {{ _('Home') }}</span></a></li>
+                        <li class="active">{{ h.nav_link(_('Datasets'), controller='package', action='search', highlight_actions = 'new index') }}</li>
+                    </ol>
+                    {% endblock %}
+
+                </div>
+            </div>
         </div>
     </div>
+</header>
+<div class="sub-nav banner-nav">
+    <div class="container">
+        <nav role="navigation" class="topic-subnav">
+            <ul class="nav navbar-nav" id="menu-community">
+            </ul>
+        </nav>
+    </div>
 </div>
- </header>
 {% endblock %}

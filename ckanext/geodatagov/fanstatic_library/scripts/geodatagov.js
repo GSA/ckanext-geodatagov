@@ -95,15 +95,21 @@ $(document).ready(function () {
         }
 
         if (fromDataGov) {
-            if (document.URL.indexOf('/dataset/') > 0
+            if (document.URL.indexOf('/dataset') > 0
                 || document.URL.indexOf('groups=') >0
                 || document.URL.indexOf('/group/') >0
                 || document.URL.indexOf('/organization/') >0)
             {
                 $.cookie('back2community', document.referrer,{ path: "/", expires: 2 });
+                if ((matches = document.location.hash.match(/#topic=([\S_-]+)/)) && (typeof matches[1] !== 'undefined')) {
+                    $.cookie('community_hash', matches[1],{ path: "/", expires: 2 });
+                }
+
             } else {
 //            if it is just search, we should remove this cookie
                 $.removeCookie('back2community');
+                $.removeCookie('community_hash');
+
             }
         }
     }
@@ -123,6 +129,7 @@ $(document).ready(function () {
         } else {
             $('#exitURL').hide();
         }
+
     }
 });
 
@@ -145,8 +152,75 @@ jQuery(window).load(function(){
         }
 
         linkRewriter("next.data.gov", "staging.data.gov");
+
     }
+    (function($) {
+
+
+        var jsonp=$('nav.primary').attr('jsonpsrc');
+        var json = $.parseJSON(jsonp);
+
+        var comm_menus=[];
+        var community = $.cookie('community_hash');
+        if ((typeof community !== 'undefined') && ('' !== community)) {
+        $.each(json[community], function(i,comm_menu){
+            if (comm_menu.link.indexOf("/#")>-1){
+                comm_menus.push('<li><a href="#" class="dropdown-toggle" data-toggle="dropdown">' +comm_menu.name + '<b class="caret"></b></a><ul class="dropdown-menu topics">');
+                $.each(json[community], function(i,comm_menu){
+                    if(comm_menu.parent_id ) {
+                        comm_menus.push('<li><a href="' +comm_menu.link + '">' +comm_menu.name + '</a></li>');
+                    }
+                });
+                comm_menus.push('</ul></li>');
+            }
+
+            else if(!comm_menu.parent_id){
+                comm_menus.push('<li><a href="' +comm_menu.link + '">' +comm_menu.name + '</a></li>');
+            }
+
+        });
+
+
+
+        $('#menu-community').append( comm_menus.join('') );
+            var cookie_comm = $.cookie('community_hash').replace("_navigation","")+' -';
+            var cookie_url= $.cookie('community_hash').replace("_navigation","");
+            var cookie_class='topic-'+$.cookie('community_hash').replace("_navigation","");
+            if (cookie_comm==='jobs-and-skills -')
+            {
+                cookie_comm='jobs & skills - ';
+            }else if(cookie_comm==='development -'){
+                cookie_comm='Global development - ';
+            }
+            else if(cookie_comm==='research -'){
+                cookie_comm='science & research - ';
+            }
+            else if(cookie_comm==='food -'){
+                cookie_comm='agriculture - ';
+            }
+
+
+            $('.topic_url').attr('href', '//data.gov/'+cookie_url);
+            $('.topic_name').html(cookie_comm);
+            $('.category-header').addClass(cookie_class);
+            $('.topic_name').show();
+
+        }
+
+
+
+    })(jQuery);
 });
 if ($.browser.msie && $.browser.version == 10) {
     $("html").addClass("ie10");
 }
+window.onload=function(){
+
+    jQuery("#menu-community a[href*='catalog']").addClass('active');
+
+}
+/*if(window.location.host.indexOf('/organization/')){$('#dataset-search').css('margin-top',0)}
+if(window.location.host.indexOf('/harvest')){$('#dataset-search').css('margin-top',-20)}
+if(window.location.host.indexOf('/harvest/')){$('#dataset-search').css('margin-top',-20)}
+*/
+
