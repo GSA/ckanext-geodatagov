@@ -1619,6 +1619,7 @@ font-weight:lighter;
 }
 .main-heading .category-header a i{
     font-size:35px;
+    margin-right:10px;
 }
 .main-heading .category-header a div {
     float: left;
@@ -1666,5 +1667,8 @@ margin-top:0px
 .ie9 .sub-nav.banner-nav nav li a:hover, .ie9 .sub-nav.banner-nav nav li a.active
 {
     background-color: #eef7ff !important;
+}
+.page-header_new .breadcrumb > li {
+  text-shadow: none;
 }
 .stages{margin-top:0px !important;}
