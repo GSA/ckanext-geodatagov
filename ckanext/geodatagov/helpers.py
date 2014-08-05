@@ -346,6 +346,8 @@ def get_dynamic_menu():
 
                 if submenu_key == 'agriculture':
                     submenu_key = 'food'
+                elif submenu_key == 'businessusa':
+                    submenu_key = 'business'
                 elif submenu_key == 'County Government':
                     submenu_key = 'counties'
                 elif submenu_key == 'State Government':
