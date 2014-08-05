@@ -330,7 +330,7 @@ def get_dynamic_menu():
     # some special topic categories got their own sub menus.
     category = None
     if group == 'climate' and categories:
-        cat_food_list = ['Food Resilience', 'Food+Production', 'Food Distribution', 'Food Safety and Nutrition', 'Food Security']
+        cat_food_list = ['Food Resilience', 'Food Production', 'Food Distribution', 'Food Safety and Nutrition', 'Food Security']
         cat_coastal_list = ['Coastal Flooding']
         if set(cat_food_list).issuperset(categories):
             category = 'foodresilience'
