@@ -311,37 +311,53 @@ def get_dynamic_menu():
     if json_menu_clean:
         try:
             menus = json.loads(json_menu_clean)
-            menus['source'] = json_menu_clean
         except:
             pass
 
     query = request.environ.get('QUERY_STRING', '');
-    group = None
-    categories = None
+    submenu_key = None
+
     if menus and query:
         query_dict = urlparse.parse_qs(query)
+        organization_types = query_dict.get('organization_type', [])
+        organizations = query_dict.get('organization', [])
         groups = query_dict.get('groups', [])
-        categories = query_dict.get('vocab_category_all', [])
-        if len(groups) == 1:
-            # remove trailing numerics
-            group = re.sub(r'\d+$', '', groups[0])
-            group = group.lower()
+        # the three are exclusive
+        if sorted([not not organization_types, not not organizations, not not groups]) == [False, False, True]:
+            _keys = organization_types or organizations or groups
+            if len(_keys) == 1:
+                submenu_key = _keys[0]
+                if groups:
+                    # remove trailing numerics
+                    submenu_key = re.sub(r'\d+$', '', submenu_key)
+                    submenu_key = submenu_key.lower()
 
-    # some special topic categories got their own sub menus.
-    category = None
-    if group == 'climate' and categories:
-        cat_food_list = ['Food Resilience', 'Food Production', 'Food Distribution', 'Food Safety and Nutrition', 'Food Security']
-        cat_coastal_list = ['Coastal Flooding']
-        if set(cat_food_list).issuperset(categories):
-            category = 'foodresilience'
-        elif set(cat_coastal_list).issuperset(categories):
-            category = 'coastalflooding'
+                    categories = query_dict.get('vocab_category_all', [])
+                    # some special topic categories got their own sub menus.
+                    category = None
+                    if submenu_key == 'climate' and categories:
+                        cat_food_list = ['Food Resilience', 'Food Production', 'Food Distribution', 'Food Safety and Nutrition', 'Food Security']
+                        cat_coastal_list = ['Coastal Flooding']
+                        if set(cat_food_list).issuperset(categories):
+                            category = 'foodresilience'
+                        elif set(cat_coastal_list).issuperset(categories):
+                            category = 'coastalflooding'
+                    submenu_key = category if category else submenu_key
 
-    group_category = category if category else group
+                if submenu_key == 'agriculture':
+                    submenu_key = 'food'
+                elif submenu_key == 'County Government':
+                    submenu_key = 'counties'
+                elif submenu_key == 'State Government':
+                    submenu_key = 'states'
+                elif submenu_key == 'City Government':
+                    submenu_key = 'cities'
+                elif submenu_key == 'hhs-gov':
+                    submenu_key = 'health'
 
-    if group_category and menus.get(group_category + '_navigation'):
+    if submenu_key and menus.get(submenu_key + '_navigation'):
         submenus = []
-        for submenu in menus[ group_category + '_navigation' ]:
+        for submenu in menus[ submenu_key + '_navigation' ]:
             if re.search(r'/#$', submenu['link']):
                 submenu['has_children'] = True
             submenus.append(submenu)
@@ -357,9 +373,9 @@ def get_dynamic_menu():
         }
 
         menus['topic_header'] = {
-            'url': '//www.data.gov/' + group_category,
-            'name': name_pair.get(group_category, group_category.capitalize()),
-            'class': 'topic-' + group,
+            'url': '//www.data.gov/' + submenu_key,
+            'name': name_pair.get(submenu_key, submenu_key.capitalize()),
+            'class': 'topic-' + submenu_key,
         }
 
     return menus
