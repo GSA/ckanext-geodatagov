@@ -1,9 +1,9 @@
-import urllib, urllib2, json, re, HTMLParser
+import urllib, urllib2, json, re, HTMLParser, urlparse
 from urllib2 import Request, urlopen, URLError, HTTPError
 import os, time
 import logging
 
-from pylons import config
+from pylons import config, request
 
 from ckan import plugins as p
 from ckan.lib import helpers as h
@@ -314,6 +314,53 @@ def get_dynamic_menu():
             menus['source'] = json_menu_clean
         except:
             pass
+
+    query = request.environ.get('QUERY_STRING', '');
+    group = None
+    categories = None
+    if menus and query:
+        query_dict = urlparse.parse_qs(query)
+        groups = query_dict.get('groups', [])
+        categories = query_dict.get('vocab_category_all', [])
+        if len(groups) == 1:
+            # remove trailing numerics
+            group = re.sub(r'\d+$', '', groups[0])
+            group = group.lower()
+
+    # some special topic categories got their own sub menus.
+    category = None
+    if group == 'climate' and categories:
+        cat_food_list = ['Food Resilience', 'Food+Production', 'Food Distribution', 'Food Safety and Nutrition', 'Food Security']
+        cat_coastal_list = ['Coastal Flooding']
+        if set(cat_food_list).issuperset(categories):
+            category = 'foodresilience'
+        elif set(cat_coastal_list).issuperset(categories):
+            category = 'coastalflooding'
+
+    group_category = category if category else group
+
+    if group_category and menus.get(group_category + '_navigation'):
+        submenus = []
+        for submenu in menus[ group_category + '_navigation' ]:
+            if re.search(r'/#$', submenu['link']):
+                submenu['has_children'] = True
+            submenus.append(submenu)
+        menus['submenus'] = submenus
+
+        name_pair = {
+        'jobs-and-skills': 'Jobs & Skills',
+        'development': 'Global Development',
+        'research': 'Science & Research',
+        'food': 'Agriculture',
+        'coastalflooding': 'Climate - Coastal Flooding',
+        'foodresilience': 'Climate - Food Resilience',
+        }
+
+        menus['topic_header'] = {
+            'url': '//www.data.gov/' + group_category,
+            'name': name_pair.get(group_category, group_category.capitalize()),
+            'class': 'topic-' + group,
+        }
 
     return menus
 

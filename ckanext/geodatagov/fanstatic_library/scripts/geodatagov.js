@@ -154,80 +154,8 @@ jQuery(window).load(function(){
         linkRewriter("next.data.gov", "staging.data.gov");
 
     }
-    (function($) {
-
-
-        var jsonp=$('nav.primary').attr('jsonpsrc');
-        var json = $.parseJSON(jsonp);
-
-        var comm_menus=[];
-        var community = $.cookie('community_hash');
-        if ((typeof community !== 'undefined') && ('' !== community)) {
-        $.each(json[community], function(i,comm_menu){
-            if (comm_menu.link.indexOf("/#")>-1){
-                var parent_id = comm_menu.id;
-                comm_menus.push('<li><a href="#" class="dropdown-toggle" data-toggle="dropdown">' +comm_menu.name + '<b class="caret"></b></a><ul class="dropdown-menu topics">');
-                $.each(json[community], function(i,comm_menu){
-                    if(comm_menu.parent_id ) {
-                        if(parent_id === comm_menu.parent_id){
-                        comm_menus.push('<li><a href="' +comm_menu.link + '">' +comm_menu.name + '</a></li>');
-                        }
-                    }
-
-                });
-                comm_menus.push('</ul></li>');
-            }
-
-            else if(!comm_menu.parent_id){
-                if(comm_menu.name==='Data'){
-                    comm_menus.push('<li><a href="' +comm_menu.link + '" class="active">' +comm_menu.name + '</a></li>');
-
-                }else{
-                comm_menus.push('<li><a href="' +comm_menu.link + '">' +comm_menu.name + '</a></li>');
-                }
-            }
-
-
-        });
-
-
-
-        $('#menu-community').append( comm_menus.join('') );
-            var cookie_comm = $.cookie('community_hash').replace("_navigation","")+' -';
-            var cookie_url= $.cookie('community_hash').replace("_navigation","");
-            var cookie_class='topic-'+$.cookie('community_hash').replace("_navigation","");
-            if (cookie_comm==='jobs-and-skills -')
-            {
-                cookie_comm='jobs & skills - ';
-            }else if(cookie_comm==='development -'){
-                cookie_comm='Global development - ';
-            }
-            else if(cookie_comm==='research -'){
-                cookie_comm='science & research - ';
-            }
-            else if(cookie_comm==='food -'){
-                cookie_comm='agriculture - ';
-            }
-            else if(cookie_comm==='coastalflooding -'){
-                cookie_comm='Climate - Coastal Flooding - ';
-                cookie_class='topic-climate';
-            }
-            else if(cookie_comm==='foodresilience -'){
-                cookie_comm='Climate - Food Resilience - ';
-                cookie_class='topic-climate';
-            }
-
-            $('.topic_url').attr('href', '//data.gov/'+cookie_url);
-            $('.topic_name').html(cookie_comm);
-            $('.category-header').addClass(cookie_class);
-            $('.topic_name').show();
-
-        }
-
-
-
-    })(jQuery);
 });
+
 if ($.browser.msie && $.browser.version == 10) {
     $("html").addClass("ie10");
 }
