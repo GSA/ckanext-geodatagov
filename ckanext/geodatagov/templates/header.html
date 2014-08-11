@@ -111,7 +111,7 @@
                 <div class="main-heading">
                     <h1>
                     {% if menus['topic_header'] %}
-                        <span class="category-header {{ menus['topic_header']['class'] }}"><a href="{{ menus['topic_header']['url'] }}" class="topic_url"><div><i></i></div><span class="topic_name">{{ menus['topic_header']['name'] }}</span></a> - </span>
+                        <span class="category-header {{ menus['topic_header']['class'] }}"><a href="{{ menus['topic_header']['url'] }}" class="topic_url"><div><i></i></div><span class="topic_name">{{ menus['topic_header']['name'] }}</span></a> &nbsp; &mdash; &nbsp; </span>
                     {% else %}
                         <span class="category-header "><a href="#" class="topic_url"><div><i></i></div><span class="topic_name"></span></a></span>
                     {% endif %}
@@ -138,11 +138,11 @@
         </div>
     </div>
 </header>
+    {% if menus['submenus'] %}
 <div class="sub-nav banner-nav">
     <div class="container">
         <nav role="navigation" class="topic-subnav">
             <ul class="nav navbar-nav" id="menu-community">
-            {% if menus['submenus'] %}
                 {% for submenu in menus['submenus'] if not submenu['parent_id'] %}
                     {% if submenu['has_children'] %}
                         {% set parent_id = submenu['id'] %}
@@ -161,9 +161,9 @@
                         {% endif %}
                     {% endif %}
                 {% endfor %}
-            {% endif %}
             </ul>
         </nav>
     </div>
 </div>
+    {% endif %}
 {% endblock %}
