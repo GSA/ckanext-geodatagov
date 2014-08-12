@@ -8,17 +8,13 @@ function onPageLoad(facetName, title){
      
     var moreText = 'Show More ' + title;
     var lessText = 'Show Only Popular ' + title;  
-  
-    var browserUrl = window.location.href;
-    if(browserUrl.indexOf(facetName + '_limit=0') == -1)  {
-	    //alert(jQuery('#' + facetName).html());
-		jQuery('#' + facetName).hideMaxListItems({ 'max': 5,
+   
+	jQuery('#' + facetName).hideMaxListItems({ 'max': 5,
 												 'speed': 0,
 												 'moreText': moreText,
 												 'lessText': lessText,											 
 												 'moreHTML': '<p class="maxlist-more module-footer" id="show-more-' + facetName + '"><a href="#" class="read-more" id="facet_read_more" name="sm_' + facetName + '"></a></p>'
 											  });
-	}									  
   
     jQuery("#show-more-" + facetName).click(function(){				
 						
@@ -78,16 +74,22 @@ hideMaxListItems: function(options)
 			speedPerLI = 0; 
 		}
 		
+		var browserUrl = window.location.href;
+		var facetName = $(this).attr('id')
 		// If list has more than the "max" option
 		if ( (totalListItems > 0) && (totalListItems > op.max) )
 		{
-			// Initial Page Load: Hide each LI element over the max
-			$(this).children("li").each(function(index) {
-				if ( (index+1) > op.max ) {
-					$(this).hide(0);
-					$(this).addClass('maxlist-hidden');
-				}
-			});
+		    if(browserUrl.indexOf('_' + facetName + '_limit=0') == -1) {
+		        //console.log();
+		    	// Initial Page Load: Hide each LI element over the max
+				$(this).children("li").each(function(index) {
+					if ( (index+1) > op.max ) {
+						$(this).hide(0);
+						$(this).addClass('maxlist-hidden');
+					}
+			 	});
+			}
+			
 			// Replace [COUNT] in "moreText" or "lessText" with number of items beyond max
 			var howManyMore = totalListItems - op.max;
 			var newMoreText = op.moreText;
@@ -99,8 +101,15 @@ hideMaxListItems: function(options)
 			}
 			// Add "Read More" button			
 			$(this).after(op.moreHTML);
-			// Add "Read More" text
-			$(this).next(".maxlist-more").children("a").text(newMoreText);			
+			
+			if(browserUrl.indexOf('_' + facetName + '_limit=0') == -1) {
+				// Add "Read More" text
+				$(this).next(".maxlist-more").children("a").text(newMoreText);			
+			}
+			else {
+			    // Add "Read Less" text
+				$(this).next(".maxlist-more").children("a").text(newLessText);			
+			}
 			// Click events on "Read More" button: Slide up and down
 			$(this).next(".maxlist-more").children("a").click(function(e)
 			{
