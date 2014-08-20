@@ -1627,7 +1627,7 @@ font-weight:lighter;
     vertical-align: middle;
 }
 #menu-community .active {
-    border-bottom: 5px solid #ccc;
+    border-bottom: 5px solid #bfd4e1;
 }
 .add_action .btn-primary{float:right;}
 .control-group {
@@ -1672,3 +1672,15 @@ margin-top:0px
   text-shadow: none;
 }
 .stages{margin-top:0px !important;}
+#dataset-resources .resource-item .btn-group > .btn + .btn {
+    margin-left: 10px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+#dataset-resources .resource-item .btn-group > .btn:first-child {
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    margin-left: 0;
+}
