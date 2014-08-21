@@ -933,7 +933,7 @@ body{font-size:87.5%;}
 header .header_new.banner_new.page-heading_new  {
     background-color: #4679B2;
     color: #FFFFFF;
-    padding:12px 0;
+    padding:2px 0;
 }
 .header_new.banner_new.page-heading_new {
     border-bottom: 0 none;
@@ -1014,7 +1014,7 @@ input.form-control {
 .masthead{background-color:#fff;}
 ul#menu-primary-navigation.navbar-nav.nav > li > a {
     /*color: #333333 !important;*/
-    padding: 15px 10px;
+    padding: 7px 10px;
 }
 ul#menu-primary-navigation li, .navbar-header .navbar-brand {
     font-size: 17px;
