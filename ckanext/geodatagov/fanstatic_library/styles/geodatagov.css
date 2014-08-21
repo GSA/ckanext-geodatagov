@@ -933,7 +933,7 @@ body{font-size:87.5%;}
 header .header_new.banner_new.page-heading_new  {
     background-color: #4679B2;
     color: #FFFFFF;
-    padding:12px 0;
+    padding:8px 0;
 }
 .header_new.banner_new.page-heading_new {
     border-bottom: 0 none;
@@ -1014,7 +1014,7 @@ input.form-control {
 .masthead{background-color:#fff;}
 ul#menu-primary-navigation.navbar-nav.nav > li > a {
     /*color: #333333 !important;*/
-    padding: 15px 10px;
+    padding: 7px 10px;
 }
 ul#menu-primary-navigation li, .navbar-header .navbar-brand {
     font-size: 17px;
@@ -1531,7 +1531,7 @@ aside.secondary{margin-left:15px !important;border:1px solid #ccc;border-right:0
 }
 .page-header_new .main-heading h1{margin:0;padding:0px;line-height:40px;}
 #menu-community.nav > li > a:hover, #menu-community.nav > li > a:focus {
-    border-bottom: 5px solid #ccc;
+    border-bottom: 5px solid #bfd4e1;
     text-decoration: none;
     background:none;
 }
@@ -1627,7 +1627,7 @@ font-weight:lighter;
     vertical-align: middle;
 }
 #menu-community .active {
-    border-bottom: 5px solid #ccc;
+    border-bottom: 5px solid #bfd4e1;
 }
 .add_action .btn-primary{float:right;}
 .control-group {
@@ -1672,3 +1672,21 @@ margin-top:0px
   text-shadow: none;
 }
 .stages{margin-top:0px !important;}
+#dataset-resources .resource-item .btn-group > .btn + .btn {
+    margin-left: 10px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+#dataset-resources .resource-item .btn-group > .btn:first-child {
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    margin-left: 0;
+}
+.masthead .container .logo {
+    margin-top: 2px;
+}
+header.masthead .container {
+    width: 945px !important;
+}
