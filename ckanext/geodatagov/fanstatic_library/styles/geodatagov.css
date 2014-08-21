@@ -1687,3 +1687,6 @@ margin-top:0px
 .masthead .container .logo {
     margin-top: 2px;
 }
+header.masthead .container {
+    width: 940px;
+}
