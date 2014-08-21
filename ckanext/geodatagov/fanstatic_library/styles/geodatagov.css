@@ -1684,3 +1684,6 @@ margin-top:0px
     border-radius: 4px;
     margin-left: 0;
 }
+.masthead .container .logo {
+    margin-top: 2px;
+}
