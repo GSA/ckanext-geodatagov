@@ -51,6 +51,15 @@
     {{ _('Download') }}
     {% endif %}
     </a>
+
+   {% if is_preview_format and h.is_preview_available(res, pkg.id)  %}
+    {% set res_url = res.url %}
+    &nbsp;
+    <a href="{{ res_url }}" class="btn btn-primary">
+    <i class="icon-download-alt"></i>
+    {{ _('Download') }}
+    </a>
+    {% endif %}
 </div>
 {% endblock %}
 </li>
