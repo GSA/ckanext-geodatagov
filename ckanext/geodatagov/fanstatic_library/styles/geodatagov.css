@@ -1689,3 +1689,21 @@ margin-top:0px
 header.masthead .container {
     width: 945px !important;
 }
+.format-label[data-format="Data-Dictionary"] {
+    background-image:url('../images/data-dictionary.png');
+    height: 35px;
+    width: 31px;
+    background-position:0px 0px;
+}
+.format-label[data-format="Landing-Page"] {
+    background-image:url('../images/landing-page.png');
+    height: 33px;
+    width: 32px;
+    background-position:0px 0px;
+}
+.format-label[data-format="API-Endpoint"] {
+    background-image:url('../images/api-endpoint.png');
+    height: 35px;
+    width: 23px;
+    background-position:0px 0px;
+}
