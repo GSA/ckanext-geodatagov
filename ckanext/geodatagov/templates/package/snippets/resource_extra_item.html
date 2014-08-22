@@ -1,32 +1,36 @@
 {% set format = 'data' %}
 
 {% for extra in pkg.extras %}
-{% if extra.key == 'data-dictiionary' or extra.key == 'dataDictionary' or extra.key == 'landingPage' or extra.key == 'webService' %}
-{% set url = extra.value %}
+   {% if extra.key == 'data-dictiionary' or extra.key == 'dataDictionary' or extra.key == 'landingPage' or extra.key == 'webService' %}
+        {% set url = extra.value %}
 
-{% if extra.key == 'data-dictiionary' or extra.key == 'dataDictionary' %}
-{% set title = 'Data Dictionary' %}
-{% elif extra.key == 'landingPage' %}
-{% set title = 'Landing Page' %}
-{% else %}
-{% set title = 'API Endpoint' %}
-{% endif %}
+                {% if extra.key == 'data-dictiionary' or extra.key == 'dataDictionary' %}
+                    {% set title = 'Data Dictionary' %}
+                    {% set format = 'Data-Dictionary' %}
+                {% elif extra.key == 'landingPage' %}
+                        {% set title = 'Landing Page' %}
+                        {% set format = 'Landing-Page' %}
+                {% else %}
+                    {% set title = 'API Endpoint' %}
+                    {% set format = 'API-Endpoint' %}
+                {% endif %}
 
-<li class="resource-item">
-    <a class="heading" href="{{ url }}" title="{{ title }}">
-        {{ title }}<span class="format-label" property="dc:format" data-format="data">{{ title }}</span>
-    </a>
-    <p class="description"></p>
-    <div class="btn-group">
-        <a href="{{ url }}" class="btn btn-primary" target="_blank">
-            <i class="icon-external-link"></i>
-            {% if title == 'API Endpoint' %}
-            {{ _('URL') }}
-            {% else %}
-            {{ _('Visit page') }}
-            {% endif %}
-        </a>
-    </div>
-</li>
-{% endif %}
+                <li class="resource-item">
+                <a class="heading" href="{{ url }}" title="{{ title }}">
+                {{ title }}<span class="format-label" property="dc:format" data-format="{{ format }}">{{ title }}</span>
+                </a>
+                        <p class="description"></p>
+                        <div class="btn-group">
+                        <a href="{{ url }}" class="btn btn-primary" target="_blank">
+                                <i class="icon-external-link"></i>
+                                {% if title == 'API Endpoint' %}
+                                        {{ _('URL') }}
+                                {% else %}
+                                        {{ _('Visit page') }}
+                                {% endif %}
+                        </a>
+                        </div>
+                </li>
+   {% endif %}
 {% endfor %}
+~                         
