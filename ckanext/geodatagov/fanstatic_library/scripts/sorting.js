@@ -43,14 +43,14 @@
 	    listitems.sort(function(a, b) {
     
     	    if(sortType == 'alphaSort') {
-        		var compA = $(a).text().toUpperCase().trim();
-        		var compB = $(b).text().toUpperCase().trim(); 
+        		var compA = $.trim($(a).text().toUpperCase());
+        		var compB = $.trim($(b).text().toUpperCase()); 
         	}
         	else { 
             	var compA_arr = $(a).text().split("(");
             	var compB_arr = $(b).text().split("(");
-            	var compA = parseInt(compA_arr[compA_arr.length-1].split(')')[0].trim());
-            	var compB = parseInt(compB_arr[compB_arr.length-1].split(')')[0].trim());
+            	var compA = $.trim(parseInt(compA_arr[compA_arr.length-1].split(')')[0]));
+            	var compB = $.trim(parseInt(compB_arr[compB_arr.length-1].split(')')[0]));
         	}
         
         	if(sort == 'asc') 
