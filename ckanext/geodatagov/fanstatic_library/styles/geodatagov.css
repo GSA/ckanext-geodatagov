@@ -1014,7 +1014,7 @@ input.form-control {
 .masthead{background-color:#fff;}
 ul#menu-primary-navigation.navbar-nav.nav > li > a {
     /*color: #333333 !important;*/
-    padding: 7px 10px;
+    padding: 9px 10px;
 }
 ul#menu-primary-navigation li, .navbar-header .navbar-brand {
     font-size: 17px;
