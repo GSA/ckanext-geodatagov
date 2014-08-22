@@ -18,6 +18,7 @@ Example:
           {% for resource in resources %}
             {% snippet 'package/snippets/resource_item.html', pkg=pkg, res=resource %}
           {% endfor %}
+		  {% snippet 'package/snippets/resource_extra_item.html', pkg=pkg %}
         {% endblock %}
       </ul>        
     {% endblock %}
