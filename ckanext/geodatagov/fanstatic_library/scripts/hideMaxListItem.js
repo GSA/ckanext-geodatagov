@@ -142,8 +142,7 @@ hideMaxListItems: function(options)
 
 $('[name="facet"]').each(function(){	
 	facetName = $(this).attr('id');
-	//title = $('[name="' + facetName + '"] span').text().trim();
-    title = $('#sec-' + facetName).find('span').text().trim();
+    title = $.trim($('#sec-' + facetName).find('span').text());
 	onPageLoad(facetName, title);
 });
 
