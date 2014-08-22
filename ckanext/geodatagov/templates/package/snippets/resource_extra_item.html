@@ -1,0 +1,19 @@
+{% set format = 'data' %}
+
+{% for extra in pkg.extras %}
+   {% if extra.key == 'data-dictiionary' %}
+        {% set url = extra.value %}
+		<li class="resource-item">
+      		<a class="heading" href="{{ url }}" title="Data Dictionary">
+    		Data Dictionary<span class="format-label" property="dc:format" data-format="data">Data Dictionary</span>
+    		</a>
+			<p class="description"></p>
+			<div class="btn-group">
+    			<a href="{{ url }}" class="btn btn-primary" target="_blank">
+				<i class="icon-external-link"></i>
+				{{ _('Visit page') }}
+    			</a>
+			</div>
+		</li>
+   {% endif %}
+{% endfor %}
