@@ -44,10 +44,8 @@ hide_empty
     {% endif %}
 
 
-
     <section class="{{ wrapper_class or 'module module-narrow module-shallow' }}">
-
-      <h2 class="module-heading" name="{{name}}">
+      <h2 class="module-heading" id="sec-{{name}}">
         <i class="icon-medium icon-filter"></i>
         {% set title = title or h.get_facet_title(name) %}
           {% if title == 'Progress' %}

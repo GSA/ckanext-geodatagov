@@ -163,8 +163,8 @@
         var name = $(this).attr('name').split("sm_")[1];
         var url = $(this).attr('href');
 
-        if(url.indexOf('#' + name) == -1)
-            url = url.replace('#', '') + '#' + name;
+        if(url.indexOf('#sec-' + name) == -1)
+            url = url.replace('#', '') + '#sec-' + name;
             
         $(this).click(function(){ 
            location.href = url;
