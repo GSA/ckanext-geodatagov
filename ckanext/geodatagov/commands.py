@@ -568,8 +568,8 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
           q = model.Session.execute(sql)
           for row in q:
             try:
-              print str(datetime.datetime.now()) + ' Building Id: ' + row['id']
-              search.rebuild(row['id'])
+              print str(datetime.datetime.now()) + ' Building Id: ' + row['pkg_id']
+              search.rebuild(row['pkg_id'])
             except ckan.logic.NotFound:
               print "Error: Not Found."
             except KeyboardInterrupt:
