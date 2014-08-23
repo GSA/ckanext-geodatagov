@@ -6,6 +6,6 @@ service crond stop
 
 if [ $(ps -ef | grep "supervisord" | grep -v "grep" | wc -l) > 0 ];
 then
-    supervisorctl stop all
+    /usr/bin/supervisorctl stop all
 fi
 
