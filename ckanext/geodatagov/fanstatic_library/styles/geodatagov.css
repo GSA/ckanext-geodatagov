@@ -304,7 +304,7 @@ a {
     text-transform: uppercase;
     /*font-weight: bold;*/
     font-size: 17px;
-    line-height: 35px;
+    line-height: 32px;
     color:#333;
 }
 .masthead .container .top-nav .primary ul li a:hover {
@@ -933,7 +933,7 @@ body{font-size:87.5%;}
 header .header_new.banner_new.page-heading_new  {
     background-color: #4679B2;
     color: #FFFFFF;
-    padding:8px 0;
+    padding:7px 0 6px 0;
 }
 .header_new.banner_new.page-heading_new {
     border-bottom: 0 none;
