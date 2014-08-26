@@ -1703,8 +1703,8 @@ header.masthead .container {
 }
 .format-label[data-format="API-Endpoint"] {
     background-image:url('../images/api-endpoint.png');
-    height: 35px;
-    width: 23px;
+    height: 23px;
+    width: 35px;
     background-position:0px 0px;
 }
 #menu-community li{line-height: 26px;}
