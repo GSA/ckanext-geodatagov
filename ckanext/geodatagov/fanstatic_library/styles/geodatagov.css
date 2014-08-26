@@ -1708,3 +1708,4 @@ header.masthead .container {
     background-position:0px 0px;
 }
 #menu-community li{line-height: 26px;}
+.resource-item .btn-group a{min-width:85px;}
