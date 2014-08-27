@@ -35,7 +35,7 @@ hide_empty
 
 #}
 {% set hide_empty = hide_empty or false %}
-{% with items = items or h.get_facet_items_dict(name) %}
+{% with items = items or h.get_facet_items_dict(name, 0) %}
   {% if items or not hide_empty %}
     {% if within_tertiary %}
       {% set nav_class = 'nav nav-pills nav-stacked' %}
@@ -44,10 +44,8 @@ hide_empty
     {% endif %}
 
 
-
     <section class="{{ wrapper_class or 'module module-narrow module-shallow' }}">
-
-      <h2 class="module-heading" name="{{name}}">
+      <h2 class="module-heading" id="sec-{{name}}">
         <i class="icon-medium icon-filter"></i>
         {% set title = title or h.get_facet_title(name) %}
           {% if title == 'Progress' %}
@@ -64,7 +62,7 @@ hide_empty
 
       {% if items %}
         <nav>
-          <ul class="{{ nav_class or 'unstyled nav nav-simple nav-facet' }}" id="{{name}}">
+          <ul class="{{ nav_class or 'unstyled nav nav-simple nav-facet' }}" id="{{name}}" name="facet">
             {% for item in items %}
               {% set href = h.remove_url_param(name, item.name, extras=extras, alternative_url=alternative_url) if item.active else h.add_url_param(new_params={name: item.name}, extras=extras, alternative_url=alternative_url) %}
               {% set label = label_function(item) if label_function else item.display_name %}
@@ -78,13 +76,7 @@ hide_empty
             {% endfor %}
           </ul>
         </nav>
-        <p class="module-footer">
-          {% if h.get_param_int('_%s_limit' % name) %}
-            <a href="{{ h.remove_url_param('_%s_limit' % name, replace=0, extras=extras, alternative_url=alternative_url) }}" class="read-more" id="facet_read_more" name="sm_{{name}}">{{ _('Show More {facet_type}').format(facet_type=title) }}</a>
-          {% else %}
-            <a href="{{ h.remove_url_param('_%s_limit' % name, extras=extras, alternative_url=alternative_url) }}" class="read-more" id="facet_read_more" name="sm_{{name}}">{{ _('Show Only Popular {facet_type}').format(facet_type=title) }}</a>
-          {% endif %}
-        </p>
+        
       {% else %}
         <p class="module-content empty">{{ _('There are no {facet_type} that match this search').format(facet_type=title) }}</p>
       {% endif %}
