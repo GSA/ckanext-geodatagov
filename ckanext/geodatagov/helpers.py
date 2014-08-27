@@ -210,7 +210,7 @@ def preview_response(url):
     
     req = Request(url)
     try:
-      response = urlopen(req, timeout = 1)
+      response = urlopen(req, timeout = 20)
     except HTTPError as e:
       log.error("The server couldn\'t fulfill the request. Error code: " + str(e.code))
       return False
