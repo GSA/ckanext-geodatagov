@@ -446,13 +446,13 @@ class Demo(p.SingletonPlugin):
             return facets_dict
 
         return OrderedDict([('metadata_type','Dataset Type'),
+                            ('vocab_category_all', 'Topic Categories'),
                             ('tags','Tags'),
                             ('res_format', 'Formats'),
                             ('groups', 'Topics'),
                             ('organization_type', 'Organization Types'),
                             ('organization', 'Organizations'),
                             ('publisher', 'Publisher'),
-                            ('vocab_category_all', 'Topic Categories'),                            
                            ## ('extras_progress', 'Progress'),
                            ])
 
