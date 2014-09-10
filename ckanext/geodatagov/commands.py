@@ -561,7 +561,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
           print str(datetime.datetime.now()) + ' Starting Database to Solr Sync'           
           
           #sql = '''Select id from package where id not in (select pkg_id from solr_pkg_ids); '''
-          sql = '''Select p.id as id from package p
+          sql = '''Select p.id as pkg_id from package p
                    left join solr_pkg_ids sp on sp.pkg_id = p.id
                    where sp.pkg_id is null; '''
           
@@ -582,8 +582,8 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
           q = model.Session.execute(sql)          
           for row in q:
             try:
-              print str(datetime.datetime.now()) + ' Rebuilding Id: ' + row['id']
-              search.rebuild(row['id'])
+              print str(datetime.datetime.now()) + ' Rebuilding Id: ' + row['pkg_id']
+              search.rebuild(row['pkg_id'])
             except ckan.logic.NotFound:
               print "Error: Not Found."
             except KeyboardInterrupt:
