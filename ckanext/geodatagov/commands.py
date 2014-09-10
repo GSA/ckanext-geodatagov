@@ -546,8 +546,8 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                
                        if(str(results[x]['metadata_modified'])[:19] != str(row1['modified_dt'])[:19]):
                          print str(datetime.datetime.now()) + ' Action Type : outsync for Package Id: ' + results[x]['id']               
-                         print str(datetime.datetime.now()) + ' Modified Date from Solr: ' + str(results[x]['metadata_modified'])
-                         print str(datetime.datetime.now()) + ' Modified Date from Db: ' + str(row1['modified_dt'])
+                         print ' ' * 26 +                     ' Modified Date from Solr: ' + str(results[x]['metadata_modified'])
+                         print ' ' * 26 +                     ' Modified Date from Db: ' + str(row1['modified_dt'])
                          sql = '''insert into solr_pkg_ids (pkg_id, action) values (:pkg_id, :action);'''  
                          model.Session.execute(sql, {'pkg_id' : results[x]['id'], 'action' : 'outsync' })      
                          model.Session.commit()
