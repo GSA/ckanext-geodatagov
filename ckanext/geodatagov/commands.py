@@ -566,10 +566,13 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                    where sp.pkg_id is null; '''
           
           q = model.Session.execute(sql)
+          pkg_ids = set()
           for row in q:
+            pkg_ids.add(row['pkg_id'])
+          for pkg_id in pkg_ids:
             try:
-              print str(datetime.datetime.now()) + ' Building Id: ' + row['pkg_id']
-              search.rebuild(row['pkg_id'])
+              print str(datetime.datetime.now()) + ' Building Id: ' + pkg_id
+              search.rebuild(pkg_id)
             except ckan.logic.NotFound:
               print "Error: Not Found."
             except KeyboardInterrupt:
@@ -580,10 +583,13 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
           
           sql = '''Select pkg_id from solr_pkg_ids where action = 'outsync'; '''
           q = model.Session.execute(sql)          
+          pkg_ids = set()
           for row in q:
+            pkg_ids.add(row['pkg_id'])
+          for pkg_id in pkg_ids:
             try:
-              print str(datetime.datetime.now()) + ' Rebuilding Id: ' + row['pkg_id']
-              search.rebuild(row['pkg_id'])
+              print str(datetime.datetime.now()) + ' Rebuilding Id: ' + pkg_id
+              search.rebuild(pkg_id)
             except ckan.logic.NotFound:
               print "Error: Not Found."
             except KeyboardInterrupt:
@@ -596,9 +602,12 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
           
           sql = '''Select pkg_id from solr_pkg_ids where action = 'notfound'; '''
           q = model.Session.execute(sql)
+          pkg_ids = set()
           for row in q:
+            pkg_ids.add(row['pkg_id'])
+          for pkg_id in pkg_ids:
             try:
-              search.clear(row['pkg_id'])
+              search.clear(pkg_id)
             except ckan.logic.NotFound:
               print "Error: Not Found."
             except KeyboardInterrupt:
