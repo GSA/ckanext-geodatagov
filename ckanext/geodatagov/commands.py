@@ -457,104 +457,20 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                      model.Session.execute(sql, {'pkg_id' : results[x]['id'], 'action' : 'notfound' })
                      model.Session.commit()			
                    else:
-                     sql = '''select replace(to_char(ts, 'YYYY-MM-DDT HH24:MI:SS.MS'), ' ', '') || 'Z' as modified_dt from 
-                        (select timestamp as ts from package p 
-                        join revision r on p.revision_id = r.id
-                        where p.id = :pkg_id
-                        union all
-                        select revision_timestamp as ts from package p
-                        join package_revision prv on prv.id = p.id and prv.current = 't' and prv.state = 'active'
-                        where p.id = :pkg_id
-                        union all
-                        select timestamp as ts from package p 
-                        join package_extra pe on pe.package_id = p.id
-                        join revision r on pe.revision_id = r.id
-                        where p.id = :pkg_id
-                        union all
-                        select revision_timestamp as ts from package p 
-                        join package_extra_revision per on per.package_id = p.id and per.current = 't' and per.state = 'active'
-                        where p.id = :pkg_id
-                        union all
-                        select timestamp as ts from package p 
-                        join package_relationship pr on pr.subject_package_id = p.id
-                        join revision r on pr.revision_id = r.id
-                        where p.id = :pkg_id
-                        union all
-                        select revision_timestamp as ts from package p 
-                        join package_relationship_revision prr on prr.subject_package_id = p.id and prr.current = 't' and prr.state = 'active'
-                        where p.id = :pkg_id
-                        union all
-                        select timestamp as ts from package p 
-                        join package_relationship pr2 on pr2.object_package_id = p.id
-                        join revision r on pr2.revision_id = r.id
-                        where p.id = :pkg_id
-                        union all
-                        select revision_timestamp as ts from package p 
-                        join package_relationship_revision prr1 on prr1.object_package_id = p.id and prr1.current = 't' and prr1.state = 'active'
-                        where p.id = :pkg_id
-                        union all
-                        select timestamp as ts from package p 
-                        join resource_group rg on rg.package_id = p.id
-                        join revision r on rg.revision_id = r.id
-                        where p.id = :pkg_id
-                        union all
-                        select revision_timestamp as ts from package p 
-                        join resource_group_revision rgr on rgr.package_id = p.id and rgr.current = 't' and rgr.state = 'active'
-                        where p.id = :pkg_id
-                        union all
-                        select timestamp as ts from package p 
-                        join resource_group rg on rg.package_id = p.id
-                        join resource rs on rs.resource_group_id = rg.id
-                        join revision r on rs.revision_id = r.id
-                        where p.id = :pkg_id
-                        union all
-                        select revision_timestamp as ts from package p 
-                        join resource_group rg1 on rg1.package_id = p.id 
-                        join resource_revision rr on rr.resource_group_id = rg1.id and rr.current = 't' and rr.state = 'active'
-                        where p.id = :pkg_id
-                        union all
-                        select timestamp as ts from package p 
-                        join package_tag pt on  pt.package_id = p.id
-                        join revision r on pt.revision_id = r.id
-                        where p.id = :pkg_id
-                        union all
-                        select revision_timestamp as ts from package p 
-                        join package_tag_revision ptr on ptr.package_id = p.id and ptr.current = 't' and ptr.state = 'active'
-                        where p.id = :pkg_id
-                        union all
-                        select timestamp as ts from package p
-                        join group_extra ge on ge.group_id = p.owner_org
-                        join revision r on r.id = ge.revision_id
-                        where p.id = :pkg_id
-                        union all
-                        select revision_timestamp as ts from package p 
-                        join group_extra_revision ger on ger.group_id = p.owner_org and ger.current = 't' and ger.state = 'active' 
-                        where p.id = :pkg_id
-                        union all
-                        select timestamp  as ts from package p
-                        join public.group g on g.id = p.owner_org
-                        join revision r on r.id = g.revision_id
-                        where p.id = :pkg_id
-                        union all
-                        select revision_timestamp as ts from package p 
-                        join group_revision gr on gr.id = p.owner_org and gr.current = 't' and gr.state = 'active'
-                        where p.id = :pkg_id) temp 
-                        order by ts desc limit 1;'''
-                    
-                     q1 = model.Session.execute(sql, {'pkg_id' : results[x]['id']})      
-                     for row1 in q1:					                        			 
-               
-                       if(str(results[x]['metadata_modified'])[:19] != str(row1['modified_dt'])[:19]):
-                         print str(datetime.datetime.now()) + ' Action Type : outsync for Package Id: ' + results[x]['id']               
-                         print ' ' * 26 +                     ' Modified Date from Solr: ' + str(results[x]['metadata_modified'])
-                         print ' ' * 26 +                     ' Modified Date from Db: ' + str(row1['modified_dt'])
-                         sql = '''insert into solr_pkg_ids (pkg_id, action) values (:pkg_id, :action);'''  
-                         model.Session.execute(sql, {'pkg_id' : results[x]['id'], 'action' : 'outsync' })      
-                         model.Session.commit()
-                       else:
-                         sql = '''insert into solr_pkg_ids (pkg_id, action) values (:pkg_id, :action);'''  
-                         model.Session.execute(sql, {'pkg_id' : results[x]['id'], 'action' : 'insync' })      
-                         model.Session.commit()
+                     pkg_dict = logic.get_action('package_show')(
+                                    {'model': model, 'ignore_auth': True, 'validate': False},
+                                    {'id': results[x]['id']})
+                     if(str(results[x]['metadata_modified'])[:19] != pkg_dict['metadata_modified'][:19]):
+                       print str(datetime.datetime.now()) + ' Action Type : outsync for Package Id: ' + results[x]['id']
+                       print ' ' * 26 +                     ' Modified Date from Solr: ' + str(results[x]['metadata_modified'])
+                       print ' ' * 26 +                     ' Modified Date from Db: ' + pkg_dict['metadata_modified']
+                       sql = '''insert into solr_pkg_ids (pkg_id, action) values (:pkg_id, :action);'''
+                       model.Session.execute(sql, {'pkg_id' : results[x]['id'], 'action' : 'outsync' })
+                       model.Session.commit()
+                     else:
+                       sql = '''insert into solr_pkg_ids (pkg_id, action) values (:pkg_id, :action);'''
+                       model.Session.execute(sql, {'pkg_id' : results[x]['id'], 'action' : 'insync' })
+                       model.Session.commit()
                      
             start = int(data.get('responseHeader').get('params').get('start')) + chunk_size			       
           
