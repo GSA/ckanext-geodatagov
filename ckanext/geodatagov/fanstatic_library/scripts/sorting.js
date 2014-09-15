@@ -49,8 +49,8 @@
         	else { 
             	var compA_arr = $(a).text().split("(");
             	var compB_arr = $(b).text().split("(");
-            	var compA = $.trim(parseInt(compA_arr[compA_arr.length-1].split(')')[0]));
-            	var compB = $.trim(parseInt(compB_arr[compB_arr.length-1].split(')')[0]));
+            	var compA = parseInt($.trim(compA_arr[compA_arr.length-1].split(')')[0]));
+            	var compB = parseInt($.trim(compB_arr[compB_arr.length-1].split(')')[0]));
         	}
         
         	if(sort == 'asc') 
