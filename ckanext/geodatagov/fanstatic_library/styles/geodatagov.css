@@ -1071,7 +1071,7 @@ body .searchbox-row.skip-navigation {
     font-weight:normal;
     line-height:1;
     -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale
+    -moz-osx-font-smoothing:grayscale;
 }
 .btn_new {
     display:inline-block;
