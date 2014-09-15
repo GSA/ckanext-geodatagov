@@ -155,11 +155,18 @@ a {
 .masthead .container .logo:after {
     clear: both;
 }
-.masthead .container .logo a {
+.ie8 .masthead .container .logo a {
     display: block;
     float: left;
     height: 53px;
     background-image: url("../images/logo.png");
+    width: 200px;
+}
+.masthead .container .logo a {
+    display: block;
+    float: left;
+    height: 53px;
+    background: url("../images/logo.svg") no-repeat scroll 0 0 / contain  rgba(0, 0, 0, 0);
     width: 200px;
 }
 .masthead .container .logo a span {
