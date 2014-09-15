@@ -445,11 +445,11 @@ class Demo(p.SingletonPlugin):
         if package_type != 'dataset':
             return facets_dict
 
-        return OrderedDict([('metadata_type','Dataset Type'),
+        return OrderedDict([('groups', 'Topics'),
                             ('vocab_category_all', 'Topic Categories'),
+                            ('metadata_type','Dataset Type'),
                             ('tags','Tags'),
                             ('res_format', 'Formats'),
-                            ('groups', 'Topics'),
                             ('organization_type', 'Organization Types'),
                             ('organization', 'Organizations'),
                             ('publisher', 'Publisher'),
