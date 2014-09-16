@@ -160,12 +160,12 @@ a {
     float: left;
     height: 53px;
     background-image: url("../images/logo.png");
-    width: 200px;
+    width: 204px;
 }
 .masthead .container .logo a {
     display: block;
     float: left;
-    height: 53px;
+    height: 48px;
     background: url("../images/logo.svg") no-repeat scroll 0 0 / contain  rgba(0, 0, 0, 0);
     width: 200px;
 }
@@ -311,7 +311,7 @@ a {
     text-transform: uppercase;
     /*font-weight: bold;*/
     font-size: 17px;
-    line-height: 32px;
+    line-height: 33px;
     color:#333;
 }
 .masthead .container .top-nav .primary ul li a:hover {
@@ -1020,7 +1020,7 @@ input.form-control {
 }
 .masthead{background-color:#fff;}
 ul#menu-primary-navigation.navbar-nav.nav > li > a {
-    padding: 9px 10px;
+    padding: 8px 10px 9px;
 }
 ul#menu-primary-navigation li, .navbar-header .navbar-brand {
     font-size: 17px;
@@ -1120,6 +1120,7 @@ body .searchbox-row.skip-navigation {
 }
 .search-submit.btn_new {
     font-size: 15px;
+    padding-bottom: 7px;
 }
 .input-group-btn > .btn_new {
     position: relative;
@@ -1535,7 +1536,7 @@ aside.secondary{margin-left:15px !important;border:1px solid #ccc;border-right:0
     color: #4679b2;
     font-size: 18px;
 }
-.page-header_new .main-heading h1{margin:0;padding:0px;line-height:40px;}
+.page-header_new .main-heading h1{margin:4px 0 0;padding:0px;line-height:34px;}
 #menu-community.nav > li > a:hover, #menu-community.nav > li > a:focus {
     border-bottom: 5px solid #bfd4e1;
     text-decoration: none;
@@ -1691,7 +1692,8 @@ margin-top:0px
     margin-left: 0;
 }
 .masthead .container .logo {
-    margin-top: 2px;
+    margin-top: 3px;
+    margin-left: 3px;
 }
 header.masthead .container {
     width: 945px !important;
