@@ -1536,7 +1536,7 @@ aside.secondary{margin-left:15px !important;border:1px solid #ccc;border-right:0
     color: #4679b2;
     font-size: 18px;
 }
-.page-header_new .main-heading h1{margin:4px 0 0;padding:0px;line-height:34px;}
+.page-header_new .main-heading h1{margin:5px 0 0 2px;padding:0px;line-height:35px;}
 #menu-community.nav > li > a:hover, #menu-community.nav > li > a:focus {
     border-bottom: 5px solid #bfd4e1;
     text-decoration: none;
@@ -1721,4 +1721,7 @@ header.masthead .container {
 .resource-item .btn-group a.btn{text-align: left !important}
 .ie8 .masthead .container .top-nav .primary {
     height:55px;
+}
+.topic_name {
+    margin-left: 2px;
 }
