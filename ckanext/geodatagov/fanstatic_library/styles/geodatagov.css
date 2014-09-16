@@ -940,7 +940,7 @@ body{font-size:87.5%;}
 header .header_new.banner_new.page-heading_new  {
     background-color: #4679B2;
     color: #FFFFFF;
-    padding:7px 0 6px 0;
+    padding:7px 0 5px 0;
 }
 .header_new.banner_new.page-heading_new {
     border-bottom: 0 none;
@@ -1256,7 +1256,7 @@ body {
     border-bottom: 0 none;
     filter:none;
 }
-.nav .dropdown-toggle .caret{margin-top: -4px;}
+.nav .dropdown-toggle .caret{margin-top: -1px; margin-left:6px;}
 
 .yamm-fw ul.topics li a {
     margin-bottom: 0;
@@ -1725,3 +1725,4 @@ header.masthead .container {
 .topic_name {
     margin-left: 2px;
 }
+#menu-primary-navigation.navbar-right{margin-right:2px;}
