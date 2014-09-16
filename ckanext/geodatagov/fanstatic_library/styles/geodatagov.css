@@ -1116,7 +1116,7 @@ body .searchbox-row.skip-navigation {
     width: 1px;
 }
 .input-group {
-    width: 400px;
+    width: 460px;
 }
 .search-submit.btn_new {
     font-size: 15px;
@@ -1664,7 +1664,7 @@ margin-top:0px
     font-size:16px;
 }
 .sub-nav.banner-nav .nav.navbar-nav li a {
-    padding-bottom: 9px;
+    padding-bottom:5px;
 }
 #menu-community.nav .open > a, #menu-community.nav .open > a:hover, #menu-community.nav .open > a:focus {
     background-color: #eee;
@@ -1716,7 +1716,7 @@ header.masthead .container {
     width: 35px;
     background-position:0px 0px;
 }
-#menu-community li{line-height: 26px;}
+#menu-community li{line-height: 30px;}
 .resource-item .btn-group a{min-width:95px;}
 .resource-item .btn-group a.btn{text-align: left !important}
 .ie8 .masthead .container .top-nav .primary {
@@ -1726,3 +1726,8 @@ header.masthead .container {
     margin-left: 2px;
 }
 #menu-primary-navigation.navbar-right{margin-right:2px;}
+input#search-header.form-control{width:85%;margin-left:1px;}
+.search-form .input-group {
+    width: 458px;
+}
+form.search-form{padding-right:0px;}
