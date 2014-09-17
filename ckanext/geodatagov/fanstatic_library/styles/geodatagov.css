@@ -1119,8 +1119,8 @@ body .searchbox-row.skip-navigation {
     width: 460px;
 }
 .search-submit.btn_new {
-    font-size: 15px;
-    padding-bottom: 7px;
+    font-size: 14px;
+    padding-bottom: 8px;
 }
 .input-group-btn > .btn_new {
     position: relative;
