@@ -77,6 +77,19 @@
       </div>
     {% endif %}
   {% endblock %}
+  
+  {% block package_publisher %}
+	<section class="module module-narrow publisher">
+	    {% block publisher_title %}
+	      <h2 class="module-heading"><i class="icon-medium icon-publisher"></i> {{ _('Publisher') }}</h2>
+	    {% endblock %}
+		{% block license_content %}
+		<p class="module-content">
+			 <a href="/dataset?publisher={{ h.get_pkg_dict_extra(c.pkg_dict, 'publisher') }}" title="{{ _('publsher') }}">{{ h.get_pkg_dict_extra(c.pkg_dict, 'publisher') }}</a>
+		 </p>
+		{% endblock %}
+	</section>
+  {% endblock %}
 
   {% block package_social %}
     {% snippet "snippets/social.html" %}
