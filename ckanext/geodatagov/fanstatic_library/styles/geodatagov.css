@@ -1727,8 +1727,14 @@ header.masthead .container {
     margin-left: 2px;
 }
 #menu-primary-navigation.navbar-right{margin-right:2px;}
-input#search-header.form-control{width:85%;margin-left:1px;}
+input#search-header.form-control{width:84.5%;margin-left:1px;}
 .search-form .input-group {
     width: 458px;
 }
 form.search-form{padding-right:0px;}
+.module-content.page-header {
+    padding-top: 20px;
+}
+[role="main"] .primary {
+    width: 730px;
+}
