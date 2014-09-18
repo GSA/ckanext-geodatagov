@@ -1727,7 +1727,7 @@ header.masthead .container {
     margin-left: 2px;
 }
 #menu-primary-navigation.navbar-right{margin-right:2px;}
-input#search-header.form-control{width:84.5%;margin-left:1px;}
+.masthead input#search-header.form-control{width:84.5%;margin-left:1px;}
 .search-form .input-group {
     width: 458px;
 }
