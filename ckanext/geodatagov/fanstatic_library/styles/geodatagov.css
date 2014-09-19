@@ -155,11 +155,18 @@ a {
 .masthead .container .logo:after {
     clear: both;
 }
-.masthead .container .logo a {
+.ie8 .masthead .container .logo a {
     display: block;
     float: left;
     height: 53px;
     background-image: url("../images/logo.png");
+    width: 204px;
+}
+.masthead .container .logo a {
+    display: block;
+    float: left;
+    height: 48px;
+    background: url("../images/logo.svg") no-repeat scroll 0 0 / contain  rgba(0, 0, 0, 0);
     width: 200px;
 }
 .masthead .container .logo a span {
@@ -304,7 +311,7 @@ a {
     text-transform: uppercase;
     /*font-weight: bold;*/
     font-size: 17px;
-    line-height: 32px;
+    line-height: 33px;
     color:#333;
 }
 .masthead .container .top-nav .primary ul li a:hover {
@@ -933,7 +940,7 @@ body{font-size:87.5%;}
 header .header_new.banner_new.page-heading_new  {
     background-color: #4679B2;
     color: #FFFFFF;
-    padding:7px 0 6px 0;
+    padding:7px 0 5px 0;
 }
 .header_new.banner_new.page-heading_new {
     border-bottom: 0 none;
@@ -1013,7 +1020,7 @@ input.form-control {
 }
 .masthead{background-color:#fff;}
 ul#menu-primary-navigation.navbar-nav.nav > li > a {
-    padding: 9px 10px;
+    padding: 8px 10px 9px;
 }
 ul#menu-primary-navigation li, .navbar-header .navbar-brand {
     font-size: 17px;
@@ -1039,7 +1046,7 @@ ul#menu-primary-navigation li, .navbar-header .navbar-brand {
 body .searchbox-row.skip-navigation {
     float: right;
     height: 3em;
-    width: 430px;
+    width: 458px;
 }
 .masthead .container .top {
     position: relative;
@@ -1071,7 +1078,7 @@ body .searchbox-row.skip-navigation {
     font-weight:normal;
     line-height:1;
     -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale
+    -moz-osx-font-smoothing:grayscale;
 }
 .btn_new {
     display:inline-block;
@@ -1109,10 +1116,11 @@ body .searchbox-row.skip-navigation {
     width: 1px;
 }
 .input-group {
-    width: 400px;
+    width: 460px;
 }
 .search-submit.btn_new {
-    font-size: 15px;
+    font-size: 14px;
+    padding-bottom: 8px;
 }
 .input-group-btn > .btn_new {
     position: relative;
@@ -1248,7 +1256,7 @@ body {
     border-bottom: 0 none;
     filter:none;
 }
-.nav .dropdown-toggle .caret{margin-top: -4px;}
+.nav .dropdown-toggle .caret{margin-top: -1px; margin-left:6px;}
 
 .yamm-fw ul.topics li a {
     margin-bottom: 0;
@@ -1473,6 +1481,7 @@ aside.secondary{margin-left:15px !important;border:1px solid #ccc;border-right:0
     border: 0 none;
     float: right;
     width: 330px;
+    padding-top: 13px;
 }
 .control-group.search-giant {
     float: left;
@@ -1528,7 +1537,7 @@ aside.secondary{margin-left:15px !important;border:1px solid #ccc;border-right:0
     color: #4679b2;
     font-size: 18px;
 }
-.page-header_new .main-heading h1{margin:0;padding:0px;line-height:40px;}
+.page-header_new .main-heading h1{margin:5px 0 0 2px;padding:0px;line-height:35px;}
 #menu-community.nav > li > a:hover, #menu-community.nav > li > a:focus {
     border-bottom: 5px solid #bfd4e1;
     text-decoration: none;
@@ -1656,7 +1665,7 @@ margin-top:0px
     font-size:16px;
 }
 .sub-nav.banner-nav .nav.navbar-nav li a {
-    padding-bottom: 9px;
+    padding-bottom:5px;
 }
 #menu-community.nav .open > a, #menu-community.nav .open > a:hover, #menu-community.nav .open > a:focus {
     background-color: #eee;
@@ -1684,7 +1693,8 @@ margin-top:0px
     margin-left: 0;
 }
 .masthead .container .logo {
-    margin-top: 2px;
+    margin-top: 3px;
+    margin-left: 3px;
 }
 header.masthead .container {
     width: 945px !important;
@@ -1707,6 +1717,24 @@ header.masthead .container {
     width: 35px;
     background-position:0px 0px;
 }
-#menu-community li{line-height: 26px;}
+#menu-community li{line-height: 30px;}
 .resource-item .btn-group a{min-width:95px;}
 .resource-item .btn-group a.btn{text-align: left !important}
+.ie8 .masthead .container .top-nav .primary {
+    height:55px;
+}
+.topic_name {
+    margin-left: 2px;
+}
+#menu-primary-navigation.navbar-right{margin-right:2px;}
+.masthead input#search-header.form-control{width:84.5%;margin-left:1px;}
+.search-form .input-group {
+    width: 458px;
+}
+form.search-form{padding-right:0px;}
+.module-content.page-header {
+    padding-top: 20px;
+}
+[role="main"] .primary {
+    width: 730px;
+}
