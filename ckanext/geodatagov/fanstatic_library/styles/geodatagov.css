@@ -1710,3 +1710,7 @@ header.masthead .container {
 #menu-community li{line-height: 26px;}
 .resource-item .btn-group a{min-width:95px;}
 .resource-item .btn-group a.btn{text-align: left !important}
+
+.btn-preview {
+    display:none;
+}

@@ -165,3 +165,21 @@ window.onload=function(){
     }
 }
 
+$(document).ready(function () {
+    dataproxy = 'http://jsonpdataproxy.appspot.com';
+    function test_to_preview(elem) {
+        ext_href = elem.next().attr('href')
+        var apiurl = dataproxy + '?url=' + ext_href;
+        $.ajax({
+            url: apiurl,
+            dataType: 'jsonp',
+            success: function(){
+                elem.show()
+            }
+        });
+    }
+
+    $('.btn-preview').each(function() {
+        test_to_preview($(this))
+    });
+});

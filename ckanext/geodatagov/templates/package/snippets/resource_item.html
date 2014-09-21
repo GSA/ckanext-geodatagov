@@ -36,21 +36,31 @@
 {% block resource_item_explore %}
 {% set resource_url = url if is_map_format or is_preview_format else res.url %}
 <div class="btn-group">
-    <a href="{{ resource_url }}" class="btn btn-primary"{% if is_web_format %} target="_blank"{% endif %}>
     {% if is_map_format %}
-    <i class="icon-globe"></i>
-    {{ _('View Map') }}
-    {% elif is_web_format %}
-    <i class="icon-external-link"></i>
-    {{ _('Visit page') }}
-    {% elif is_preview_format %}
-    <i class="icon-search"></i>
-    {{ _('Preview') }}
-    {% else %}
-    <i class="icon-download-alt"></i>
-    {{ _('Download') }}
-    {% endif %}
+    <a href="{{ resource_url }}" class="btn btn-primary"{% if is_web_format %} target="_blank"{% endif %}>
+        <i class="icon-globe"></i>
+        {{ _('View Map') }}
     </a>
+    {% elif is_web_format %}
+    <a href="{{ resource_url }}" class="btn btn-primary"{% if is_web_format %} target="_blank"{% endif %}>
+        <i class="icon-external-link"></i>
+        {{ _('Visit page') }}
+    </a>
+    {% elif is_preview_format %}
+    <a href="{{ resource_url }}" class="btn btn-primary btn-preview"{% if is_web_format %} target="_blank"{% endif %}>
+        <i class="icon-search"></i>
+        {{ _('Preview') }}
+    </a>
+    <a href="{{ res.url }}" class="btn btn-primary"{% if is_web_format %} target="_blank"{% endif %}>
+        <i class="icon-download-alt"></i>
+        {{ _('Download') }}
+    </a>
+    {% else %}
+    <a href="{{ resource_url }}" class="btn btn-primary"{% if is_web_format %} target="_blank"{% endif %}>
+        <i class="icon-download-alt"></i>
+        {{ _('Download') }}
+    </a>
+    {% endif %}
 </div>
 {% endblock %}
 </li>
