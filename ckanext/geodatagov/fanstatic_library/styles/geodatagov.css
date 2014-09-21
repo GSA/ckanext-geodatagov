@@ -1720,6 +1720,7 @@ header.masthead .container {
 #menu-community li{line-height: 30px;}
 .resource-item .btn-group a{min-width:95px;}
 .resource-item .btn-group a.btn{text-align: left !important}
+<<<<<<< HEAD
 .ie8 .masthead .container .top-nav .primary {
     height:55px;
 }
@@ -1739,3 +1740,7 @@ form.search-form{padding-right:0px;}
     width: 730px;
 }
 p.module-content{padding-left: 20px !important;}
+
+.btn-preview {
+    display:none;
+}
