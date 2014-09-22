@@ -1743,4 +1743,8 @@ form.search-form{padding-right:0px;}
 [role="main"] .primary {
     width: 730px;
 }
-p.module-content{padding-left: 20px !important;}
+p.module-content{padding-left: 18px !important;}
+.publisher p.module-content {
+    margin-top: 10px;
+    padding: 0 15px;
+}
