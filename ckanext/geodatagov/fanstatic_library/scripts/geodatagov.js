@@ -174,7 +174,7 @@ $(document).ready(function () {
             url: apiurl,
             dataType: 'jsonp',
             success: function(){
-                elem.show()
+                elem.css('display', 'inline-block');
             }
         });
     }
