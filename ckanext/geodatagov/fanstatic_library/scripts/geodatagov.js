@@ -173,7 +173,8 @@ $(document).ready(function () {
         $.ajax({
             url: apiurl,
             dataType: 'jsonp',
-            success: function(){
+            success: function(data){
+                if (data.error) return;
                 elem.css('display', 'inline-block');
             }
         });
