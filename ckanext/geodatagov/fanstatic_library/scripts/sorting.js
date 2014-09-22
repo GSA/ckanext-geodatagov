@@ -3,7 +3,8 @@
  //sortList function
  $.fn.sortList = function(sort, sortType) {
     
-    cnt = $(this).children('li:not(.maxlist-hidden)').get().length;
+    //cnt = $(this).children('li:not(.maxlist-hidden)').get().length;
+    cnt = $(this).children('li:visible').get().length;
     var mylist = $(this);
     var listitems = $('li', mylist).get();
     
@@ -180,7 +181,7 @@
  var defaults = {
       'metadata_type' : {'sortType': 'cntSort', 'sort' : 'desc'},
       'tags' : {'sortType': 'cntSort', 'sort' : 'desc'},
-      'res_format' : {'sortType': 'alphaSort', 'sort' : 'asc'},
+      'res_format' : {'sortType': 'cntSort', 'sort' : 'desc'},
       'groups' : {'sortType': 'cntSort', 'sort' : 'desc'},
       'organization_type' : {'sortType': 'cntSort', 'sort' : 'desc'},
       'organization' : {'sortType': 'cntSort', 'sort' : 'desc'},
