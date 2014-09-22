@@ -97,7 +97,7 @@
     {% if pkg_dict.maintainer_email or pkg_dict.maintainer or h.get_pkg_dict_extra(c.pkg_dict, 'contact-email') %}
     <section class="module module-narrow contact">
         {% block contact_title %}
-            <h2 class="module-heading"><img id="Contact" src="/fanstatic/geodatagov/images/contact.png" style="height:16px;"> {{ _('Contact') }}</h2>
+            <h2 class="module-heading"><i class="icon-envelope-alt"></i>{{ _('Contact') }}</h2>
         {% endblock %}
         {% block contact_content %}
             <p class="module-content">
