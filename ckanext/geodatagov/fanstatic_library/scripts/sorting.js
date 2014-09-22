@@ -3,7 +3,8 @@
  //sortList function
  $.fn.sortList = function(sort, sortType) {
     
-    cnt = $(this).children('li:not(.maxlist-hidden)').get().length;
+    //cnt = $(this).children('li:not(.maxlist-hidden)').get().length;
+    cnt = $(this).children('li:visible').get().length;
     var mylist = $(this);
     var listitems = $('li', mylist).get();
     
