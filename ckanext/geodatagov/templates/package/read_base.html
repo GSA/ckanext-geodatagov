@@ -87,10 +87,10 @@
 		{% block license_content %}
 		<p class="module-content">
 			 <a href="/dataset?publisher={{ h.get_pkg_dict_extra(c.pkg_dict, 'publisher') }}" title="{{ _('publsher') }}">{{ h.get_pkg_dict_extra(c.pkg_dict, 'publisher') }}</a>
-		 </p>
-        {% endif %}
+		</p>
 		{% endblock %}
 	</section>
+    {% endif %}
   {% endblock %}
 
   {% block package_social %}
