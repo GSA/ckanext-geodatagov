@@ -21,12 +21,17 @@
         {% endif %}
         {% endblock %}
     </h1>
-    <div style="width:100px; float:left;">
-        <i class="icon-globe"></i><span style="color:#999;margin-left:8px;">{{ h.get_pkg_dict_extra(c.pkg_dict, 'accessLevel')|title}}</span>
+
+    {% if h.get_pkg_dict_extra(c.pkg_dict, 'accessLevel') %}
+    <div style="width:65px; float:left;margin-right:10px;">
+        <i class="icon-globe" style="color:#6e6e6e;"></i><span style="color:#7d7d7d;margin-left:8px;">{{ h.get_pkg_dict_extra(c.pkg_dict, 'accessLevel')|title}}</span>
     </div>
-    <div style="width:200px;float:left;margin-left:15px; margin-bottom:15px;">
-        <i class="icon-calendar"></i><span style="font-weight:bold;color:#999;margin-left:8px;">Updated:</span> <span style="color:#999;">{{ h.render_datetime_datagov(pkg.metadata_modified) }}</span>
+    {% endif %}
+    {% if h.render_datetime_datagov(pkg.metadata_modified)  %}
+    <div style="width:200px;float:left;margin-bottom:15px;">
+        <i class="icon-calendar" style="color:#949494;"></i><span style="font-weight:bold;color:#6e6e6e;margin-left:8px;">Updated:</span> <span style="color:#7d7d7d;">{{ h.render_datetime_datagov(pkg.metadata_modified) }}</span>
     </div>
+    {% endif %}
     <br clear="all" />
 		
 	{# <h4> {{ pkg }}</h4> #}
