@@ -181,7 +181,7 @@
  var defaults = {
       'metadata_type' : {'sortType': 'cntSort', 'sort' : 'desc'},
       'tags' : {'sortType': 'cntSort', 'sort' : 'desc'},
-      'res_format' : {'sortType': 'alphaSort', 'sort' : 'asc'},
+      'res_format' : {'sortType': 'cntSort', 'sort' : 'desc'},
       'groups' : {'sortType': 'cntSort', 'sort' : 'desc'},
       'organization_type' : {'sortType': 'cntSort', 'sort' : 'desc'},
       'organization' : {'sortType': 'cntSort', 'sort' : 'desc'},
