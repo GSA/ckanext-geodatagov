@@ -371,14 +371,22 @@ def get_dynamic_menu():
         'development': 'Global Development',
         'research': 'Science & Research',
         'food': 'Agriculture',
-        'coastalflooding': 'Climate - Coastal Flooding',
-        'foodresilience': 'Climate - Food Resilience',
+        'coastalflooding': ['Climate', 'Coastal Flooding'],
+        'foodresilience': ['Climate', 'Food Resilience'],
         }
 
+        parent = {}
+        name = name_pair.get(submenu_key, submenu_key.capitalize())
+        if type(name) is list:
+            parent['key'] = name[0].lower() # hope nothing breaks here
+            parent['url'] = '//www.data.gov/' + parent['key']
+            parent['class'] = 'topic-' + parent['key']
+
         menus['topic_header'] = {
-            'url': '//www.data.gov/' + submenu_key,
-            'name': name_pair.get(submenu_key, submenu_key.capitalize()),
-            'class': 'topic-' + submenu_key,
+            'multi': True if parent else False,
+            'url': '//www.data.gov/' + submenu_key if not parent else [parent['url'], '//www.data.gov/' + submenu_key],
+            'name': name,
+            'class': 'topic-' + submenu_key if not parent else parent['class'],
         }
 
     return menus
