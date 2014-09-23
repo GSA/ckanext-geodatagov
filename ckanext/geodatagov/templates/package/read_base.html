@@ -79,7 +79,7 @@
   {% endblock %}
   
   {% block package_publisher %}
-    {% if h.get_pkg_dict_extra(c.pkg_dict, 'publisher') %}
+    {% if h.get_pkg_dict_extra(c.pkg_dict, 'publisher') and h.get_pkg_dict_extra(c.pkg_dict, 'publisher').strip()|length > 0 %}
 	<section class="module module-narrow publisher">
 	    {% block publisher_title %}
 	      <h2 class="module-heading"><img id="Publisher" src="/fanstatic/geodatagov/images/publisher.png" style="height:16px;"> {{ _('Publisher') }}</h2>
@@ -94,7 +94,7 @@
   {% endblock %}
 
   {% block package_contact %}
-    {% if pkg_dict.maintainer_email or pkg_dict.maintainer or h.get_pkg_dict_extra(c.pkg_dict, 'contact-email') %}
+    {% if (pkg_dict.maintainer_email and pkg_dict.maintainer_email.strip()|length > 0) or (pkg_dict.maintainer and pkg_dict.maintainer.strip()|length > 0 ) or (h.get_pkg_dict_extra(c.pkg_dict, 'contact-email') and h.get_pkg_dict_extra(c.pkg_dict, 'contact-email').strip()|length > 0 ) %}
     <section class="module module-narrow contact">
         {% block contact_title %}
             <h2 class="module-heading"><i class="icon-envelope-alt"></i>{{ _('Contact') }}</h2>
