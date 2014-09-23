@@ -82,7 +82,7 @@
     {% if h.get_pkg_dict_extra(c.pkg_dict, 'publisher') and h.get_pkg_dict_extra(c.pkg_dict, 'publisher').strip()|length > 0 %}
 	<section class="module module-narrow publisher">
 	    {% block publisher_title %}
-	      <h2 class="module-heading"><img id="Publisher" src="/fanstatic/geodatagov/images/publisher.png" style="height:15px; cursor: default;vertical-align:sub;"> {{ _('Publisher') }}</h2>
+	      <h2 class="module-heading"><img id="Publisher" src="/fanstatic/geodatagov/images/publisher.png" style="height:15px; cursor: default;margin-top:-2px;"> {{ _('Publisher') }}</h2>
 	    {% endblock %}
 		{% block publisher_content %}
 		<p class="module-content">
