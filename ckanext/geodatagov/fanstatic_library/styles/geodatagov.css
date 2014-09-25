@@ -1760,3 +1760,4 @@ p.module-content{padding-left: 18px !important;}
     margin-top: 10px;
     padding: 0 15px;
 }
+.topic-aapi a i:before{content:"\e600";}
