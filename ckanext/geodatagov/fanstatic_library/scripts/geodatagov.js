@@ -166,6 +166,7 @@ window.onload=function(){
 }
 
 $(document).ready(function () {
+    document.domain="reisys.com";
     dataproxy = 'http://jsonpdataproxy.appspot.com';
     function test_to_preview(elem) {
         ext_href = elem.next().attr('href')
