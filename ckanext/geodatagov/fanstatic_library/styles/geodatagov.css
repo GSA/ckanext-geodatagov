@@ -951,7 +951,7 @@ header .header_new.banner_new.page-heading_new  {
     padding-bottom: 0;
 }
 .page-header_new  h1 {
-    font-size: 17.6px;
+    font-size: 18px;
     padding-bottom: 0.2em;
     text-transform: uppercase;
     font-weight:normal;
@@ -1537,7 +1537,7 @@ aside.secondary{margin-left:15px !important;border:1px solid #ccc;border-right:0
     color: #4679b2;
     font-size: 18px;
 }
-.page-header_new .main-heading h1{margin:5px 0 0 2px;padding:0px;line-height:35px;}
+.page-header_new .main-heading h1{margin:5px 0 0 2px;padding:0px;line-height:36px;}
 #menu-community.nav > li > a:hover, #menu-community.nav > li > a:focus {
     border-bottom: 5px solid #bfd4e1;
     text-decoration: none;
@@ -1637,6 +1637,7 @@ font-weight:lighter;
     float: left;
     text-align: left;
     vertical-align: middle;
+    margin-right:1px;
 }
 #menu-community .active {
     border-bottom: 5px solid #bfd4e1;
@@ -1724,7 +1725,6 @@ header.masthead .container {
 #menu-community li{line-height: 30px;}
 .resource-item .btn-group a{min-width:95px;}
 .resource-item .btn-group a.btn{text-align: left !important}
-<<<<<<< HEAD
 .ie8 .masthead .container .top-nav .primary {
     height:55px;
 }
