@@ -1742,7 +1742,7 @@ form.search-form{padding-right:0px;}
 }
 
 [role="main"] .primary {
-    width: 730px;
+    /*width: 730px;*/
 }
 
 .btn-preview {
