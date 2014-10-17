@@ -12,15 +12,29 @@ Example:
 {% if resources %}
 <section id="dataset-resources" class="resources module-content">
   <h3>{{ _('Data and Resources') }}</h3>
-  {% block resource_list %}    
-      <ul class="{% block resource_list_class %}resource-list{% endblock %}">
-        {% block resource_list_inner %}
-          {% for resource in resources %}
-            {% snippet 'package/snippets/resource_item.html', pkg=pkg, res=resource %}
-          {% endfor %}
-		  {% snippet 'package/snippets/resource_extra_item.html', pkg=pkg %}
-        {% endblock %}
-      </ul>        
+  {% block resource_list %}
+  <ul class="{% block resource_list_class %}resource-list{% endblock %}">
+    {% block resource_list_inner %}
+    
+    {% for resource in resources %}
+    
+    {% if resource %}
+    
+    {% snippet 'package/snippets/resource_item.html', pkg=pkg, res=resource %}
+    
+    {% else %}
+    <div class="no-resource"><i class="icon-exclamation-sign"></i>No file downloads have been provided. The publisher may provide downloads in the future or they may be available from their other links.</div>
+    {% endif %}
+    
+    {% endfor %}
+    
+    {% snippet 'package/snippets/resource_extra_item.html', pkg=pkg %}
+    
     {% endblock %}
+  </ul>
+  {% endblock %} </section>
+{% else %}
+<section id="dataset-resources" class="resources module-content">
+  <div class="no-resource"><i class="icon-exclamation-sign"></i>No file downloads have been provided. The publisher may provide downloads in the future or they may be available from their other links.</div>
 </section>
 {% endif %}
