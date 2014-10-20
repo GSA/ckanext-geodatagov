@@ -1537,7 +1537,7 @@ aside.secondary{margin-left:15px !important;border:1px solid #ccc;border-right:0
     color: #4679b2;
     font-size: 18px;
 }
-.page-header_new .main-heading h1{margin:5px 0 0 2px;padding:0px;line-height:36px;}
+.page-header_new .main-heading h1{margin:5px 0 0 2px;padding:0px;line-height:35px;}
 #menu-community.nav > li > a:hover, #menu-community.nav > li > a:focus {
     border-bottom: 5px solid #bfd4e1;
     text-decoration: none;
