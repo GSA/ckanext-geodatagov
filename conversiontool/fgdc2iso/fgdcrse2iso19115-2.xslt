@@ -1046,9 +1046,6 @@
         </xsl:if>
         <xsl:if test="//spref">
           <xsl:comment>Other FGDC spatial reference elements not mapped to ISO from Xpath: //spref</xsl:comment>
-          <xsl:text disable-output-escaping="yes">&lt;!--</xsl:text>
-          <xsl:copy-of select="//spref"/>
-          <xsl:text disable-output-escaping="yes">--&gt;</xsl:text>
         </xsl:if>
       </xsl:for-each>
       <xsl:for-each select="$var1_instance/metadata">
