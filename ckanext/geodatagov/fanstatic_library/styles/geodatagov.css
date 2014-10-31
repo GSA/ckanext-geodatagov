@@ -1760,6 +1760,7 @@ p.module-content{padding-left: 18px !important;}
     margin-top: 10px;
     padding: 0 15px;
 }
+
 .no-resource {
 	background: none repeat scroll 0 0 #fef9df;
 	font-size: 16px;
@@ -1774,3 +1775,5 @@ p.module-content{padding-left: 18px !important;}
 	width: 30px;
 	float: left;
 }
+
+.topic-aapi a i:before{content:"\e600";}
