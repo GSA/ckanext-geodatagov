@@ -754,9 +754,6 @@
                       <xsl:value-of select="'template'"/>
                     </xsl:attribute>
                     <xsl:comment>FGDC content not mapped to ISO. From Xpath: //spdoinfo/rastinfo/rasttype</xsl:comment>
-                    <xsl:text disable-output-escaping="yes">&lt;!--</xsl:text>
-                    <xsl:copy-of select="//spdoinfo/rastinfo/rasttype"/>
-                    <xsl:text disable-output-escaping="yes">--&gt;</xsl:text>
                   </xsl:otherwise>
                 </xsl:choose>
               </gmd:cellGeometry>
@@ -1020,9 +1017,6 @@
                       <xsl:value-of select="'template'"/>
                     </xsl:attribute>
                     <xsl:comment>FGDC content not mapped to ISO. From Xpath: //spdoinfo/rastinfo/rasttype</xsl:comment>
-                    <xsl:text disable-output-escaping="yes">&lt;!--</xsl:text>
-                    <xsl:copy-of select="//spdoinfo/rastinfo/rasttype"/>
-                    <xsl:text disable-output-escaping="yes">--&gt;</xsl:text>
                   </xsl:otherwise>
                 </xsl:choose>
               </gmd:cellGeometry>
@@ -1040,9 +1034,6 @@
         <xsl:comment>
           <xsl:text>FGDC Content not mapped to ISO from Xpath: //spdoinfo/indspref</xsl:text>
         </xsl:comment>
-        <xsl:text disable-output-escaping="yes">&lt;!--</xsl:text>
-        <xsl:copy-of select="//spdoinfo/indspref"/>
-        <xsl:text disable-output-escaping="yes">--&gt;</xsl:text>
       </xsl:for-each>
       <xsl:for-each select="$var1_instance/metadata/spref">
         <gmd:referenceSystemInfo>
@@ -2015,9 +2006,6 @@
           <gmi:MI_CoverageDescription>
             <xsl:if test="numbands">
               <xsl:comment>FGDC content not mapped to ISO. From Xpath: //idinfo/bandidnt/numbands</xsl:comment>
-              <xsl:text disable-output-escaping="yes">&lt;!--</xsl:text>
-              <xsl:copy-of select="./numbands"/>
-              <xsl:text disable-output-escaping="yes">--&gt;</xsl:text>
             </xsl:if>
             <gmd:attributeDescription>
               <xsl:variable name="var1250_cond_result_exists" as="xs:string?" select="(if (fn:exists(inbident/bandid)) then 'Individual Band Identification' else ())"/>
@@ -2065,9 +2053,6 @@
             <gmd:attributeDescription gco:nilReason="unknown"/>
             <gmd:contentType gco:nilReason="unknown"/>
             <xsl:comment>FGDC content not mapped to ISO. From Xpath: //enttyp</xsl:comment>
-            <xsl:text disable-output-escaping="yes">&lt;!--</xsl:text>
-            <xsl:copy-of select=".//enttyp"/>
-            <xsl:text disable-output-escaping="yes">--&gt;</xsl:text>
             <xsl:for-each select="//attr">
               <gmd:dimension>
                 <gmd:MD_Band>
@@ -2114,27 +2099,15 @@
                     </xsl:when>
                     <xsl:when test="attrdomv/edom">
                       <xsl:comment>FGDC content not mapped to ISO. From Xpath: //attrdomv/edom</xsl:comment>
-                      <xsl:text disable-output-escaping="yes">&lt;!--</xsl:text>
-                      <xsl:copy-of select="./attrdomv//edom"/>
-                      <xsl:text disable-output-escaping="yes">--&gt;</xsl:text>
                     </xsl:when>
                     <xsl:when test="attrdomv/codesetd">
                       <xsl:comment>FGDC content not mapped to ISO. From Xpath: //attrdomv/codesetd</xsl:comment>
-                      <xsl:text disable-output-escaping="yes">&lt;!--</xsl:text>
-                      <xsl:copy-of select="./attrdomv//codesetd"/>
-                      <xsl:text disable-output-escaping="yes">--&gt;</xsl:text>
                     </xsl:when>
                     <xsl:when test="attrdomv/datascal">
                       <xsl:comment>FGDC content not mapped to ISO. From Xpath: //attrdomv/datascal</xsl:comment>
-                      <xsl:text disable-output-escaping="yes">&lt;!--</xsl:text>
-                      <xsl:copy-of select="./attrdomv//datascal"/>
-                      <xsl:text disable-output-escaping="yes">--&gt;</xsl:text>
                     </xsl:when>
                     <xsl:when test="attrdomv/udom">
                       <xsl:comment>FGDC content not mapped to ISO. From Xpath: //attrdomv/udom</xsl:comment>
-                      <xsl:text disable-output-escaping="yes">&lt;!--</xsl:text>
-                      <xsl:copy-of select="./attrdomv//udom"/>
-                      <xsl:text disable-output-escaping="yes">--&gt;</xsl:text>
                     </xsl:when>
                   </xsl:choose>
                 </gmd:MD_Band>
@@ -2335,9 +2308,6 @@
                       <gmd:MD_StandardOrderProcess>
                         <xsl:if test=".//resdesc">
                           <xsl:comment>FGDC content not mapped to ISO. From Xpath: //distinfo/stdorder/resdesc</xsl:comment>
-                          <xsl:text disable-output-escaping="yes">&lt;!--</xsl:text>
-                          <xsl:copy-of select="./resdesc"/>
-                          <xsl:text disable-output-escaping="yes">--&gt;</xsl:text>
                         </xsl:if>
                         <gmd:fees>
                           <gco:CharacterString>
@@ -2413,9 +2383,6 @@
                                       </xsl:call-template>
                                     </gco:DateTime>
                                     <xsl:comment>FGDC content not mapped to ISO. From Xpath: //distinfo/availabl/timeinfo/rngdates/enddate</xsl:comment>
-                                    <xsl:text disable-output-escaping="yes">&lt;!--</xsl:text>
-                                    <xsl:copy-of select=".//timeinfo/rngdates/enddate"/>
-                                    <xsl:text disable-output-escaping="yes">--&gt;</xsl:text>
                                   </xsl:otherwise>
                                 </xsl:choose>
                               </xsl:when>
@@ -2662,9 +2629,6 @@
                           <xsl:otherwise>
                             <xsl:attribute name="gco:nilReason" select="'template'"/>
                             <xsl:comment>FGDC content not mapped to ISO MD_MediumCode. From Xpath: //distinfo/stdorder/digform/digtopt/offoptn/offmedia </xsl:comment>
-                            <xsl:text disable-output-escaping="yes">&lt;!--</xsl:text>
-                            <xsl:copy-of select=".//offmedia"/>
-                            <xsl:text disable-output-escaping="yes">--&gt;</xsl:text>
                           </xsl:otherwise>
                         </xsl:choose>
                       </gmd:name>
@@ -3576,9 +3540,6 @@
                   <xsl:otherwise>
                     <xsl:attribute name="gco:nilReason">missing</xsl:attribute>
                     <xsl:comment>FGDC content not mapped to ISO. From Xpath: </xsl:comment>
-                    <xsl:text disable-output-escaping="yes">&lt;!--</xsl:text>
-                    <xsl:copy-of select="//metsc"/>
-                    <xsl:text disable-output-escaping="yes">--&gt;</xsl:text>
                   </xsl:otherwise>
                 </xsl:choose>
               </gmd:classification>
