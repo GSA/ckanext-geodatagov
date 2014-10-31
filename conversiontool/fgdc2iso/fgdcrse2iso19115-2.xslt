@@ -2471,20 +2471,33 @@
                       </gco:Real>
                     </gmd:transferSize>
                   </xsl:for-each>
-                  <xsl:for-each select="//networka/CI_OnlineResource">
-                    <gmd:onLine>
-                      <xsl:call-template name="CI_OnlineResource">
-                        <xsl:with-param name="source" select="'CI_OnlineResource'"/>
-                      </xsl:call-template>
-                    </gmd:onLine>
-                  </xsl:for-each>
-                  <xsl:for-each select="//networka/networkr">
-                    <gmd:onLine>
-                      <xsl:call-template name="CI_OnlineResource">
-                        <xsl:with-param name="source" select="'networkr'"/>
-                      </xsl:call-template>
-                    </gmd:onLine>
-                  </xsl:for-each>
+                  <xsl:choose>
+                    <xsl:when test="//stdorder//formcont">
+                      <xsl:for-each select="//stdorder/digform">
+                        <gmd:onLine>
+                          <xsl:call-template name="CI_OnlineResource">
+                            <xsl:with-param name="source" select="'digform'"/>
+                          </xsl:call-template>
+                        </gmd:onLine>
+                      </xsl:for-each>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:for-each select="//networka/CI_OnlineResource">
+                        <gmd:onLine>
+                          <xsl:call-template name="CI_OnlineResource">
+                            <xsl:with-param name="source" select="'CI_OnlineResource'"/>
+                          </xsl:call-template>
+                        </gmd:onLine>
+                      </xsl:for-each>
+                      <xsl:for-each select="//networka/networkr">
+                        <gmd:onLine>
+                          <xsl:call-template name="CI_OnlineResource">
+                            <xsl:with-param name="source" select="'networkr'"/>
+                          </xsl:call-template>
+                        </gmd:onLine>
+                      </xsl:for-each>
+                    </xsl:otherwise>
+                  </xsl:choose>
                   <!--<xsl:variable name="networkr" as="xs:string*">
                     <xsl:for-each select="$var1_instance/metadata/distinfo/stdorder/digform/digtopt/onlinopt/computer/networka/networkr">
                       <xsl:sequence select="xs:string(.)"/>
@@ -4271,6 +4284,45 @@
           </gmd:name>
         </xsl:for-each>
         <xsl:for-each select="description">
+          <gmd:description>
+            <gco:CharacterString>
+              <xsl:value-of select="normalize-space(.)"/>
+            </gco:CharacterString>
+          </gmd:description>
+        </xsl:for-each>
+        <xsl:for-each select="function">
+          <gmd:function>
+            <xsl:variable name="function">
+              <xsl:call-template name="functionCode">
+                <xsl:with-param name="input" select="fn:upper-case(fn:normalize-space(fn:string(.)))"/>
+              </xsl:call-template>
+            </xsl:variable>
+            <gmd:CI_OnLineFunctionCode>
+              <xsl:attribute name="codeList">http://www.ngdc.noaa.gov/metadata/published/xsd/schema/resources/Codelist/gmxCodelists.xml#CI_OnLineFunctionCode</xsl:attribute>
+              <xsl:attribute name="codeListValue">
+                <xsl:value-of select="$function"/>
+              </xsl:attribute>
+              <xsl:value-of select="$function"/>
+            </gmd:CI_OnLineFunctionCode>
+          </gmd:function>
+        </xsl:for-each>
+      </gmd:CI_OnlineResource>
+    </xsl:if>
+    <xsl:if test="$source='digform'">
+      <gmd:CI_OnlineResource>
+        <gmd:linkage>
+          <gmd:URL>
+            <xsl:value-of select="normalize-space(digtopt//networkr)"/>
+          </gmd:URL>
+        </gmd:linkage>
+        <xsl:for-each select="digtinfo/formname">
+          <gmd:name>
+            <gco:CharacterString>
+              <xsl:value-of select="normalize-space(.)"/>
+            </gco:CharacterString>
+          </gmd:name>
+        </xsl:for-each>
+        <xsl:for-each select="digtinfo/formcont">
           <gmd:description>
             <gco:CharacterString>
               <xsl:value-of select="normalize-space(.)"/>
