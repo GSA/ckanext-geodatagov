@@ -1781,3 +1781,7 @@ p.module-content{padding-left: 18px !important;}
 .topic-ecosystems a i:before{
     content: "\e017";
 }
+#menu-community .dropdown-toggle .caret {
+    margin-left: 0.325em;
+    margin-top: 0;
+}
