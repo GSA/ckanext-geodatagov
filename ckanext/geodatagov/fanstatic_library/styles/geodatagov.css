@@ -1777,3 +1777,7 @@ p.module-content{padding-left: 18px !important;}
 }
 
 .topic-aapi a i:before{content:"\e600";}
+
+.dataset-collection .icon-collection{
+    background: transparent url('../img/collection.png') no-repeat;
+}
