@@ -399,9 +399,9 @@ class Demo(p.SingletonPlugin):
                 'render_datetime_datagov': geodatagov_helpers.render_datetime_datagov,
                 'get_dynamic_menu': geodatagov_helpers.get_dynamic_menu,
                 'get_harvest_source_type': geodatagov_helpers.get_harvest_source_type,
-                #'get_file_size': geodatagov_helpers.get_file_size,
                 'convert_resource_format':geodatagov_helpers.convert_resource_format,
                 'remove_extra_chars':geodatagov_helpers.remove_extra_chars,
+                'get_pkg_extras':geodatagov_helpers.get_pkg_extras,
                 }
 
     ## IActions
