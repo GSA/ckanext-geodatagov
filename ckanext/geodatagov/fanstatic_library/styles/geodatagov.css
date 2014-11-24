@@ -1780,4 +1780,5 @@ p.module-content{padding-left: 18px !important;}
 
 .dataset-collection .icon-collection{
     background: transparent url('../images/collection.png') no-repeat;
+    height:13px;
 }
