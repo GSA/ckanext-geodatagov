@@ -102,13 +102,13 @@
         {% block contact_content %}
             <p class="module-content">
             {% if pkg_dict.maintainer and pkg_dict.maintainer_email %}
-                <a href="mailto:{{ pkg_dict.maintainer_email }}" title="{{ _('contact') }}" style="word-wrap:break-word">{{ pkg_dict.maintainer }}</a>
+                <a href="mailto:{{ pkg_dict.maintainer_email|replace('mailto:','') }}" title="{{ _('contact') }}" style="word-wrap:break-word">{{ pkg_dict.maintainer }}</a>
             {% elif pkg_dict.maintainer and not pkg_dict.maintainer_email %}
                 {{ pkg_dict.maintainer }}
             {% elif not pkg_dict.maintainer and pkg_dict.maintainer_email %}
-                <a href="mailto:{{ pkg_dict.maintainer_email }}" title="{{ _('contact') }}">{{ pkg_dict.maintainer_email }}</a>
+                <a href="mailto:{{ pkg_dict.maintainer_email|replace('mailto:','') }}" title="{{ _('contact') }}">{{ pkg_dict.maintainer_email }}</a>
             {% else %}
-                <a href="mailto:{{ h.get_pkg_dict_extra(c.pkg_dict, 'contact-email') }}" title="{{ _('contact') }}"> {{ h.get_pkg_dict_extra(c.pkg_dict, 'contact-email') }} </a>
+                <a href="mailto:{{ h.get_pkg_dict_extra(c.pkg_dict, 'contact-email')|replace('mailto:','') }}" title="{{ _('contact') }}"> {{ h.get_pkg_dict_extra(c.pkg_dict, 'contact-email') }} </a>
             {% endif %}
 
             </p>
