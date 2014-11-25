@@ -12,8 +12,8 @@
       <li>{% link_for _('Organizations'), controller='organization', action='index' %}</li>
       <li>{% link_for organization|truncate(30), controller='organization', action='read', id=pkg.organization.name %}
 	  {% for extra in pkg.extras %}
-	     {% if extra.key == 'publisher' %}
-	        <li class="active">{% link_for extra.value|truncate(30), controller='package', action='search', publisher=extra.value %}</li>
+	     {% if extra.key == 'publisher' and organization != extra.value %}
+	        <li class="active">&nbsp;{% link_for extra.value|truncate(30), controller='package', action='search', publisher=extra.value %}</li>
 		 {% endif %}
 	  {% endfor %}
     {% else %}
