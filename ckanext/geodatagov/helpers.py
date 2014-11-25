@@ -372,7 +372,7 @@ def schema11_key_mod(key):
         'Catalog Conformsto': 'Schema Version',
         'Catalog DescribedBy': 'Data Dictionary',
 
-        'Identifier': 'Unique Identifier',
+        # 'Identifier': 'Unique Identifier',
         'Modified': 'Last Update',
         'Accesslevel': 'Public Access Level',
         'Bureaucode' : 'Bureau Code',
