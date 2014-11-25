@@ -286,7 +286,7 @@ def get_dynamic_menu():
                             category = 'coastalflooding'
                         else: # climate special treatment
                             climate_generic_category = categories[0]
-                            category = climate_generic_category.replace(" ", "").lower()
+                            category = climate_generic_category.replace(" ", "-").lower()
                     submenu_key = category if category else submenu_key
 
                 if submenu_key == 'agriculture':
