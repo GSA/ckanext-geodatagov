@@ -364,3 +364,30 @@ def remove_extra_chars(str_value):
         ret = str_value
 
     return ret
+
+def schema11_key_mod(key):
+    key_map = {
+        'Catalog @Context': 'Metadata Context',
+        'Catalog @Id': 'Metadata Catalog ID',
+        'Catalog Conformsto': 'Schema Version',
+        'Catalog DescribedBy': 'Data Dictionary',
+
+        'Identifier': 'Unique Identifier',
+        'Modified': 'Last Update',
+        'Accesslevel': 'Public Access Level',
+        'Bureaucode' : 'Bureau Code',
+        'Programcode': 'Program Code',
+        'Accrualperiodicity': 'Frequency',
+        'Conformsto': 'Data Standard',
+        'Dataquality': 'Data Quality',
+        'Describedby': 'Data Dictionary',
+        'Describedbytype': 'Data Dictionary Type',
+        'Issued': 'Release Date',
+        'Landingpage': 'Homepage URL',
+        'Primaryitinvestmentuii': 'Primary IT Investment UII',
+        'References': 'Related Documents',
+        'Systemofrecords': 'System of Records',
+        'Theme': 'Category',
+    }
+
+    return key_map.get(key, key)

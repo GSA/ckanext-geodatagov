@@ -87,6 +87,13 @@
             </tr>
             {% for key, value in h.format_resource_items(res.items()) %}
               {% if key not in ['format', 'no real name'] %}
+                {% if key == 'conformsTo' %}
+                  {% set key = 'Data Standard' %}
+                {% elif key == 'describedBy' %}
+                  {% set key = 'Data Dictionary' %}
+                {% elif key == 'describedByType' %}
+                  {% set key = 'Data Dictionary Type' %}
+                {% endif %}
               <tr class="toggle-more"><th scope="row">{{ key }}</th><td>{{ value }}</td></tr>
               {% endif %}
             {% endfor %}

@@ -402,6 +402,7 @@ class Demo(p.SingletonPlugin):
                 #'get_file_size': geodatagov_helpers.get_file_size,
                 'convert_resource_format':geodatagov_helpers.convert_resource_format,
                 'remove_extra_chars':geodatagov_helpers.remove_extra_chars,
+                'schema11_key_mod':geodatagov_helpers.schema11_key_mod,
                 }
 
     ## IActions

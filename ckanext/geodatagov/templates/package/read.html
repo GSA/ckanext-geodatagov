@@ -4,6 +4,7 @@
 {% set pkg_dict = c.pkg_dict %}
 {% set dataset_extent = h.get_pkg_dict_extra(c.pkg_dict, 'spatial', '') %}
 {% set dataset_is_datajson = h.get_pkg_dict_extra(c.pkg_dict, 'source_datajson_identifier', False) %}
+{% set dataset_is_schema11 = h.get_pkg_dict_extra(c.pkg_dict, 'source_schema_version', '') == '1.1' %}
 
 
 {% block package_description %}
@@ -227,6 +228,9 @@
         {% set duplicate_key_check = "" %}
         {% for extra in h.sorted_extras(extras, auto_clean=true, exclude=exclude_list) %}
           {% set key, value = extra %}
+            {% if dataset_is_schema11 %}
+              {% set key = h.schema11_key_mod(key) %}
+            {% endif %}
            {% if key == 'Data Dictiionary' %}
             {% set key = 'Data Dictionary'%}
            {% endif %}
