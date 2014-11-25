@@ -146,6 +146,9 @@
               {% set key, value = extra %}
               {% if dataset_is_schema11 %}
                  {% set key = h.schema11_key_mod(key) %}
+                 {% if key == 'Frequency' %}
+                     {% set value = h.schema11_frequency_mod(value) %}
+                 {% endif %}
               {% endif %}
               {% if key in ['Modified', 'Issued'] %}
               <tr rel="dc:relation" resource="_:extra{{ i }}">
@@ -157,7 +160,7 @@
                 </td>
               </tr>
               {% endif %}
-              {% if 'date' in key %}
+              {% if 'date' in key or key == 'Frequency' %}
                 <tr>
                   <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key) }}</th>
                   <td class="dataset-details" property="rdf:value">
