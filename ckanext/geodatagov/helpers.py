@@ -342,13 +342,3 @@ def remove_extra_chars(str_value):
         ret = str_value
 
     return ret
-
-def get_pkg_extras(pkg, key, default_value):
-  for extra in pkg["extras"]:
-    if extra["key"] == key:
-      ret = extra["value"]
-      break
-  else:
-    ret = default_value
-
-  return ret
