@@ -231,6 +231,9 @@
             {% if dataset_is_schema11 %}
               {% set key = h.schema11_key_mod(key) %}
             {% endif %}
+            {% if dataset_is_schema11 and key == 'Frequency' %}
+              {% set value = h.schema11_frequency_mod(value) %}
+            {% endif %}
            {% if key == 'Data Dictiionary' %}
             {% set key = 'Data Dictionary'%}
            {% endif %}

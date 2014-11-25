@@ -391,3 +391,28 @@ def schema11_key_mod(key):
     }
 
     return key_map.get(key, key)
+
+def schema11_frequency_mod(value):
+    frequency_map = {
+        'R/P10Y': 'Decennial',
+        'R/P4Y': 'Quadrennial',
+        'R/P1Y': 'Annual',
+        'R/P2M': 'Bimonthly',
+        'R/P0.5M': 'Bimonthly',
+        'R/P3.5D': 'Semiweekly',
+        'R/P1D': 'Daily',
+        'R/P2W': 'Biweekly',
+        'R/P0.5W': 'Biweekly',
+        'R/P6M': 'Semiannual',
+        'R/P2Y': 'Biennial',
+        'R/P3Y': 'Triennial',
+        'R/P0.33W': 'Three times a week',
+        'R/P0.33M': 'Three times a month',
+        'R/PT1S': 'Continuously updated',
+        'R/P1M': 'Monthly',
+        'R/P3M': 'Quarterly',
+        'R/P0.5M': 'Semimonthly',
+        'R/P4M': 'Three times a year',
+        'R/P1W': 'Weekly',
+    }
+    return frequency_map.get(value, value)
