@@ -4,6 +4,7 @@
 {% set pkg_dict = c.pkg_dict %}
 {% set dataset_extent = h.get_pkg_dict_extra(c.pkg_dict, 'spatial', '') %}
 {% set dataset_is_datajson = h.get_pkg_dict_extra(c.pkg_dict, 'source_datajson_identifier', False) %}
+{% set dataset_is_schema11 = h.get_pkg_dict_extra(c.pkg_dict, 'source_schema_version', '') == '1.1' %}
 
 
 {% block package_description %}
@@ -257,13 +258,13 @@
           <td><span property="dct:modified">{{ h.render_datetime_datagov(c.pkg_dict.metadata_modified) or 'Unknown' }}</span></td>
         </tr>		
         {% if dataset_is_datajson %}
-          {% set exclude_list = ['metadata-date', 'publisher', 'identifier', 'maintainer_email', 'maintainer', 'resource-type', 'spatial'] %}
+          {% set exclude_list = ['metadata-date', 'publisher', 'identifier', 'maintainer_email', 'maintainer', 'resource-type'] %}
           <tr itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
             <th scope="row" class="dataset-label">Publisher</th>
             <td><span itemprop="name" property="dct:publisher">{{ h.get_pkg_dict_extra(c.pkg_dict, 'publisher', 'Unknown') }}<span></td>
           </tr>
           <tr>
-            <th scope="row" class="dataset-label">Identifier</th>
+            <th scope="row" class="dataset-label">{% if dataset_is_schema11 %}Unique {% endif %}Identifier</th>
             <td><span property="dct:identifier">{{ h.get_pkg_dict_extra(c.pkg_dict, 'identifier', 'Unknown') }}</span></td>
           </tr>
           <tr>
@@ -321,6 +322,12 @@
         {% set duplicate_key_check = "" %}
         {% for extra in h.sorted_extras(extras, auto_clean=true, exclude=exclude_list) %}
           {% set key, value = extra %}
+            {% if dataset_is_schema11 %}
+              {% set key = h.schema11_key_mod(key) %}
+            {% endif %}
+            {% if dataset_is_schema11 and key == 'Frequency' %}
+              {% set value = h.schema11_frequency_mod(value) %}
+            {% endif %}
            {% if key == 'Data Dictiionary' %}
             {% set key = 'Data Dictionary'%}
            {% endif %}

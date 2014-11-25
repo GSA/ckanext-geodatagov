@@ -401,6 +401,8 @@ class Demo(p.SingletonPlugin):
                 'get_harvest_source_type': geodatagov_helpers.get_harvest_source_type,
                 'convert_resource_format':geodatagov_helpers.convert_resource_format,
                 'remove_extra_chars':geodatagov_helpers.remove_extra_chars,
+                'schema11_key_mod':geodatagov_helpers.schema11_key_mod,
+                'schema11_frequency_mod':geodatagov_helpers.schema11_frequency_mod,
                 }
 
     ## IActions
