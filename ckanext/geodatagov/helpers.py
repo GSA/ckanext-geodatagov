@@ -262,8 +262,9 @@ def get_dynamic_menu():
                             category = 'foodresilience'
                         elif set(cat_coastal_list).issuperset(categories):
                             category = 'coastalflooding'
-                        elif set(cat_water_list).issuperset(categories):
-                            category = 'water'
+                        else: # climate special treatment
+                            climate_generic_category = categories[0]
+                            category = climate_generic_category.replace(" ", "-").lower()
                     submenu_key = category if category else submenu_key
 
                 if submenu_key == 'agriculture':
@@ -294,8 +295,9 @@ def get_dynamic_menu():
         'food': 'Agriculture',
         'coastalflooding': ['Climate', 'Coastal Flooding'],
         'foodresilience': ['Climate', 'Food Resilience'],
-        'water': ['Climate', 'Water'],
         }
+        if category and climate_generic_category:
+            name_pair[category] = ['Climate', climate_generic_category]
 
         parent = {}
         name = name_pair.get(submenu_key, submenu_key.capitalize())
