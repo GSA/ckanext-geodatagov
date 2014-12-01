@@ -147,8 +147,6 @@
 
     - name: create ckan database
       action: postgresql_db name=ckan owner=geo.gov
-    #- name: create ckan database
-    #  action: postgresql_db name=ckan owner=geo
 
     - name: install postgis script
       shell: "psql -d ckan -f /usr/pgsql-9.2/share/contrib/postgis-2.1/postgis.sql"
