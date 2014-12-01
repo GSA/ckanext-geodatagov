@@ -88,11 +88,11 @@
 
 
 
-    #- name: copy needed solr config file
-    #  action: copy src=usr/share/tomcat6/webapps/solr/WEB-INF/web.xml dest=/usr/share/tomcat6/webapps/solr/WEB-INF/web.xml
+    - name: copy needed solr config file
+      action: copy src=usr/share/tomcat6/webapps/solr/WEB-INF/web.xml dest=/usr/share/tomcat6/webapps/solr/WEB-INF/web.xml
 
-    #- name: restarting tomcat service
-    #  action: service name=tomcat6 state=restarted
+    - name: restarting tomcat service
+      action: service name=tomcat6 state=restarted
       #command: service tomcat6 restart
 
     - name: stop firewall
