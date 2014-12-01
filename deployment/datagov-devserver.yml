@@ -6,7 +6,7 @@
       action: command creates=/etc/yum.repos.d/epel.repo rpm -Uvh http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
 
     - name: install postgres repository
-      action: command rpm -Uvh http://yum.postgresql.org/9.2/redhat/rhel-6-x86_64/pgdg-redhat92-9.2-7.noarch.rpm
+      action: command rpm -Uvh --replacepkgs http://yum.postgresql.org/9.2/redhat/rhel-6-x86_64/pgdg-redhat92-9.2-7.noarch.rpm
 
     - name: make sure packages are installed
       action: yum pkg={{item}} state=installed
@@ -77,10 +77,10 @@
       shell: "cd ~/ && tar -zxvf solr-4.2.1.tgz && cd solr-4.2.1/dist && cp solr-4.2.1.war /var/lib/tomcat6/webapps/solr.war"
 
     - name: Setup solr home folder
-      shell: "mkdir /home/solr && cp -R ~/solr-4.2.1/example/solr/* /home/solr && cd /home/solr/collection1/conf/ && rm schema.xml && wget https://raw.github.com/okfn/ckanext-geodatagov/master/solr/schema.xml && chown -R tomcat /home/solr"
+      shell: "mkdir -p /home/solr && cp -R ~/solr-4.2.1/example/solr/* /home/solr && cd /home/solr/collection1/conf/ && rm schema.xml && wget --no-check-certificate https://raw.github.com/okfn/ckanext-geodatagov/master/solr/schema.xml && chown -R tomcat /home/solr"
 
     - name: restarting tomcat service
-      command: service tomcat6 restart
+      action: service name=tomcat6 state=restarted
 
     - name: copy needed solr config file
       action: copy src=usr/share/tomcat6/webapps/solr/WEB-INF/web.xml dest=/usr/share/tomcat6/webapps/solr/WEB-INF/web.xml
@@ -100,7 +100,7 @@
 
 #POSTGRESQL setup
     - name: install postgres repository
-      action: command rpm -Uvh http://yum.postgresql.org/9.2/redhat/rhel-6-x86_64/pgdg-redhat92-9.2-7.noarch.rpm
+      action: command rpm -Uvh --replacepkgs http://yum.postgresql.org/9.2/redhat/rhel-6-x86_64/pgdg-redhat92-9.2-7.noarch.rpm
 
     - name: install epel
       action: command creates=/etc/yum.repos.d/epel.repo rpm -Uvh http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
@@ -172,7 +172,7 @@
       action: file path=/usr/lib/ckan/src state=absent
 
     - name: create link of pg_config for postgresql9.2
-      action: command ln -s /usr/pgsql-9.2/bin/pg_config /usr/bin/pg_config
+      action: command ln -sf /usr/pgsql-9.2/bin/pg_config /usr/bin/pg_config
 
     - name: get ckan version
       action: git repo=https://github.com/GSA/ckan.git dest=/usr/lib/ckan/src/ckan version=release-datagov
@@ -303,8 +303,39 @@
     - name: download default ckan who.ini
       get_url: url="https://github.com/ckan/ckan/raw/366f1620da29ffaecf7e39d400b5223c8a56417e/ckan/config/who.ini" dest="/etc/ckan/who.ini"
 
+#
+# missing Celery?
+#
+    - name: install Celery
+      action: pip name=Celery virtualenv=/usr/lib/ckan/
+
+    - name: get report
+      action: git repo=https://github.com/datagovuk/ckanext-report.git dest=/usr/lib/ckan/src/ckanext-report version=master
+
+    - name: run setup.py develop for report
+      action: command chdir=/usr/lib/ckan/src/ckanext-report/ ../../bin/python setup.py develop
+
+    - name: get deadoralive
+      action: pip name=ckanext-deadoralive virtualenv=/usr/lib/ckan/
+
+#
+#  we should swap the production ini in place?
+#
+    - name: production ini hack
+      shell: "mv /etc/ckan/production.ini /etc/ckan/production.ini.bak && ln -s /etc/ckan/development.ini /etc/ckan/production.ini"
+
+#
+# we probably need to change the permissions on the cache directory
+#
+    - name: fix permissions problem
+      shell: "chmod a+rw /usr/lib/ckan/src/ckanext-geodatagov/ckanext/geodatagov/dynamic_menu/"
+
+
     - name: Initialize ckan db
       action: command ckan db init
+
+    - name: report initdb
+      action: command chdir=/usr/lib/ckan/src/ckanext-report /usr/lib/ckan/bin/paster report initdb --config=/etc/ckan/production.ini
 
     - name: after harvester installation script
       action: command /tmp/after_web.sh
