@@ -59,34 +59,41 @@
       command: service tomcat6 start
 
     - name: Download Common Logging 1.1.3
-      get_url: url="http://apache.cc.uoc.gr//commons/logging/binaries/commons-logging-1.1.3-bin.tar.gz" dest="~/"
+      get_url: url="http://apache.org/dist/commons/logging/binaries/commons-logging-1.1.3-bin.tar.gz" dest="~/" force=no
+#      shell: creates=~/commons-logging-1.1.3-bin.tar.gz "cd  ~/ && wget http://apache.cc.uoc.gr/commons/logging/binaries/commons-logging-1.1.3-bin.tar.gz"
+
 
     - name: Unpack common-logging
       shell: "cd ~/ && tar -zxvf commons-logging-1.1.3-bin.tar.gz && cd commons-logging-1.1.3 && cp commons-logging-*.jar /usr/share/tomcat6/lib/"
 
     - name: Download slf4j 1.7.5
-      get_url: url="http://www.slf4j.org/dist/slf4j-1.7.5.tar.gz" dest="~/"
+     # get_url: url="http://www.slf4j.org/dist/slf4j-1.7.5.tar.gz" dest="~/" force=no timeout=30
+      shell: creates=~/slf4j-1.7.5.tar.gz "cd  ~/ &&  wget -T 40  http://www.slf4j.org/dist/slf4j-1.7.5.tar.gz"
 
     - name: Unpack slf4j
       shell: "cd ~/ && tar -zxvf slf4j-1.7.5.tar.gz && cd slf4j-1.7.5 && cp slf4j-*.jar /usr/share/tomcat6/lib/"
 
     - name: Download solr 4.2.1
-      get_url: url="http://archive.apache.org/dist/lucene/solr/4.2.1/solr-4.2.1.tgz" dest="~/"
+      #get_url: url="http://archive.apache.org/dist/lucene/solr/4.2.1/solr-4.2.1.tgz" dest="~/" force=no
+      shell: creates=~/solr-4.2.1.tgz "cd  ~/ && wget -T 40 http://archive.apache.org/dist/lucene/solr/4.2.1/solr-4.2.1.tgz"
 
     - name: Unpack solr
       shell: "cd ~/ && tar -zxvf solr-4.2.1.tgz && cd solr-4.2.1/dist && cp solr-4.2.1.war /var/lib/tomcat6/webapps/solr.war"
 
     - name: Setup solr home folder
-      shell: "mkdir -p /home/solr && cp -R ~/solr-4.2.1/example/solr/* /home/solr && cd /home/solr/collection1/conf/ && rm schema.xml && wget --no-check-certificate https://raw.github.com/okfn/ckanext-geodatagov/master/solr/schema.xml && chown -R tomcat /home/solr"
+      shell: "mkdir -p /home/solr && cp -R ~/solr-4.2.1/example/solr/* /home/solr && cd /home/solr/collection1/conf/ && rm schema.xml && wget  --no-check-certificate https://raw.github.com/okfn/ckanext-geodatagov/master/solr/schema.xml && chown -R tomcat /home/solr"
 
     - name: restarting tomcat service
       action: service name=tomcat6 state=restarted
 
-    - name: copy needed solr config file
-      action: copy src=usr/share/tomcat6/webapps/solr/WEB-INF/web.xml dest=/usr/share/tomcat6/webapps/solr/WEB-INF/web.xml
 
-    - name: restarting tomcat service
-      command: service tomcat6 restart
+
+    #- name: copy needed solr config file
+    #  action: copy src=usr/share/tomcat6/webapps/solr/WEB-INF/web.xml dest=/usr/share/tomcat6/webapps/solr/WEB-INF/web.xml
+
+    #- name: restarting tomcat service
+    #  action: service name=tomcat6 state=restarted
+      #command: service tomcat6 restart
 
     - name: stop firewall
       command: service iptables stop
@@ -140,6 +147,8 @@
 
     - name: create ckan database
       action: postgresql_db name=ckan owner=geo.gov
+    #- name: create ckan database
+    #  action: postgresql_db name=ckan owner=geo
 
     - name: install postgis script
       shell: "psql -d ckan -f /usr/pgsql-9.2/share/contrib/postgis-2.1/postgis.sql"
@@ -330,6 +339,7 @@
     - name: fix permissions problem
       shell: "chmod a+rw /usr/lib/ckan/src/ckanext-geodatagov/ckanext/geodatagov/dynamic_menu/"
 
+    - file: path=/usr/lib/ckan/src/ckanext-geodatagov/ckanext/geodatagov/dynamic_menu/menu.json state=touch mode=0666
 
     - name: Initialize ckan db
       action: command ckan db init
