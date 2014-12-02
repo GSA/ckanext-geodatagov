@@ -143,7 +143,13 @@
             </tr>
             {% endif %}
 
-            {% for extra in h.sorted_extras(extras, auto_clean=true) %}
+            {% if not dataset_is_datajson %}
+              {% set exclude_list = ['metadata-date', 'dataset-reference-date'] %}
+            {% else %}
+              {% set exclude_list = ['metadata-date'] %}
+            {% endif %}
+
+            {% for extra in h.sorted_extras(extras, auto_clean=true, exclude=exclude_list) %}
               {% set key, value = extra %}
               {% if dataset_is_schema11 %}
                  {% set key = h.schema11_key_mod(key) %}
