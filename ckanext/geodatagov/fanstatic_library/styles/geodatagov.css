@@ -1404,6 +1404,9 @@ position: static
 #menu-primary-navigation .menu-public-safety a i:before{
     content: "\e014"
 }
+#menu-primary-navigation .menu-local-government a i:before{
+    content: "\e015"
+}
 #menu-primary-navigation .menu-agriculture a i:before{
     content: "\e00b"
 }
