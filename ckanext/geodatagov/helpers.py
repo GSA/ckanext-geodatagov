@@ -235,6 +235,7 @@ def get_dynamic_menu():
 
     query = request.environ.get('QUERY_STRING', '');
     submenu_key = None
+    category = None
 
     if menus and query:
         query_dict = urlparse.parse_qs(query)
@@ -253,7 +254,6 @@ def get_dynamic_menu():
 
                     categories = query_dict.get('vocab_category_all', [])
                     # some special topic categories got their own sub menus.
-                    category = None
                     if submenu_key == 'climate' and categories:
                         cat_food_list = ['Food Resilience', 'Food Production', 'Food Distribution', 'Food Safety and Nutrition', 'Food Security']
                         cat_coastal_list = ['Coastal Flooding']
