@@ -67,15 +67,16 @@
       shell: "cd ~/ && tar -zxvf commons-logging-1.1.3-bin.tar.gz && cd commons-logging-1.1.3 && cp commons-logging-*.jar /usr/share/tomcat6/lib/"
 
     - name: Download slf4j 1.7.5
-     # get_url: url="http://www.slf4j.org/dist/slf4j-1.7.5.tar.gz" dest="~/" force=no timeout=30
-      shell: creates=~/slf4j-1.7.5.tar.gz "cd  ~/ &&  wget -T 40  http://www.slf4j.org/dist/slf4j-1.7.5.tar.gz"
+      #get_url: url="http://www.slf4j.org/dist/slf4j-1.7.5.tar.gz" dest="~/" force=no 
+      command: creates=~/slf4j-1.7.5.tar.gz chdir=~/ wget -T 40  http://www.slf4j.org/dist/slf4j-1.7.5.tar.gz
 
     - name: Unpack slf4j
       shell: "cd ~/ && tar -zxvf slf4j-1.7.5.tar.gz && cd slf4j-1.7.5 && cp slf4j-*.jar /usr/share/tomcat6/lib/"
 
     - name: Download solr 4.2.1
       #get_url: url="http://archive.apache.org/dist/lucene/solr/4.2.1/solr-4.2.1.tgz" dest="~/" force=no
-      shell: creates=~/solr-4.2.1.tgz "cd  ~/ && wget -T 40 http://archive.apache.org/dist/lucene/solr/4.2.1/solr-4.2.1.tgz"
+      #shell: creates=~/solr-4.2.1.tgz "cd  ~/ && wget -T 40 http://archive.apache.org/dist/lucene/solr/4.2.1/solr-4.2.1.tgz"
+      command: creates=~/solr-4.2.1.tgz chdir=~/ wget -T 40  http://archive.apache.org/dist/lucene/solr/4.2.1/solr-4.2.1.tgz
 
     - name: Unpack solr
       shell: "cd ~/ && tar -zxvf solr-4.2.1.tgz && cd solr-4.2.1/dist && cp solr-4.2.1.war /var/lib/tomcat6/webapps/solr.war"
@@ -89,7 +90,7 @@
 
 
     - name: copy needed solr config file
-      action: copy src=usr/share/tomcat6/webapps/solr/WEB-INF/web.xml dest=/usr/share/tomcat6/webapps/solr/WEB-INF/web.xml
+      action: copy src=usr/share/tomcat6/webapps/solr/WEB-INF/web.xml dest=/usr/share/tomcat6/webapps/solr/WEB-INF/web.xml force=yes
 
     - name: restarting tomcat service
       action: service name=tomcat6 state=restarted
@@ -147,6 +148,8 @@
 
     - name: create ckan database
       action: postgresql_db name=ckan owner=geo.gov
+    #- name: create ckan database
+    #  action: postgresql_db name=ckan owner=geo
 
     - name: install postgis script
       shell: "psql -d ckan -f /usr/pgsql-9.2/share/contrib/postgis-2.1/postgis.sql"
