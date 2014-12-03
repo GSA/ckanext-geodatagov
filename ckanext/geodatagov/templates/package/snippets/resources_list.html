@@ -19,23 +19,27 @@ Example:
 
 {% if resources or exists|length > 0  %}
 <section id="dataset-resources" class="resources module-content">
-  <h3>{{ _('Data and Resources') }}</h3>
+  <h3>{{ _('Downloads and Resources') }}</h3>
   {% block resource_list %}
   <ul class="{% block resource_list_class %}resource-list{% endblock %}">
     {% block resource_list_inner %}
-    
+
+    {% if not resources %}
+      <br/>
+      <div class="no-resource"><i class="icon-exclamation-sign"></i>No file downloads have been provided. The publisher may provide downloads in the future or they may be available from their other links.</div>
+      <br/>
+    {% endif %}
+
     {% for resource in resources %}
     
-    {% if resource %}
-    
-    {% snippet 'package/snippets/resource_item.html', pkg=pkg, res=resource %}
-    
-    {% else %}
-    <div class="no-resource"><i class="icon-exclamation-sign"></i>No file downloads have been provided. The publisher may provide downloads in the future or they may be available from their other links.</div>
-    {% endif %}
-    
+      {% if resource %}
+
+        {% snippet 'package/snippets/resource_item.html', pkg=pkg, res=resource %}
+
+      {% endif %}
+
     {% endfor %}
-    
+
     {% snippet 'package/snippets/resource_extra_item.html', pkg=pkg %}
     
     {% endblock %}
@@ -43,6 +47,7 @@ Example:
   {% endblock %} </section>
 {% else %}
 <section id="dataset-resources" class="resources module-content">
+  <h3>{{ _('Downloads and Resources') }}</h3>
   <div class="no-resource"><i class="icon-exclamation-sign"></i>No file downloads have been provided. The publisher may provide downloads in the future or they may be available from their other links.</div>
 </section>
 {% endif %}

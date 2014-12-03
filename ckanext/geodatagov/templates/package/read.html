@@ -100,14 +100,28 @@
                      {% set val = val.replace(']','') %}
                      {% set val = val.replace('u\'','') %}
                      {% set val = val.replace('\'','') %}
-                     {{ val }}
+                     {% set val = val.replace('"','') %}
+                     {% if "http://" in val or "https://" in val %}
+                        <a href="{{ val }}" target="_blank">{{ val }}</a>
+                     {% else %}
+                        {{ val }}
+                     {% endif %}
                   </td>
                 </tr>
               {% endfor %}
             {% else %}
              <tr rel="dc:relation" resource="_:extra{{ i }}">
                <td class="dataset-details" property="rdf:value">
-                 {{ value }}
+                   {% set value = value.replace('[','') %}
+                   {% set value = value.replace(']','') %}
+                   {% set value = value.replace('u\'','') %}
+                   {% set value = value.replace('\'','') %}
+                   {% set value = value.replace('"','') %}
+                   {% if "http://" in value or "https://" in value %}
+                     <a href="{{ value }}" target="_blank">{{ value }}</a>
+                   {% else %}
+                     {{ value }}
+                   {% endif %}
                </td>
              </tr>
             {% endif %}
