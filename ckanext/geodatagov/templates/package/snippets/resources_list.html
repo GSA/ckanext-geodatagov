@@ -9,7 +9,15 @@ Example:
   {% snippet "package/snippets/resources_list.html", pkg=pkg, resources=pkg.resources %}
 
 #}
-{% if resources %}
+
+{% set exists = [] %}
+{% for extra in pkg.extras %}
+   {% if extra.key == 'data-dictiionary' or extra.key == 'dataDictionary' or extra.key == 'landingPage' or extra.key == 'webService' %}
+       {% do exists.append(1) %}
+   {% endif %}
+{% endfor %}
+
+{% if resources or exists|length > 0  %}
 <section id="dataset-resources" class="resources module-content">
   <h3>{{ _('Data and Resources') }}</h3>
   {% block resource_list %}
