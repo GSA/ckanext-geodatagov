@@ -236,6 +236,7 @@ def get_dynamic_menu():
     query = request.environ.get('QUERY_STRING', '');
     submenu_key = None
     category = None
+    climate_generic_category = None
 
     if menus and query:
         query_dict = urlparse.parse_qs(query)
