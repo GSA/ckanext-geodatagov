@@ -5,7 +5,7 @@
 # description: myapp daemon
 # processname: myapp
 
-DAEMON_PATH="/usr/lib/ckan/bin/"
+DAEMON_PATH="/usr/lib/ckan/src/ckan/bin/"
 
 DAEMON=less
 DAEMONOPTS=""
