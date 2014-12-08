@@ -396,10 +396,10 @@
         - npm
 
     - name: install node less
-      npm: name=less path=/usr/lib/ckan/bin
+      npm: name=less path=/usr/lib/ckan/src/ckan
 
     - name: install node nodewatch
-      npm: name=nodewatch path=/usr/lib/ckan/bin
+      npm: name=nodewatch path=/usr/lib/ckan/src/ckan
  
     - name: enabling node less ckan template service
       command: chkconfig ckanless on
