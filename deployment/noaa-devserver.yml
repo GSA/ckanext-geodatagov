@@ -96,6 +96,26 @@
       action: service name=tomcat6 state=restarted
       #command: service tomcat6 restart
 
+ 
+#
+# install a new version of libxml - needs to be greater than 2.9 for spatial plugin
+#
+     
+#    - name: install libxml 
+#      action: command rpm -Uvh --replacepkgs ftp://xmlsoft.org/libxml2/libxml2-2.9.2-1.fc19.x86_64.rpm
+
+    - name: Download libxml2-2.9.2
+      command: creates=~/libxml2-2.9.2.tar.gz chdir=~/ wget -T 40  ftp://xmlsoft.org/libxml2/libxml2-2.9.2.tar.gz
+
+    - name: unpack libxml2-2.9.2
+      command: creates=~/libxml2-2.9.2/ chdir=~/ tar zxf libxml2-2.9.2.tar.gz
+
+    - name: configure libxml2-2.9.2
+      command: creates=~/libxml2-2.9.2/Makefile chdir=~/libxml2-2.9.2/ ~/libxml2-2.9.2/configure --libdir=/usr/lib64
+
+    - name: compile and install libxml2-2.9.2
+      command: creates=/usr/lib64/libxml2.so.2.9.2 chdir=~/libxml2-2.9.2/ make install
+
     - name: stop firewall
       command: service iptables stop
 
@@ -267,6 +287,7 @@
         - usr/bin/ckan
         - tmp/after_web.sh
         - tmp/after_harvester.sh
+        - etc/init.d/ckanless
 
     - name: create superviserctl symlink
       action: file src=/usr/lib/ckan/bin/supervisorctl dest=/usr/bin/supervisorctl state=link
@@ -363,6 +384,28 @@
 # AJS - not sure why this is a mess
     - name: make dynamic_menu / do we need this
       shell: "mkdir -p /usr/lib/ckan/src/ckanext-geodatagov/ckanext/geodatagov/dynamic_menu/"
+
+#
+#  install nodejs and template changes
+#
+
+    - name: make sure packages are installed
+      action: yum pkg={{item}} state=installed
+      with_items:
+        - nodejs
+        - npm
+
+    - name: install node less
+      npm: name=less path=/usr/lib/ckan/bin
+
+    - name: install node nodewatch
+      npm: name=nodewatch path=/usr/lib/ckan/bin
+ 
+    - name: enabling node less ckan template service
+      command: chkconfig ckanless on
+
+    - name: starting ckanless service
+      command: service ckanless start
 
     - name: after harvester installation script
       action: command /tmp/after_web.sh
