@@ -232,7 +232,7 @@
       action: git repo=https://github.com/mwengren/ckanext-harvest dest=/usr/lib/ckan/src/ckanext-harvest version=master
 
     - name: get extra data files
-      action: git repo=https://github.com/mwengren/ckanext-geodatagov-extras dest=/usr/lib/ckan/src/ckanext-harvest version=master
+      action: git repo=https://github.com/mwengren/ckanext-geodatagov-extras dest=/usr/lib/ckan/src/ckanext-geodatagov-extras version=master
 
     - name: install requirements for geodatagov
       action: pip requirements=/usr/lib/ckan/src/ckanext-geodatagov/pip-requirements.txt virtualenv=/usr/lib/ckan/ extra_args='--exists-action i'
@@ -252,19 +252,19 @@
     - name: run setup.py develop for datajson
       action: command chdir=/usr/lib/ckan/src/ckanext-datajson/ ../../bin/python setup.py develop
 
-    - name: install postgis script
+    - name: install locations database
       shell: "psql -d ckan -f /usr/lib/ckan/src/ckanext-geodatagov-extras/extras/locations.sql"
       sudo: yes
       sudo_user: postgres
 
     - name: copy ogc viewer in place 
-      shell: "cp /usr/lib/ckan/src/ckanext-geodatagov-extas/extras/viewer.war /var/lib/tomcat6/webapps/ogc_viewer.war"
+      shell: "cp /usr/lib/ckan/src/ckanext-geodatagov-extras/extras/viewer.war /var/lib/tomcat6/webapps/ogc_viewer.war"
 
     - name: set owner of ogc viewer
       shell: "chown tomcat /var/lib/tomcat6/webapps/ogc_viewer.war"
 
     - name: set permissions of ogc viewer
-      shell: "chmod 750 tomcat /var/lib/tomcat6/webapps/ogc_viewer.war"
+      shell: "chmod 750 /var/lib/tomcat6/webapps/ogc_viewer.war"
 
     - name: restarting tomcat service
       action: service name=tomcat6 state=restarted
