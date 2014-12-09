@@ -292,6 +292,7 @@
       with_items:
         - etc/ckan/who.ini
         - etc/ckan/apache.wsgi
+        - etc/ckan/noaaproduction.ini
         - etc/ckan/production.ini
         - etc/ckan/development.ini
         - etc/supervisord.conf
@@ -382,7 +383,7 @@
 #  we should swap the production ini in place?
 #
     - name: production ini hack
-      shell: "mv /etc/ckan/production.ini /etc/ckan/production.ini.bak && ln -s /etc/ckan/development.ini /etc/ckan/production.ini"
+      shell: "mv /etc/ckan/production.ini /etc/ckan/production.ini.bak && ln -s /etc/ckan/noaaproduction.ini /etc/ckan/production.ini"
 
 #
 # we probably need to change the permissions on the cache directory
