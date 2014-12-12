@@ -154,6 +154,10 @@ jQuery(window).load(function(){
         linkRewriter("next.data.gov", "staging.data.gov");
 
     }
+
+    window.location.hash = "";
+
+   
 });
 
 if ($.browser.msie && $.browser.version == 10) {
@@ -189,4 +193,6 @@ $(document).ready(function () {
     $('.btn-preview').each(function() {
         test_to_preview($(this))
     });
+
+
 });
