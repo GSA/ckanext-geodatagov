@@ -156,7 +156,6 @@ jQuery(window).load(function(){
     }
 
     window.location.hash = "";
-
    
 });
 
