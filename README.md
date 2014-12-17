@@ -6,7 +6,7 @@
 
 Currently this repository is only used for source version control on the code for the CKAN extension for geospatial data, but you can see all of the Data.gov relevant repos listed in the [GSA Data.gov README file](https://github.com/GSA/data.gov/blob/master/README.md). 
 
-## CKAN Extenstion for Geospatial Data
+## CKAN Extension for Geospatial Data
 
 Most Data.gov specific CKAN customizations are contained within this extension, but the extension also provides additional geospatial capabilities.
 
