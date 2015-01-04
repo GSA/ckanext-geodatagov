@@ -319,6 +319,7 @@
       action: copy src={{item}} dest=/{{item}}
       with_items:
         - etc/ckan/who.ini
+        - etc/ckan/who.2.3.ini
         - etc/ckan/apache.wsgi
         - etc/ckan/noaaproduction.ini
         - etc/ckan/production.ini
@@ -389,8 +390,11 @@
     - name: remove default who.ini
       action: file path=/etc/ckan/who.ini state=absent
 
-    - name: download default ckan who.ini
-      get_url: url="https://github.com/ckan/ckan/raw/366f1620da29ffaecf7e39d400b5223c8a56417e/ckan/config/who.ini" dest="/etc/ckan/who.ini"
+#    - name: download default ckan who.ini
+#      get_url: url="https://github.com/ckan/ckan/raw/366f1620da29ffaecf7e39d400b5223c8a56417e/ckan/config/who.ini" dest="/etc/ckan/who.ini"
+
+    - name: move new who.ini in place
+      shell: "mv /etc/ckan/who.2.3.ini /etc/ckan/who.ini"
 
 #
 # missing Celery?
