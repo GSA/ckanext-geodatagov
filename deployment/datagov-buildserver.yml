@@ -137,7 +137,7 @@
 
 #pycsw setup
     - name: get pycsw version
-      action: git repo=https://github.com/geopython/pycsw.git dest=/usr/lib/ckan/src/pycsw version=datagov
+      action: git repo=https://github.com/geopython/pycsw.git dest=/usr/lib/ckan/src/pycsw version=1.10.1
 
     - name: run setup build for pycsw
       action: command chdir=/usr/lib/ckan/src/pycsw/ ../../bin/python setup.py build
