@@ -99,6 +99,16 @@
             <xsl:param name="root" />
 		<div class="iso_section_title"><xsl:call-template name="get_property"><xsl:with-param name="key">catalog.iso19139.MD_Metadata.section.metadata</xsl:with-param></xsl:call-template></div>
 		<dl>
+            <xsl:if test="$root/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle">
+                <dt>
+                    <em>
+                        <xsl:call-template name="get_property">
+                            <xsl:with-param name="key">catalog.iso19139.CI_Citation.<xsl:value-of select="local-name($root/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle)" /></xsl:with-param>
+                        </xsl:call-template>: </em>
+                    <xsl:value-of select="$root/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle/gco:CharacterString"/>
+                </dt>
+            </xsl:if>
+
 			<xsl:for-each select="$root/gmd:fileIdentifier">				
 			<dt>
 				<em><xsl:call-template name="get_property"><xsl:with-param name="key">catalog.iso19139.MD_Metadata.<xsl:value-of select="local-name()" /></xsl:with-param></xsl:call-template>: </em>
