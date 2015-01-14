@@ -9,6 +9,9 @@ from ckan.lib import helpers as h
 from ckanext.geodatagov.plugins import RESOURCE_MAPPING
 #from routes import url_for as _routes_default_url_for
 
+from urllib2 import Request, urlopen, URLError, HTTPError
+import ckan.lib.datapreview as datapreview
+
 log = logging.getLogger(__name__)
 
 try:
@@ -152,7 +155,70 @@ def resource_preview_custom(resource, pkg_id):
                'resource_url': url,
                'raw_resource_url': resource['url']})
 
+    if is_preview_format(resource) and not is_preview_available(resource, pkg_id):
+       return p.toolkit.render_snippet("dataviewer/snippets/no_preview.html")
+
     return h.resource_preview(resource, pkg_id)
+
+
+def is_preview_available(resource, pkg_id):
+
+    if not resource.get('url', 'data'):
+        return False
+
+    format_lower = resource.get('format', 'data').lower()
+
+    if (format_lower in ['csv', 'txt']):
+     type = 'csv'
+    elif (format_lower == 'xls'):
+	 type = 'xls'
+    elif (format_lower in ['jpg', 'jpeg', 'png', 'gif']):
+	 type = format_lower
+    else:
+	 return False
+
+    direct_embed = config.get('ckan.preview.direct', '').split()
+    if not direct_embed:
+        direct_embed = datapreview.DEFAULT_DIRECT_EMBED
+
+    loadable_in_iframe = config.get('ckan.preview.loadable', '').split()
+    if not loadable_in_iframe:
+        loadable_in_iframe = datapreview.DEFAULT_LOADABLE_IFRAME
+
+    package = p.toolkit.get_action('package_show')({}, {'id': pkg_id})
+    data_dict = {'resource': resource, 'package': package}
+
+    if (not datapreview.can_be_previewed(data_dict) and format_lower not in direct_embed and format_lower not in loadable_in_iframe):
+	 return False
+
+    if(format_lower in direct_embed):
+     return True
+
+    url = "http://jsonpdataproxy.appspot.com/?callback=result&url=" + resource.get('url') + "&max-results=1000&type=" + type + "&_=" + str(int(time.time()))
+
+    return preview_response(url)
+
+def preview_response(url):
+
+    req = Request(url)
+    try:
+      response = urlopen(req)
+    except HTTPError as e:
+      log.error("The server couldn\'t fulfill the request. Error code: " + str(e.code))
+      return False
+    except URLError as e:
+      log.error("We failed to reach a server. Reason: " + e.reason)
+      return False
+    else:
+      f = response.read()
+      data = json.loads(f[7:-1])
+      error_exists = data.get('error', 0)
+
+    if (error_exists != 0):
+      return False
+
+    return True
+
 
 types = {
     'web': ('html', 'data', 'esri rest', 'gov', 'org', ''),
