@@ -155,6 +155,7 @@ def resource_preview_custom(resource, pkg_id):
                'resource_url': url,
                'raw_resource_url': resource['url']})
 
+    
     if is_preview_format(resource) and not is_preview_available(resource, pkg_id):
        return p.toolkit.render_snippet("dataviewer/snippets/no_preview.html")
 
@@ -239,6 +240,7 @@ def is_web_format(resource):
 
 def is_preview_format(resource):
     return is_type_format('preview', resource)
+     
 
 def is_map_format(resource):
     return is_type_format('map', resource)
