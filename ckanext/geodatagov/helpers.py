@@ -154,11 +154,11 @@ def resource_preview_custom(resource, pkg_id):
                'resource_url': url,
                'raw_resource_url': resource['url']})
 
-    url = resource.get('url')
+    '''url = resource.get('url')
     type = os.path.splitext(os.path.basename(urlparse.urlsplit(url).path))[1].replace(".", "")
 
     if type != resource_format:
-        resource['format'] = type
+        resource['format'] = type'''
 
     if is_preview_format(resource) and not is_preview_available(resource, pkg_id):
        return p.toolkit.render_snippet("dataviewer/snippets/no_preview.html")
