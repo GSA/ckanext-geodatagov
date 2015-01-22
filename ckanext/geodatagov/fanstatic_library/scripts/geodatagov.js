@@ -134,7 +134,7 @@ $(document).ready(function () {
 });
 
 // fix for dynamic menu to check current domain and assign menu
-
+/*
 jQuery(window).load(function(){
     if (window.location.hostname==='catalog.data.gov'){
         var linkRewriter = function(a, b) {
@@ -158,7 +158,7 @@ jQuery(window).load(function(){
     window.location.hash = "";
    
 });
-
+*/
 if ($.browser.msie && $.browser.version == 10) {
     $("html").addClass("ie10");
 }
