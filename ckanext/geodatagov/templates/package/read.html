@@ -366,6 +366,12 @@
                 {% endif %}
 
                 {% if value != '[]' %}
+                  {% if '[' in value  %}
+                    {% set value = value.replace('[','') %}
+                    {% set value = value.replace(']','') %}
+                    {% set value = value.replace('u\'','') %}
+                    {% set value = value.replace('\'','') %}
+                  {% endif %}
                   {{ value }}
                 {% endif %}
               </td>
