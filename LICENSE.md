@@ -27,7 +27,7 @@ Visit http://www.gnu.org/licenses/ to learn more about the GNU Affero General Pu
 CKAN is sometimes packaged directly with other software (listed in
 requirements.txt and dev-requirements.txt).
 In these cases, we are required to list the licenses of the packaged softare
-too. They are all AGPL compatible and read as follows in the [CKAN licensing.txt](https://github.com/ckan/ckan/blob/master/LICENSE.txt).
+too. They are all AGPL compatible and listed in the [CKAN licensing.txt](https://github.com/ckan/ckan/blob/master/LICENSE.txt).
 
 
 ## Other Information
