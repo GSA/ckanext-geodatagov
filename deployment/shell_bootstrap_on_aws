@@ -1,0 +1,19 @@
+yum install wget -y
+wget "https://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm"
+rpm -ivh epel-release-6-8.noarch.rpm
+yum install git vim python-pip python-devel -y
+yum update
+yum groupinstall "Development Tools"
+pip install ansible==1.7.2
+ssh-keygen
+cat /root/.ssh/id_rsa.pub >> /root/.ssh/authorized_keys
+git clone https://github.com/18F/ckanext-geodatagov.git
+mkdir /etc/ansible/
+cat  << EOF >>/etc/ansible/hosts
+
+[dev]
+127.0.0.1
+
+EOF
+
+echo "ansible-playbook ckanext-geodatagov/deployment/datagov-devserver.yml"
