@@ -16,4 +16,4 @@ cat  << EOF >>/etc/ansible/hosts
 
 EOF
 
-echo "ansible-playbook ckanext-geodatagov/deployment/datagov-devserver.yml"
+echo "ansible-playbook ckanext-geodatagov/deployment/noaa-devserver.yml"
