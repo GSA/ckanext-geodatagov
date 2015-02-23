@@ -344,6 +344,7 @@
           {% set key, value = extra %}
             {% if dataset_is_schema11 %}
               {% set key = h.schema11_key_mod(key) %}
+              {% set value = value|string %}
               {% set value = value.replace('[','') %}
               {% set value = value.replace(']','') %}
               {% set value = value.replace('u\'','') %}
