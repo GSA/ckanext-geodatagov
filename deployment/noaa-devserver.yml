@@ -406,6 +406,10 @@
     - name: make dynamic_menu / do we need this
       shell: "mkdir -p /usr/lib/ckan/src/ckanext-geodatagov/ckanext/geodatagov/dynamic_menu/"
 
+    - name: add missing harvest template
+      shell: "curl -o /usr/lib/ckan/src/ckan/ckan/templates/snippets/search_form.html https://raw.githubusercontent.com/ckan/ckan/b0ca98a14fce1d4f7f9578723cd9cd3150da5335/ckan/templates/snippets/search_form.html"
+
+
 #
 #  install nodejs and template changes
 #
