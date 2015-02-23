@@ -223,10 +223,10 @@
       action: git repo=https://github.com/mwengren/ckanext-geodatagov dest=/usr/lib/ckan/src/ckanext-geodatagov version=noaa_dev
 
     - name: get datajson
-      action: git repo=https://github.com/mwengren/ckanext-datajson dest=/usr/lib/ckan/src/ckanext-datajson version=noaa_doi_dev_fuhu
+      action: git repo=https://github.com/18F/ckanext-datajson dest=/usr/lib/ckan/src/ckanext-datajson version=noaa_merge
 
     - name: get spatial
-      action: git repo=https://github.com/mwengren/ckanext-spatial dest=/usr/lib/ckan/src/ckanext-spatial version=noaa_dev
+      action: git repo=https://github.com/18F/ckanext-spatial dest=/usr/lib/ckan/src/ckanext-spatial version=master
 
     - name: get harvest
       action: git repo=https://github.com/mwengren/ckanext-harvest dest=/usr/lib/ckan/src/ckanext-harvest version=master
@@ -247,7 +247,7 @@
       action: pip requirements=/usr/lib/ckan/src/ckanext-spatial/pip-requirements.txt virtualenv=/usr/lib/ckan/ extra_args='--exists-action i'
 
     - name: install requirements for datajson
-      action: pip requirements=/usr/lib/ckan/src/ckanext-datajson/pip-requirements.txt virtualenv=/usr/lib/ckan/ extra_args='--exists-action i'
+      action: pip requirements=/usr/lib/ckan/src/ckanext-datajson/requirements.txt virtualenv=/usr/lib/ckan/ extra_args='--exists-action i'
 
     - name: run setup.py develop for datajson
       action: command chdir=/usr/lib/ckan/src/ckanext-datajson/ ../../bin/python setup.py develop
