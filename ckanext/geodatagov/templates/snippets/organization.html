@@ -50,4 +50,13 @@ Example:
       {% endif %}
     </section>
   </div>
+    {% set organization_terms = organization.terms_of_use %}
+        {% if organization_terms %}
+            <section class="module module-narrow module-shallow terms">
+                <h2 class="module-heading"><i class="icon-medium icon-legal"></i>{{ _('Terms of Use') }}</h2>
+                    <p class="module-content">
+                        <a href="{{organization.terms_of_use}}"> Terms of Use</a>
+                    </p>
+            </section>
+        {% endif %}
 {% endwith %}
