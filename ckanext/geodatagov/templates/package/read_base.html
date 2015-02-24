@@ -125,4 +125,20 @@
     {% snippet "snippets/license.html", pkg_dict=pkg %}
   {% endblock %}
 
+  {{ super() }}
+
+  {% set extras = c.pkg_dict.extras %}
+
+    <section class="module module-narrow module-shallow terms">
+        {% for extra in h.sorted_extras(extras, auto_clean=true) %}
+            {% set key, value = extra %}
+                 {% if key in ['Terms Of Use'] and (value != '' or value != '[]' ) %}
+                    <h2 class="module-heading">{{ _('Terms of Use') }}</h2>
+                    <p class="module-content">
+                         <a href="{{value}}"> Terms of Use</a>
+                    </p>
+                 {% endif %}
+        {% endfor %}
+    </section>
+
 {% endblock %}
