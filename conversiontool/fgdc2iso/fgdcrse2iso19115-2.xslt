@@ -2469,7 +2469,7 @@
                     </gmd:transferSize>
                   </xsl:for-each>
                   <xsl:choose>
-                    <xsl:when test="//stdorder//formcont">
+                    <xsl:when test="//stdorder//formname">
                       <xsl:for-each select="//stdorder/digform">
                         <gmd:onLine>
                           <xsl:call-template name="CI_OnlineResource">
