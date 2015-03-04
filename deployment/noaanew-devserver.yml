@@ -186,7 +186,7 @@
 
 # AJS -- switch this to 18F
     - name: get spatial
-      action: git repo=https://github.com/18F/ckanext-spatial dest=/usr/lib/ckan/src/ckanext-spatial version=master
+      action: git repo=https://github.com/18F/ckanext-spatial dest=/usr/lib/ckan/src/ckanext-spatial version=2.3
 #     action: git repo=https://github.com/ckan/ckanext-spatial dest=/usr/lib/ckan/src/ckanext-spatial version=5-postgis-2-support
 #     action: git repo=https://github.com/ckan/ckanext-spatial dest=/usr/lib/ckan/src/ckanext-spatial version=master
 
