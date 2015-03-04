@@ -184,6 +184,9 @@
     - name: get datajson
       action: git repo=https://github.com/18F/ckanext-datajson dest=/usr/lib/ckan/src/ckanext-datajson version=noaa_merge
 
+    - name: get datesearch
+      action: git repo=https://github.com/18F/ckanext-datesearch dest=/usr/lib/ckan/src/ckanext-datesearch version=master
+
 # AJS -- switch this to 18F
     - name: get spatial
       action: git repo=https://github.com/18F/ckanext-spatial dest=/usr/lib/ckan/src/ckanext-spatial version=2.3
@@ -203,6 +206,9 @@
 
     - name: run setup.py develop for geodatagov
       action: command chdir=/usr/lib/ckan/src/ckanext-geodatagov/ ../../bin/python setup.py develop
+
+    - name: run setup.py develop for datesearch
+      action: command chdir=/usr/lib/ckan/src/ckanext-datesearch/ ../../bin/python setup.py develop
 
     - name: install requirements for harvest
       action: pip requirements=/usr/lib/ckan/src/ckanext-harvest/pip-requirements.txt virtualenv=/usr/lib/ckan/ extra_args='--exists-action i'
