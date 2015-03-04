@@ -337,13 +337,13 @@
         - etc/ckan/who.ini
         - etc/ckan/who.2.3.ini
         - etc/ckan/apache.wsgi
-        - etc/ckan/noaaproduction.ini
+        - etc/ckan/2.3noaaproduction.ini
         - etc/ckan/production.ini
-        - etc/ckan/development.ini
+        - etc/ckan/2.3development.ini
         - etc/supervisord.conf
         #- etc/httpd/conf.d/ckan.conf
-        - etc/apache2/sites-available/ckan.conf
-        - etc/apache2/sites-available/waf.conf
+        - etc/apache2/sites-enabled/ckan.conf
+        - etc/apache2/sites-enabled/waf.conf
         - etc/cron.d/ckan-harvest
         - etc/cron.daily/remove_old_sessions
         - etc/init/supervisor.conf
@@ -360,6 +360,11 @@
     - name: create superviserctl symlink
       action: file src=/usr/lib/ckan/bin/supervisorctl dest=/usr/bin/supervisorctl state=link
 
+    - name: Apache | Enable some required modules
+      action: command a2enmod rewrite headers 
+      tags: common
+
+
     - name: restart apache
       action: service name=apache2 state=restarted
 
@@ -375,8 +380,8 @@
     - name: make dynamic_menu / do we need this
       shell: "mkdir -p /usr/lib/ckan/src/ckanext-geodatagov/ckanext/geodatagov/dynamic_menu/"
 
-    - name: after web installation script
-      action: command /tmp/after_web.sh
+    #- name: after web installation script
+    #  action: command /tmp/after_web.sh
 
     - name: packages for harvester part
       action: apt pkg={{item}} state=installed
@@ -396,6 +401,10 @@
     - name: move new who.ini in place
       shell: "mv /etc/ckan/who.2.3.ini /etc/ckan/who.ini"
 
+    - name: move new development.ini in place
+      shell: "mv /etc/ckan/2.3development.ini /etc/ckan/development.ini"
+
+
 #
 # missing Celery?
 #
@@ -411,11 +420,18 @@
     - name: get deadoralive
       action: pip name=ckanext-deadoralive virtualenv=/usr/lib/ckan/
 
+    - name: get pdfview
+      action: git repo=https://github.com/ckan/ckanext-pdfview.git dest=/usr/lib/ckan/src/ckanext-pdfview version=master
+
+    - name: run setup.py develop for pdfview
+      action: command chdir=/usr/lib/ckan/src/ckanext-pdfview/ ../../bin/python setup.py develop
+
+
 #
 #  we should swap the production ini in place?
 #
     - name: production ini hack
-      shell: "mv /etc/ckan/production.ini /etc/ckan/production.ini.bak && ln -s /etc/ckan/noaaproduction.ini /etc/ckan/production.ini"
+      shell: "mv /etc/ckan/production.ini /etc/ckan/production.ini.bak && ln -s /etc/ckan/2.3noaaproduction.ini /etc/ckan/production.ini"
 
 #
 # we probably need to change the permissions on the cache directory
@@ -427,6 +443,10 @@
       shell: "chmod a+rw /usr/lib/ckan/src/ckanext-geodatagov/ckanext/geodatagov/dynamic_menu/"
 
     - file: path=/usr/lib/ckan/src/ckanext-geodatagov/ckanext/geodatagov/dynamic_menu/menu.json state=touch mode=0666
+
+
+    - name: make /var/run/postgresql - do we need this
+      shell: "mkdir -p /var/run/postgresql"
 
     - name: Initialize ckan db
       action: command ckan db init
@@ -454,17 +474,17 @@
     - name: install node nodewatch
       npm: name=nodewatch path=/usr/lib/ckan/src/ckan
  
-    - name: enabling node less ckan template service
-      command: chkconfig ckanless on
+    #- name: enabling node less ckan template service
+    #  command: chkconfig ckanless on
 
     - name: starting ckanless service
-      command: service ckanless start
+      action: service name=ckanless state=started
 
-    - name: after harvester installation script
-      action: command /tmp/after_web.sh
+    #- name: after harvester installation script
+    #  action: command /tmp/after_web.sh
 
-    - name: after harvester installation script
-      action: command /tmp/after_harvester.sh
+    #- name: after harvester installation script
+    #  action: command /tmp/after_harvester.sh
 
 # After CKAN installation:
 # $ ckan search-index rebuild
