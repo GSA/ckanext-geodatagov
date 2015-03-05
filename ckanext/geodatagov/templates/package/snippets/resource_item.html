@@ -39,11 +39,14 @@
 {% block resource_item_explore %}
 {% set resource_url = url if is_map_format or is_preview_format else res.url %}
 <div class="btn-group">
-    {% if is_map_format %}
+    {% if is_map_format or is_cartodb_format %}
         <button class="btn btn-primary" style="border-top-right-radius:0;border-bottom-right-radius:0">Open With</button>
         <button class="btn btn-primary" data-toggle="dropdown" style="margin-left:0px;margin-right:10px;border-top-left-radius:0;border-bottom-left-radius:0"><span class="caret" style="margin-top:0px;"></span><span class="sr-only">Toggle dropdown</span></button>
            <ul class="dropdown-menu">
-             <!-- <li class="datagov_viewer"><a href="{{ resource_url }}"><i></i><span>Data.gov Map Preview</span></a></li>-->
+             {% if is_map_format %}
+              <li class="datagov_viewer"><a href="{{ resource_url }}"><i></i><span>Data.gov Map Preview</span></a></li>
+             {% endif %}
+
 	{% if is_cartodb_format %}
           <li class="cartodb"><a href=""><i></i><span>Carto DB</span></a></li>
 	{% endif %}
@@ -58,7 +61,7 @@
         <i class="icon-external-link"></i>
         {{ _('Visit page') }}
     </a>
-    {% elif is_preview_format %}
+    {% elif is_preview_format or is_cartodb_format or is_plotly_format %}
     <!--<a href="{{ resource_url }}" class="btn btn-primary btn-preview"{% if is_web_format %} target="_blank"{% endif %}>
         <i class="icon-search"></i>
         {{ _('Preview') }}
@@ -66,7 +69,9 @@
     <button class="btn btn-primary" style="border-top-right-radius:0;border-bottom-right-radius:0">Open With</button>
         <button class="btn btn-primary" data-toggle="dropdown" style="margin-left:0px;margin-right:10px;border-top-left-radius:0;border-bottom-left-radius:0"><span class="caret" style="margin-top:0px;"></span><span class="sr-only">Toggle dropdown</span></button>
            <ul class="dropdown-menu">
+          {% if is_preview_format %}
               <li class="datagov_viewer"><a href="{{ resource_url }}"><i></i><span>Data.gov Preview</span></a></li>
+	  {% endif %}
 
           {% if is_cartodb_format %}
              <li class="cartodb"><a href=""><span>Carto DB</span></a></li>
@@ -81,14 +86,7 @@
         <i class="icon-download-alt"></i>
         {{ _('Download') }}
     </a>
-    {% elif is_cartodb_format %}
-    <a href="" class="btn btn-primary" target="_blank">
-        {{ _('Carto DB') }}
-    </a>
-    {% elif is_plotly_format %}
-    <a href="https://plot.ly/external/?url={{ res.url }}" class="btn btn-primary" target="_blank">
-        {{ _('Plot ly') }}
-    </a>
+  
     {% else %}
     <a href="{{ resource_url }}" class="btn btn-primary"{% if is_web_format %} target="_blank"{% endif %}>
         <i class="icon-download-alt"></i>
