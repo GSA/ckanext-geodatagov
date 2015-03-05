@@ -174,8 +174,10 @@ def is_type_format(type, resource):
     if resource and type in types:
         format = resource.get('format', 'data').lower()
         # TODO: convert mimetypes to formats so we dont have to do this.
-        minetype = resource.get('mimetype', '').lower()
-        if format in types[type] or minetype in types[type]:
+        mimetype = resource.get('mimetype')
+        if mimetype:
+            mimetype = mimetype.lower()
+        if format in types[type] or mimetype in types[type]:
             return True
     return False
 
