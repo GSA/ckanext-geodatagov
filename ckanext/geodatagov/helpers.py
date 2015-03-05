@@ -159,12 +159,23 @@ types = {
     'preview': ('csv', 'xls', 'txt', 'jpg', 'jpeg', 'png', 'gif'),
     # "web map application" is deprecated in favour of "arcgis online map"
     'map': ('wms', 'kml', 'kmz', 'georss', 'web map application', 'arcgis online map'),
+    'plotly': ('csv', 'xls', 'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'text/csv','text/tab-separated-values',
+        'application/matlab-mattext/x-matlab', 'application/x-msaccess',
+        'application/msaccess', 'application/x-hdf', 'application/x-bag'),
+    'cartodb': ('csv', 'xls','kml', 'geojson', 'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'text/csv', 'application/vnd.google-earth.kml+xml',
+        'application/vnd.geo+json'),
 }
 
 def is_type_format(type, resource):
     if resource and type in types:
         format = resource.get('format', 'data').lower()
-        if format in types[type]:
+        # TODO: convert mimetypes to formats so we dont have to do this.
+        minetype = resource.get('mimetype', '').lower()
+        if format in types[type] or minetype in types[type]:
             return True
     return False
 
@@ -176,6 +187,12 @@ def is_preview_format(resource):
 
 def is_map_format(resource):
     return is_type_format('map', resource)
+
+def is_plotly_format(resource):
+    return is_type_format('plotly', resource)
+
+def is_cartodb_format(resource):
+    return is_type_format('cartodb', resource)
     
 def get_dynamic_menu():
     filename = os.path.join(os.path.dirname(__file__), 'dynamic_menu/menu.json')
