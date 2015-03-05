@@ -3,6 +3,9 @@
 {% set is_web_format = h.is_web_format(res) %}
 {% set is_preview_format = h.is_preview_format(res) %}
 {% set is_map_format = h.is_map_format(res) %}
+{% set is_cartodb_format = h.is_cartodb_format(res) %}
+{% set is_plotly_format = h.is_plotly_format(res) %}
+
 {% set filesize = res.size %}
 {% set tooltip = _("ZIP files may contain data and documentation in one or more formats. In Data.gov’s Geospatial catalog, most of the files are multi-part shapefiles.") if format == 'zip' %}
 <li itemprop="distribution" itemscope itemtype="http://schema.org/DataDownload" class="resource-item"{% if tooltip %} title="{{ tooltip }}"{% endif %}>
