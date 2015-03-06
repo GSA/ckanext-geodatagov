@@ -62,11 +62,11 @@
 	<a href="{{ resource_url }}" class="btn btn-primary"{% if is_web_format %} target="_blank"{% endif %}> <i class="icon-external-link"></i> {{ _('Visit page') }} </a> 
 
 {% elif is_preview_format %} 
-	<button class="btn btn-primary" style="border-top-right-radius:0;border-bottom-right-radius:0">Open With
+	<button class="btn btn-primary btn-preview" style="border-top-right-radius:0;border-bottom-right-radius:0">Open With
 	</button>
-	<button class="btn btn-primary" data-toggle="dropdown" style="margin-left:0px;margin-right:10px;border-top-left-radius:0;border-bottom-left-radius:0"><span class="caret" style="margin-top:0px;"></span><span class="sr-only">Toggle dropdown</span>
+	<button class="btn btn-primary btn-preview" data-toggle="dropdown" style="margin-left:0px;margin-right:10px;border-top-left-radius:0;border-bottom-left-radius:0"><span class="caret" style="margin-top:0px;"></span><span class="sr-only">Toggle dropdown</span>
 	</button>
-	<ul class="dropdown-menu">
+	<ul class="dropdown-menu ul-preview">
 	  <li class="datagov_viewer"><a href="{{ resource_url }}"><i></i><span>Data.gov Preview</span></a></li>	  
 	  {% if is_plotly_format %}
 	  <li class="plotly"><a href="{{ plotly_url }}?url={{ res.url }}"><span>Plot ly</span></a></li>

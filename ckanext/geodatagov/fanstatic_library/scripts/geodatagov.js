@@ -179,19 +179,20 @@ $(document).ready(function () {
 	}
     dataproxy = 'http://jsonpdataproxy.appspot.com';
     function test_to_preview(elem) {
-        ext_href = elem.next().attr('href')
+        ext_href = elem.parent().next().attr('href')
         var apiurl = dataproxy + '?url=' + ext_href;
         $.ajax({
             url: apiurl,
             dataType: 'jsonp',
             success: function(data){
                 if (data.error) return;
-                elem.css('display', 'inline-block');
+                elem.parent().prev().css('display', 'inline-block');
+                elem.parent().prev().prev().css('display', 'inline-block');
             }
         });
     }
 
-    $('.btn-preview').each(function() {
+    $('.ul-preview .datagov_viewer').each(function() {
         test_to_preview($(this))
     });
 
