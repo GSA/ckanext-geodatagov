@@ -207,9 +207,8 @@ $(document).ready(function () {
 
          if (request) {
            request.open("GET", url);
-           if (request.status == 200) {
+           if (request.status == 200)
               $('.ckanext-datapreview').css('display', 'inline-block');
-           }
            else
              $('.ckanext-datapreview').css('display', 'none');
          }
