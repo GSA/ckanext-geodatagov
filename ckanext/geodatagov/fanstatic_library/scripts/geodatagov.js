@@ -166,14 +166,13 @@ window.onload=function(){
 }
 
 $(document).ready(function () {
-    if (document.domain.indexOf('data.gov') > -1) {
+	    if (document.domain.indexOf('data.gov') > -1) {
 	document.domain="data.gov";
 	}
 	if (document.domain.indexOf('reisys.com') > -1) {
 	document.domain="reisys.com";
 	}
-    dataproxy = 'http://jsonpdataproxy.appspot.com';
-    
+    dataproxy = '//jsonpdataproxy.appspot.com';
     function test_to_preview(elem) {
         ext_href = elem.next().attr('href')
         var apiurl = dataproxy + '?url=' + ext_href;
