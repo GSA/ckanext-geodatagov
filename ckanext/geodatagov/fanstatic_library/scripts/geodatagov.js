@@ -173,6 +173,7 @@ $(document).ready(function () {
 	document.domain="reisys.com";
 	}
     dataproxy = 'http://jsonpdataproxy.appspot.com';
+    
     function test_to_preview(elem) {
         ext_href = elem.next().attr('href')
         var apiurl = dataproxy + '?url=' + ext_href;
@@ -189,4 +190,23 @@ $(document).ready(function () {
     $('.btn-preview').each(function() {
         test_to_preview($(this))
     });
+    
+    $('.module-content .ckanext-datapreview').function() {
+         var url = $('#res_url').attr('href');
+         var request = false;
+         if (window.XMLHttpRequest) {
+            request = new XMLHttpRequest;
+         } else if (window.ActiveXObject) {
+            request = new ActiveXObject("Microsoft.XMLHttp");
+         }
+
+         if (request) {
+           request.open("GET", url);
+           if (request.status == 200) { 
+              return true; 
+           }
+         }
+     
+         return false;
+    };
 });
