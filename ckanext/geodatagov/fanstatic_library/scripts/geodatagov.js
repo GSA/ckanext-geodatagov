@@ -166,7 +166,7 @@ window.onload=function(){
 }
 
 $(document).ready(function () {
-	    if (document.domain.indexOf('data.gov') > -1) {
+    if (document.domain.indexOf('data.gov') > -1) {
 	document.domain="data.gov";
 	}
 	if (document.domain.indexOf('reisys.com') > -1) {
@@ -191,7 +191,7 @@ $(document).ready(function () {
         test_to_preview($(this))
     });
     
-    $('.module-content .ckanext-datapreview').function() {
+    if($('#res_url')) {
          var url = $('#res_url').attr('href');
          var request = false;
          if (window.XMLHttpRequest) {
@@ -203,10 +203,12 @@ $(document).ready(function () {
          if (request) {
            request.open("GET", url);
            if (request.status == 200) { 
-              return true; 
+              $('.ckanext-datapreview').css('display', 'inline-block');
            }
+           else 
+             $('.ckanext-datapreview').css('display', 'none');
          }
-     
-         return false;
-    };
+         else
+            $('.ckanext-datapreview').css('display', 'none');
+    }
 });
