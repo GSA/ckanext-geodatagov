@@ -154,6 +154,9 @@ jQuery(window).load(function(){
         linkRewriter("next.data.gov", "staging.data.gov");
 
     }
+
+ //   window.location.hash = "";
+   
 });
 
 if ($.browser.msie && $.browser.version == 10) {
@@ -163,6 +166,8 @@ window.onload=function(){
     if (!jQuery("#menu-community a[href*='catalog']").hasClass('active')) {
          jQuery("#menu-community a[href*='catalog']").addClass('active');
     }
+    jQuery("#content .toolbar .breadcrumb .active a").prop("href", document.URL);
+	
 }
 
 $(document).ready(function () {
@@ -172,24 +177,25 @@ $(document).ready(function () {
 	if (document.domain.indexOf('reisys.com') > -1) {
 	document.domain="reisys.com";
 	}
-    dataproxy = 'http://jsonpdataproxy.appspot.com';
+    dataproxy = '//jsonpdataproxy.appspot.com';
     function test_to_preview(elem) {
-        ext_href = elem.next().attr('href')
+        ext_href = elem.parent().next().attr('href')
         var apiurl = dataproxy + '?url=' + ext_href;
         $.ajax({
             url: apiurl,
             dataType: 'jsonp',
             success: function(data){
                 if (data.error) return;
-                elem.css('display', 'inline-block');
+                elem.parent().prev().css('display', 'inline-block');
+                elem.parent().prev().prev().css('display', 'inline-block');
             }
         });
     }
 
-    $('.btn-preview').each(function() {
+    $('.ul-preview .datagov_viewer').each(function() {
         test_to_preview($(this))
     });
-    
+
     if($('#res_url')) {
          var url = $('#res_url').attr('href');
          var request = false;
@@ -201,13 +207,14 @@ $(document).ready(function () {
 
          if (request) {
            request.open("GET", url);
-           if (request.status == 200) { 
+           if (request.status == 200) {
               $('.ckanext-datapreview').css('display', 'inline-block');
            }
-           else 
+           else
              $('.ckanext-datapreview').css('display', 'none');
          }
          else
             $('.ckanext-datapreview').css('display', 'none');
     }
+
 });
