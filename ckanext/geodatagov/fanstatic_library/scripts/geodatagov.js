@@ -197,25 +197,17 @@ $(document).ready(function () {
     });
 
     if($('#res_url')) {
-         var url = $('#res_url').attr('href');
-         var request = false;
-         if (window.XMLHttpRequest) {
-            request = new XMLHttpRequest;
-         } else if (window.ActiveXObject) {
-            request = new ActiveXObject("Microsoft.XMLHttp");
-         }
+         ext_href = $('#res_url').attr('href');
 
-         if (request) {
-           request.open("GET", url);
-           if (request.status == 200) {
-              $('.ckanext-datapreview').css('display', 'inline-block');
-              exit
-           }
-           else
-             $('.ckanext-datapreview').css('display', 'none');
-         }
-         else
-            $('.ckanext-datapreview').css('display', 'none');
+         var apiurl = dataproxy + '?url=' + ext_href;
+         $.ajax({
+                 url: apiurl,
+                 dataType: 'jsonp',
+                    success: function(data){
+                         if (data.error) return;
+                           $('.ckanext-datapreview').css('display', 'inline-block');
+                     }
+                 });
     }
 
 });
