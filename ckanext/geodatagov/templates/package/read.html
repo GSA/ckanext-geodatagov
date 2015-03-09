@@ -74,7 +74,8 @@
   {% endif %}
 
   {% set graphic_preview_file =h.get_pkg_dict_extra(pkg, 'graphic-preview-file', None) %}
-  {% if graphic_preview_file and graphic_preview_file.lower()[:4] == 'http' %}
+  {% if graphic_preview_file and (graphic_preview_file.lower()[:4] == 'http' or graphic_preview_file.lower()[:3] == 'ftp') %}
+
     <section id="dataset-graphic-preview" class="resources module-content">
       <h3>Graphic Preview</h3>
       {% set graphic_preview_desc =h.get_pkg_dict_extra(pkg, 'graphic-preview-description', 'Graphic Preview') %}
