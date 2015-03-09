@@ -32,11 +32,7 @@
     </div>
   {% endif %}
 
-  {% if h.is_preview_format(c.resource)  %}
-    {{ h.resource_preview_custom(c.resource, c.package.id) }}
-  {% else %}
-    {% snippet "dataviewer/snippets/no_preview.html" %}
-  {% endif %}
+  {{ h.resource_preview_custom(c.resource, c.package.id) }}
   
 {% endblock %}
 

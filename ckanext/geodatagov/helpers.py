@@ -156,7 +156,7 @@ def resource_preview_custom(resource, pkg_id):
 
 types = {
     'web': ('html', 'data', 'esri rest', 'gov', 'org', ''),
-    'preview': ('csv', 'xls', 'txt', 'jpg', 'jpeg', 'png', 'gif', 'pdf'),
+    'preview': ('csv', 'xls', 'txt', 'jpg', 'jpeg', 'png', 'gif'),
     # "web map application" is deprecated in favour of "arcgis online map"
     'map': ('wms', 'kml', 'kmz', 'georss', 'web map application', 'arcgis online map'),
 }
