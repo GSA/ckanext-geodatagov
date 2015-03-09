@@ -38,12 +38,6 @@ Example:
             {{ _('Private') }}
           </span>
         {% endif %}
-        {% if h.get_pkg_dict_extra(package, 'collection_metadata', '') %}
-          <span class="dataset-collection label">
-            <i class="icon-collection"></i>
-            {{ _('Collection') }}
-          </span>
-        {% endif %}
         {{ h.link_to(title, h.url_for(controller='package', action='read', id=package.name)) }}
         {% if package.get('state', '').startswith('draft') %}
           <span class="label label-info">{{ _('Draft') }}</span>

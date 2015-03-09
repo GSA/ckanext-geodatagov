@@ -1,66 +1,31 @@
 {% ckan_extends %}
 
 {% block footer_content %}
-
-
-        <div class="row">
-
-
-
-    <div class="col-md-4 col-lg-4">
-        <form action="/dataset" class="search-form form-inline" method="get" role="search">
-            <div class="input-group">
-                <label for="search-footer" class="hide">Search for:</label>
-<input type="search" placeholder="Search Data.Gov" class="search-field form-control" name="q" value="Search Data.Gov" id="search-header" onblur="if(value=='') value = 'Search Data.Gov'" onfocus="if(value=='Search Data.Gov') value = ''">        <span class="input-group-btn">
-        <button class="search-submit btn_new btn-default" type="submit"> <i class="fa fa-search"></i> <span class="sr-only">Search</span> </button>
-        </span> </div>
-        </form>
-        <div class="footer-logo"> <a href="http://www.data.gov/" class="logo-brand">Data.Gov 2.0</a> </div>
-    </div>
-    <nav role="navigation" class="col-md-2 col-lg-2">
-        <ul class="nav" id="menu-primary-navigation-1">
-        {% snippet "snippets/footer_menu_primary.html" %}
-        </ul>
-    </nav>
-    <nav role="navigation" class="col-md-2 col-lg-2">
-        <ul class="nav" id="menu-footer">
-            {% snippet "snippets/footer_menu.html" %}
-            {% if c.userobj%}
-            <li class="local-link"> <a href="{{ h.url_for('/user/_logout') }}" title="{{ _('Log out') }}"></a> </li>
-            {% else %}
-            <li><a href="{{ h.url_for(controller='user', action='login') }}" class="local-link">
-                {{ _('Login') }}
-            </a>
-            </li>
-            {% endif  %}
-
-        </ul>
-    </nav>
-    <div class="col-md-3 col-md-offset-1 col-lg-3 col-lg-offset-1 social-nav">
-        <nav role="navigation">
-            <ul class="nav" id="menu-social_navigation">
-                <li><a href="https://twitter.com/usdatagov"><i class="fa fa-twitter"></i><span>Twitter</span></a></li>
-                <li><a href="http://github.com/GSA/data.gov/"><i class="fa fa-github"></i><span>Github</span></a></li>
-
-            </ul>
-        </nav>
-    </div>
-        </div>
-
-
-    {#
+  <!--  
+  <nav class="footer-nav">
+    {% block footer_nav %}
+      <ul class="unstyled">
+        <li><a href="/about">{{ _('About') }}</a></li>
+        <li><a href="http://www.data.gov/accessibility">{{ _('Accessibility') }}</a></li>
+        <li><a href="http://www.data.gov/contact-us">{{ _('Contact Us') }}</a></li>
+        <li><a href="http://www.data.gov/data-policy">{{ _('Data Policy') }}</a></li>
+        <li><a href="http://www.data.gov/faq">{{ _('FAQ') }}</a></li>
+        <li><a href="http://www.data.gov/privacy-policy">{{ _('Privacy Policy') }}</a></li>
+        <li><a href="http://www.data.gov/sitemap">{{ _('Sitemap') }}</a></li>
+        <li><a href="http://www.usa.gov">{{ _('USA.gov') }}</a></li>
+      </ul>
+    {% endblock %}
+    <img src="http://www.data.gov/sites/all/themes/datagov/images/datagov-footer-logo.png" alt="{{ _('Data.gov') }}">
+  </nav>
+  -->
+  {#
     {% block footer_lang %}
-    {% snippet "snippets/language_selector.html" %}
+      {% snippet "snippets/language_selector.html" %}
     {% endblock %}
-    #}
+  #}
 
-	
-	{#
-    {% if not g.debug %}
+  {% if not g.debug %}
     {% snippet "snippets/webtrends.html" %}
-    {% endif %}
-    #}
-	
-    {% snippet "snippets/fedrated_analytics.html" %}
-    {% snippet "snippets/google_analytics_additional.html" %}
-    {% endblock %}
+  {% endif %}
+
+{% endblock %}

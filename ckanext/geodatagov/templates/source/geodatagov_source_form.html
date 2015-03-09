@@ -28,18 +28,6 @@
            </div>
          </div>
 
-         <div class="control-group harvest-types">
-           <label class="control-label">Validation Schema</label>
-           <div class="controls">
-             {% for key, value in h.get_validation_schema() %}
-               {% set checked = key == (data.validator_schema or '')  %}
-               <label class="radio">
-                 <input type="radio" name="validator_schema" value="{{ key }}" {{ "checked " if checked }}>
-                 {{ value }}
-               </label>
-             {% endfor %}
-           </div>
-         </div>
 
 </fieldset>
 
@@ -48,7 +36,7 @@
   <div class="controls">
     <select id="field-private_datasets" name="private_datasets">
       {% for option in [(true, _('Private')), (false, _('Public'))] %}
-      <option value="{{ option[0] }}" {% if option[0]|lower == data.private_datasets|lower %}selected="selected"{% endif %}>{{ option[1] }}</option>
+      <option value="{{ option[0] }}" {% if option[0] == data.private_datasets %}selected="selected"{% endif %}>{{ option[1] }}</option>
       {% endfor %}
     </select>
     <i class="icon-question-sign muted" title="{{ _('This will take effect the next time datasets are created or updated during a harvest job') }}" data-toggle="tooltip"></i>

@@ -35,34 +35,27 @@ hide_empty
 
 #}
 {% set hide_empty = hide_empty or false %}
-{% with items = items or h.get_facet_items_dict(name, 0) %}
+{% with items = items or h.get_facet_items_dict(name) %}
   {% if items or not hide_empty %}
     {% if within_tertiary %}
       {% set nav_class = 'nav nav-pills nav-stacked' %}
       {% set nav_item_class = ' ' %}
       {% set wrapper_class = 'nav-facet nav-facet-tertiary' %}
     {% endif %}
-
-
     <section class="{{ wrapper_class or 'module module-narrow module-shallow' }}">
-      <h2 class="module-heading" id="sec-{{name}}">
+      <h2 class="module-heading">
         <i class="icon-medium icon-filter"></i>
         {% set title = title or h.get_facet_title(name) %}
-          {% if title == 'Progress' %}
-          {% set title = 'Status' %}
+          {% if title == 'Groups' %}
+          {% set title = 'Communities' %}
           {% endif %}
-
-        <span>  {{ title }} &nbsp;
-	</span>	  
-          <img src="/fanstatic/geodatagov/images/alpha.png" id="sortFacetAlpha"></img>
-		  <img src="/fanstatic/geodatagov/images/number.png" id="sortFacetCount"></img>
-		
+          {{ title }}&nbsp;
           <a href="{{ h.remove_url_param(name, extras=extras, alternative_url=alternative_url) }}" class="action">{{ _('Clear All') }}</a>
       </h2>
 
       {% if items %}
         <nav>
-          <ul class="{{ nav_class or 'unstyled nav nav-simple nav-facet' }}" id="{{name}}" name="facet">
+          <ul class="{{ nav_class or 'unstyled nav nav-simple nav-facet' }}">
             {% for item in items %}
               {% set href = h.remove_url_param(name, item.name, extras=extras, alternative_url=alternative_url) if item.active else h.add_url_param(new_params={name: item.name}, extras=extras, alternative_url=alternative_url) %}
               {% set label = label_function(item) if label_function else item.display_name %}
@@ -76,7 +69,13 @@ hide_empty
             {% endfor %}
           </ul>
         </nav>
-        
+        <p class="module-footer">
+          {% if h.get_param_int('_%s_limit' % name) %}
+            <a href="{{ h.remove_url_param('_%s_limit' % name, replace=0, extras=extras, alternative_url=alternative_url) }}" class="read-more">{{ _('Show More {facet_type}').format(facet_type=title) }}</a>
+          {% else %}
+            <a href="{{ h.remove_url_param('_%s_limit' % name, extras=extras, alternative_url=alternative_url) }}" class="read-more">{{ _('Show Only Popular {facet_type}').format(facet_type=title) }}</a>
+          {% endif %}
+        </p>
       {% else %}
         <p class="module-content empty">{{ _('There are no {facet_type} that match this search').format(facet_type=title) }}</p>
       {% endif %}

@@ -46,7 +46,6 @@ from ckan.logic.converters import convert_from_extras
 from ckan.lib.navl.validators import ignore_missing
 from sqlalchemy.util import OrderedDict
 
-
 log = logging.getLogger(__name__)
 
 try:
@@ -63,7 +62,7 @@ RESOURCE_MAPPING = {
     'application/xml': ('XML', 'XML File'),
     'xml': ('XML', 'XML File'),
     'application/x-netcdf': ('NetCDF', 'NetCDF File'),
-    'netcdf': ('NetCDF', 'NetCDF File'),
+    'NetCDF': ('NetCDF', 'NetCDF File'),
     'application/x-httpd-php': ('HTML', 'Web Page'),
     'application/pdf': ('PDF', 'PDF File'),
     'pdf': ('PDF', 'PDF File'),
@@ -122,6 +121,15 @@ def split_tags(tag):
         tags.extend(tag.split('>'))
     return [tag.strip().lower() for tag in tags]
 
+def uniq_list(seq):
+    # *********
+    # order preserving
+    checked = []
+    for e in seq:
+        if e not in checked:
+            checked.append(e)
+    return checked
+
 ##copied from harvest but deals withe single item list keys like validation
 def harvest_source_convert_from_config(key,data,errors,context):
     config = data[key]
@@ -157,7 +165,6 @@ class DataGovHarvest(ckanext.harvest.plugin.Harvest):
                             ('frequency', 'Frequency'),
                             ('source_type','Type'),
                             ('organization', 'Organizations'),
-                            #('publisher', 'Publisher'),							
                            ])
 
     def organization_facets(self, facets_dict, organization_type, package_type):
@@ -167,7 +174,6 @@ class DataGovHarvest(ckanext.harvest.plugin.Harvest):
 
         return OrderedDict([('frequency', 'Frequency'),
                             ('source_type','Type'),
-                            #('publisher', 'Publisher'),
                            ])
 
 def get_filename_and_extension(resource):
@@ -191,8 +197,6 @@ def change_resource_details(resource):
     filename, extension = get_filename_and_extension(resource)
     if not resource_format:
         resource_format = extension
-    if resource.get('name', '') in ['Unnamed resource', '', None]:
-        resource['no_real_name'] = True
     if resource_format in formats:
         resource['format'] = RESOURCE_MAPPING[resource_format][0]
         if resource.get('name', '') in ['Unnamed resource', '', None]:
@@ -296,6 +300,7 @@ class Demo(p.SingletonPlugin):
                 tags = pkg_dict.get('tags', [])
                 tags.extend([dict(name=tag, display_name=tag) for tag
                              in split_tags(extra['value'])])
+                tags = uniq_list(tags)
                 pkg_dict['tags'] = tags
                 pkg_dict['extras'].pop(num)
                 break
@@ -348,10 +353,7 @@ class Demo(p.SingletonPlugin):
         fq = pkg_dict.get('fq', '')
 
         if pkg_dict.get('sort') in (None, 'rank'):
-            pkg_dict['sort'] = 'views_recent desc'
-		
-        if pkg_dict.get('sort') in ('none'):
-            pkg_dict['sort'] = 'score desc, name asc'
+            pkg_dict['sort'] = 'metadata_modified desc'
 
         # only show collections on bulk update page and when the facet is explictely added
 
@@ -387,7 +389,6 @@ class Demo(p.SingletonPlugin):
                 'get_harvest_object_formats': geodatagov_helpers.get_harvest_object_formats,
                 'get_harvest_source_link': geodatagov_helpers.get_harvest_source_link,
                 'get_validation_profiles': geodatagov_helpers.get_validation_profiles,
-                'get_validation_schema': geodatagov_helpers.get_validation_schema,
                 'get_collection_package': geodatagov_helpers.get_collection_package,
                 'resource_preview_custom': geodatagov_helpers.resource_preview_custom,
                 'is_web_format': geodatagov_helpers.is_web_format,
@@ -397,12 +398,6 @@ class Demo(p.SingletonPlugin):
                 'is_map_viewer_format' : geodatagov_helpers.is_map_viewer_format,
                 'get_map_viewer_params': geodatagov_helpers.get_map_viewer_params,
                 'render_datetime_datagov': geodatagov_helpers.render_datetime_datagov,
-                'get_dynamic_menu': geodatagov_helpers.get_dynamic_menu,
-                'get_harvest_source_type': geodatagov_helpers.get_harvest_source_type,
-                'convert_resource_format':geodatagov_helpers.convert_resource_format,
-                'remove_extra_chars':geodatagov_helpers.remove_extra_chars,
-                'schema11_key_mod':geodatagov_helpers.schema11_key_mod,
-                'schema11_frequency_mod':geodatagov_helpers.schema11_frequency_mod,
                 }
 
     ## IActions
@@ -420,8 +415,6 @@ class Demo(p.SingletonPlugin):
             'group_catagory_tag_update': geodatagov_logic.group_catagory_tag_update,
             'datajson_create': geodatagov_logic.datajson_create,
             'datajson_update': geodatagov_logic.datajson_update,
-            'doi_create': geodatagov_logic.doi_create,
-            'doi_update': geodatagov_logic.doi_update,
             'package_show_rest': geodatagov_logic.package_show_rest,
         }
 
@@ -444,30 +437,25 @@ class Demo(p.SingletonPlugin):
         if package_type != 'dataset':
             return facets_dict
 
-        return OrderedDict([('groups', 'Topics'),
-                            ('vocab_category_all', 'Topic Categories'),
-                            ('metadata_type','Dataset Type'),
+        return OrderedDict([('metadata_type','Dataset Type'),
                             ('tags','Tags'),
                             ('res_format', 'Formats'),
+                            ('groups', 'Groups'),
                             ('organization_type', 'Organization Types'),
                             ('organization', 'Organizations'),
-                            ('publisher', 'Publisher'),
-                           ## ('extras_progress', 'Progress'),
+                            ('vocab_category_all', 'Community Categories'),
                            ])
 
     def organization_facets(self, facets_dict, organization_type, package_type):
 
         if not package_type:
-            return OrderedDict([('groups', 'Topics'),
-                                ('vocab_category_all', 'Topic Categories'),
-                                ('metadata_type','Dataset Type'),
+            return OrderedDict([('metadata_type','Dataset Type'),
                                 ('tags','Tags'),
                                 ('res_format', 'Formats'),
-                                ('groups', 'Topics'),
+                                ('groups', 'Groups'),
                                 ('harvest_source_title', 'Harvest Source'),
                                 ('capacity', 'Visibility'),
-                                ('dataset_type', 'Resource Type'),
-                                ('publisher', 'Publisher'),
+                                ('dataset_type', 'Dataset Type'),
                                ])
         else:
             return facets_dict
@@ -478,14 +466,12 @@ class Demo(p.SingletonPlugin):
         group_id = p.toolkit.c.group_dict['id']
         key = 'vocab___category_tag_%s' % group_id
         if not package_type:
-            return OrderedDict([(key, 'Categories'),
-                                ('metadata_type','Dataset Type'),
+            return OrderedDict([('metadata_type','Dataset Type'),
                                 ('organization_type', 'Organization Types'),
                                 ('tags','Tags'),
                                 ('res_format', 'Formats'),
                                 ('organization', 'Organizations'),
                                 (key, 'Categories'),
-                                #('publisher', 'Publisher'),
                                ])
         else:
             return facets_dict

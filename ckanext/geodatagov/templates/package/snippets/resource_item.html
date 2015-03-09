@@ -3,64 +3,46 @@
 {% set is_web_format = h.is_web_format(res) %}
 {% set is_preview_format = h.is_preview_format(res) %}
 {% set is_map_format = h.is_map_format(res) %}
-{% set filesize = res.size %}
 {% set tooltip = _("ZIP files may contain data and documentation in one or more formats. In Data.gov’s Geospatial catalog, most of the files are multi-part shapefiles.") if format == 'zip' %}
-<li itemprop="distribution" itemscope itemtype="http://schema.org/DataDownload" class="resource-item"{% if tooltip %} title="{{ tooltip }}"{% endif %}>
+<li class="resource-item"{% if tooltip %} title="{{ tooltip }}"{% endif %}>
 {% block resource_item_title %}
   {% if res.name == 'Comma Seperated Values File' %}
-    <a itemprop="contentUrl" class="heading" href="{{ url }}" title="Comma Separated Values File">
+    <a class="heading" href="{{ url }}" title="Comma Separated Values File">
     Comma Separated Values File<span class="format-label" property="dc:format" data-format="{{ res.format.lower() or 'data' }}">{{ res.format }}</span>
     {{ h.popular('views', res.tracking_summary.total, min=10) }}
     </a>
   {% else %}
-    <a itemprop="contentUrl" class="heading" href="{{ url }}" title="{{ res.name or res.description }}">
+    <a class="heading" href="{{ url }}" title="{{ res.name or res.description }}">
     {{ h.resource_display_name(res) | truncate(50) }}<span class="format-label" property="dc:format" data-format="{{ res.format.lower() or 'data' }}">{{ res.format }}</span>
     {{ h.popular('views', res.tracking_summary.total, min=10) }}
     </a>
   {% endif %}
 {% endblock %}
-
-
-<p itemprop="description" class="description">
+<p class="description">
     {% if res.description %}
     {{ h.markdown_extract(res.description, extract_length=80) }}
     {% else %}
     &nbsp;
     {% endif %}
-	{#
-	{% if filesize != 0 and filesize != None and  not is_map_format and not is_web_format %}	
-	  &nbsp;( {{ filesize|float/1000 }} KB )
-	{% endif %}
-	#}
 </p>
 {% block resource_item_explore %}
 {% set resource_url = url if is_map_format or is_preview_format else res.url %}
 <div class="btn-group">
+    <a href="{{ resource_url }}" class="btn btn-primary"{% if is_web_format %} target="_blank"{% endif %}>
     {% if is_map_format %}
-    <a href="{{ resource_url }}" class="btn btn-primary"{% if is_web_format %} target="_blank"{% endif %}>
-        <i class="icon-globe"></i>
-        {{ _('View Map') }}
-    </a>
+    <i class="icon-globe"></i>
+    {{ _('View Map') }}
     {% elif is_web_format %}
-    <a href="{{ resource_url }}" class="btn btn-primary"{% if is_web_format %} target="_blank"{% endif %}>
-        <i class="icon-external-link"></i>
-        {{ _('Visit page') }}
-    </a>
+    <i class="icon-external-link"></i>
+    {{ _('Visit page') }}
     {% elif is_preview_format %}
-    <a href="{{ resource_url }}" class="btn btn-primary btn-preview"{% if is_web_format %} target="_blank"{% endif %}>
-        <i class="icon-search"></i>
-        {{ _('Preview') }}
-    </a>
-    <a href="{{ res.url }}" class="btn btn-primary"{% if is_web_format %} target="_blank"{% endif %}>
-        <i class="icon-download-alt"></i>
-        {{ _('Download') }}
-    </a>
+    <i class="icon-search"></i>
+    {{ _('Preview') }}
     {% else %}
-    <a href="{{ resource_url }}" class="btn btn-primary"{% if is_web_format %} target="_blank"{% endif %}>
-        <i class="icon-download-alt"></i>
-        {{ _('Download') }}
-    </a>
+    <i class="icon-download-alt"></i>
+    {{ _('Download') }}
     {% endif %}
+    </a>
 </div>
 {% endblock %}
 </li>
