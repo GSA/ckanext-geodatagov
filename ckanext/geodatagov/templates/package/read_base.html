@@ -54,12 +54,13 @@
 {% block secondary_content %}
 
   {% block secondary_help_content %}{% endblock %}
-
+  <div class="org_type">
   {% block package_organization %}
     {% if pkg.organization %}
       {% snippet "snippets/organization.html", organization=pkg.organization %}
     {% endif %}
   {% endblock %}
+  </div>
 
   {% block package_groups %}
     {% if pkg.groups %}
@@ -124,5 +125,11 @@
   {% block package_license %}
     {% snippet "snippets/license.html", pkg_dict=pkg %}
   {% endblock %}
+
+
+
+        <div class="terms">
+            {% snippet "snippets/organization.html", organization=pkg.organization %}
+        </div>
 
 {% endblock %}

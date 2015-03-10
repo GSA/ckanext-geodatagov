@@ -306,7 +306,11 @@ class Demo(p.SingletonPlugin):
                 key='organization_type', group_id=organization['id']).first()
             if result:
                 organization['organization_type'] = result[0]
-
+            result = model.Session.query(model.GroupExtra.value).filter_by(
+                key='terms_of_use', state='active',
+                group_id=organization['id']).first()
+            if result:
+                organization['terms_of_use'] = result[0]
 
         return pkg_dict
 
@@ -320,6 +324,8 @@ class Demo(p.SingletonPlugin):
         group = model.Group.get(org_name)
         if group and ('organization_type' in group.extras):
             pkg_dict['organization_type'] = group.extras['organization_type']
+        if group and ('terms_of_use' in group.extras):
+            pkg_dict['terms_of_use'] = group.extras['terms_of_use']
 
         title_string = pkg_dict.get('title_string')
         if title_string:

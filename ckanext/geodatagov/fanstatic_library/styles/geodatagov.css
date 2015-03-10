@@ -1798,3 +1798,5 @@ p.module-content{padding-left: 18px !important;}
     margin-left: 0.325em;
     margin-top: 0;
 }
+.org_type .terms{display:none;}
+.terms .context-info{display: none;}
