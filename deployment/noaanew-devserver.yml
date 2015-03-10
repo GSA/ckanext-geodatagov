@@ -500,14 +500,14 @@
 #       on the package page
 #
     - name: remove the harvest extra check
-      action: command sed -i 's/if harvest_object and not context/if harvest_object: # and not context/g' /usr/lib/ckan/src/ckanext-harvest/ckanext/harvest/plugin.py
+      action: 'command sed -i ''s/if harvest_object and not context/if harvest_object: # and not context/g'' /usr/lib/ckan/src/ckanext-harvest/ckanext/harvest/plugin.py'
 
 
 #
 # the harvest extras are messed up - this fixes the /harvest/new submit bug
 #
     - name: fix the extra problem so we can submit /harvest/new form
-      action: command sed -i '/except KeyError:/i \            except IndexError:\n                current_pos = current_pos[0]' /usr/lib/ckan/src/ckan/ckan/lib/navl/dictization_functions.py
+      action: 'command sed -i ''/except KeyError:/i \            except IndexError:\n                current_pos = current_pos[0]'' /usr/lib/ckan/src/ckan/ckan/lib/navl/dictization_functions.py'
 
 
     - name: supervisor restart all
