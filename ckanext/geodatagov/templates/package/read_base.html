@@ -94,19 +94,19 @@
   {% endblock %}
 
   {% block package_contact %}
-    {% if (pkg_dict.maintainer_email and pkg_dict.maintainer_email.strip()|length > 0) or (pkg_dict.maintainer and pkg_dict.maintainer.strip()|length > 0 ) or (h.get_pkg_dict_extra(c.pkg_dict, 'contact-email') and h.get_pkg_dict_extra(c.pkg_dict, 'contact-email').strip()|length > 0 ) %}
+    {% if (c.pkg_dict.maintainer_email and c.pkg_dict.maintainer_email.strip()|length > 0) or (c.pkg_dict.maintainer and c.pkg_dict.maintainer.strip()|length > 0 ) or (h.get_pkg_dict_extra(c.pkg_dict, 'contact-email') and h.get_pkg_dict_extra(c.pkg_dict, 'contact-email').strip()|length > 0 ) %}
     <section class="module module-narrow contact">
         {% block contact_title %}
             <h2 class="module-heading"><i class="icon-envelope-alt"></i>{{ _('Contact') }}</h2>
         {% endblock %}
         {% block contact_content %}
             <p class="module-content">
-            {% if pkg_dict.maintainer and pkg_dict.maintainer_email %}
-                <a href="mailto:{{ pkg_dict.maintainer_email|replace('mailto:','') }}" title="{{ _('contact') }}" style="word-wrap:break-word">{{ pkg_dict.maintainer }}</a>
-            {% elif pkg_dict.maintainer and not pkg_dict.maintainer_email %}
-                {{ pkg_dict.maintainer }}
-            {% elif not pkg_dict.maintainer and pkg_dict.maintainer_email %}
-                <a href="mailto:{{ pkg_dict.maintainer_email|replace('mailto:','') }}" title="{{ _('contact') }}">{{ pkg_dict.maintainer_email }}</a>
+            {% if c.pkg_dict.maintainer and c.pkg_dict.maintainer_email %}
+                <a href="mailto:{{ c.pkg_dict.maintainer_email|replace('mailto:','') }}" title="{{ _('contact') }}" style="word-wrap:break-word">{{ c.pkg_dict.maintainer }}</a>
+            {% elif c.pkg_dict.maintainer and not c.pkg_dict.maintainer_email %}
+                {{ c.pkg_dict.maintainer }}
+            {% elif not c.pkg_dict.maintainer and c.pkg_dict.maintainer_email %}
+                <a href="mailto:{{ c.pkg_dict.maintainer_email|replace('mailto:','') }}" title="{{ _('contact') }}">{{ c.pkg_dict.maintainer_email }}</a>
             {% else %}
                 <a href="mailto:{{ h.get_pkg_dict_extra(c.pkg_dict, 'contact-email')|replace('mailto:','') }}" title="{{ _('contact') }}"> {{ h.get_pkg_dict_extra(c.pkg_dict, 'contact-email') }} </a>
             {% endif %}
