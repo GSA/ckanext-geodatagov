@@ -2469,7 +2469,7 @@
                     </gmd:transferSize>
                   </xsl:for-each>
                   <xsl:choose>
-                    <xsl:when test="//stdorder//formcont">
+                    <xsl:when test="//stdorder//formname">
                       <xsl:for-each select="//stdorder/digform">
                         <gmd:onLine>
                           <xsl:call-template name="CI_OnlineResource">
@@ -4304,33 +4304,29 @@
           </gmd:function>
         </xsl:for-each>
       </gmd:CI_OnlineResource>
-    </xsl:if>
+    </xsl:if> 
     <xsl:if test="$source='digform'">
-      <gmd:CI_OnlineResource>
-        <gmd:linkage>
-          <gmd:URL>
-            <xsl:value-of select="normalize-space(digtopt//networkr)"/>
-          </gmd:URL>
-        </gmd:linkage>
-        <xsl:for-each select="digtinfo/formname">
+      <xsl:for-each select="digtopt//networkr">
+        <gmd:CI_OnlineResource>
+          <gmd:linkage>
+            <gmd:URL>
+              <xsl:value-of select="normalize-space(.)"/>
+            </gmd:URL>
+          </gmd:linkage>
           <gmd:name>
             <gco:CharacterString>
-              <xsl:value-of select="normalize-space(.)"/>
+              <xsl:value-of select="normalize-space(ancestor::digform/digtinfo/formname)"/>
             </gco:CharacterString>
           </gmd:name>
-        </xsl:for-each>
-        <xsl:for-each select="digtinfo/formcont">
           <gmd:description>
             <gco:CharacterString>
-              <xsl:value-of select="normalize-space(.)"/>
+              <xsl:value-of select="normalize-space(ancestor::digform/digtinfo/formcont)"/>
             </gco:CharacterString>
           </gmd:description>
-        </xsl:for-each>
-        <xsl:for-each select="function">
           <gmd:function>
             <xsl:variable name="function">
               <xsl:call-template name="functionCode">
-                <xsl:with-param name="input" select="fn:upper-case(fn:normalize-space(fn:string(.)))"/>
+                <xsl:with-param name="input" select="fn:upper-case(fn:normalize-space(fn:string(ancestor::digform/function)))"/>
               </xsl:call-template>
             </xsl:variable>
             <gmd:CI_OnLineFunctionCode>
@@ -4341,8 +4337,8 @@
               <xsl:value-of select="$function"/>
             </gmd:CI_OnLineFunctionCode>
           </gmd:function>
-        </xsl:for-each>
-      </gmd:CI_OnlineResource>
+        </gmd:CI_OnlineResource>
+      </xsl:for-each>
     </xsl:if>
   </xsl:template>
   <xsl:template name="fgdc2isoDate">
