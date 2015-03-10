@@ -65,6 +65,9 @@
 
    #  should we add a wait for? is this directory being created by tomcat?
 
+    - name: wait for the solr directory to be created
+      wait_for: path=/var/lib/tomcat6/webapps/solr/WEB-INF/
+
     - name: copy needed solr config file
       #action: copy src=etc/newschema.xml dest=/usr/share/tomcat6/webapps/solr/WEB-INF/web.xml force=yes
       action: copy src=etc/newschema.xml dest=/var/lib/tomcat6/webapps/solr/WEB-INF/web.xml force=yes
@@ -480,14 +483,32 @@
 # until we fix this template, let's move it out of the way
 #
    # -- seems to work well
-    - name: fix the header template - for now move it out of the way
-      action: command chdir=/usr/lib/ckan/src/ckanext-geodatagov/ckanext/geodatagov/templates/ mv header.html header.html.broken
+   # - name: fix the header template - for now move it out of the way
+   #   action: command chdir=/usr/lib/ckan/src/ckanext-geodatagov/ckanext/geodatagov/templates/ mv header.html header.html.broken
+
+    - debug: msg="FIXING problems that should be patches.. until we patch ckan and ckanext-harvest let's fix them up"
 
 #
 # not sure why we need this
 #
     - name: remove the extra_key_not_in_root_schmema check -- why is this a problem?
       action: command sed -i 's/not_empty, extra_key_not_in_root_schema, unicode/not_empty, unicode/g' /usr/lib/ckan/src/ckan/ckan/logic/schema.py
+
+
+#
+# AJS - something is goofy with the extras - if we don't pull this check out then we don't have harvest source in the extras tree
+#       on the package page
+#
+    - name: remove the harvest extra check
+      action: command sed -i 's/if harvest_object and not context/if harvest_object: # and not context/g' /usr/lib/ckan/src/ckanext-harvest/ckanext/harvest/plugin.py
+
+
+#
+# the harvest extras are messed up - this fixes the /harvest/new submit bug
+#
+    - name: fix the extra problem so we can submit /harvest/new form
+      action: command sed -i '/except KeyError:/i \            except IndexError:\n                current_pos = current_pos[0]' /usr/lib/ckan/src/ckan/ckan/lib/navl/dictization_functions.py
+
 
     - name: supervisor restart all
       action: command supervisorctl restart all
