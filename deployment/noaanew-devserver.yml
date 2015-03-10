@@ -182,7 +182,7 @@
       action: command chdir=/usr/lib/ckan/src/ckan/ ../../bin/easy_install https://pypi.python.org/packages/source/p/pip/pip-1.3.1.tar.gz
 
     - name: get geodatagov
-      action: git repo=https://github.com/mwengren/ckanext-geodatagov dest=/usr/lib/ckan/src/ckanext-geodatagov version=noaa_dev
+      action: git repo=https://github.com/18F/ckanext-geodatagov dest=/usr/lib/ckan/src/ckanext-geodatagov version=noaa_dev_2.3
 
     - name: get datajson
       action: git repo=https://github.com/18F/ckanext-datajson dest=/usr/lib/ckan/src/ckanext-datajson version=noaa_merge
