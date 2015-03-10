@@ -112,6 +112,10 @@ RESOURCE_MAPPING = {
     'web map application': ('ArcGIS Online Map', 'ArcGIS Online Map'),
     'arcgis map preview': ('ArcGIS Map Preview', 'ArcGIS Map Preview'),
     'arcgis map service': ('ArcGIS Map Service', 'ArcGIS Map Service'),
+    'application/rdf+xml': ('RDF', 'RDF File'),
+    'rdf': ('RDF', 'RDF File'),
+    'application/json': ('JSON', 'JSON File'),
+    'json': ('JSON', 'JSON File'),
 }
 
 
