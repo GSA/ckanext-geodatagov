@@ -344,6 +344,11 @@
           {% set key, value = extra %}
             {% if dataset_is_schema11 %}
               {% set key = h.schema11_key_mod(key) %}
+              {% set value = value|string %}
+              {% set value = value.replace('[','') %}
+              {% set value = value.replace(']','') %}
+              {% set value = value.replace('u\'','') %}
+              {% set value = value.replace('\'','') %}
             {% endif %}
             {% if dataset_is_schema11 and key == 'Frequency' %}
               {% set value = h.schema11_frequency_mod(value) %}
@@ -366,7 +371,7 @@
                 {% endif %}
 
                 {% if value != '[]' %}
-                  {{ value }}
+                     {{ value }}
                 {% endif %}
               </td>
             </tr>
