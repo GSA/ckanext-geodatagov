@@ -1,0 +1,18 @@
+echo "run as root"
+apt-get update
+apt-get install git vim python-pip python-dev 
+pip install ansible==1.7.2
+ssh-keygen
+cat /root/.ssh/id_rsa.pub >> /root/.ssh/authorized_keys
+#git clone https://github.com/18F/ckanext-geodatagov.git
+mkdir /etc/ansible/
+cat  << EOF >>/etc/ansible/hosts
+
+[dev]
+127.0.0.1
+
+EOF
+
+echo "sed -i 's/user: vagrant/user: root/g' ckanext-geodatagov/deployment/noaanew-devserver.yml"
+echo "ansible-playbook ckanext-geodatagov/deployment/noaanew-devserver.yml"
+
