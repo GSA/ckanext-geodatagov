@@ -1,15 +1,14 @@
 {% ckan_extends %}
 
 {% block resource_actions_inner %}
-  {% set is_web_format = h.is_web_format(res) %}
-  {% set is_map_format = h.is_map_format(res) %}
+  
   {% if h.check_access('package_update', {'id':pkg.id }) %}
     <li>{% link_for _('Edit'), controller='package', action='resource_edit', id=pkg.name, resource_id=res.id, class_='btn', icon='wrench' %}</li>
   {% endif %}
   {% if res.url %}
     <li>
-      <a class="btn btn-primary resource-url-analytics resource-type-{{ res.resource_type }}" href="{{ res.url }}"{% if is_web_format %} target="_blank"{% endif %}>
-        {% if is_web_format %}
+      <a class="btn btn-primary resource-url-analytics resource-type-{{ res.resource_type }}" href="{{ res.url }}"{% if h.is_web_format(c.resource) %} target="_blank"{% endif %}>
+        {% if h.is_web_format(c.resource) %}
           <i class="icon-external-link"></i> {{ _('Visit page') }}
         {% else %}
           <i class="icon-download-alt"></i> {{ _('Download') }}
@@ -34,6 +33,7 @@
   {% endif %}
 
   {{ h.resource_preview_custom(c.resource, c.package.id) }}
+  
 {% endblock %}
 
 {% block resource_content %}
@@ -41,7 +41,7 @@
   {% block five_star %} {{ h.qa_stars(c.resource.id) }} {% endblock %}
   {% block resource_read_url %}
     {% if res.url %}
-      <p class="muted ellipsis">{{ _('URL:') }} <a href="{{ res.url }}">{{ res.url }}</a></p>
+      <p class="muted ellipsis">{{ _('URL:') }} <a id="res_url" href="{{ res.url }}">{{ res.url }}</a></p>
     {% endif %}
   {% endblock %}
   <div class="prose notes" property="rdfs:label">

@@ -196,5 +196,24 @@ $(document).ready(function () {
         test_to_preview($(this))
     });
 
+    if($('#res_url')) {
+         ext_href = $('#res_url').attr('href');
+         extension = ext_href.substr( (ext_href.lastIndexOf('.') +1) ).toLowerCase();
+         if(extension.indexOf('?') != -1)
+             extension = extension.substr(0, extension.lastIndexOf('?')).toLowerCase();
+
+         if(extension  == 'csv' or extension == 'xls') {
+
+             var apiurl = dataproxy + '?url=' + ext_href;
+             $.ajax({
+                   url: apiurl,
+                   dataType: 'jsonp',
+                      success: function(data){
+                          if (data.error) return;
+                          $('.ckanext-datapreview').css('display', 'block');
+                      }
+             });
+         }
+    }
 
 });
