@@ -198,11 +198,12 @@ $(document).ready(function () {
 
     if($('#res_url')) {
          ext_href = $('#res_url').attr('href');
+         if (!ext_href) { return }
          extension = ext_href.substr( (ext_href.lastIndexOf('.') +1) ).toLowerCase();
          if(extension.indexOf('?') != -1)
              extension = extension.substr(0, extension.lastIndexOf('?')).toLowerCase();
 
-         if(extension  == 'csv' or extension == 'xls') {
+         if(extension  == 'csv' || extension == 'xls') {
 
              var apiurl = dataproxy + '?url=' + ext_href;
              $.ajax({
