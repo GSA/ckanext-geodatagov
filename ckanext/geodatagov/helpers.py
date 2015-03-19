@@ -168,6 +168,7 @@ types = {
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         'text/csv', 'application/vnd.google-earth.kml+xml',
         'application/vnd.geo+json'),
+    'arcgis': ('esri rest')
 }
 
 def is_type_format(type, resource):
@@ -195,6 +196,9 @@ def is_plotly_format(resource):
 
 def is_cartodb_format(resource):
     return is_type_format('cartodb', resource)
+
+def is_arcgis_format(resource):
+    return is_type_format('arcgis', resource)
     
 def get_dynamic_menu():
     filename = os.path.join(os.path.dirname(__file__), 'dynamic_menu/menu.json')

@@ -407,6 +407,7 @@ class Demo(p.SingletonPlugin):
                 'is_map_viewer_format' : geodatagov_helpers.is_map_viewer_format,
                 'is_plotly_format': geodatagov_helpers.is_plotly_format,
                 'is_cartodb_format': geodatagov_helpers.is_cartodb_format,
+                'is_arcgis_format': geodatagov_helpers.is_arcgis_format,
                 'get_map_viewer_params': geodatagov_helpers.get_map_viewer_params,
                 'render_datetime_datagov': geodatagov_helpers.render_datetime_datagov,
                 'get_dynamic_menu': geodatagov_helpers.get_dynamic_menu,

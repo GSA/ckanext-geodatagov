@@ -5,8 +5,10 @@
 {% set is_map_format = h.is_map_format(res) %}
 {% set is_cartodb_format = h.is_cartodb_format(res) %}
 {% set is_plotly_format = h.is_plotly_format(res) %}
+{% set is_arcgis_format = h.is_arcgis_format(res) %}
 {% set plotly_url = "https://plot.ly/external/" %}
 {% set cartodb_url = "http://oneclick.cartodb.com/" %}
+{% set arcgis_url = "http://www.arcgis.com/home/webmap/viewer.html" %}
 
 {% set filesize = res.size %}
 {% set tooltip = _("ZIP files may contain data and documentation in one or more formats. In Data.gov’s Geospatial catalog, most of the files are multi-part shapefiles.") if format == 'zip' %}
@@ -59,6 +61,15 @@
 	<a href="{{ resource_url }}" class="btn btn-primary"{% if is_web_format %} target="_blank"{% endif %} style="border-radius:4px;"> <i class="icon-globe"></i> {{ _('View Map') }} </a> 
 
 {% elif is_web_format %} 
+	{% if is_arcgis_format %}
+		<button class="btn btn-primary" data-toggle="dropdown" style="border-top-right-radius:0;border-bottom-right-radius:0">Open With</button>
+		<button class="btn btn-primary" data-toggle="dropdown" style="margin-left:0px;margin-right:10px;border-top-left-radius:0;border-bottom-left-radius:0">
+		<span class="caret" style="margin-top:0px;"></span><span class="sr-only">Toggle dropdown</span>
+		</button>
+		<ul class="dropdown-menu">
+		  <li class="arcgis"><a href="{{ arcgis_url }}?url={{ res.url }}"><span>ArcGIS</span></a></li>
+		</ul>
+	{% endif %}
 	<a href="{{ resource_url }}" class="btn btn-primary"{% if is_web_format %} target="_blank"{% endif %}> <i class="icon-external-link"></i> {{ _('Visit page') }} </a> 
 
 {% elif is_preview_format %} 
