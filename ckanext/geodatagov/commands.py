@@ -38,6 +38,7 @@ class GeoGovCommand(cli.CkanCommand):
         paster geodatagov import-dms -c <config>
         paster geodatagov import-doi -c <config>
         paster geodatagov clean-deleted -c <config>
+        paster geodatagov combine-feeds -c <config>
     '''
     summary = __doc__.split('\n')[0]
     usage = __doc__
@@ -90,7 +91,9 @@ class GeoGovCommand(cli.CkanCommand):
         if cmd == 'clean-deleted':
             self.clean_deleted()
         if cmd == 'db_solr_sync':
-		    self.db_solr_sync()
+            self.db_solr_sync()
+        if cmd == 'combine-feeds':
+            self.combine_feeds()
 
     def get_user_org_mapping(self, location):
         user_org_mapping = open(location)
@@ -533,6 +536,68 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
               raise
           
           print str(datetime.datetime.now()) + " All Sync Done."
+
+    def combine_feeds(self):
+        from xml.dom import minidom
+        from xml.parsers.expat import ExpatError
+        import urllib
+        import codecs
+
+        feed_url = config.get('ckan.site_url') + '/feeds/dataset.atom'
+        # from http://boodebr.org/main/python/all-about-python-and-unicode#UNI_XML
+        RE_XML_ILLEGAL = u'([\u0000-\u0008\u000b-\u000c\u000e-\u001f\ufffe-\uffff])' + \
+                         u'|' + \
+                         u'([%s-%s][^%s-%s])|([^%s-%s][%s-%s])|([%s-%s]$)|(^[%s-%s])' % \
+                          (unichr(0xd800),unichr(0xdbff),unichr(0xdc00),unichr(0xdfff),
+                           unichr(0xd800),unichr(0xdbff),unichr(0xdc00),unichr(0xdfff),
+                           unichr(0xd800),unichr(0xdbff),unichr(0xdc00),unichr(0xdfff))
+
+        def get_dom(url):
+            retry = 5
+            delay = 3
+            while retry > 0:
+                print '%s fetching %s' % (datetime.datetime.now(), url)
+                try:
+                    xml = urllib.urlopen(url_page_feed).read()
+                    xml = re.sub(RE_XML_ILLEGAL, "?", xml)
+                    dom = minidom.parseString(xml)
+                except ExpatError:
+                    print 'retry url: %s' % url
+                    print 'deplay %s seconds...' % (delay ** (6 - retry))
+                    time.sleep(delay ** (6 - retry))
+                    retry = retry -1
+                    continue
+
+                return dom
+            raise Exception('Can not connect to %s after multiple tries' % url)
+
+        feed = None
+        for page in range(0, 20):
+            url_page_feed = feed_url + '?page=' + str(page + 1)
+            if not feed:
+                dom = get_dom(url_page_feed)
+                feed = dom.getElementsByTagName('feed')[0]
+                for child in feed.childNodes:
+                    if child.getAttribute('rel') in ['next', 'first', 'last']:
+                        feed.removeChild(child)
+            else:
+                dom = get_dom(url_page_feed)
+                entrylist = dom.getElementsByTagName('entry')
+                for entry in entrylist:
+                    feed.appendChild(entry)
+
+        if not feed:
+            raise Exception('Can not read any feed')
+
+        doc = minidom.Document()
+        doc.appendChild(feed)
+
+        filename = '/usr/lib/ckan/src/ckanext-geodatagov/ckanext/geodatagov/dynamic_menu/usasearch-custom-feed.xml'
+        with codecs.open(filename, "w", "utf-8") as out:
+            doc.writexml(out, encoding="UTF-8")
+
+        print '%s combined feeds written to %s' % (datetime.datetime.now(),
+            filename)
 
 def get_response(url):
     req = Request(url)
