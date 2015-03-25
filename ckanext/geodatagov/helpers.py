@@ -168,7 +168,7 @@ types = {
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         'text/csv', 'application/vnd.google-earth.kml+xml',
         'application/vnd.geo+json'),
-    'arcgis': ('esri rest')
+    'arcgis': ('esri rest', )
 }
 
 def is_type_format(type, resource):
