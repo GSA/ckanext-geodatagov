@@ -1,0 +1,1 @@
+30 4 * * * root ckan --plugin=ckanext-geodatagov geodatagov combine-feeds -c /etc/ckan/production.ini >> /var/log/ckan-combine-feeds.log 2>&1

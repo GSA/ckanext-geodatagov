@@ -22,3 +22,4 @@ service memcached start
 service httpd restart
 
 chown apache:apache -R /usr/lib/ckan/src/ckanext-geodatagov/ckanext/geodatagov/dynamic_menu
+ln -s /usr/lib/ckan/src/ckanext-geodatagov/ckanext/geodatagov/dynamic_menu/usasearch-custom-feed.xml /usr/lib/ckan/src/ckan/ckan/public/usasearch-custom-feed.xml
