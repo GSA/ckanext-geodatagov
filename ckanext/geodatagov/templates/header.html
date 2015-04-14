@@ -151,7 +151,7 @@
                     {% if submenu['has_children'] %}
                         {% set parent_id = submenu['id'] %}
             <li><a href="#" class="dropdown-toggle{% if submenu['name']=='Data' %} active{% endif %}" data-toggle="dropdown">{{ submenu['name'] }}<b class="caret"></b></a>
-                <ul class="dropdown-menu topics">
+                <ul class="dropdown-menu topics{% if menus['topic_header'] %} menus['topic_header']['class']{% endif %}">
                         {% for sub_submenu in menus['submenus'] if sub_submenu['parent_id'] == parent_id %}
                     <li><a href="{{ sub_submenu['link'] }}">{{ sub_submenu['name'] }}</a></li>
                         {% endfor %}
