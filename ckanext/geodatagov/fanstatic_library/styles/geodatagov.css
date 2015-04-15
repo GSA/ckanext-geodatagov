@@ -1800,3 +1800,5 @@ p.module-content{padding-left: 18px !important;}
 }
 .org_type .terms{display:none;}
 .terms .context-info{display: none;}
+#menu-community .dropdown-menu.topics .active {border:0; background:none;}
+#menu-community .dropdown-menu.topics .active:hover {background-color:#eef7ff;}
