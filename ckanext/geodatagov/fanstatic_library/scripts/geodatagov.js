@@ -166,7 +166,7 @@ window.onload=function(){
     if (!jQuery("#menu-community a[href*='catalog']").hasClass('active')) {
          jQuery("#menu-community a[href*='catalog']").addClass('active');
     }
-    jQuery("#content .toolbar .breadcrumb .active a").prop("href", document.URL);
+    /*jQuery("#content .toolbar .breadcrumb .active a").prop("href", document.URL);*/
 	
 }
 
