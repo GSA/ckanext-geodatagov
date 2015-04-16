@@ -1802,3 +1802,8 @@ p.module-content{padding-left: 18px !important;}
 .terms .context-info{display: none;}
 #menu-community .dropdown-menu.topics .active {border:0; background:none;}
 #menu-community .dropdown-menu.topics .active:hover {background-color:#eef7ff;}
+.recent-views{
+    color: #ef7100;
+    font-size: 12px;
+    padding-left:5px;
+}
