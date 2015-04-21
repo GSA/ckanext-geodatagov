@@ -281,6 +281,7 @@ var ieDetector = function() {
 jQuery(document).ready(function () {
     if((ieDetector.isIE) && (ieDetector.Version <= 9))
     {
-        jQuery('.fa-line-chart').replaceWith( '<img src="../fanstatic/geodatagov/images/bar-chart.png"' );
+        jQuery('.recent-views').css("width","100px");
+        jQuery('.fa-line-chart').replaceWith( '<img class="bar-image" src="../fanstatic/geodatagov/images/bar-chart.png"' );
     }
 });
