@@ -18,17 +18,6 @@
 
 {% block primary_content %}
   <article itemscope itemtype="http://schema.org/Dataset" class="module prose">
-    {% block page_header %}
-      <header class="module-content page-header">
-        <ul class="nav nav-tabs">
-          {% block page_header_tabs %}
-            {{ h.build_nav_icon('dataset_read', _('Dataset'), id=pkg.name) }}
-            {#{ h.build_nav_icon('dataset_activity', _('Activity Stream'), id=pkg.name) }}
-            {{ h.build_nav_icon('related_list', _('Related'), id=pkg.name) }#}
-          {% endblock %}
-        </ul>
-      </header>
-    {% endblock %}
 
     {% block package_revision_info %}
       {% if c.pkg_revision_id %}
