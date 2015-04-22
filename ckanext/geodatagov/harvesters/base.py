@@ -73,6 +73,8 @@ class GeoDataGovHarvester(SpatialHarvester):
         new_tags = list(set(new_tags))
 
         package_dict = super(GeoDataGovHarvester, self).get_package_dict(iso_values, harvest_object)
+        if not package_dict:
+            return None
 
         if self.source_config.get('private_datasets', True):
             package_dict['private'] = True
