@@ -268,6 +268,15 @@ def get_dynamic_menu():
         organization_types = query_dict.get('organization_type', [])
         organizations = query_dict.get('organization', [])
         groups = query_dict.get('groups', [])
+        if (not groups or groups == ['local']) and organization_types in [
+                    ['State Government'],
+                    ['City Government'],
+                    ['County Government'],
+                    ['Local Government'],
+                ]:
+            # State/County/Cities and Local are merged into 'local' group.
+            organization_types = []
+            groups = ['local']
         # the three are exclusive
         if sorted([not not organization_types, not not organizations, not not groups]) == [False, False, True]:
             _keys = organization_types or organizations or groups
