@@ -66,15 +66,18 @@ body,
     border-radius: 3px;
 }
 .toolbar {
-    background-color: white;
+    background-color: #f6f6f6;
     margin: 0;
     border: 1px solid #CCC;
-    border-width: 0 1px;
+    border-width : 0 1px 1px 1px;
     padding: 10px;
 }
 .toolbar .add_action {
     top: 8px;
     right: 10px;
+}
+.toolbar .breadcrumb .active a {
+     font-weight : normal;
 }
 .page-header {
     -webkit-border-radius: 0;
@@ -1461,7 +1464,11 @@ position: static
 }
 .ckanext-datapreview{clear:both;}
 .muted.ellipsis{white-space:normal;}
-aside.secondary{margin-left:15px !important;border:1px solid #ccc;border-right:0px;}
+aside.secondary{
+    margin-left: 0;
+    width: 236px !important;
+    border-width: 0;
+}
 .wrapper {
     background: url("../../../../base/images/nav.png") repeat-y scroll 16px 0 #ffffff;
 
@@ -1749,7 +1756,7 @@ form.search-form{padding-right:0px;}
 }
 
 [role="main"] .primary {
-    /*width: 730px;*/
+    width: 732px;
 }
 
 .btn-preview {
