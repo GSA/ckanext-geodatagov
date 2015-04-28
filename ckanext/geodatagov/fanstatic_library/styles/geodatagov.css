@@ -1634,6 +1634,9 @@ font-weight:lighter;
 .topic-developers a i:before{
     content: "\e005";
 }
+.topic-local a i:before{
+    content: "\e015";
+}
 
 .main-heading .category-header a i {
     font-size: 35px;
