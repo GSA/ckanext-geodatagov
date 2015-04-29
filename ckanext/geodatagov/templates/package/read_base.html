@@ -20,6 +20,10 @@
   {% if h.get_pkg_dict_extra(pkg, 'accessLevel') == 'non-public' %}
   <div class="no-resource disclaimer"><i class="icon-lock"></i><span>This Metadata record is available for the public, but the data itself is not public for privacy or security reasons. <a href="#access-use" style="text-decoration:underline;">See details</a></span></div>
   {% endif %}
+  {% if pkg_dict.organization.organization_type == 'Federal Government' %}
+    <div class="alert-info non-federal"><i class="icon-info-sign"></i><span>This is a Non-Federal dataset covered by different Terms of Use than Data.gov.<a href="#access-use" style="text-decoration:underline;">See details</a></span></div>
+  {% endif %}
+
   <article itemscope itemtype="http://schema.org/Dataset" class="module prose">
 
     {% block package_revision_info %}
