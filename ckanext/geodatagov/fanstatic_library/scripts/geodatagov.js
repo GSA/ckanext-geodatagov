@@ -287,9 +287,10 @@ jQuery(document).ready(function () {
 });
 if( jQuery("div").hasClass( "btn-group actions" ) )
 {
-   if( jQuery("div").hasClass( "alert-info non-federal" ) ){
+   if( jQuery("div").hasClass( "alert-info non-federal" ) || jQuery("div").hasClass( "no-resource disclaimer" )  ){
      
         jQuery( ".primary" ).css( "margin-top","40px" );
 
    }
+   
 }
