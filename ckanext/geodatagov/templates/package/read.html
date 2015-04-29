@@ -67,7 +67,11 @@
   <span><i class="icon-key"></i> Restricted: This dataset can only be accessed or used under certain conditions. </span>
   {% endif %}
   {% if pkg_dict.organization.organization_type != 'Federal Government' %}
-    <span><i class="icon-info-sign"></i>This is a Non-Federal dataset covered by different Terms of Use than Data.gov.<a href="#access-use" style="text-decoration:underline;">See details</a></span>
+    <span><i class="icon-info-sign"></i>This is a Non-Federal dataset covered by different Terms of Use than Data.gov.
+    {% if pkg_dict.organization.terms_of_use %}
+        <a href="{{ pkg_dict.organization.terms_of_use }}" style="text-decoration:underline;">See details</a>
+     {% endif %}
+    </span>
   {% endif %}
   {% if pkg_dict.license_id%}
   <span>
