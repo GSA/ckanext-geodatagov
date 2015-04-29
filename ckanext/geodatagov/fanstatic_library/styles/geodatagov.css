@@ -1784,7 +1784,13 @@ p.module-content{padding-left: 18px !important;}
 	padding: 15px;
 	border: 1px solid #f6f0d1;
 }
-.no-resource .icon-exclamation-sign {
+
+.no-resource.disclaimer{
+    width:670px;
+    border: 1px solid #d7d09b;
+}
+
+.no-resource .icon-exclamation-sign, .no-resource .icon-lock{
 	color: #b85123;
 	font-size: 30px;
 	margin-right: 15px;
@@ -1810,6 +1816,7 @@ p.module-content{padding-left: 18px !important;}
 }
 .org_type .terms{display:none;}
 .terms .context-info{display: none;}
+
 #menu-community .dropdown-menu.topics .active {border:0; background:none;}
 #menu-community .dropdown-menu.topics .active:hover {background-color:#eef7ff;}
 .recent-views{
@@ -1820,3 +1827,10 @@ p.module-content{padding-left: 18px !important;}
     font-view:normal;
 }
 .bar-image{width:18px;display:inline-block;}
+
+.module-content hr{margin:5px 0;}
+#access-use span{display:block}
+#access-use i{ margin-right:10px;}
+#access-use .icon-lock, #access-use .icon-key{color:#b85123;}
+#access-use .icon-globe{color:#4679b2}
+#access-use .fa-file-text-o{color:#474747}
