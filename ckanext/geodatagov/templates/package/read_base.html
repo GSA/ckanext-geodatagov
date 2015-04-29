@@ -23,7 +23,7 @@
   {% if pkg_dict.organization.organization_type != 'Federal Government' %}
     <div class="alert-info non-federal"><i class="icon-info-sign"></i><span>This is a Non-Federal dataset covered by different Terms of Use than Data.gov.
      {% if pkg_dict.organization.terms_of_use %}
-        <a href="{{ pkg_dict.organization.terms_of_use }}" style="text-decoration:underline;">See details</a>
+        <a href="{{ pkg_dict.organization.terms_of_use }}" style="text-decoration:underline;">See Terms</a>
      {% endif %}
     </span></div>
   {% endif %}

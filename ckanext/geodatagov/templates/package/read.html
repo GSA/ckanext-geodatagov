@@ -62,14 +62,14 @@
   {% if h.get_pkg_dict_extra(pkg, 'accessLevel') == 'non-public' %}
   <span><i class="icon-lock"></i>Non-public: This dataset is not for public access or use. Specific details are provided below.</span>
   {% elif h.get_pkg_dict_extra(pkg, 'accessLevel') == 'public' %}
-  <span><i class="icon-globe"></i> Public: This dataset is intended for public access and use.</span>
+  <span><i class="icon-globe"></i>Public: This dataset is intended for public access and use.</span>
   {% elif h.get_pkg_dict_extra(pkg, 'accessLevel') == 'restricted public' %}
-  <span><i class="icon-key"></i> Restricted: This dataset can only be accessed or used under certain conditions. </span>
+  <span><i class="icon-key"></i>Restricted: This dataset can only be accessed or used under certain conditions. </span>
   {% endif %}
   {% if pkg_dict.organization.organization_type != 'Federal Government' %}
     <span><i class="icon-info-sign"></i>This is a Non-Federal dataset covered by different Terms of Use than Data.gov.
     {% if pkg_dict.organization.terms_of_use %}
-        <a href="{{ pkg_dict.organization.terms_of_use }}" style="text-decoration:underline;">See details</a>
+        <a href="{{ pkg_dict.organization.terms_of_use }}" style="text-decoration:underline;">See Terms</a>
      {% endif %}
     </span>
   {% endif %}
