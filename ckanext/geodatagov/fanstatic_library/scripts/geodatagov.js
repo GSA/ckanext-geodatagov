@@ -285,3 +285,11 @@ jQuery(document).ready(function () {
         jQuery('.fa-line-chart').replaceWith( '<img class="bar-image" src="../fanstatic/geodatagov/images/bar-chart.png"' );
     }
 });
+if( jQuery("div").hasClass( "btn-group actions" ) )
+{
+   if( jQuery("div").hasClass( "alert-info non-federal" ) ){
+     
+        jQuery( ".primary" ).css( "margin-top","40px" );
+
+   }
+}
