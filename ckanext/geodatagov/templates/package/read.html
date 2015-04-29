@@ -80,7 +80,7 @@
       {% if 'license_url' in pkg_dict %}
         <a href="{{ pkg_dict.license_url }}" rel="dc:rights">{{ pkg_dict.license_title }}</a>
       {% else %}
-        <span property="dc:rights">{{ pkg_dict.license_title }}</span>
+        {{ pkg_dict.license_title }}
       {% endif %}
   </span>
   {% elif h.get_pkg_dict_extra(c.pkg_dict, 'license') %}
@@ -100,8 +100,10 @@
       {% endif %}
   </span>
   {% endif %}
+    {% if h.get_pkg_dict_extra(c.pkg_dict, 'rights') %}
     <hr />
     {{ h.get_pkg_dict_extra(c.pkg_dict, 'rights') }}
+    {% endif %}
 </section>
   {% set collection_package_id = h.get_pkg_dict_extra(c.pkg_dict, 'collection_package_id', '') %}
   {% if h.get_pkg_dict_extra(c.pkg_dict, 'collection_metadata', '') %}

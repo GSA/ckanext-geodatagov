@@ -1654,7 +1654,9 @@ font-weight:lighter;
     margin-bottom: 5px;
 }
 #dataset-search .results {
-margin-top:0px
+margin-top:0px;
+margin-bottom:0px;
+border-bottom:0px;
 }
 .wrapper .btn-group.actions{top:0px;}
 @media screen and (-webkit-min-device-pixel-ratio:0) {
@@ -1749,8 +1751,13 @@ form.search-form{padding-right:0px;}
 }
 
 [role="main"] .primary {
-    /*width: 730px;*/
+    width: 732px;
 }
+.primary .primary {
+
+    width: 479px;
+}
+
 
 .btn-preview {
     display:none;
@@ -1823,6 +1830,7 @@ p.module-content{padding-left: 18px !important;}
     margin: 10px auto 0;
     padding: 15px;
     width: 660px;
+    color:#444;
 }
 .non-federal .icon-info-sign
 {
