@@ -66,7 +66,9 @@
   {% elif h.get_pkg_dict_extra(pkg, 'accessLevel') == 'restricted public' %}
   <span><i class="icon-key"></i> Restricted: This dataset can only be accessed or used under certain conditions. </span>
   {% endif %}
-
+  {% if pkg_dict.organization.organization_type == 'Federal Government' %}
+    <span><i class="icon-info-sign"></i>This is a Non-Federal dataset covered by different Terms of Use than Data.gov.<a href="#access-use" style="text-decoration:underline;">See details</a></span>
+  {% else %}
   {% if pkg_dict.license_id%}
   <span>
     <i class="fa fa-file-text-o"></i>
@@ -86,11 +88,11 @@
   {% else %}
   <span>
     <i class="fa fa-file-text-o"></i>
-    License:
+
       {% if pkg_dict.organization.organization_type == 'Federal Government' %}
-        No license information was provided. If this work was prepared by an officer or employee of the United States government as part of that person's official duties it is considered a <a href="http://www.usa.gov/publicdomain/label/1.0/">U.S. Government Work</a>.
+       License: No license information was provided. If this work was prepared by an officer or employee of the United States government as part of that person's official duties it is considered a <a href="http://www.usa.gov/publicdomain/label/1.0/">U.S. Government Work</a>.
       {% else %}
-        No license information was provided.
+       License: No license information was provided.
       {% endif %}
   </span>
   {% endif %}

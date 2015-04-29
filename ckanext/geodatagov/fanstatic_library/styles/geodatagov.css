@@ -1778,6 +1778,7 @@ p.module-content{padding-left: 18px !important;}
 .no-resource.disclaimer{
     width:670px;
     border: 1px solid #d7d09b;
+    margin: 10px auto 0;
 }
 
 .no-resource .icon-exclamation-sign, .no-resource .icon-lock{
@@ -1808,7 +1809,11 @@ p.module-content{padding-left: 18px !important;}
 .terms .context-info{display: none;}
 .module-content hr{margin:5px 0;}
 #access-use span{display:block}
-#access-use i{ margin-right:10px;}
-#access-use .icon-lock, #access-use .icon-key{color:#b85123;}
-#access-use .icon-globe{color:#4679b2}
+#access-use i{ margin-right:10px;text-align: left;}
+#access-use .icon-lock, #access-use .icon-key {
+    color: #b85123;
+    font-size: 17px;
+    margin-left: 0;
+}
+#access-use .icon-globe{color:#4679b2; font-size: 17px;margin-left: 0;}
 #access-use .fa-file-text-o{color:#474747}
