@@ -100,7 +100,8 @@
       {% endif %}
   </span>
   {% endif %}
-
+    <hr />
+    {{ h.get_pkg_dict_extra(c.pkg_dict, 'rights') }}
 </section>
   {% set collection_package_id = h.get_pkg_dict_extra(c.pkg_dict, 'collection_package_id', '') %}
   {% if h.get_pkg_dict_extra(c.pkg_dict, 'collection_metadata', '') %}

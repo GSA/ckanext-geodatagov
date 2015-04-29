@@ -1776,7 +1776,7 @@ p.module-content{padding-left: 18px !important;}
 }
 
 .no-resource.disclaimer{
-    width:670px;
+    width:660px;
     border: 1px solid #d7d09b;
     margin: 10px auto 0;
 }
@@ -1815,7 +1815,7 @@ p.module-content{padding-left: 18px !important;}
     font-size: 14px;
     margin-left: 0;
 }
-#access-use .icon-globe{color:#4679b2; font-size: 17px;margin-left: 0;}
+#access-use .icon-globe{color:#4679b2; font-size: 14px;margin-left: 0;}
 #access-use .fa-file-text-o{color:#474747}
 .alert-info.non-federal {
     border: 1px solid #ccc;
