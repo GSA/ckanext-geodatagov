@@ -17,7 +17,9 @@
 {% endblock %}
 
 {% block primary_content %}
-<div class="no-resource disclaimer"><i class="icon-lock"></i><span>This Metadata record is available for the public, but the data itself is not public for privacy or security reasons. <a href="#access-use" style="text-decoration:underline;">See details</a></span></div>
+  {% if h.get_pkg_dict_extra(pkg, 'accessLevel') == 'non-public' %}
+  <div class="no-resource disclaimer"><i class="icon-lock"></i><span>This Metadata record is available for the public, but the data itself is not public for privacy or security reasons. <a href="#access-use" style="text-decoration:underline;">See details</a></span></div>
+  {% endif %}
   <article itemscope itemtype="http://schema.org/Dataset" class="module prose">
     {% block page_header %}
       <header class="module-content page-header">

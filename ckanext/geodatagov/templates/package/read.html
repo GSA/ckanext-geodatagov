@@ -24,11 +24,6 @@
         {% endblock %}
     </h1>
 
-    {% if h.get_pkg_dict_extra(c.pkg_dict, 'accessLevel') and h.get_pkg_dict_extra(c.pkg_dict, 'accessLevel').strip()|length > 0 %}
-    <div style="display:inline;margin-right:10px;">
-        <i class="icon-globe" style="color:#6e6e6e;"></i><span style="color:#7d7d7d;margin-left:8px;">{{ h.get_pkg_dict_extra(c.pkg_dict, 'accessLevel')|title}}</span>
-    </div>
-    {% endif %}
     {% if h.render_datetime_datagov(pkg.metadata_modified) and h.render_datetime_datagov(pkg.metadata_modified).strip()|length > 0 %}
     <div style="display:inline;">
         <i class="icon-calendar" style="color:#949494;"></i><span style="font-weight:bold;color:#6e6e6e;margin-left:8px;">Updated:</span> <span style="color:#7d7d7d;"><a href="#sec-dates">{{ h.render_datetime_datagov(pkg.metadata_modified) }}</a></span>
@@ -62,29 +57,43 @@
 
 {% block package_resources %}
 <section class="information module-content" id="access-use">
-    <h3>Access & Use Information</h3>
-    <hr/>
-  <span><i class="icon-lock"></i>
-  Non-public: This dataset is not for public access or use. Specific details are provided below.
+  <h3>Access & Use Information</h3>
+  <hr/>
+  {% if h.get_pkg_dict_extra(pkg, 'accessLevel') == 'non-public' %}
+  <span><i class="icon-lock"></i>Non-public: This dataset is not for public access or use. Specific details are provided below.</span>
+  {% elif h.get_pkg_dict_extra(pkg, 'accessLevel') == 'public' %}
+  <span><i class="icon-globe"></i> Public: This dataset is intended for public access and use.</span>
+  {% elif h.get_pkg_dict_extra(pkg, 'accessLevel') == 'restricted public' %}
+  <span><i class="icon-key"></i> Restricted: This dataset can only be accessed or used under certain conditions. </span>
+  {% endif %}
+
+  {% if pkg_dict.license_id%}
+  <span>
+    <i class="fa fa-file-text-o"></i>
+    License:
+      {% if 'license_url' in pkg_dict %}
+        <a href="{{ pkg_dict.license_url }}" rel="dc:rights">{{ pkg_dict.license_title }}</a>
+      {% else %}
+        <span property="dc:rights">{{ pkg_dict.license_title }}</span>
+      {% endif %}
   </span>
-    <span><i class="icon-globe"></i> Public: This dataset is intended for public access and use.</span>
-    <span><i class="icon-key"></i> Restricted: This dataset can only be accessed or used under certain conditions. </span>
-<span>
-<i class="fa fa-file-text-o"></i>
-License: <a href="">Licence Title</a>
-</span>
-<span><i class="fa fa-file-text-o"></i>
-License: <a href="">See this page for license information.</a>
-</span>
-<span><i class="fa fa-file-text-o"></i>
-License: No license information was provided. If this work was prepared by an officer or employee of the United States government as part of that person's official duties it is considered a
-<a href="http://www.usa.gov/publicdomain/label/1.0/">U.S. Government Work</a>.
-</span>
-<span><i class="fa fa-file-text-o"></i>
-License: No license information was provided.
-</span>
-    <hr/>
-    Additional information included in the rights field would be shown below the accessLevel and license
+  {% elif h.get_pkg_dict_extra(c.pkg_dict, 'license') %}
+  <span>
+    <i class="fa fa-file-text-o"></i>
+    License:
+      <a href="{{ h.get_pkg_dict_extra(c.pkg_dict, 'license') }}" rel="dc:rights">See this page for license information.</a>
+  </span>
+  {% else %}
+  <span>
+    <i class="fa fa-file-text-o"></i>
+    License:
+      {% if pkg_dict.organization.organization_type == 'Federal Government' %}
+        No license information was provided. If this work was prepared by an officer or employee of the United States government as part of that person's official duties it is considered a <a href="http://www.usa.gov/publicdomain/label/1.0/">U.S. Government Work</a>.
+      {% else %}
+        No license information was provided.
+      {% endif %}
+  </span>
+  {% endif %}
 
 </section>
   {% set collection_package_id = h.get_pkg_dict_extra(c.pkg_dict, 'collection_package_id', '') %}
