@@ -6,6 +6,7 @@
 {% set is_cartodb_format = h.is_cartodb_format(res) %}
 {% set is_plotly_format = h.is_plotly_format(res) %}
 {% set is_arcgis_format = h.is_arcgis_format(res) %}
+{% set arcgis_format_query = h.arcgis_format_query(res) %}
 {% set plotly_url = "https://plot.ly/external/" %}
 {% set cartodb_url = "http://oneclick.cartodb.com/" %}
 {% set arcgis_url = "http://www.arcgis.com/home/webmap/viewer.html" %}
@@ -57,6 +58,9 @@
 	  {% if is_cartodb_format %}
 	  <li class="cartodb"><a href="{{ cartodb_url }}?file={{ res.url }}&provider=data.gov"><span>CartoDB</span></a></li>
 	  {% endif %}
+	  {% if is_arcgis_format %}
+	  <li class="arcgis"><a href="{{ arcgis_url }}?{{ arcgis_format_query }}={{ res.url }}"><span>ArcGIS</span></a></li>
+	  {% endif %}	  
 	</ul>
 	<a href="{{ resource_url }}" class="btn btn-primary"{% if is_web_format %} target="_blank"{% endif %} style="border-radius:4px;"> <i class="icon-globe"></i> {{ _('View Map') }} </a>
 
