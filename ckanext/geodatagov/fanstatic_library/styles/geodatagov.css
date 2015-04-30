@@ -1840,15 +1840,43 @@ p.module-content{padding-left: 18px !important;}
 }
 .bar-image{width:18px;display:inline-block;}
 .module-content hr{margin:5px 0;}
+.access-use-main {
+    padding : .5em 0; 
+    margin-bottom : 1em; 
+    border : 1px solid #dddddd; 
+    border-width : 1px 0;
+}
+#access-use h3 {
+    margin-bottom : .15em;
+}
 #access-use span{display:block}
 #access-use i{ margin-right:10px;text-align: left;}
-#access-use .icon-lock, #access-use .icon-key {
-    color: #b85123;
+#access-use .icon-lock, 
+#access-use .icon-key {
     font-size: 14px;
     margin-left: 0;
 }
-#access-use .icon-globe{color:#4679b2; font-size: 14px;margin-left: 0;}
-#access-use .fa-file-text-o{color:#474747}
+#access-use .icon-globe { 
+    font-size: 14px;
+    margin-left: 0;
+}
+
+#access-use .icon-key,
+#access-use .access-restricted strong {
+    color: #b85123;
+}
+#access-use .icon-globe, 
+#access-use .access-public strong { 
+    color: #4679b2; 
+}
+#access-use .icon-lock, 
+#access-use .access-non-public strong { 
+    color: #b85123; 
+}
+
+#access-use .fa-file-text-o {
+    color:#474747
+}
 .alert-info.non-federal {
     border: 1px solid #ccc;
     font-size: 16px;
