@@ -9,5 +9,5 @@ redis==2.7.2
 ply==3.4
 
 
--e git+https://github.com/GSA/ckanext-saml2.git@catalog#egg=ckanext-saml2
+-e git+https://github.com/GSA/ckanext-saml2.git@master#egg=ckanext-saml2
 -e git+https://github.com/tobes/pysaml2.git@fixes#egg=pysaml2
