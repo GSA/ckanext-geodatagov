@@ -21,5 +21,10 @@ fi
 service memcached start
 service httpd restart
 
+if [ ! -f /usr/lib/ckan/src/ckan/ckan/public/usasearch-custom-feed.xml ];
+then
+    ln -s /usr/lib/ckan/src/ckanext-geodatagov/ckanext/geodatagov/dynamic_menu/usasearch-custom-feed.xml /usr/lib/ckan/src/ckan/ckan/public/usasearch-custom-feed.xml
+fi
+
 chown apache:apache -R /usr/lib/ckan/src/ckanext-geodatagov/ckanext/geodatagov/dynamic_menu
-ln -s /usr/lib/ckan/src/ckanext-geodatagov/ckanext/geodatagov/dynamic_menu/usasearch-custom-feed.xml /usr/lib/ckan/src/ckan/ckan/public/usasearch-custom-feed.xml
+chmod -R a+r /usr/lib/ckan
