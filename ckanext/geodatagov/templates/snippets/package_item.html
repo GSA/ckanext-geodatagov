@@ -69,12 +69,14 @@ Example:
             {% if loop.index < resource_limit %}
               {% set url = h.url_for(controller='package', action='resource_read', id=package.name, resource_id=resource.id) if is_map_format else resource.url %}
               <li>
-                <a href="{{ url }}" class="label" data-format="{{ format|lower }}"{% if is_web_format %} target="_blank"{% endif %} onClick="_gaq.push(['_trackEvent', 'Resource', 'Download', '{{ package.organization.title }}']);">{{ format }}</a>
+                <a href="{{ url }}" class="label" data-format="{{ format|lower }}"{% if is_web_format %} target="_blank"{% endif %}
+                   onClick="_gaq.push(['_trackEvent', 'Resource', 'Download', '{{ package.organization.title }}']);ga('send','event', 'Resource', 'Download', '{{ package.organization.title }}');">{{ format }}</a>
               </li>
             {% elif loop.index == resource_limit %}
               {% set more = loop.length - resource_limit + 1 %}
               <li>
-                <a href="{{ h.url_for(controller='package', action='read', id=package.name) }}" class="more" onClick="_gaq.push(['_trackEvent', 'Resource', 'Download', '{{ package.organization.title }}']);">{{ '{0} more in dataset'.format(more) }}</a>
+                <a href="{{ h.url_for(controller='package', action='read', id=package.name) }}" class="more" onClick="_gaq.push(['_trackEvent', 'Resource', 'Download', '{{ package.organization.title }}']);
+                        ga('send','event', 'Resource', 'Download', '{{ package.organization.title }}');">{{ '{0} more in dataset'.format(more) }}</a>
               </li>
             {% endif %}
           {% endfor %}
