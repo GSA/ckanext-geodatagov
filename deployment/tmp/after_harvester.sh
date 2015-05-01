@@ -14,4 +14,9 @@ initctl start supervisor
 service redis restart
 service tomcat6 restart
 service crond restart
-supervisorctl restart all
+
+supervisorctl reread
+supervisorctl update
+supervisorctl restart harvest-gather
+supervisorctl restart harvest-fetch:*
+
