@@ -618,7 +618,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
 
         harvest_pairs = []
         # find those stuck ones with harvest objects
-        gather_time_limit = '12 hours'
+        create_time_limit = '12 hours'
         fetch_time_limit = '6 hours'
         sql = '''
             SELECT
@@ -632,9 +632,9 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                 WHERE
                   status = 'Running'
                 AND (
-                  gather_started IS NULL
+                  created IS NULL
                   OR
-                  gather_started < CURRENT_TIMESTAMP AT TIME ZONE 'UTC' - INTERVAL :gather_time_limit
+                  created < CURRENT_TIMESTAMP AT TIME ZONE 'UTC' - INTERVAL :create_time_limit
                 )
               )
               GROUP BY
@@ -645,7 +645,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                 MAX(import_finished) < CURRENT_TIMESTAMP AT TIME ZONE 'UTC' - INTERVAL :fetch_time_limit
         '''
         results = model.Session.execute(sql, {
-            'gather_time_limit' : gather_time_limit,
+            'create_time_limit' : create_time_limit,
             'fetch_time_limit': fetch_time_limit,
         })
         for row in results:
@@ -670,13 +670,13 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             AND
               harvest_job.status = 'Running'
             AND (
-              harvest_job.gather_started IS NULL
+              harvest_job.created IS NULL
               OR
-              harvest_job.gather_started < CURRENT_TIMESTAMP AT TIME ZONE 'UTC' - INTERVAL :gather_time_limit
+              harvest_job.created < CURRENT_TIMESTAMP AT TIME ZONE 'UTC' - INTERVAL :create_time_limit
             )
         '''
         results = model.Session.execute(sql, {
-            'gather_time_limit' : gather_time_limit,
+            'create_time_limit' : create_time_limit,
         })
         for row in results:
             harvest_pairs.append({
