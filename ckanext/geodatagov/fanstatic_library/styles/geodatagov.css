@@ -1558,7 +1558,6 @@ margin-left: 15px;
     border-bottom: 5px solid #ccc;
 }
 .page-header_new .toolbar{background: none !important;}
-.toolbar .btn.question{background-color:transparent;top:10px;}
 .ie10 .page-header_new .toolbar .breadcrumb a {
 font-weight:lighter;
 }
@@ -1841,4 +1840,10 @@ p.module-content{padding-left: 18px !important;}
     vertical-align: top;
     margin-top: -4px;
     width: 30px;
+}
+.toolbar .btn.question{background-color:transparent;top:10px;right:auto;}
+/* Css targeting chrome for the question mark sign*/
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    .toolbar .btn.question{background-color:transparent;top:10px;right:-30px;}
+
 }
