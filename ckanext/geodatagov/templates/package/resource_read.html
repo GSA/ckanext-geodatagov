@@ -7,7 +7,7 @@
   {% endif %}
   {% if res.url %}
     <li>
-      <a class="btn btn-primary resource-url-analytics resource-type-{{ res.resource_type }}" href="{{ res.url }}"{% if h.is_web_format(c.resource) %} target="_blank"{% endif %}>
+      <a class="btn btn-primary resource-url-analytics resource-type-{{ res.resource_type }}" href="{{ res.url }}"{% if h.is_web_format(c.resource) %} target="_blank"{% endif %} onClick="_gaq.push(['_trackEvent', 'Resource', 'Download', '{{ pkg.organization.title }}']);">
         {% if h.is_web_format(c.resource) %}
           <i class="icon-external-link"></i> {{ _('Visit page') }}
         {% else %}
@@ -41,7 +41,7 @@
   {% block five_star %} {{ h.qa_stars(c.resource.id) }} {% endblock %}
   {% block resource_read_url %}
     {% if res.url %}
-      <p class="muted ellipsis">{{ _('URL:') }} <a id="res_url" href="{{ res.url }}">{{ res.url }}</a></p>
+      <p class="muted ellipsis">{{ _('URL:') }} <a id="res_url" href="{{ res.url }}" onClick="_gaq.push(['_trackEvent', 'Resource', 'Download', '{{ pkg.organization.title }}']);">{{ res.url }}</a></p>
     {% endif %}
   {% endblock %}
   <div class="prose notes" property="rdfs:label">
