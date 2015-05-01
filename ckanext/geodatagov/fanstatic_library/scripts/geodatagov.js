@@ -218,3 +218,5 @@ $(document).ready(function () {
     }
 
 });
+jQuery("a:contains('Add Harvest Source')").css("top", "10px");
+jQuery("a:contains('Add Organization')").css("top", "10px");
