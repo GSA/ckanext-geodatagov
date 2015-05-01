@@ -1641,6 +1641,9 @@ font-weight:lighter;
 .topic-developers a i:before{
     content: "\e005";
 }
+.topic-local a i:before{
+    content: "\e015";
+}
 
 .main-heading .category-header a i {
     font-size: 35px;
@@ -1807,3 +1810,13 @@ p.module-content{padding-left: 18px !important;}
 }
 .org_type .terms{display:none;}
 .terms .context-info{display: none;}
+#menu-community .dropdown-menu.topics .active {border:0; background:none;}
+#menu-community .dropdown-menu.topics .active:hover {background-color:#eef7ff;}
+.recent-views{
+    color: #ef7100;
+    font-size: 12px;
+    padding-left:5px;
+    display:inline-block;
+    font-view:normal;
+}
+.bar-image{width:18px;display:inline-block;}
