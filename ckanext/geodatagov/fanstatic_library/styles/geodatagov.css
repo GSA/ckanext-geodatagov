@@ -1486,8 +1486,8 @@ aside.secondary{margin-left:15px !important;border:1px solid #ccc;border-right:0
 .page-header_new .toolbar {
     background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
     border: 0 none;
-    float: right;
-    width: 330px;
+    float: left;
+    width: 320px;
     padding-top: 13px;
 }
 .control-group.search-giant {
@@ -1558,7 +1558,7 @@ margin-left: 15px;
     border-bottom: 5px solid #ccc;
 }
 .page-header_new .toolbar{background: none !important;}
-.toolbar .btn.question{background-color:transparent;}
+.toolbar .btn.question{background-color:transparent;top:10px;}
 .ie10 .page-header_new .toolbar .breadcrumb a {
 font-weight:lighter;
 }
