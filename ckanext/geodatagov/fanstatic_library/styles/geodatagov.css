@@ -1664,9 +1664,11 @@ font-weight:lighter;
     margin-bottom: 5px;
 }
 #dataset-search .results {
-margin-top:0px
+margin-top:0px;
+margin-bottom:0px;
+border-bottom:0px;
 }
-.wrapper .btn-group.actions{top:0px;}
+/*.wrapper .btn-group.actions{top:10px;}*/
 @media screen and (-webkit-min-device-pixel-ratio:0) {
 .page-header_new .toolbar .breadcrumb a{font-weight: lighter;}
     .btn-primary.question {
@@ -1761,6 +1763,11 @@ form.search-form{padding-right:0px;}
 [role="main"] .primary {
     width: 732px;
 }
+.primary .primary {
+
+    width: 479px;
+}
+
 
 .btn-preview {
     display:none;
@@ -1784,7 +1791,14 @@ p.module-content{padding-left: 18px !important;}
 	padding: 15px;
 	border: 1px solid #f6f0d1;
 }
-.no-resource .icon-exclamation-sign {
+
+.no-resource.disclaimer{
+    width:660px;
+    border: 1px solid #d7d09b;
+    margin: 10px auto 0;
+}
+
+.no-resource .icon-exclamation-sign, .no-resource .icon-lock{
 	color: #b85123;
 	font-size: 30px;
 	margin-right: 15px;
@@ -1820,3 +1834,31 @@ p.module-content{padding-left: 18px !important;}
     font-view:normal;
 }
 .bar-image{width:18px;display:inline-block;}
+.module-content hr{margin:5px 0;}
+#access-use span{display:block}
+#access-use i{ margin-right:10px;text-align: left;}
+#access-use .icon-lock, #access-use .icon-key {
+    color: #b85123;
+    font-size: 14px;
+    margin-left: 0;
+}
+#access-use .icon-globe{color:#4679b2; font-size: 14px;margin-left: 0;}
+#access-use .fa-file-text-o{color:#474747}
+.alert-info.non-federal {
+    border: 1px solid #ccc;
+    font-size: 16px;
+    margin: 10px auto 0;
+    padding: 15px;
+    width: 660px;
+    color:#444;
+}
+.non-federal .icon-info-sign
+{
+    color: #444;
+    float: left;
+    font-size: 30px;
+    margin-right: 15px;
+    vertical-align: top;
+    margin-top: -4px;
+    width: 30px;
+}
