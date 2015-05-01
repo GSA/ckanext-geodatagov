@@ -17,33 +17,6 @@ this.ckan.module('geodatagov-site-wide-search', function($, _) {
   }
 });
 
-this.ckan.module('geodatagov-search-helper-message', function($, _) {
-  return {
-    options: {},
-    initialize: function() {
-      var el = this.el;
-      var popup = $('#search-helper-message');
-      el
-        .on('mouseover', function() {
-          popup.show();
-        })
-        .on('mouseout', function() {
-          popup.hide();
-        });
-      if ($('html').hasClass('ie7')) {
-        function position() {
-          var offset = el.offset();
-          popup
-            .css('left', offset.left - popup.outerWidth() + el.outerWidth())
-            .css('top', offset.top + el.outerHeight() + 5);
-        }
-        popup.appendTo('body');
-        position();
-        $(window).on('resize', position);
-      }
-    }
-  };
-});
 
 function GetURLParameter(sParam) {
     var sPageURL = window.location.search.substring(1);

@@ -547,22 +547,6 @@ a {
     background-position: 0 0;
     background-image: url("../images/icon-wms.png");
 }
-#search-helper-message {
-    display: none;
-    position: absolute;
-    z-index: 1;
-    color: #FFF;
-    background-color: #000;
-    background-color: rgba(0, 0, 0, 0.85);
-    padding: 10px 15px;
-    width: 300px;
-    right: 0;
-    top: 35px;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    -o-border-radius: 5px;
-    border-radius: 5px;
-}
 .module-narrow #dataset-map-container {
     height: 200px;
 }
