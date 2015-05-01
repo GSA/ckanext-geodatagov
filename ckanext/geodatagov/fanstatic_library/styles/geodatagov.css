@@ -76,12 +76,11 @@ body,
     top: 8px;
     right: 10px;
 }
-.toolbar .add_action .btn-primary {
+#content .toolbar .add_action .btn-primary {
     float : none;
     display: inline-block;
     position: absolute;
     right: 10px;
-    top: 100px;
     z-index: 2;
 }
 .toolbar .breadcrumb .active a {
