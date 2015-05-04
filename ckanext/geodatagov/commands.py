@@ -603,17 +603,22 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             filename)
 
     def harvest_job_cleanup(self):
-        print str(datetime.datetime.now()) + ' Clean up stuck harvest jobs.'
+        msg = ''
+        msg += str(datetime.datetime.now()) + ' Clean up stuck harvest jobs.\n'
 
         # is harvest job running regularly?
         HARVESTER_LOG = '/var/log/harvester_run.log'
         if not os.path.exists(HARVESTER_LOG):
-            print 'File %s not found.' % HARVESTER_LOG
+            msg += 'File %s not found.\n' % HARVESTER_LOG
+            print msg
+            email_log('harvest-job-cleanup', msg)
             return
         time_file = os.path.getmtime(HARVESTER_LOG)
         time_current = time.time()
         if (time_current - time_file) > 3600:
-            print 'Harvester is not running, or not frequently enough.'
+            msg += 'Harvester is not running, or not frequently enough.\n'
+            print msg
+            email_log('harvest-job-cleanup', msg)
             return
 
         harvest_pairs = []
@@ -698,7 +703,12 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         for item in harvest_pairs:
             model.Session.execute(sql, {'harvest_job_id':item['harvest_job_id']})
             model.Session.commit()
-            print str(datetime.datetime.now()) + ' Harvest source %s was forced to Finish.' % item['harvest_source_id']
+            msg += str(datetime.datetime.now()) + ' Harvest source %s was forced to Finish.\n' % item['harvest_source_id']
+        if not harvest_pairs:
+            msg += str(datetime.datetime.now()) + ' Nothing to do.\n'
+
+        print msg
+        email_log('harvest-job-cleanup', msg)
 
 def get_response(url):
     req = Request(url)
@@ -714,3 +724,16 @@ def get_response(url):
       return 'error'
     else:
       return response
+
+def email_log(log_type, msg):
+    import ckan.lib.mailer as mailer
+    email_address = config.get('email_to')
+    email = {'recipient_name': email_address,
+             'recipient_email': email_address,
+             'subject': log_type + ' Log',
+             'body': msg,
+    }
+    try:
+        mailer.mail_recipient(**email)
+    except Exception:
+        pass
