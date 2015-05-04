@@ -1847,3 +1847,7 @@ p.module-content{padding-left: 18px !important;}
     .toolbar .btn.question{background-color:transparent;top:10px;right:-30px;}
 
 }
+#content .toolbar .breadcrumb{
+	width:800px;
+}
+}
