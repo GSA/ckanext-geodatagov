@@ -286,8 +286,3 @@ jQuery(document).ready(function () {
     }
 });
 
-
-
-if (jQuery("#content .breadcrumb").width()>700){
-jQuery(".wrapper .btn-group.actions").css("top","10px");
-}
