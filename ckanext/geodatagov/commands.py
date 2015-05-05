@@ -39,6 +39,7 @@ class GeoGovCommand(cli.CkanCommand):
         paster geodatagov import-doi -c <config>
         paster geodatagov clean-deleted -c <config>
         paster geodatagov combine-feeds -c <config>
+        paster geodatagov harvest-job-cleanup -c <config>
     '''
     summary = __doc__.split('\n')[0]
     usage = __doc__
@@ -94,6 +95,8 @@ class GeoGovCommand(cli.CkanCommand):
             self.db_solr_sync()
         if cmd == 'combine-feeds':
             self.combine_feeds()
+        if cmd == 'harvest-job-cleanup':
+            self.harvest_job_cleanup()
 
     def get_user_org_mapping(self, location):
         user_org_mapping = open(location)
@@ -598,6 +601,104 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
 
         print '%s combined feeds written to %s' % (datetime.datetime.now(),
             filename)
+
+    def harvest_job_cleanup(self):
+        print str(datetime.datetime.now()) + ' Clean up stuck harvest jobs.'
+
+        # is harvest job running regularly?
+        HARVESTER_LOG = '/var/log/harvester_run.log'
+        if not os.path.exists(HARVESTER_LOG):
+            print 'File %s not found.' % HARVESTER_LOG
+            return
+        time_file = os.path.getmtime(HARVESTER_LOG)
+        time_current = time.time()
+        if (time_current - time_file) > 3600:
+            print 'Harvester is not running, or not frequently enough.'
+            return
+
+        harvest_pairs = []
+        # find those stuck ones with harvest objects
+        gather_time_limit = '12 hours'
+        fetch_time_limit = '6 hours'
+        sql = '''
+            SELECT
+                harvest_source_id, harvest_job_id
+            FROM
+              harvest_object
+            WHERE
+              harvest_job_id IN (
+                SELECT id
+                FROM harvest_job
+                WHERE
+                  status = 'Running'
+                AND (
+                  gather_started IS NULL
+                  OR
+                  gather_started < CURRENT_TIMESTAMP AT TIME ZONE 'UTC' - INTERVAL :gather_time_limit
+                )
+              )
+              GROUP BY
+                harvest_source_id, harvest_job_id
+              HAVING
+                MAX(import_finished) IS NULL
+              OR
+                MAX(import_finished) < CURRENT_TIMESTAMP AT TIME ZONE 'UTC' - INTERVAL :fetch_time_limit
+        '''
+        results = model.Session.execute(sql, {
+            'gather_time_limit' : gather_time_limit,
+            'fetch_time_limit': fetch_time_limit,
+        })
+        for row in results:
+            harvest_pairs.append({
+                'harvest_source_id': row['harvest_source_id'],
+                'harvest_job_id': row['harvest_job_id']
+            })
+
+        # some may not even have harvest objects
+        sql = '''
+            SELECT
+              harvest_job.source_id AS harvest_source_id,
+              harvest_job.id AS harvest_job_id
+            FROM
+              harvest_job
+            LEFT JOIN
+              harvest_object
+            ON
+              harvest_job.id = harvest_object.harvest_job_id
+            WHERE
+              harvest_object.id is NULL
+            AND
+              harvest_job.status = 'Running'
+            AND (
+              harvest_job.gather_started IS NULL
+              OR
+              harvest_job.gather_started < CURRENT_TIMESTAMP AT TIME ZONE 'UTC' - INTERVAL :gather_time_limit
+            )
+        '''
+        results = model.Session.execute(sql, {
+            'gather_time_limit' : gather_time_limit,
+        })
+        for row in results:
+            harvest_pairs.append({
+                'harvest_source_id': row['harvest_source_id'],
+                'harvest_job_id': row['harvest_job_id']
+            })
+
+        # secretly truncate to minute precision to indicate a reset job.
+        sql = '''
+            UPDATE
+                harvest_job
+            SET
+                status = 'Finished',
+                finished = date_trunc('minute', CURRENT_TIMESTAMP AT TIME ZONE 'UTC')
+            WHERE
+                id = :harvest_job_id
+        '''
+
+        for item in harvest_pairs:
+            model.Session.execute(sql, {'harvest_job_id':item['harvest_job_id']})
+            model.Session.commit()
+            print str(datetime.datetime.now()) + ' Harvest source %s was forced to Finish.' % item['harvest_source_id']
 
 def get_response(url):
     req = Request(url)

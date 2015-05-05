@@ -6,6 +6,7 @@
 {% set is_cartodb_format = h.is_cartodb_format(res) %}
 {% set is_plotly_format = h.is_plotly_format(res) %}
 {% set is_arcgis_format = h.is_arcgis_format(res) %}
+{% set arcgis_format_query = h.arcgis_format_query(res) %}
 {% set plotly_url = "https://plot.ly/external/" %}
 {% set cartodb_url = "http://oneclick.cartodb.com/" %}
 {% set arcgis_url = "http://www.arcgis.com/home/webmap/viewer.html" %}
@@ -35,7 +36,7 @@
     &nbsp;
     {% endif %}
 	{#
-	{% if filesize != 0 and filesize != None and  not is_map_format and not is_web_format %}	
+	{% if filesize != 0 and filesize != None and  not is_map_format and not is_web_format %}
 	  &nbsp;( {{ filesize|float/1000 }} KB )
 	{% endif %}
 	#}
@@ -57,10 +58,13 @@
 	  {% if is_cartodb_format %}
 	  <li class="cartodb"><a href="{{ cartodb_url }}?file={{ res.url }}&provider=data.gov"><span>CartoDB</span></a></li>
 	  {% endif %}
+	  {% if is_arcgis_format %}
+	  <li class="arcgis"><a href="{{ arcgis_url }}?{{ arcgis_format_query }}={{ res.url }}"><span>ArcGIS</span></a></li>
+	  {% endif %}	  
 	</ul>
-	<a href="{{ resource_url }}" class="btn btn-primary"{% if is_web_format %} target="_blank"{% endif %} style="border-radius:4px;"> <i class="icon-globe"></i> {{ _('View Map') }} </a> 
+	<a href="{{ resource_url }}" class="btn btn-primary"{% if is_web_format %} target="_blank"{% endif %} style="border-radius:4px;"> <i class="icon-globe"></i> {{ _('View Map') }} </a>
 
-{% elif is_web_format %} 
+{% elif is_web_format %}
 	{% if is_arcgis_format %}
 		<button class="btn btn-primary" data-toggle="dropdown" style="border-top-right-radius:0;border-bottom-right-radius:0">Open With</button>
 		<button class="btn btn-primary" data-toggle="dropdown" style="margin-left:0px;margin-right:10px;border-top-left-radius:0;border-bottom-left-radius:0">
@@ -70,15 +74,15 @@
 		  <li class="arcgis"><a href="{{ arcgis_url }}?url={{ res.url }}"><span>ArcGIS</span></a></li>
 		</ul>
 	{% endif %}
-	<a href="{{ resource_url }}" class="btn btn-primary"{% if is_web_format %} target="_blank"{% endif %}> <i class="icon-external-link"></i> {{ _('Visit page') }} </a> 
+	<a href="{{ resource_url }}" class="btn btn-primary"{% if is_web_format %} target="_blank"{% endif %}> <i class="icon-external-link"></i> {{ _('Visit page') }} </a>
 
-{% elif is_preview_format %} 
+{% elif is_preview_format %}
 	<button class="btn btn-primary btn-preview" data-toggle="dropdown" style="border-top-right-radius:0;border-bottom-right-radius:0">Open With
 	</button>
 	<button class="btn btn-primary btn-preview" data-toggle="dropdown" style="margin-left:0px;margin-right:10px;border-top-left-radius:0;border-bottom-left-radius:0"><span class="caret" style="margin-top:0px;"></span><span class="sr-only">Toggle dropdown</span>
 	</button>
 	<ul class="dropdown-menu ul-preview">
-	  <li class="datagov_viewer"><a href="{{ resource_url }}"><i></i><span>Data.gov Preview</span></a></li>	  
+	  <li class="datagov_viewer"><a href="{{ resource_url }}"><i></i><span>Data.gov Preview</span></a></li>
 	  {% if is_plotly_format %}
 	  <li class="plotly"><a href="{{ plotly_url }}?url={{ res.url }}"><span>plotly</span></a></li>
 	  {% endif %}
@@ -86,7 +90,7 @@
 	  <li class="cartodb"><a href="{{ cartodb_url }}?file={{ res.url }}&provider=data.gov"><span>CartoDB</span></a></li>
 	  {% endif %}
 	</ul>
-	<a href="{{ res.url }}" class="btn btn-primary"{% if is_web_format %} target="_blank"{% endif %} style="border-radius:4px;"> <i class="icon-download-alt"></i> {{ _('Download') }} </a> 
+	<a href="{{ res.url }}" class="btn btn-primary"{% if is_web_format %} target="_blank"{% endif %} style="border-radius:4px;" onClick="_gaq.push(['_trackEvent', 'Resource', 'Download', '{{ pkg.organization.title }}']);"> <i class="icon-download-alt"></i> {{ _('Download') }} </a>
 
 {% elif is_cartodb_format and is_plotly_format  %}
 	<button class="btn btn-primary" data-toggle="dropdown" style="border-top-right-radius:0;border-bottom-right-radius:0">Open With
@@ -97,7 +101,7 @@
 	  <li class="plotly"><a href="{{ plotly_url }}?url={{ res.url }}"><span>plotly</span></a></li>
 	  <li class="cartodb"><a href="{{ cartodb_url }}?file={{ res.url }}&provider=data.gov"><span>CartoDB</span></a></li>
 	</ul>
-	<a href="{{ resource_url }}" class="btn btn-primary"{% if is_web_format %} target="_blank"{% endif %}> <i class="icon-download-alt"></i> {{ _('Download') }} </a> 
+	<a href="{{ resource_url }}" onClick="_gaq.push(['_trackEvent', 'Resource', 'Download', '{{ pkg.organization.title }}']);" class="btn btn-primary"{% if is_web_format %} target="_blank"{% endif %}> <i class="icon-download-alt"></i> {{ _('Download') }} </a>
 {% elif is_cartodb_format %}
 	<button class="btn btn-primary" data-toggle="dropdown" style="border-top-right-radius:0;border-bottom-right-radius:0">Open With
 	</button>
@@ -106,7 +110,7 @@
 	<ul class="dropdown-menu">
 	  <li class="cartodb"><a href="{{ cartodb_url }}?file={{ res.url }}&provider=data.gov"><span>CartoDB</span></a></li>
 	</ul>
-	<a href="{{ resource_url }}" class="btn btn-primary"{% if is_web_format %} target="_blank"{% endif %}> <i class="icon-download-alt"></i> {{ _('Download') }} </a> 
+	<a href="{{ resource_url }}" class="btn btn-primary"{% if is_web_format %} target="_blank"{% endif %} onClick="_gaq.push(['_trackEvent', 'Resource', 'Download', '{{ pkg.organization.title }}']);"> <i class="icon-download-alt"></i> {{ _('Download') }} </a>
 {% elif is_plotly_format %}
 	<button class="btn btn-primary" data-toggle="dropdown" style="border-top-right-radius:0;border-bottom-right-radius:0">Open With
 	</button>
@@ -115,9 +119,9 @@
 	<ul class="dropdown-menu">
 	  <li class="plotly"><a href="{{ plotly_url }}?url={{ res.url }}"><span>plotly</span></a></li>
 	</ul>
-	<a href="{{ resource_url }}" class="btn btn-primary"{% if is_web_format %} target="_blank"{% endif %}> <i class="icon-download-alt"></i> {{ _('Download') }} </a> 
+	<a href="{{ resource_url }}" class="btn btn-primary"{% if is_web_format %} target="_blank"{% endif %} onClick="_gaq.push(['_trackEvent', 'Resource', 'Download', '{{ pkg.organization.title }}']);"> <i class="icon-download-alt"></i> {{ _('Download') }} </a>
 {% else %}
-	<a href="{{ resource_url }}" class="btn btn-primary"{% if is_web_format %} target="_blank"{% endif %}> <i class="icon-download-alt"></i> {{ _('Download') }} </a> 
+	<a href="{{ resource_url }}" class="btn btn-primary"{% if is_web_format %} target="_blank"{% endif %} onClick="_gaq.push(['_trackEvent', 'Resource', 'Download', '{{ pkg.organization.title }}']);"> <i class="icon-download-alt"></i> {{ _('Download') }} </a>
 {% endif %}
 </div>
 {% endblock %}

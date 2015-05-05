@@ -7,7 +7,7 @@
   {% endif %}
   {% if res.url %}
     <li>
-      <a class="btn btn-primary resource-url-analytics resource-type-{{ res.resource_type }}" href="{{ res.url }}"{% if h.is_web_format(c.resource) %} target="_blank"{% endif %}>
+      <a class="btn btn-primary resource-url-analytics resource-type-{{ res.resource_type }}" href="{{ res.url }}"{% if h.is_web_format(c.resource) %} target="_blank"{% endif %} onClick="_gaq.push(['_trackEvent', 'Resource', 'Download', '{{ pkg.organization.title }}']);">
         {% if h.is_web_format(c.resource) %}
           <i class="icon-external-link"></i> {{ _('Visit page') }}
         {% else %}
@@ -36,12 +36,38 @@
   
 {% endblock %}
 
+{% set pkg = c.pkg_dict %}
+
+{% block breadcrumb_content_selected %} class="active"{% endblock %}
+
+{% block breadcrumb_content %}
+    {% if pkg %}
+    {% set dataset = pkg.title or pkg.name %}
+        {% if pkg.organization %}
+            {% set organization = pkg.organization.title or pkg.organization.name %}
+            <li>{% link_for _('Organizations'), controller='organization', action='index' %}</li>
+            <li>{% link_for organization|truncate(30), controller='organization', action='read', id=pkg.organization.name %}</li>
+            <li>{% trans dataset=c.package.title|truncate(30), url=h.url_for(controller='package', action='read', id=c.package['name']) %}<a href="{{ url }}">{{ dataset }}</a>{% endtrans %}</li>
+                {% for extra in pkg.extras %}
+                    {% if extra.key == 'publisher' and organization != extra.value %}
+                        <li class="active">&nbsp;{% link_for extra.value|truncate(30), controller='package', action='search', publisher=extra.value %}</li>
+                    {% endif %}
+                {% endfor %}
+        {% else %}
+            <li>{% link_for _('Datasets'), controller='package', action='search' %}</li>
+        {% endif %}
+    {% else %}
+            <li>{% link_for _('Datasets'), controller='package', action='search' %}</li>
+            <li class="active"><a href="">{{ _('Create Dataset') }}</a></li>
+    {% endif %}
+{% endblock %}
+
 {% block resource_content %}
   {% block resource_read_title %}<h1 class="page-heading">{{ h.resource_display_name(res) | truncate(50) }}</h1>{% endblock %}
   {% block five_star %} {{ h.qa_stars(c.resource.id) }} {% endblock %}
   {% block resource_read_url %}
     {% if res.url %}
-      <p class="muted ellipsis">{{ _('URL:') }} <a id="res_url" href="{{ res.url }}">{{ res.url }}</a></p>
+      <p class="muted ellipsis">{{ _('URL:') }} <a id="res_url" href="{{ res.url }}" onClick="_gaq.push(['_trackEvent', 'Resource', 'Download', '{{ pkg.organization.title }}']);">{{ res.url }}</a></p>
     {% endif %}
   {% endblock %}
   <div class="prose notes" property="rdfs:label">

@@ -168,7 +168,7 @@ types = {
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         'text/csv', 'application/vnd.google-earth.kml+xml',
         'application/vnd.geo+json'),
-    'arcgis': ('esri rest', )
+    'arcgis': ('esri rest', 'wms', 'kml', 'kmz', 'application/vnd.google-earth.kml+xml', 'georss')
 }
 
 def is_type_format(type, resource):
@@ -199,6 +199,15 @@ def is_cartodb_format(resource):
 
 def is_arcgis_format(resource):
     return is_type_format('arcgis', resource)
+
+def arcgis_format_query(resource):
+    mimetype = resource.get('mimetype')
+    kmlstring = re.compile('(kml|kmz)');
+    if kmlstring.match(mimetype):
+        return 'kml'
+    else:
+        # wms, georss
+        return mimetype 
     
 def get_dynamic_menu():
     filename = os.path.join(os.path.dirname(__file__), 'dynamic_menu/menu.json')
@@ -258,6 +267,8 @@ def get_dynamic_menu():
 
     query = request.environ.get('QUERY_STRING', '');
     submenu_key = None
+    category_1 = None
+    category_2 = None
     category = None
     climate_generic_category = None
 
@@ -266,6 +277,15 @@ def get_dynamic_menu():
         organization_types = query_dict.get('organization_type', [])
         organizations = query_dict.get('organization', [])
         groups = query_dict.get('groups', [])
+        if (not groups or groups == ['local']) and organization_types in [
+                    ['State Government'],
+                    ['City Government'],
+                    ['County Government'],
+                    ['Local Government'],
+                ]:
+            # State/County/Cities and Local are merged into 'local' group.
+            organization_types = []
+            groups = ['local']
         # the three are exclusive
         if sorted([not not organization_types, not not organizations, not not groups]) == [False, False, True]:
             _keys = organization_types or organizations or groups
@@ -281,15 +301,17 @@ def get_dynamic_menu():
                     if submenu_key == 'climate' and categories:
                         cat_food_list = ['Food Resilience', 'Food Production', 'Food Distribution', 'Food Safety and Nutrition', 'Food Security']
                         cat_coastal_list = ['Coastal Flooding']
-                        cat_water_list = ['Water']
                         if set(cat_food_list).issuperset(categories):
                             category = 'foodresilience'
                         elif set(cat_coastal_list).issuperset(categories):
                             category = 'coastalflooding'
-                        else: # climate special treatment
+                        else:
+                            # climate special treatment
+                            # try replace space with '-' and '', which ever works
                             climate_generic_category = categories[0]
-                            category = climate_generic_category.replace(" ", "-").lower()
-                    submenu_key = category if category else submenu_key
+                            category_1 = climate_generic_category.replace(" ", "-").lower()
+                            category_2 = climate_generic_category.replace(" ", "").lower()
+                    submenu_key = category or category_1 or category_2 or submenu_key
 
                 if submenu_key == 'agriculture':
                     submenu_key = 'food'
@@ -304,38 +326,49 @@ def get_dynamic_menu():
                 elif submenu_key == 'hhs-gov':
                     submenu_key = 'health'
 
-    if submenu_key and menus.get(submenu_key + '_navigation'):
-        submenus = []
-        for submenu in menus[ submenu_key + '_navigation' ]:
-            if re.search(r'/#$', submenu['link']):
-                submenu['has_children'] = True
-            submenus.append(submenu)
-        menus['submenus'] = submenus
+    if submenu_key:
+        navigations = None
+        if category_1 or category_2:
+            navigations = menus.get(category_1 + '_navigation', menus.get(category_2 + '_navigation'))
+        else:
+            navigations = menus.get(submenu_key + '_navigation')
 
-        name_pair = {
-        'jobs-and-skills': 'Jobs & Skills',
-        'development': 'Global Development',
-        'research': 'Science & Research',
-        'food': 'Agriculture',
-        'coastalflooding': ['Climate', 'Coastal Flooding'],
-        'foodresilience': ['Climate', 'Food Resilience'],
-        }
-        if category and climate_generic_category:
-            name_pair[category] = ['Climate', climate_generic_category]
 
-        parent = {}
-        name = name_pair.get(submenu_key, submenu_key.capitalize())
-        if type(name) is list:
-            parent['key'] = name[0].lower() # hope nothing breaks here
-            parent['url'] = '//www.data.gov/' + parent['key']
-            parent['class'] = 'topic-' + parent['key']
+        if navigations:
+            submenus = []
+            for submenu in navigations:
+                if re.search(r'/#$', submenu['link']):
+                    submenu['has_children'] = True
+                submenus.append(submenu)
+            menus['submenus'] = submenus
 
-        menus['topic_header'] = {
-            'multi': True if parent else False,
-            'url': '//www.data.gov/' + submenu_key if not parent else [parent['url'], '//www.data.gov/' + submenu_key],
-            'name': name,
-            'class': 'topic-' + submenu_key if not parent else parent['class'],
-        }
+            name_pair = {
+            'jobs-and-skills': 'Jobs & Skills',
+            'development': 'Global Development',
+            'research': 'Science & Research',
+            'food': 'Agriculture',
+            'coastalflooding': ['Climate', 'Coastal Flooding'],
+            'foodresilience': ['Climate', 'Food Resilience'],
+            }
+            if climate_generic_category:
+                if category_1:
+                    name_pair[category_1] = ['Climate', climate_generic_category]
+                if category_2:
+                    name_pair[category_2] = ['Climate', climate_generic_category]
+
+            parent = {}
+            name = name_pair.get(submenu_key, submenu_key.capitalize())
+            if type(name) is list:
+                parent['key'] = name[0].lower() # hope nothing breaks here
+                parent['url'] = '//www.data.gov/' + parent['key']
+                parent['class'] = 'topic-' + parent['key']
+
+            menus['topic_header'] = {
+                'multi': True if parent else False,
+                'url': '//www.data.gov/' + submenu_key if not parent else [parent['url'], '//www.data.gov/' + submenu_key],
+                'name': name,
+                'class': 'topic-' + submenu_key if not parent else parent['class'],
+            }
 
     return menus
 
