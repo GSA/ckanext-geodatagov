@@ -547,6 +547,22 @@ a {
     background-position: 0 0;
     background-image: url("../images/icon-wms.png");
 }
+#search-helper-message {
+    display: none;
+    position: absolute;
+    z-index: 3;
+    color: #FFF;
+    background-color: #000;
+    background-color: rgba(0, 0, 0, 0.85);
+    padding: 10px 15px;
+    width: 300px;
+    right: 0;
+    top: 35px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -o-border-radius: 5px;
+    border-radius: 5px;
+}
 .module-narrow #dataset-map-container {
     height: 200px;
 }
@@ -1484,8 +1500,8 @@ aside.secondary{
 .page-header_new .toolbar {
     background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
     border: 0 none;
-    float: right;
-    width: 330px;
+    float: left;
+    width: 320px;
     padding-top: 13px;
 }
 .control-group.search-giant {
@@ -1555,7 +1571,6 @@ margin-left: 15px;
     border-bottom: 5px solid #ccc;
 }
 .page-header_new .toolbar{background: none !important;}
-.toolbar .btn.question{background-color:transparent;}
 .ie10 .page-header_new .toolbar .breadcrumb a {
 font-weight:lighter;
 }
@@ -1877,4 +1892,13 @@ p.module-content{padding-left: 18px !important;}
     vertical-align: top;
     margin-top: -4px;
     width: 30px;
+}
+.toolbar .btn.question{background-color:transparent;top:10px;right:auto;}
+/* Css targeting chrome for the question mark sign*/
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    .toolbar .btn.question{background-color:transparent;top:10px;right:-30px;}
+
+}
+#content .toolbar .breadcrumb{
+	width:850px;
 }
