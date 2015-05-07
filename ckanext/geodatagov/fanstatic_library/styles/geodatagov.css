@@ -1574,6 +1574,16 @@ margin-left: 15px;
 .ie10 .page-header_new .toolbar .breadcrumb a {
 font-weight:lighter;
 }
+
+/* Adjust margins for dataset page headings */
+article.module.prose .module-content:first-child {
+padding-top : 0;
+}
+
+article.module.prose h3 {
+margin-top : 2.5em;
+}
+
 .module .module-content .dataset-search {
    /* margin-top: -20px;
 */}
