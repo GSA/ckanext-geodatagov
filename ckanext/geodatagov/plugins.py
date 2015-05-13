@@ -396,7 +396,6 @@ class Demo(p.SingletonPlugin):
                 'is_cartodb_format': geodatagov_helpers.is_cartodb_format,
                 'is_arcgis_format': geodatagov_helpers.is_arcgis_format,
                 'get_map_viewer_params': geodatagov_helpers.get_map_viewer_params,
-                'get_dynamic_menu': geodatagov_helpers.get_dynamic_menu,
                 'get_harvest_source_type': geodatagov_helpers.get_harvest_source_type,
                 'convert_resource_format':geodatagov_helpers.convert_resource_format,
                 'remove_extra_chars':geodatagov_helpers.remove_extra_chars,
