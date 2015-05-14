@@ -382,7 +382,6 @@ class Demo(p.SingletonPlugin):
     def get_helpers(self):
         from ckanext.geodatagov import helpers as geodatagov_helpers
         return {
-                'get_harvest_source_link': geodatagov_helpers.get_harvest_source_link,
                 'get_validation_profiles': geodatagov_helpers.get_validation_profiles,
                 'get_validation_schema': geodatagov_helpers.get_validation_schema,
                 'resource_preview_custom': geodatagov_helpers.resource_preview_custom,

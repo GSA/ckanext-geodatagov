@@ -38,19 +38,6 @@ def get_harvest_source_type(harvester_id):
 
     return source_type
 
-def get_harvest_source_link(package_dict):
-    harvest_source_id = h.get_pkg_dict_extra(package_dict, 'harvest_source_id', None)
-    harvest_source_title = h.get_pkg_dict_extra(package_dict, 'harvest_source_title', None)
-
-    if harvest_source_id and harvest_source_title:
-       msg = p.toolkit._('Harvested from')
-       url = h.url_for('harvest_read', id=harvest_source_id)
-       link = '{msg} <a href="{url}">{title}</a>'.format(url=url, msg=msg, title=harvest_source_title)
-       return p.toolkit.literal(link)
-
-    return ''
-
-
 def is_map_viewer_format(resource):
     viewer_url = config.get('ckanext.geodatagov.spatial_preview.url')
     viewer_formats = config.get('ckanext.geodatagov.spatial_preview.formats', 'wms kml kmz').strip().split(' ')
