@@ -386,7 +386,6 @@ class Demo(p.SingletonPlugin):
                 'get_validation_schema': geodatagov_helpers.get_validation_schema,
                 'saml2_user_edit_url': self.saml2_user_edit_url,
                 'get_harvest_source_type': geodatagov_helpers.get_harvest_source_type,
-                'remove_extra_chars':geodatagov_helpers.remove_extra_chars,
                 'schema11_key_mod':geodatagov_helpers.schema11_key_mod,
                 'schema11_frequency_mod':geodatagov_helpers.schema11_frequency_mod,
                 }

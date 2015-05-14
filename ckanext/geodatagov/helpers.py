@@ -38,25 +38,6 @@ def get_harvest_source_type(harvester_id):
 
     return source_type
 
-def remove_extra_chars(str_value):
-    # this will remove brackets for list and dict values.
-    import ast
-    new_value = None
-
-    try:
-        new_value = ast.literal_eval(str_value)
-    except:
-        pass
-
-    if type(new_value) is list:
-        new_value = [i.strip() for i in new_value]
-        ret = ', '.join(new_value)
-    elif type(new_value) is dict:
-        ret = ', '.join('{0}:{1}'.format(key, val) for key, val in new_value.items())
-    else:
-        ret = str_value
-
-    return ret
 
 def schema11_key_mod(key):
     key_map = {
