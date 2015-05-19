@@ -228,6 +228,7 @@ class Demo(p.SingletonPlugin):
     p.implements(p.ITemplateHelpers)
     p.implements(p.IActions, inherit=True)
     p.implements(p.IAuthFunctions)
+    p.implements(p.IFacets, inherit=True)
     edit_url = None
 
     UPDATE_CATEGORY_ACTIONS = ['package_update', 'dataset_update']
@@ -419,3 +420,47 @@ class Demo(p.SingletonPlugin):
             'related_update': geodatagov_auth.related_update,
             'group_catagory_tag_update': geodatagov_auth.group_catagory_tag_update,
         }
+
+
+    ## IFacets
+    def dataset_facets(self, facets_dict, package_type):
+
+        if package_type != 'dataset':
+            return facets_dict
+
+        return OrderedDict([
+                             ('organization', 'Organizations'),
+                             ('groups', 'Groups'),
+                             ('tags','Tags'),
+                             ('res_format', 'Formats'),
+                             ('license_id', 'Licence'),
+                            ])
+
+    def organization_facets(self, facets_dict, organization_type, package_type):
+
+        if not package_type:
+            return OrderedDict([
+                                 ('organization', 'Organizations'),
+                                 ('groups', 'Groups'),
+                                 ('tags','Tags'),
+                                 ('res_format', 'Formats'),
+                                 ('license_id', 'Licence'),
+                                ])
+        else:
+            return facets_dict
+
+    def group_facets(self, facets_dict, organization_type, package_type):
+
+        # get the categories key
+        group_id = p.toolkit.c.group_dict['id']
+        key = 'vocab___category_tag_%s' % group_id
+        if not package_type:
+            return OrderedDict([
+                                 ('organization', 'Organizations'),
+                                 ('groups', 'Groups'),
+                                 ('tags','Tags'),
+                                 ('res_format', 'Formats'),
+                                 ('license_id', 'Licence'),
+                                ])
+        else:
+            return facets_dict
