@@ -1,0 +1,41 @@
+{% ckan_extends %}
+
+  {% block custom_fields %}
+    {% set extras_email = [] %}
+    {% set extras_except_email = [] %}
+    {% for extra in data.extras %}
+      {% if extra.key == 'email_list' %}
+        {# there is only one email value, but using a list here to bypass jinja valiable scope limitaiton #}
+        {% do extras_email.append(extra.value) %}
+      {% else %}
+        {% do extras_except_email.append(extra) %}
+      {% endif%}
+    {% endfor %}
+    {{ form.hidden('extras__0__key', value='email_list') }}
+    {{ form.textarea('extras__0__value', label=_('Harvest report email list'), id='field-extras-0-value', value=extras_email[0], error=errors[prefix ~ 'value']) }}
+
+    {% for extra in extras_except_email %}
+      {% set prefix = 'extras__%d__' % loop.index %}
+      {{ form.custom(
+        names=(prefix ~ 'key', prefix ~ 'value', prefix ~ 'deleted'),
+        id='field-extras-%d' % loop.index,
+        label=_('Custom Field'),
+        values=(extra.key, extra.value, extra.deleted),
+        error=errors[prefix ~ 'key'] or errors[prefix ~ 'value']
+      ) }}
+    {% endfor %}
+
+    {# Add a max if 3 empty columns #}
+    {% for extra in range(extras_except_email|count, 3) %}
+      {% set index = (loop.index + extras_except_email|count) %}
+      {% set prefix = 'extras__%d__' % index %}
+      {{ form.custom(
+        names=(prefix ~ 'key', prefix ~ 'value', prefix ~ 'deleted'),
+        id='field-extras-%d' % index,
+        label=_('Custom Field'),
+        values=(extra.key, extra.value, extra.deleted),
+        error=errors[prefix ~ 'key'] or errors[prefix ~ 'value']
+      ) }}
+    {% endfor %}
+  {% endblock %}
+
