@@ -1,7 +1,8 @@
 {% ckan_extends %}
 
-{{ super }}
+{% set pkg_dict = c.pkg_dict %}
 
+{% block package_resources %}
 {% block collection_resources %}
 {% set collection_package_id = h.get_pkg_dict_extra(c.pkg_dict, 'collection_package_id', '') %}
 {% if h.get_pkg_dict_extra(c.pkg_dict, 'collection_metadata', '') %}
@@ -20,4 +21,8 @@
     </ul>
 </section>
 {% endif %}
+{% endblock %}
+
+{{ super() }}
+
 {% endblock %}
