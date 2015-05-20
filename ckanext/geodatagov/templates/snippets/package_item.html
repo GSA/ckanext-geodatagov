@@ -1,0 +1,10 @@
+{% block collection_icon %}
+    {% if h.get_pkg_dict_extra(package, 'collection_metadata', '') %}
+        <span class="dataset-collection label">
+            <i class="icon-collection"></i>
+            {{ _('Collection') }}
+        </span>
+    {% endif %}
+{% endblock %}
+
+{{ super() }}
