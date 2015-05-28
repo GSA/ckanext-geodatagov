@@ -27,7 +27,7 @@ then
 fi
 
 chown apache:apache -R /usr/lib/ckan/src/ckanext-geodatagov/ckanext/geodatagov/dynamic_menu
-if [ ! -d /usr/lib/ckan/src/ckanext-datagovtheme/ckanext/datagovtheme/dynamic_menu ];
+if [ -d /usr/lib/ckan/src/ckanext-datagovtheme/ckanext/datagovtheme/dynamic_menu ];
 then
     chown apache:apache -R /usr/lib/ckan/src/ckanext-datagovtheme/ckanext/datagovtheme/dynamic_menu
 fi
