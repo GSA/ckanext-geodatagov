@@ -97,6 +97,8 @@ class GeoGovCommand(cli.CkanCommand):
             self.combine_feeds()
         if cmd == 'harvest-job-cleanup':
             self.harvest_job_cleanup()
+        if cmd == 'harvest-object-relink':
+            self.harvest_object_relink()
 
     def get_user_org_mapping(self, location):
         user_org_mapping = open(location)
@@ -709,6 +711,69 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
 
         print msg
         email_log('harvest-job-cleanup', msg)
+
+    def harvest_object_relink(self):
+        print '%s: Fix packages which lost harvest objects.' % datetime.datetime.now()
+
+        pkgs_problematic = set()
+        # find packages that has no current harvest object
+        sql = '''
+            SELECT DISTINCT package_id
+            FROM harvest_object
+            WHERE
+                state = 'COMPLETE'
+            AND
+                package_id NOT IN (
+                    SELECT DISTINCT package_id
+                    FROM harvest_object
+                    WHERE current='t'
+                )
+        '''
+        results = model.Session.execute(sql)
+        for row in results:
+            pkgs_problematic.add(row['package_id'])
+        total = len(pkgs_problematic)
+        print '%s packages to be fixed.' % total
+
+        # set last complete harvest object to be current
+        sql = '''
+            UPDATE harvest_object
+            SET current = 't'
+            WHERE
+                package_id = :id
+            AND
+                state = 'COMPLETE'
+            AND
+                import_finished = (
+                    SELECT MAX(import_finished)
+                    FROM harvest_object
+                    WHERE
+                        state = 'COMPLETE'
+                    AND
+                        package_id = :id
+                )
+            RETURNING 1
+        '''
+        count = 0
+        for id in pkgs_problematic:
+            result = model.Session.execute(sql, {'id':id}).fetchall()
+            model.Session.commit()
+            count = count + 1
+            if result:
+                print '%s: %s/%s id %s fixed. Now pushing to solr... ' % (datetime.datetime.now(), count, total, id),
+                try:
+                  search.rebuild(id)
+                except KeyboardInterrupt:
+                  print "Stopped."
+                  return
+                except:
+                  raise
+                print 'Done.'
+            else:
+                print '%s: %s/%s id %s has no valid harvest object. Need to inspect mannully. ' % (datetime.datetime.now(), count, total, id)
+
+        if not pkgs_problematic:
+            print '%s: All looks good. Nothing to do. ' % datetime.datetime.now()
 
 def get_response(url):
     req = Request(url)

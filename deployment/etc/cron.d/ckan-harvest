@@ -4,4 +4,4 @@
 #0 4 * * 6 root ckan --plugin=ckanext-qa qa collect-ids >> /var/log/qa-update.log 2>&1 && supervisorctl start qa-update:*
 #1 6 * * * root ckan --plugin=ckanext-qa qa update_sel >> /var/log/ckan_qa.log 2>&1 && ckan --plugin=ckanext-report report generate >> /var/log/ckan_report.log 2>&1
 0 5 * * 0 root ckan --plugin=ckanext-geodatagov geodatagov db_solr_sync -c /etc/ckan/production.ini >> /var/log/db_solr_sync.log 2>&1
-#30 5 * * 0 root ckan --plugin=ckanext-geodatagov geodatagov harvest-job-cleanup -c /etc/ckan/production.ini >> /var/log/harvest_job_cleanup.log 2>&1
+30 5 * * * root ckan --plugin=ckanext-geodatagov geodatagov harvest-job-cleanup -c /etc/ckan/production.ini >> /var/log/harvest_job_cleanup.log 2>&1

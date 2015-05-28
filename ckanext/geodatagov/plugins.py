@@ -231,8 +231,6 @@ class Demo(p.SingletonPlugin):
     p.implements(p.IFacets, inherit=True)
     edit_url = None
 
-    p.implements(p.IRoutes, inherit=True)
-
     UPDATE_CATEGORY_ACTIONS = ['package_update', 'dataset_update']
     ROLLUP_SAVE_ACTIONS = ['package_create', 'dataset_create', 'package_update', 'dataset_update']
 
@@ -269,19 +267,10 @@ class Demo(p.SingletonPlugin):
                                    'value': json.dumps(extras_rollup)})
             data_dict['extras'] = new_extras
 
-    ## IRoutes
-    def before_map(self, map):
-        controller = 'ckanext.geodatagov.controllers:ViewController'
-        map.connect('map_viewer', '/viewer',controller=controller, action='show')
-        map.redirect('/', '/dataset')
-        return map
-
     ## IConfigurer
     def update_config(self, config):
         # add template directory
         p.toolkit.add_template_directory(config, 'templates')
-        p.toolkit.add_public_directory(config, 'public')
-        p.toolkit.add_resource('fanstatic_library', 'geodatagov')
 
     def configure(self, config):
         self.__class__.edit_url = config.get('saml2.user_edit')
@@ -394,28 +383,11 @@ class Demo(p.SingletonPlugin):
     def get_helpers(self):
         from ckanext.geodatagov import helpers as geodatagov_helpers
         return {
-                'get_harvest_object_formats': geodatagov_helpers.get_harvest_object_formats,
-                'get_harvest_source_link': geodatagov_helpers.get_harvest_source_link,
                 'get_validation_profiles': geodatagov_helpers.get_validation_profiles,
                 'get_validation_schema': geodatagov_helpers.get_validation_schema,
-                'get_collection_package': geodatagov_helpers.get_collection_package,
-                'resource_preview_custom': geodatagov_helpers.resource_preview_custom,
-                'is_web_format': geodatagov_helpers.is_web_format,
                 'saml2_user_edit_url': self.saml2_user_edit_url,
-                'is_preview_format': geodatagov_helpers.is_preview_format,
-                'is_map_format': geodatagov_helpers.is_map_format,
-                'is_map_viewer_format' : geodatagov_helpers.is_map_viewer_format,
-                'is_plotly_format': geodatagov_helpers.is_plotly_format,
-                'is_cartodb_format': geodatagov_helpers.is_cartodb_format,
-                'is_arcgis_format': geodatagov_helpers.is_arcgis_format,
-                'get_map_viewer_params': geodatagov_helpers.get_map_viewer_params,
-                'render_datetime_datagov': geodatagov_helpers.render_datetime_datagov,
-                'get_dynamic_menu': geodatagov_helpers.get_dynamic_menu,
                 'get_harvest_source_type': geodatagov_helpers.get_harvest_source_type,
-                'convert_resource_format':geodatagov_helpers.convert_resource_format,
-                'remove_extra_chars':geodatagov_helpers.remove_extra_chars,
-                'schema11_key_mod':geodatagov_helpers.schema11_key_mod,
-                'schema11_frequency_mod':geodatagov_helpers.schema11_frequency_mod,
+                'get_collection_package': geodatagov_helpers.get_collection_package,
                 }
 
     ## IActions
@@ -450,38 +422,31 @@ class Demo(p.SingletonPlugin):
             'group_catagory_tag_update': geodatagov_auth.group_catagory_tag_update,
         }
 
-    ## IFacets
 
+    ## IFacets
     def dataset_facets(self, facets_dict, package_type):
 
         if package_type != 'dataset':
             return facets_dict
 
-        return OrderedDict([('groups', 'Topics'),
-                            ('vocab_category_all', 'Topic Categories'),
-                            ('metadata_type','Dataset Type'),
-                            ('tags','Tags'),
-                            ('res_format', 'Formats'),
-                            ('organization_type', 'Organization Types'),
-                            ('organization', 'Organizations'),
-                            ('publisher', 'Publisher'),
-                           ## ('extras_progress', 'Progress'),
-                           ])
+        return OrderedDict([
+                             ('organization', 'Organizations'),
+                             ('groups', 'Groups'),
+                             ('tags','Tags'),
+                             ('res_format', 'Formats'),
+                             ('license_id', 'Licence'),
+                            ])
 
     def organization_facets(self, facets_dict, organization_type, package_type):
 
         if not package_type:
-            return OrderedDict([('groups', 'Topics'),
-                                ('vocab_category_all', 'Topic Categories'),
-                                ('metadata_type','Dataset Type'),
-                                ('tags','Tags'),
-                                ('res_format', 'Formats'),
-                                ('groups', 'Topics'),
-                                ('harvest_source_title', 'Harvest Source'),
-                                ('capacity', 'Visibility'),
-                                ('dataset_type', 'Resource Type'),
-                                ('publisher', 'Publisher'),
-                               ])
+            return OrderedDict([
+                                 ('organization', 'Organizations'),
+                                 ('groups', 'Groups'),
+                                 ('tags','Tags'),
+                                 ('res_format', 'Formats'),
+                                 ('license_id', 'Licence'),
+                                ])
         else:
             return facets_dict
 
@@ -491,14 +456,12 @@ class Demo(p.SingletonPlugin):
         group_id = p.toolkit.c.group_dict['id']
         key = 'vocab___category_tag_%s' % group_id
         if not package_type:
-            return OrderedDict([(key, 'Categories'),
-                                ('metadata_type','Dataset Type'),
-                                ('organization_type', 'Organization Types'),
-                                ('tags','Tags'),
-                                ('res_format', 'Formats'),
-                                ('organization', 'Organizations'),
-                                (key, 'Categories'),
-                                #('publisher', 'Publisher'),
-                               ])
+            return OrderedDict([
+                                 ('organization', 'Organizations'),
+                                 ('groups', 'Groups'),
+                                 ('tags','Tags'),
+                                 ('res_format', 'Formats'),
+                                 ('license_id', 'Licence'),
+                                ])
         else:
             return facets_dict

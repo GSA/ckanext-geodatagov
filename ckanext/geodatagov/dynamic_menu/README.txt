@@ -1,1 +1,0 @@
-helpers.py uses urllib2.urlopen to fetch menu json into this folder and create file /menu.json. So need to keep this folder writable by apache.
