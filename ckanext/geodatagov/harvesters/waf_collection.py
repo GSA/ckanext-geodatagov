@@ -29,6 +29,8 @@ class WAFCollectionHarvester(GeoDataGovWAFHarvester):
     def get_package_dict(self, iso_values, harvest_object):
 
         package_dict = super(WAFCollectionHarvester, self).get_package_dict(iso_values, harvest_object)
+        if not package_dict:
+            return None
 
         collection_package_id = self._get_object_extra(harvest_object, 'collection_package_id')
         if collection_package_id:
