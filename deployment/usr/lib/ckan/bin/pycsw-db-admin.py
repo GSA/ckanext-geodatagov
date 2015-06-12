@@ -33,8 +33,13 @@ def _parse_db_connection_string(db_conn_str):
     conn2 = conn.split('@')
     username, password = conn2[0].split(':')
     host, dbname = conn2[1].split('/')
+    port = '5432'
+    if host.count(':') == 1:
+        host, port = host.split(':')
+
     return {
         'host': host,
+        'port': port,
         'dbname': dbname,
         'username': username,
         'password': password
@@ -54,8 +59,8 @@ DBC = _parse_db_connection_string(CONFIG.get('repository', 'database'))
 
 try:
     LOGGER.info('Connecting to database')
-    CONN_STR = "host='{0}' dbname='{1}' user='{2}' password='{3}'".format(
-        DBC['host'], DBC['dbname'], DBC['username'], DBC['password'])
+    CONN_STR = "host='{0}' port='{1}' dbname='{2}' user='{3}' password='{4}'".format(
+        DBC['host'], DBC['port'], DBC['dbname'], DBC['username'], DBC['password'])
     CONN = psycopg2.connect(CONN_STR)
 except Exception, err:
     raise AssertionError('Cannot connect to database: %s' % err)
