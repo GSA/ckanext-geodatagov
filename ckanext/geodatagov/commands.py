@@ -1,12 +1,14 @@
-import collections
-import os
-import sys
-import re
 import csv
 import datetime
 import json
-import urllib
-import lxml.etree
+import xml.etree.ElementTree as ET
+from urllib2 import Request, urlopen, URLError, HTTPError
+import time
+import math
+import logging
+
+import os
+import re
 import ckan
 import ckan.model as model
 import ckan.logic as logic
@@ -14,19 +16,13 @@ import ckan.lib.search as search
 import ckan.logic.schema as schema
 import ckan.lib.cli as cli
 import requests
-import ckanext.harvest.model as harvest_model
 from ckanext.harvest.model import HarvestSource, HarvestJob
-import xml.etree.ElementTree as ET
 import ckan.lib.munge as munge
 import ckan.plugins as p
-from ckanext.geodatagov.harvesters.arcgis import _slugify
 from pylons import config
-from urllib2 import Request, urlopen, URLError, HTTPError
-import time
-import math
 
-import logging
 log = logging.getLogger()
+
 
 class GeoGovCommand(cli.CkanCommand):
     '''
@@ -99,6 +95,8 @@ class GeoGovCommand(cli.CkanCommand):
             self.harvest_job_cleanup()
         if cmd == 'harvest-object-relink':
             self.harvest_object_relink()
+        if cmd == 'export-csv':
+            self.export_csv()
 
     def get_user_org_mapping(self, location):
         user_org_mapping = open(location)
@@ -109,15 +107,14 @@ class GeoGovCommand(cli.CkanCommand):
             mapping[row[0].lower()] = row[1]
         return mapping
 
-
     def import_harvest_source(self, sources_location):
         '''Import data from this mysql command
 select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE, FREQUENCY, USERNAME into outfile '/tmp/results_with_user.csv' from GPT_RESOURCE join GPT_USER on owner = USERID where frequency is not null;
 '''
-        error_log = file('harvest_source_import_errors.txt' , 'w+')
+        error_log = file('harvest_source_import_errors.txt', 'w+')
 
         fields = ['DOCUUID', 'TITLE', 'OWNER', 'APPROVALSTATUS', 'HOST_URL',
-        'PROTOCAL', 'PROTOCOL_TYPE', 'FREQUENCY', 'ORGID']
+                  'PROTOCAL', 'PROTOCOL_TYPE', 'FREQUENCY', 'ORGID']
 
         user = logic.get_action('get_site_user')({'model': model, 'ignore_auth': True}, {})
 
@@ -125,28 +122,28 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         try:
             csv_reader = csv.reader(harvest_sources)
             for row in csv_reader:
-                row = dict(zip(fields,row))
+                row = dict(zip(fields, row))
 
                 ## neeeds some fix
-                #if row['PROTOCOL_TYPE'].lower() not in ('waf', 'csw', 'z3950'):
-                    #continue
+                # if row['PROTOCOL_TYPE'].lower() not in ('waf', 'csw', 'z3950'):
+                # continue
 
-                #frequency = row['FREQUENCY'].upper()
-                #if frequency not in ('WEEKLY', 'MONTHLY', 'BIWEEKLY'):
+                # frequency = row['FREQUENCY'].upper()
+                # if frequency not in ('WEEKLY', 'MONTHLY', 'BIWEEKLY'):
 
                 frequency = 'MANUAL'
 
                 config = {
-                          'ORIGINAL_UUID': row['DOCUUID'][1:-1].lower()
-                         }
+                    'ORIGINAL_UUID': row['DOCUUID'][1:-1].lower()
+                }
 
                 protocal = row['PROTOCAL']
                 protocal = protocal[protocal.find('<protocol'):]
                 import re
+
                 protocal = re.sub('<protocol.*?>', '<protocol>', protocal)
 
                 root = ET.fromstring(protocal[protocal.find('<protocol'):])
-
 
                 for child in root:
                     if child.text:
@@ -192,7 +189,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             all_rows.add(tuple(row))
 
         for num, row in enumerate(all_rows):
-            row = dict(zip(fields,row))
+            row = dict(zip(fields, row))
             org = logic.get_action('organization_create')(
                 {'model': model, 'user': user['name'],
                  'session': model.Session},
@@ -200,9 +197,8 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                  'title': row['title'],
                  'extras': [{'key': 'organization_type',
                              'value': row['type']}]
-                }
+                 }
             )
-
 
     def import_dms(self, url):
 
@@ -218,12 +214,12 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         collected_ids = set(to_import.keys())
 
         existing_package_ids = set([row[0] for row in
-                       model.Session.query(model.Package.id).from_statement(
-                           '''select p.id
-                           from package p
-                           join package_extra pe on p.id = pe.package_id
-                           where pe.key = 'metadata-source' and pe.value = 'dms'
-                           and p.state = 'active' ''')])
+                                    model.Session.query(model.Package.id).from_statement(
+                                        '''select p.id
+                                        from package p
+                                        join package_extra pe on p.id = pe.package_id
+                                        where pe.key = 'metadata-source' and pe.value = 'dms'
+                                        and p.state = 'active' ''')])
 
         context = {}
         context['user'] = self.user_name
@@ -252,7 +248,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             context.pop('package', None)
             context.pop('group', None)
             try:
-                logic.get_action('package_delete')(context, {"id":package_id})
+                logic.get_action('package_delete')(context, {"id": package_id})
             except Exception, e:
                 print str(datetime.datetime.now()) + ' Error when deleting id ' + package_id
                 print e
@@ -263,7 +259,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             print 'ckanext.geodatagov.doi.url not defined in config.'
             return
 
-        url_list =  doi_url + 'api/search/dataset?qjson={"fl":"id,extras_harvest_object_id","q":"harvest_object_id:[\\\"\\\"%20TO%20*],%20metadata_type:geospatial","sort":"id%20asc","start":0,"limit":0}'
+        url_list = doi_url + 'api/search/dataset?qjson={"fl":"id,extras_harvest_object_id","q":"harvest_object_id:[\\\"\\\"%20TO%20*],%20metadata_type:geospatial","sort":"id%20asc","start":0,"limit":0}'
         url_dataset = doi_url + 'api/action/package_show?id='
         url_harvestobj = doi_url + 'harvest/object/'
 
@@ -275,7 +271,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         total = requested['count']
         pagination = 1000
         to_import = {}
-        for page in xrange(0, int(math.ceil(float(total)/pagination)) + 1):
+        for page in xrange(0, int(math.ceil(float(total) / pagination)) + 1):
             url_list_dataset = ""
             input_records = []
             start = page * pagination
@@ -293,11 +289,11 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         collected_ids = set(to_import.keys())
 
         existing_ids = set([row[0] for row in
-                       model.Session.query(model.Package.id).from_statement(
-                           '''select p.id
-                           from package p
-                           join package_extra pe on p.id = pe.package_id
-                           where pe.key = 'metadata-source' and pe.value = 'doi' ''')])
+                            model.Session.query(model.Package.id).from_statement(
+                                '''select p.id
+                                from package p
+                                join package_extra pe on p.id = pe.package_id
+                                where pe.key = 'metadata-source' and pe.value = 'doi' ''')])
 
         context = {}
         user = logic.get_action('get_site_user')(
@@ -310,7 +306,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         if not source_pkg:
             log.error('Harvest source %s does not exist', source_name)
             return
-        source_id =  source_pkg.id
+        source_id = source_pkg.id
         source = HarvestSource.get(source_id)
         if not source:
             log.error('Harvest source %s does not exist', source_id)
@@ -327,7 +323,8 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         context['harvest_job'] = job
 
         print str(datetime.datetime.now()) + ' Start to import doi datasets.'
-        print 'Datasets found on remote doi server: ' + str(len(collected_ids)) + ', on local: ' + str(len(existing_ids)) + '.'
+        print 'Datasets found on remote doi server: ' + str(len(collected_ids)) + ', on local: ' + str(
+            len(existing_ids)) + '.'
 
         ids_to_add = collected_ids - existing_ids
         print 'Datasets to be added as new: ' + str(len(ids_to_add)) + '.'
@@ -338,7 +335,9 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                 new_package = self.get_doi_package(url_dataset + doi_id)
                 new_harvestobj = self.get_doi_harvestobj(url_harvestobj + to_import[doi_id])
             except Exception, e:
-                print str(datetime.datetime.now()) + ' Error when downlaoding doi id ' + doi_id + ' and harvest object ' + to_import[doi_id]
+                print str(
+                    datetime.datetime.now()) + ' Error when downlaoding doi id ' + doi_id + ' and harvest object ' + \
+                      to_import[doi_id]
                 print e
 
             context['harvestobj'] = new_harvestobj
@@ -357,7 +356,9 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                 new_package = self.get_doi_package(url_dataset + doi_id)
                 new_harvestobj = self.get_doi_harvestobj(url_harvestobj + to_import[doi_id])
             except Exception, e:
-                print str(datetime.datetime.now()) + ' Error when downlaoding doi id ' + doi_id + ' and harvest object ' + to_import[doi_id]
+                print str(
+                    datetime.datetime.now()) + ' Error when downlaoding doi id ' + doi_id + ' and harvest object ' + \
+                      to_import[doi_id]
                 print e
             context['harvestobj'] = new_harvestobj
             try:
@@ -372,7 +373,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             context.pop('package', None)
             context.pop('group', None)
             try:
-                logic.get_action('package_delete')(context, {"id":doi_id})
+                logic.get_action('package_delete')(context, {"id": doi_id})
                 print str(datetime.datetime.now()) + ' Deleted doi id ' + doi_id
             except Exception, e:
                 print str(datetime.datetime.now()) + ' Error when deleting doi id ' + doi_id
@@ -413,10 +414,10 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         model.Session.execute(sql)
         print str(datetime.datetime.now()) + ' Finished delete'
 
-#set([u'feed', u'webService', u'issued', u'modified', u'references', u'keyword', u'size', u'landingPage', u'title', u'temporal', u'theme', u'spatial', u'dataDictionary', u'description', u'format', u'granularity', u'accessLevel', u'accessURL', u'publisher', u'language', u'license', u'systemOfRecords', u'person', u'accrualPeriodicity', u'dataQuality', u'distribution', u'identifier', u'mbox'])
+    # set([u'feed', u'webService', u'issued', u'modified', u'references', u'keyword', u'size', u'landingPage', u'title', u'temporal', u'theme', u'spatial', u'dataDictionary', u'description', u'format', u'granularity', u'accessLevel', u'accessURL', u'publisher', u'language', u'license', u'systemOfRecords', u'person', u'accrualPeriodicity', u'dataQuality', u'distribution', u'identifier', u'mbox'])
 
 
-#{u'title': 6061, u'theme': 6061, u'accessLevel': 6061, u'publisher': 6061, u'identifier': 6061, u'description': 6060, u'accessURL': 6060, u'distribution': 6060, u'keyword': 6059, u'person': 6057, u'accrualPeriodicity': 6056, u'format': 6047, u'spatial': 6009, u'size': 5964, u'references': 5841, u'dataDictionary': 5841, u'temporal': 5830, u'modified': 5809, u'issued': 5793, u'mbox': 5547, u'granularity': 4434, u'license': 2048, u'dataQuality': 453}
+    # {u'title': 6061, u'theme': 6061, u'accessLevel': 6061, u'publisher': 6061, u'identifier': 6061, u'description': 6060, u'accessURL': 6060, u'distribution': 6060, u'keyword': 6059, u'person': 6057, u'accrualPeriodicity': 6056, u'format': 6047, u'spatial': 6009, u'size': 5964, u'references': 5841, u'dataDictionary': 5841, u'temporal': 5830, u'modified': 5809, u'issued': 5793, u'mbox': 5547, u'granularity': 4434, u'license': 2048, u'dataQuality': 453}
 
 
     def db_solr_sync(self):
@@ -425,122 +426,125 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
 
         url = config.get('solr_url') + "/select?q=*%3A*&sort=id+asc&fl=id%2Cmetadata_modified&wt=json&indent=true"
         response = get_response(url)
-    
+
         if (response != 'error'):
 
-          print str(datetime.datetime.now()) + ' Deleting records from solr_pkg_ids.'		
-          sql = '''delete from solr_pkg_ids'''
-          model.Session.execute(sql)
-          model.Session.commit()
-		
-          f = response.read()
-          data = json.loads(f)
-          rows = data.get('response').get('numFound')
+            print str(datetime.datetime.now()) + ' Deleting records from solr_pkg_ids.'
+            sql = '''delete from solr_pkg_ids'''
+            model.Session.execute(sql)
+            model.Session.commit()
 
-          start = 0
-          chunk_size = 1000         
-
-          print str(datetime.datetime.now()) + ' Starting insertion of records in solr_pkg_ids .'
- 
-          for x in range(0, int(math.ceil(rows/chunk_size))+1):
-		  
-            if(x == 0):
-               start = 0
-			
-            print str(datetime.datetime.now()) + ' Fetching ' + url + "&rows=" + str(chunk_size) + "&start=" + str(start)			  
-			  
-            response = get_response(url + "&rows=" + str(chunk_size) + "&start=" + str(start))
             f = response.read()
             data = json.loads(f)
-            results = data.get('response').get('docs')
+            rows = data.get('response').get('numFound')
 
-            print str(datetime.datetime.now()) + ' Inserting ' + str(start) + ' - ' + str(start + int(data.get('responseHeader').get('params').get('rows')) - 1) + ' of ' + str(rows)			
-			
-            for x in range(0, len(results)):
-                sql = '''select count(id) as count from package where id = :pkg_id;'''
-                q = model.Session.execute(sql, {'pkg_id' : results[x]['id']})            
-                for row in q:
-                   if(row['count'] == 0):
-                     sql = '''insert into solr_pkg_ids (pkg_id, action) values (:pkg_id, :action);'''
-                     model.Session.execute(sql, {'pkg_id' : results[x]['id'], 'action' : 'notfound' })
-                     model.Session.commit()			
-                   else:
-                     pkg_dict = logic.get_action('package_show')(
-                                    {'model': model, 'ignore_auth': True, 'validate': False},
-                                    {'id': results[x]['id']})
-                     if(str(results[x]['metadata_modified'])[:19] != pkg_dict['metadata_modified'][:19]):
-                       print str(datetime.datetime.now()) + ' Action Type : outsync for Package Id: ' + results[x]['id']
-                       print ' ' * 26 +                     ' Modified Date from Solr: ' + str(results[x]['metadata_modified'])
-                       print ' ' * 26 +                     ' Modified Date from Db: ' + pkg_dict['metadata_modified']
-                       sql = '''insert into solr_pkg_ids (pkg_id, action) values (:pkg_id, :action);'''
-                       model.Session.execute(sql, {'pkg_id' : results[x]['id'], 'action' : 'outsync' })
-                       model.Session.commit()
-                     else:
-                       sql = '''insert into solr_pkg_ids (pkg_id, action) values (:pkg_id, :action);'''
-                       model.Session.execute(sql, {'pkg_id' : results[x]['id'], 'action' : 'insync' })
-                       model.Session.commit()
-                     
-            start = int(data.get('responseHeader').get('params').get('start')) + chunk_size			       
-          
-          print str(datetime.datetime.now()) + ' Starting Database to Solr Sync'           
-          
-          #sql = '''Select id from package where id not in (select pkg_id from solr_pkg_ids); '''
-          sql = '''Select p.id as pkg_id from package p
+            start = 0
+            chunk_size = 1000
+
+            print str(datetime.datetime.now()) + ' Starting insertion of records in solr_pkg_ids .'
+
+            for x in range(0, int(math.ceil(rows / chunk_size)) + 1):
+
+                if (x == 0):
+                    start = 0
+
+                print str(datetime.datetime.now()) + ' Fetching ' + url + "&rows=" + str(chunk_size) + "&start=" + str(
+                    start)
+
+                response = get_response(url + "&rows=" + str(chunk_size) + "&start=" + str(start))
+                f = response.read()
+                data = json.loads(f)
+                results = data.get('response').get('docs')
+
+                print str(datetime.datetime.now()) + ' Inserting ' + str(start) + ' - ' + str(
+                    start + int(data.get('responseHeader').get('params').get('rows')) - 1) + ' of ' + str(rows)
+
+                for x in range(0, len(results)):
+                    sql = '''select count(id) as count from package where id = :pkg_id;'''
+                    q = model.Session.execute(sql, {'pkg_id': results[x]['id']})
+                    for row in q:
+                        if (row['count'] == 0):
+                            sql = '''insert into solr_pkg_ids (pkg_id, action) values (:pkg_id, :action);'''
+                            model.Session.execute(sql, {'pkg_id': results[x]['id'], 'action': 'notfound'})
+                            model.Session.commit()
+                        else:
+                            pkg_dict = logic.get_action('package_show')(
+                                {'model': model, 'ignore_auth': True, 'validate': False},
+                                {'id': results[x]['id']})
+                            if (str(results[x]['metadata_modified'])[:19] != pkg_dict['metadata_modified'][:19]):
+                                print str(datetime.datetime.now()) + ' Action Type : outsync for Package Id: ' + \
+                                      results[x]['id']
+                                print ' ' * 26 + ' Modified Date from Solr: ' + str(results[x]['metadata_modified'])
+                                print ' ' * 26 + ' Modified Date from Db: ' + pkg_dict['metadata_modified']
+                                sql = '''insert into solr_pkg_ids (pkg_id, action) values (:pkg_id, :action);'''
+                                model.Session.execute(sql, {'pkg_id': results[x]['id'], 'action': 'outsync'})
+                                model.Session.commit()
+                            else:
+                                sql = '''insert into solr_pkg_ids (pkg_id, action) values (:pkg_id, :action);'''
+                                model.Session.execute(sql, {'pkg_id': results[x]['id'], 'action': 'insync'})
+                                model.Session.commit()
+
+                start = int(data.get('responseHeader').get('params').get('start')) + chunk_size
+
+            print str(datetime.datetime.now()) + ' Starting Database to Solr Sync'
+
+            # sql = '''Select id from package where id not in (select pkg_id from solr_pkg_ids); '''
+            sql = '''Select p.id as pkg_id from package p
                    left join solr_pkg_ids sp on sp.pkg_id = p.id
                    where sp.pkg_id is null; '''
-          
-          q = model.Session.execute(sql)
-          pkg_ids = set()
-          for row in q:
-            pkg_ids.add(row['pkg_id'])
-          for pkg_id in pkg_ids:
-            try:
-              print str(datetime.datetime.now()) + ' Building Id: ' + pkg_id
-              search.rebuild(pkg_id)
-            except ckan.logic.NotFound:
-              print "Error: Not Found."
-            except KeyboardInterrupt:
-              print "Stopped."
-              return
-            except:
-              raise
-          
-          sql = '''Select pkg_id from solr_pkg_ids where action = 'outsync'; '''
-          q = model.Session.execute(sql)          
-          pkg_ids = set()
-          for row in q:
-            pkg_ids.add(row['pkg_id'])
-          for pkg_id in pkg_ids:
-            try:
-              print str(datetime.datetime.now()) + ' Rebuilding Id: ' + pkg_id
-              search.rebuild(pkg_id)
-            except ckan.logic.NotFound:
-              print "Error: Not Found."
-            except KeyboardInterrupt:
-              print "Stopped."
-              return
-            except:
-              raise
-          
-          print str(datetime.datetime.now()) + ' Starting Solr to Database Sync'
-          
-          sql = '''Select pkg_id from solr_pkg_ids where action = 'notfound'; '''
-          q = model.Session.execute(sql)
-          pkg_ids = set()
-          for row in q:
-            pkg_ids.add(row['pkg_id'])
-          for pkg_id in pkg_ids:
-            try:
-              search.clear(pkg_id)
-            except ckan.logic.NotFound:
-              print "Error: Not Found."
-            except KeyboardInterrupt:
-              print "Stopped."
-              return
-            except:
-              raise
-          
-          print str(datetime.datetime.now()) + " All Sync Done."
+
+            q = model.Session.execute(sql)
+            pkg_ids = set()
+            for row in q:
+                pkg_ids.add(row['pkg_id'])
+            for pkg_id in pkg_ids:
+                try:
+                    print str(datetime.datetime.now()) + ' Building Id: ' + pkg_id
+                    search.rebuild(pkg_id)
+                except ckan.logic.NotFound:
+                    print "Error: Not Found."
+                except KeyboardInterrupt:
+                    print "Stopped."
+                    return
+                except:
+                    raise
+
+            sql = '''Select pkg_id from solr_pkg_ids where action = 'outsync'; '''
+            q = model.Session.execute(sql)
+            pkg_ids = set()
+            for row in q:
+                pkg_ids.add(row['pkg_id'])
+            for pkg_id in pkg_ids:
+                try:
+                    print str(datetime.datetime.now()) + ' Rebuilding Id: ' + pkg_id
+                    search.rebuild(pkg_id)
+                except ckan.logic.NotFound:
+                    print "Error: Not Found."
+                except KeyboardInterrupt:
+                    print "Stopped."
+                    return
+                except:
+                    raise
+
+            print str(datetime.datetime.now()) + ' Starting Solr to Database Sync'
+
+            sql = '''Select pkg_id from solr_pkg_ids where action = 'notfound'; '''
+            q = model.Session.execute(sql)
+            pkg_ids = set()
+            for row in q:
+                pkg_ids.add(row['pkg_id'])
+            for pkg_id in pkg_ids:
+                try:
+                    search.clear(pkg_id)
+                except ckan.logic.NotFound:
+                    print "Error: Not Found."
+                except KeyboardInterrupt:
+                    print "Stopped."
+                    return
+                except:
+                    raise
+
+            print str(datetime.datetime.now()) + " All Sync Done."
 
     def combine_feeds(self):
         from xml.dom import minidom
@@ -553,9 +557,9 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         RE_XML_ILLEGAL = u'([\u0000-\u0008\u000b-\u000c\u000e-\u001f\ufffe-\uffff])' + \
                          u'|' + \
                          u'([%s-%s][^%s-%s])|([^%s-%s][%s-%s])|([%s-%s]$)|(^[%s-%s])' % \
-                          (unichr(0xd800),unichr(0xdbff),unichr(0xdc00),unichr(0xdfff),
-                           unichr(0xd800),unichr(0xdbff),unichr(0xdc00),unichr(0xdfff),
-                           unichr(0xd800),unichr(0xdbff),unichr(0xdc00),unichr(0xdfff))
+                         (unichr(0xd800), unichr(0xdbff), unichr(0xdc00), unichr(0xdfff),
+                          unichr(0xd800), unichr(0xdbff), unichr(0xdc00), unichr(0xdfff),
+                          unichr(0xd800), unichr(0xdbff), unichr(0xdc00), unichr(0xdfff))
 
         def get_dom(url):
             retry = 5
@@ -570,7 +574,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                     print 'retry url: %s' % url
                     print 'deplay %s seconds...' % (delay ** (6 - retry))
                     time.sleep(delay ** (6 - retry))
-                    retry = retry -1
+                    retry = retry - 1
                     continue
 
                 return dom
@@ -602,7 +606,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             doc.writexml(out, encoding="UTF-8")
 
         print '%s combined feeds written to %s' % (datetime.datetime.now(),
-            filename)
+                                                   filename)
 
     def harvest_job_cleanup(self):
         msg = ''
@@ -652,7 +656,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                 MAX(import_finished) < CURRENT_TIMESTAMP AT TIME ZONE 'UTC' - INTERVAL :fetch_time_limit
         '''
         results = model.Session.execute(sql, {
-            'create_time_limit' : create_time_limit,
+            'create_time_limit': create_time_limit,
             'fetch_time_limit': fetch_time_limit,
         })
         for row in results:
@@ -683,7 +687,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             )
         '''
         results = model.Session.execute(sql, {
-            'create_time_limit' : create_time_limit,
+            'create_time_limit': create_time_limit,
         })
         for row in results:
             harvest_pairs.append({
@@ -703,9 +707,10 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         '''
 
         for item in harvest_pairs:
-            model.Session.execute(sql, {'harvest_job_id':item['harvest_job_id']})
+            model.Session.execute(sql, {'harvest_job_id': item['harvest_job_id']})
             model.Session.commit()
-            msg += str(datetime.datetime.now()) + ' Harvest source %s was forced to Finish.\n' % item['harvest_source_id']
+            msg += str(datetime.datetime.now()) + ' Harvest source %s was forced to Finish.\n' % item[
+                'harvest_source_id']
         if not harvest_pairs:
             msg += str(datetime.datetime.now()) + ' Nothing to do.\n'
 
@@ -756,48 +761,136 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         '''
         count = 0
         for id in pkgs_problematic:
-            result = model.Session.execute(sql, {'id':id}).fetchall()
+            result = model.Session.execute(sql, {'id': id}).fetchall()
             model.Session.commit()
             count = count + 1
             if result:
                 print '%s: %s/%s id %s fixed. Now pushing to solr... ' % (datetime.datetime.now(), count, total, id),
                 try:
-                  search.rebuild(id)
+                    search.rebuild(id)
                 except KeyboardInterrupt:
-                  print "Stopped."
-                  return
+                    print "Stopped."
+                    return
                 except:
-                  raise
+                    raise
                 print 'Done.'
             else:
-                print '%s: %s/%s id %s has no valid harvest object. Need to inspect mannully. ' % (datetime.datetime.now(), count, total, id)
+                print '%s: %s/%s id %s has no valid harvest object. Need to inspect mannully. ' % (
+                    datetime.datetime.now(), count, total, id)
 
         if not pkgs_problematic:
             print '%s: All looks good. Nothing to do. ' % datetime.datetime.now()
 
+    def export_csv(self):
+        # run it using
+        # paster --plugin=ckanext-harvest harvester export-csv
+        domain = 'https://catalog.data.gov'
+
+        # Exported CSV header list:
+        # - Dataset Title
+        # - Dataset URL
+        # - Organization Name
+        # - Organization Link
+        # - Harvest Source Name
+        # - Harvest Source Link
+        # - Topic Name
+        # - Topic Categories
+
+        import csv
+
+        packages = p.toolkit.get_action("current_package_list_with_resources")(None, {})
+
+        groups_cache = {}
+
+        result = []
+        for pkg in packages:
+            package = dict()
+            package_groups = pkg.get('groups')
+            if not package_groups:
+                continue
+
+            extras = dict([(x['key'], x['value']) for x in pkg['extras']])
+            package['title'] = pkg.get('title')
+            package['url'] = domain + '/dataset/' + pkg.get('name')
+            package['organization'] = pkg.get('organization').get('title')
+            package['organizationUrl'] = domain + '/organization/' + pkg.get('organization').get('name')
+            package['harvestSourceTitle'] = extras.get('harvest_source_title', '')
+            package['harvestSourceUrl'] = ''
+            harvest_source_id = extras.get('harvest_source_id')
+            if harvest_source_id:
+                package['harvestSourceUrl'] = domain + '/harvest/' + harvest_source_id
+
+            for group_name in package_groups:
+                group_key = groups_cache.get(group_name)
+                if not group_key:
+                    group = model.Group.by_name(group_name)
+                    group_key = group.get('id')
+                    if not group_key:
+                        continue
+                    groups_cache[group_name] = group_key
+
+                category_tag = '__category_tag_' + group_key
+                package_categories = extras.get(category_tag)
+
+                package['topic'] = group_name
+                package['topicCategories'] = ''
+                if package_categories:
+                    package['topicCategories'] = package_categories
+
+                result.append(package)
+
+        if not result:
+            return
+
+        import datetime
+
+        date_suffix = datetime.datetime.strftime(datetime.datetime.now(), '%m%d%Y')
+
+        with open('topic_datasets_' + date_suffix + '.csv', 'w') as f:
+            fieldnames = ['Dataset Title', 'Dataset URL', 'Organization Name', 'Organization Link',
+                          'Harvest Source Name', 'Harvest Source Link', 'Topic Name', 'Topic Categories']
+            csv_file = csv.writer(f)
+            csv_file.writerow(fieldnames)
+            for pkg in result:
+                csv_file.writerow(
+                    [
+                        pkg['title'],
+                        pkg['url'],
+                        pkg['organization'],
+                        pkg['organizationUrl'],
+                        pkg['harvestSourceTitle'],
+                        pkg['harvestSourceUrl'],
+                        pkg['topic'],
+                        pkg['topicCategories']
+                    ]
+                )
+
+
 def get_response(url):
     req = Request(url)
     try:
-      response = urlopen(req)
+        response = urlopen(req)
     except HTTPError as e:
-      print 'The server couldn\'t fulfill the request.'
-      print 'Error code: ', e.code
-      return 'error'
+        print 'The server couldn\'t fulfill the request.'
+        print 'Error code: ', e.code
+        return 'error'
     except URLError as e:
-      print 'We failed to reach a server.'
-      print 'Reason: ', e.reason
-      return 'error'
+        print 'We failed to reach a server.'
+        print 'Reason: ', e.reason
+        return 'error'
     else:
-      return response
+        return response
+
 
 def email_log(log_type, msg):
     import ckan.lib.mailer as mailer
+
     email_address = config.get('email_to')
     email = {'recipient_name': email_address,
              'recipient_email': email_address,
              'subject': log_type + ' Log',
              'body': msg,
-    }
+             }
     try:
         mailer.mail_recipient(**email)
     except Exception:
