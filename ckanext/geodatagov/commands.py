@@ -36,6 +36,7 @@ class GeoGovCommand(cli.CkanCommand):
         paster geodatagov clean-deleted -c <config>
         paster geodatagov combine-feeds -c <config>
         paster geodatagov harvest-job-cleanup -c <config>
+        paster geodatagov export-csv -c <config>
     '''
     summary = __doc__.split('\n')[0]
     usage = __doc__
@@ -782,8 +783,6 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             print '%s: All looks good. Nothing to do. ' % datetime.datetime.now()
 
     def export_csv(self):
-        # run it using
-        # paster --plugin=ckanext-harvest harvester export-csv
         domain = 'https://catalog.data.gov'
 
         # Exported CSV header list:
