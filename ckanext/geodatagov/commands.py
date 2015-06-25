@@ -9,6 +9,7 @@ import time
 import math
 
 import logging
+from shutil import copyfile
 
 import os
 import re
@@ -892,6 +893,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                     )
                 except UnicodeEncodeError:
                     pprint.pprint(pkg)
+        copyfile(csv_dir + '/topic_datasets_' + date_suffix + '.csv', csv_dir + '/topic_datasets.csv')
 
 
 def get_response(url):
