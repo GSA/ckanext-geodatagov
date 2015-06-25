@@ -868,7 +868,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         import datetime
 
         date_suffix = datetime.datetime.strftime(datetime.datetime.now(), '%m%d%Y')
-        csv_dir = '/usr/lib/ckan/src/ckan/ckan/public/csv'
+        csv_dir = '/usr/lib/ckan/src/ckanext-geodatagov/ckanext/geodatagov/dynamic_menu/csv'
         if not os.path.isdir(csv_dir):
             os.mkdir(csv_dir)
         with open(csv_dir + '/topic_datasets_' + date_suffix + '.csv', 'w') as f:
