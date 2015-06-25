@@ -868,6 +868,8 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
 
         import datetime
 
+        print 'writing csv...'
+
         date_suffix = datetime.datetime.strftime(datetime.datetime.now(), '%m%d%Y')
         csv_dir = '/usr/lib/ckan/src/ckanext-geodatagov/ckanext/geodatagov/dynamic_menu/csv'
         if not os.path.isdir(csv_dir):
@@ -893,6 +895,8 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                     )
                 except UnicodeEncodeError:
                     pprint.pprint(pkg)
+
+        print 'copying latest csv to a topic_datasets.csv ...'
         copyfile(csv_dir + '/topic_datasets_' + date_suffix + '.csv', csv_dir + '/topic_datasets.csv')
 
 
