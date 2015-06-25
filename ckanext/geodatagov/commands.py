@@ -785,6 +785,8 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
     def export_csv(self):
         domain = 'https://catalog.data.gov'
 
+        print 'export started...'
+
         # Exported CSV header list:
         # - Dataset Title
         # - Dataset URL
@@ -797,46 +799,61 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
 
         import csv
 
-        packages = p.toolkit.get_action("current_package_list_with_resources")(None, {})
-
-        groups_cache = {}
+        limit = 20
+        page = 1
+        # sort_by = 'id+asc'
 
         result = []
-        for pkg in packages:
-            package = dict()
-            package_groups = pkg.get('groups')
-            if not package_groups:
-                continue
 
-            extras = dict([(x['key'], x['value']) for x in pkg['extras']])
-            package['title'] = pkg.get('title')
-            package['url'] = domain + '/dataset/' + pkg.get('name')
-            package['organization'] = pkg.get('organization').get('title')
-            package['organizationUrl'] = domain + '/organization/' + pkg.get('organization').get('name')
-            package['harvestSourceTitle'] = extras.get('harvest_source_title', '')
-            package['harvestSourceUrl'] = ''
-            harvest_source_id = extras.get('harvest_source_id')
-            if harvest_source_id:
-                package['harvestSourceUrl'] = domain + '/harvest/' + harvest_source_id
+        while True:
+            data_dict = {
+                'q': 'groups:*',
+                # 'fq': fq,
+                # 'facet.field': facets.keys(),
+                'rows': limit,
+                # 'sort': sort_by,
+                'start': (page - 1) * limit
+                # 'extras': search_extras
+            }
 
-            for group_name in package_groups:
-                group_key = groups_cache.get(group_name)
-                if not group_key:
-                    group = model.Group.by_name(group_name)
-                    group_key = group.get('id')
-                    if not group_key:
-                        continue
-                    groups_cache[group_name] = group_key
+            query = logic.get_action('package_search')({'model': model, 'ignore_auth': True}, data_dict)
+            # import pprint
+            # pprint.pprint(packages)
 
-                category_tag = '__category_tag_' + group_key
-                package_categories = extras.get(category_tag)
+            if not query['results']:
+                break
 
-                package['topic'] = group_name
-                package['topicCategories'] = ''
-                if package_categories:
-                    package['topicCategories'] = package_categories
+            packages = query['results']
+            for pkg in packages:
+                package = dict()
 
-                result.append(package)
+                package_groups = pkg.get('groups')
+                if not package_groups:
+                    continue
+
+                extras = dict([(x['key'], x['value']) for x in pkg['extras']])
+                package['title'] = pkg.get('title')
+                package['url'] = domain + '/dataset/' + pkg.get('name')
+                package['organization'] = pkg.get('organization').get('title')
+                package['organizationUrl'] = domain + '/organization/' + pkg.get('organization').get('name')
+                package['harvestSourceTitle'] = extras.get('harvest_source_title', '')
+                package['harvestSourceUrl'] = ''
+                harvest_source_id = extras.get('harvest_source_id')
+                if harvest_source_id:
+                    package['harvestSourceUrl'] = domain + '/harvest/' + harvest_source_id
+
+                for group in package_groups:
+                    category_tag = '__category_tag_' + group.get('id')
+                    package_categories = extras.get(category_tag)
+
+                    package['topic'] = group.get('title')
+                    package['topicCategories'] = ''
+                    if package_categories:
+                        package['topicCategories'] = package_categories
+
+                    result.append(package)
+
+            break
 
         if not result:
             return
@@ -863,7 +880,6 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                         pkg['topicCategories']
                     ]
                 )
-
 
 def get_response(url):
     req = Request(url)
