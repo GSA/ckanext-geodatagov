@@ -789,6 +789,9 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
 
         print 'export started...'
 
+        # cron job
+        # paster --plugin=ckanext-geodatagov geodatagov export-csv --config=/etc/ckan/production.ini
+
         # Exported CSV header list:
         # - Dataset Title
         # - Dataset URL
