@@ -801,7 +801,8 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
 
         limit = 100
         page = 1
-        # sort_by = 'id+asc'
+
+        import pprint
 
         result = []
 
@@ -869,18 +870,21 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             csv_file = csv.writer(f)
             csv_file.writerow(fieldnames)
             for pkg in result:
-                csv_file.writerow(
-                    [
-                        unicode(pkg['title']),
-                        unicode(pkg['url']),
-                        unicode(pkg['organization']),
-                        unicode(pkg['organizationUrl']),
-                        unicode(pkg['harvestSourceTitle']),
-                        unicode(pkg['harvestSourceUrl']),
-                        unicode(pkg['topic']),
-                        unicode(pkg['topicCategories'])
-                    ]
-                )
+                try:
+                    csv_file.writerow(
+                        [
+                            unicode(pkg['title']),
+                            unicode(pkg['url']),
+                            unicode(pkg['organization']),
+                            unicode(pkg['organizationUrl']),
+                            unicode(pkg['harvestSourceTitle']),
+                            unicode(pkg['harvestSourceUrl']),
+                            unicode(pkg['topic']),
+                            unicode(pkg['topicCategories'])
+                        ]
+                    )
+                except UnicodeEncodeError:
+                    pprint.pprint(pkg)
 
 def get_response(url):
     req = Request(url)
