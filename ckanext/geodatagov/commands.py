@@ -799,7 +799,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
 
         import csv
 
-        limit = 20
+        limit = 100
         page = 1
         # sort_by = 'id+asc'
 
@@ -817,6 +817,8 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             }
 
             query = logic.get_action('package_search')({'model': model, 'ignore_auth': True}, data_dict)
+
+            page += 1
             # import pprint
             # pprint.pprint(packages)
 
@@ -849,11 +851,10 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                     package['topic'] = group.get('title')
                     package['topicCategories'] = ''
                     if package_categories:
-                        package['topicCategories'] = package_categories
+                        package_categories = package_categories.strip('"[]').split('","')
+                        package['topicCategories'] = ';'.join(package_categories)
 
                     result.append(package)
-
-            break
 
         if not result:
             return
@@ -870,14 +871,14 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             for pkg in result:
                 csv_file.writerow(
                     [
-                        pkg['title'],
-                        pkg['url'],
-                        pkg['organization'],
-                        pkg['organizationUrl'],
-                        pkg['harvestSourceTitle'],
-                        pkg['harvestSourceUrl'],
-                        pkg['topic'],
-                        pkg['topicCategories']
+                        unicode(pkg['title']),
+                        unicode(pkg['url']),
+                        unicode(pkg['organization']),
+                        unicode(pkg['organizationUrl']),
+                        unicode(pkg['harvestSourceTitle']),
+                        unicode(pkg['harvestSourceUrl']),
+                        unicode(pkg['topic']),
+                        unicode(pkg['topicCategories'])
                     ]
                 )
 
