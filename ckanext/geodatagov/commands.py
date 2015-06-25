@@ -835,7 +835,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                     continue
 
                 extras = dict([(x['key'], x['value']) for x in pkg['extras']])
-                package['title'] = pkg.get('title')
+                package['title'] = pkg.get('title').encode('ascii', 'xmlcharrefreplace')
                 package['url'] = domain + '/dataset/' + pkg.get('name')
                 package['organization'] = pkg.get('organization').get('title')
                 package['organizationUrl'] = domain + '/organization/' + pkg.get('organization').get('name')
