@@ -873,14 +873,14 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                 try:
                     csv_file.writerow(
                         [
-                            unicode(pkg['title']),
-                            unicode(pkg['url']),
-                            unicode(pkg['organization']),
-                            unicode(pkg['organizationUrl']),
-                            unicode(pkg['harvestSourceTitle']),
-                            unicode(pkg['harvestSourceUrl']),
-                            unicode(pkg['topic']),
-                            unicode(pkg['topicCategories'])
+                            pkg['title'].decode('utf8'),
+                            pkg['url'].decode('utf8'),
+                            pkg['organization'].decode('utf8'),
+                            pkg['organizationUrl'].decode('utf8'),
+                            pkg['harvestSourceTitle'].decode('utf8'),
+                            pkg['harvestSourceUrl'].decode('utf8'),
+                            pkg['topic'].decode('utf8'),
+                            pkg['topicCategories'].decode('utf8')
                         ]
                     )
                 except UnicodeEncodeError:
