@@ -858,7 +858,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                     package['topic'] = group.get('title')
                     package['topicCategories'] = ''
                     if package_categories:
-                        package_categories = package_categories.strip('"[]').split('","')
+                        package_categories = package_categories.strip('"[],').split('","')
                         package['topicCategories'] = ';'.join(package_categories)
 
                     result.append(package)
