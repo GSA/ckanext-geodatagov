@@ -3,8 +3,11 @@ import datetime
 import json
 import xml.etree.ElementTree as ET
 from urllib2 import Request, urlopen, URLError, HTTPError
+
 import time
+
 import math
+
 import logging
 
 import os
@@ -18,7 +21,6 @@ import ckan.lib.cli as cli
 import requests
 from ckanext.harvest.model import HarvestSource, HarvestJob
 import ckan.lib.munge as munge
-import ckan.plugins as p
 from pylons import config
 
 log = logging.getLogger()
@@ -863,8 +865,10 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         import datetime
 
         date_suffix = datetime.datetime.strftime(datetime.datetime.now(), '%m%d%Y')
-
-        with open('topic_datasets_' + date_suffix + '.csv', 'w') as f:
+        csv_dir = '/usr/lib/ckan/src/ckan/ckan/public/csv'
+        if not os.path.isdir(csv_dir):
+            os.mkdir(csv_dir)
+        with open(csv_dir + '/topic_datasets_' + date_suffix + '.csv', 'w') as f:
             fieldnames = ['Dataset Title', 'Dataset URL', 'Organization Name', 'Organization Link',
                           'Harvest Source Name', 'Harvest Source Link', 'Topic Name', 'Topic Categories']
             csv_file = csv.writer(f)
@@ -885,6 +889,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                     )
                 except UnicodeEncodeError:
                     pprint.pprint(pkg)
+
 
 def get_response(url):
     req = Request(url)
