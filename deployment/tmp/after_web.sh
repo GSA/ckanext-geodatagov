@@ -26,6 +26,11 @@ then
     ln -s /usr/lib/ckan/src/ckanext-geodatagov/ckanext/geodatagov/dynamic_menu/usasearch-custom-feed.xml /usr/lib/ckan/src/ckan/ckan/public/usasearch-custom-feed.xml
 fi
 
+if [ ! -d /usr/lib/ckan/src/ckan/ckan/public/csv ];
+then
+    ln -s /usr/lib/ckan/src/ckanext-geodatagov/ckanext/geodatagov/dynamic_menu/csv /usr/lib/ckan/src/ckan/ckan/public/csv
+fi
+
 chown apache:apache -R /usr/lib/ckan/src/ckanext-geodatagov/ckanext/geodatagov/dynamic_menu
 if [ -d /usr/lib/ckan/src/ckanext-datagovtheme/ckanext/datagovtheme/dynamic_menu ];
 then
