@@ -35,6 +35,7 @@ chown apache:apache -R /usr/lib/ckan/src/ckanext-geodatagov/ckanext/geodatagov/d
 if [ -d /usr/lib/ckan/src/ckanext-datagovtheme/ckanext/datagovtheme/dynamic_menu ];
 then
     chown apache:apache -R /usr/lib/ckan/src/ckanext-datagovtheme/ckanext/datagovtheme/dynamic_menu
+    chcon -R -t httpd_sys_content_t /usr/lib/ckan/src/ckanext-datagovtheme/ckanext/datagovtheme/dynamic_menu
 fi
 
 chmod -R a+r /usr/lib/ckan
