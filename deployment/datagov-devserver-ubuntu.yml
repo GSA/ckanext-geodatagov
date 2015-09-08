@@ -1,0 +1,224 @@
+---
+- hosts: geodatagov23
+  user: ubuntu
+  sudo: yes
+  tasks:
+
+    - name: make sure packages are installed
+      action: apt pkg={{item}} state=installed
+      with_items:
+        - htop
+        - atool
+        - ruby
+        - python-virtualenv
+        - python-setuptools
+        - git
+        - python-dev
+        - ruby-dev
+        - postgresql-client
+        - libxml2-dev
+        - libxslt-dev
+        - bison
+        - apache2
+        - libapache2-mod-wsgi
+        - python-pip
+        - default-jdk
+        - tomcat6
+        - python-selinux
+        - wget
+        - vim
+        - python-psycopg2
+        - libpq-dev
+
+#Prepare
+    - name: fix some ansibel bug
+      shell: ssh-keyscan github.com >> /etc/ssh/ssh_known_hosts
+
+#CKAN setup
+    - name: remove old code
+      action: file path=/usr/lib/ckan/src state=absent
+
+    - name: get ckan version
+      action: git repo=https://github.com/GSA/ckan.git dest=/usr/lib/ckan/src/ckan version=release-datagov
+
+    - name: get pip
+      action: easy_install name=https://pypi.python.org/packages/source/p/pip/pip-1.3.1.tar.gz
+
+    - name: add PasteScript==1.7.5 to requirements
+      lineinfile: dest=/usr/lib/ckan/src/ckan/pip-requirements.txt line="PasteScript==1.7.5"
+    - name: install requirements and make virtualenv
+      action: pip requirements=/usr/lib/ckan/src/ckan/pip-requirements.txt virtualenv=/usr/lib/ckan/ virtualenv_site_packages=yes
+
+    - name: run setup.py develop for ckan
+      action: command chdir=/usr/lib/ckan/src/ckan/ ../../bin/python setup.py develop
+
+    - name: make sure pip is 1.3.1
+      action: command chdir=/usr/lib/ckan/src/ckan/ ../../bin/easy_install https://pypi.python.org/packages/source/p/pip/pip-1.3.1.tar.gz
+
+    - name: get geodatagov
+      action: git repo=https://github.com/GSA/ckanext-geodatagov dest=/usr/lib/ckan/src/ckanext-geodatagov version=master
+
+    - name: install requirements for geodatagov
+      action: pip requirements=/usr/lib/ckan/src/ckanext-geodatagov/pip-requirements.txt virtualenv=/usr/lib/ckan/
+
+    - name: run setup.py develop for geodatagov
+      action: command chdir=/usr/lib/ckan/src/ckanext-geodatagov/ ../../bin/python setup.py develop
+
+    - name: install requirements for harvest
+      action: pip requirements=/usr/lib/ckan/src/ckanext-harvest/pip-requirements.txt virtualenv=/usr/lib/ckan/
+
+    - name: install requirements for spatial
+      action: pip requirements=/usr/lib/ckan/src/ckanext-spatial/pip-requirements.txt virtualenv=/usr/lib/ckan/
+
+    - name: install a good version of json-table-schema for archiver/messytables
+      pip: name=json-table-schema version=0.1 virtualenv=/usr/lib/ckan/
+
+    - name: install requirements for archiver
+      action: pip requirements=/usr/lib/ckan/src/ckanext-archiver/pip-requirements.txt virtualenv=/usr/lib/ckan/
+
+    - name: install requirements for qa
+      action: pip requirements=/usr/lib/ckan/src/ckanext-qa/pip-requirements.txt virtualenv=/usr/lib/ckan/
+
+    - name: get datajson extension
+      action: git repo=https://github.com/GSA/ckanext-datajson dest=/usr/lib/ckan/src/ckanext-datajson version=master
+
+    - name: use a good version of jsonschema
+      replace: dest=/usr/lib/ckan/src/ckanext-datajson/pip-requirements.txt regexp='^jsonschema$' replace='jsonschema==2.4.0'
+    - name: install requirements for datajson
+      action: pip requirements=/usr/lib/ckan/src/ckanext-datajson/pip-requirements.txt virtualenv=/usr/lib/ckan/
+
+    - name: run setup.py develop for datajson
+      action: command chdir=/usr/lib/ckan/src/ckanext-datajson/ ../../bin/python setup.py develop
+
+    - name: get report extension
+      action: git repo=https://github.com/GSA/ckanext-report dest=/usr/lib/ckan/src/ckanext-report version=geoversion
+
+    - name: run setup.py develop for report
+      action: command chdir=/usr/lib/ckan/src/ckanext-report/ ../../bin/python setup.py develop
+
+    - name: get datagovtheme
+      action: git repo=https://github.com/GSA/ckanext-datagovtheme.git dest=/usr/lib/ckan/src/ckanext-datagovtheme version=master
+
+    - name: run setup.py develop for datagovtheme
+      action: command chdir=/usr/lib/ckan/src/ckanext-datagovtheme/ ../../bin/python setup.py develop
+
+    - name: remove psycopg2
+      action: pip name=psycopg2 virtualenv=/usr/lib/ckan/ state=absent
+
+    - name: install supervisor
+      action: pip name=supervisor virtualenv=/usr/lib/ckan/
+
+    - name: create directories
+      action: file path={{item}} state=directory
+      with_items:
+        - /etc/ckan
+
+    - name: default apache removed
+      action: file path=/etc/apache2/sites-enabled/000-default.conf state=absent
+
+    - name: copy all needed files
+      action: copy src={{item}} dest=/{{item}}
+      with_items:
+        - etc/ckan/who.ini
+        - etc/ckan/apache.wsgi
+        - etc/ckan/production.ini
+        - etc/supervisord.conf
+        - etc/apache2/sites-enabled/ckan.conf
+        - etc/cron.d/ckan-harvest
+        - etc/cron.d/supervisor
+        - etc/cron.daily/remove_old_sessions
+        - etc/supervisord.conf
+        - var/lib/tomcat6/webapps/fgdc2iso.war
+        - etc/ckan/robots.txt
+
+    - name: copy executables
+      action: copy src={{item}} dest=/{{item}} mode=744
+      with_items:
+        - usr/bin/ckan
+
+    - name: create superviserctl symlink
+      action: file src=/usr/lib/ckan/bin/supervisorctl dest=/usr/bin/supervisorctl state=link
+
+    - name: Apache | Enable some required modules
+      action: command a2enmod rewrite headers 
+      tags: common
+
+# after_combined.sh
+    - name: make dynamic_menu / do we need this
+      shell: "chown www-data:www-data -R /usr/lib/ckan/src/ckanext-datagovtheme/ckanext/datagovtheme/dynamic_menu"
+
+    - name: create usasearch-custom-feed.xml symlink
+      action: file src=/usr/lib/ckan/src/ckanext-geodatagov/ckanext/geodatagov/dynamic_menu/usasearch-custom-feed.xml dest=/usr/lib/ckan/src/ckan/ckan/public/usasearch-custom-feed.xml state=link force=yes
+
+    - name: use disallowed robots.txt
+      shell: "cp /etc/ckan/robots.txt /usr/lib/ckan/src/ckan/ckan/public/"
+
+
+##
+## install a new version of libxml - needs to be greater than 2.9 for spatial plugin
+##
+     
+#   # - name: Download libxml2-2.9.2
+#   #   command: creates=~/libxml2-2.9.2.tar.gz chdir=~/ wget -T 40  ftp://xmlsoft.org/libxml2/libxml2-2.9.2.tar.gz
+
+#    # - name: unpack libxml2-2.9.2
+#    #   command: creates=~/libxml2-2.9.2/ chdir=~/ tar zxf libxml2-2.9.2.tar.gz
+
+#    # - name: configure libxml2-2.9.2
+#    #   command: creates=~/libxml2-2.9.2/Makefile chdir=~/libxml2-2.9.2/ ~/libxml2-2.9.2/configure --libdir=/usr/lib64
+
+#    # - name: compile and install libxml2-2.9.2
+#    #   command: creates=/usr/lib64/libxml2.so.2.9.2 chdir=~/libxml2-2.9.2/ make install
+
+
+    - name: packages for harvester part
+      action: apt pkg={{item}} state=installed
+      with_items:
+        - redis-server
+        - libgeos-c1
+
+## #
+## # missing Celery?
+## #
+##     - name: install Celery
+##       action: pip name=Celery virtualenv=/usr/lib/ckan/
+
+    - name: copy all needed files
+      action: copy src={{item}} dest=/{{item}}
+      with_items:
+        - etc/init/supervisor.conf
+
+    - name: start supervisor
+      action: command initctl start supervisor
+
+##     - name: point apache.wsgi to development.ini
+##       action: command sed -i 's/production.ini/development.ini/g' /etc/ckan/apache.wsgi
+
+#pycsw setup
+    - name: get pycsw version
+      action: git repo=https://github.com/geopython/pycsw.git dest=/usr/lib/ckan/src/pycsw version=1.10.1
+
+    - name: run setup build for pycsw
+      action: command chdir=/usr/lib/ckan/src/pycsw/ ../../bin/python setup.py build
+
+    - name: run setup install for pycsw
+      action: command chdir=/usr/lib/ckan/src/pycsw/ ../../bin/python setup.py install
+
+    - name: install pyproj
+      action: pip name=pyproj virtualenv=/usr/lib/ckan/
+
+    - name: install geolinks
+      action: pip name=geolinks virtualenv=/usr/lib/ckan/
+
+    - name: copy pycsw configuration files
+      action: copy src={{item}} dest=/{{item}} mode=644
+      with_items:
+        - etc/ckan/pycsw-all.cfg
+        - etc/ckan/pycsw-collection.cfg
+        - etc/ckan/pycsw.wsgi
+        - etc/cron.d/ckan-pycsw
+        - usr/lib/ckan/bin/pycsw-db-admin.py
+
+    - name: restart apache
+      action: service name=apache2 state=restarted
+
