@@ -1,6 +1,6 @@
 ---
-- hosts: dev
-  user: vagrant
+- hosts: geodatagov23
+  user: ubuntu
   sudo: yes
   tasks:
 
@@ -15,158 +15,25 @@
         - git
         - python-dev
         - ruby-dev
-        - postgresql
+        - postgresql-client
         - libxml2-dev
         - libxslt-dev
         - bison
         - apache2
         - libapache2-mod-wsgi
         - python-pip
-        - default-jdk
-        - tomcat6
         - python-selinux
         - wget
         - vim
         - python-psycopg2
         - libpq-dev
-
-#SOLR setup
-    - name: prepare packages needed for solr
-      action: apt pkg={{item}} state=installed
-      with_items:
-        - tomcat6-admin
-        - tomcat6-common 
-        - tomcat6-user 
-        - tomcat6-docs 
-
-    - name: Download Common Logging 1.1.3
-      get_url: url="http://apache.org/dist/commons/logging/binaries/commons-logging-1.1.3-bin.tar.gz" dest="~/" force=no
-#      shell: creates=~/commons-logging-1.1.3-bin.tar.gz "cd  ~/ && wget http://apache.cc.uoc.gr/commons/logging/binaries/commons-logging-1.1.3-bin.tar.gz"
-
-
-    - name: Unpack common-logging
-      shell: "cd ~/ && tar -zxvf commons-logging-1.1.3-bin.tar.gz && cd commons-logging-1.1.3 && cp commons-logging-*.jar /usr/share/tomcat6/lib/"
-
-    - name: Download slf4j 1.7.5
-      #get_url: url="http://www.slf4j.org/dist/slf4j-1.7.5.tar.gz" dest="~/" force=no 
-      command: creates=~/slf4j-1.7.5.tar.gz chdir=~/ wget -T 40  http://www.slf4j.org/dist/slf4j-1.7.5.tar.gz
-
-    - name: Unpack slf4j
-      shell: "cd ~/ && tar -zxvf slf4j-1.7.5.tar.gz && cd slf4j-1.7.5 && cp slf4j-*.jar /usr/share/tomcat6/lib/"
-
-    - name: Download solr 4.2.1
-      #get_url: url="http://archive.apache.org/dist/lucene/solr/4.2.1/solr-4.2.1.tgz" dest="~/" force=no
-      #shell: creates=~/solr-4.2.1.tgz "cd  ~/ && wget -T 40 http://archive.apache.org/dist/lucene/solr/4.2.1/solr-4.2.1.tgz"
-      command: creates=~/solr-4.2.1.tgz chdir=~/ wget -T 40  http://archive.apache.org/dist/lucene/solr/4.2.1/solr-4.2.1.tgz
-
-    - name: Unpack solr
-      shell: "cd ~/ && tar -zxvf solr-4.2.1.tgz && cd solr-4.2.1/dist && cp solr-4.2.1.war /var/lib/tomcat6/webapps/solr.war"
-
-
-   #  should we add a wait for? is this directory being created by tomcat?
-
-    - name: wait for the solr directory to be created
-      wait_for: path=/var/lib/tomcat6/webapps/solr/WEB-INF/
-
-    - name: copy needed solr config file
-      #action: copy src=etc/newschema.xml dest=/usr/share/tomcat6/webapps/solr/WEB-INF/web.xml force=yes
-      action: copy src=etc/newschema.xml dest=/var/lib/tomcat6/webapps/solr/WEB-INF/web.xml force=yes
-
-    - name: Setup solr home folder
-      shell: "mkdir -p /home/solr && cp -R ~/solr-4.2.1/example/solr/* /home/solr && cd /home/solr/collection1/conf/ && rm schema.xml && chown -R tomcat6 /home/solr"
-
-    - name: copy needed solr config file
-      action: copy src=etc/newschema.xml dest=/home/solr/collection1/conf/schema.xml force=yes
-
-    - name: Setup solr permissions
-      shell: "chown -R tomcat6 /home/solr"
-
-
-    - name: restarting tomcat service
-      action: service name=tomcat6 state=restarted
-
-
-
-    - name: copy needed solr config file
-      #action: copy src=usr/share/tomcat6/webapps/solr/WEB-INF/web.xml dest=/usr/share/tomcat6/webapps/solr/WEB-INF/web.xml force=yes
-      action: copy src=usr/share/tomcat6/webapps/solr/WEB-INF/web.xml dest=/var/lib/tomcat6/webapps/solr/WEB-INF/web.xml force=yes
-
-    - name: restarting tomcat service
-      action: service name=tomcat6 state=restarted
-      #command: service tomcat6 restart
-
- 
-#
-# install a new version of libxml - needs to be greater than 2.9 for spatial plugin
-#
-     
-    - name: Download libxml2-2.9.2
-      command: creates=~/libxml2-2.9.2.tar.gz chdir=~/ wget -T 40  ftp://xmlsoft.org/libxml2/libxml2-2.9.2.tar.gz
-
-    - name: unpack libxml2-2.9.2
-      command: creates=~/libxml2-2.9.2/ chdir=~/ tar zxf libxml2-2.9.2.tar.gz
-
-    - name: configure libxml2-2.9.2
-      command: creates=~/libxml2-2.9.2/Makefile chdir=~/libxml2-2.9.2/ ~/libxml2-2.9.2/configure --libdir=/usr/lib64
-
-    - name: compile and install libxml2-2.9.2
-      command: creates=/usr/lib64/libxml2.so.2.9.2 chdir=~/libxml2-2.9.2/ make install
-
-    - name: make sure postgresql packages are installed
-      action: apt pkg={{item}} state=installed
-      with_items:
-        - postgis
-        - postgresql-9.3-postgis-2.1
-
-    - name: copy all needed postgresql files
-      action: copy src={{item}} dest=/{{item}}
-      with_items:
-        - etc/postgresql/9.3/main/postgresql.conf
-        - etc/postgresql/9.3/main/pg_hba.conf
-
-    - name: reload postgres config
-      command: /etc/init.d/postgresql restart
-
-    - name: create geo.gov role
-      action: postgresql_user user=geo.gov password=ckan role_attr_flags=SUPERUSER
-
-    - name: create geo role
-      action: postgresql_user user=geo password=ckan role_attr_flags=SUPERUSER
-
-    - name: create ckan database
-      action: postgresql_db name=ckan owner=geo.gov
-
-    - name: install postgis script
-      shell: "psql -d ckan -f /usr/share/postgresql/9.3/contrib/postgis-2.1/postgis.sql"
-      sudo: yes
-      sudo_user: postgres
-
-    - name: install postgis script
-      shell: "psql -d ckan -f /usr/share/postgresql/9.3/contrib/postgis-2.1/spatial_ref_sys.sql"
-      sudo: yes
-      sudo_user: postgres
-
-    - name: install postgis script
-      shell: "psql -d ckan -f /usr/share/postgresql/9.3/contrib/postgis-2.1/rtpostgis.sql"
-      sudo: yes
-      sudo_user: postgres
-
-    - name: install postgis script
-      shell: "psql -d ckan -f /usr/share/postgresql/9.3/contrib/postgis-2.1/topology.sql"
-      sudo: yes
-      sudo_user: postgres
-
-# After PostgreSQL installation:
-# $ gunzip -c /path/to/ckan2_tmp_dump.sql.gz | psql ckan
-# $ psql ckan
-# ckan=# ANALYZE; 
-
+        - libgeos-c1
 
 #CKAN setup
     - name: remove old code
       action: file path=/usr/lib/ckan/src state=absent
 
-    - name: get ckan version latest
+    - name: get ckan version
       action: git repo=https://github.com/ckan/ckan.git dest=/usr/lib/ckan/src/ckan version=ckan-2.3
 
     - name: get pip
@@ -178,100 +45,50 @@
     - name: run setup.py develop for ckan
       action: command chdir=/usr/lib/ckan/src/ckan/ ../../bin/python setup.py develop
 
-    - name: make sure pip is 1.3.1
-      action: command chdir=/usr/lib/ckan/src/ckan/ ../../bin/easy_install https://pypi.python.org/packages/source/p/pip/pip-1.3.1.tar.gz
-
     - name: get geodatagov
-      action: git repo=https://github.com/18F/ckanext-geodatagov dest=/usr/lib/ckan/src/ckanext-geodatagov version=noaa_dev_2.3
-
-    - name: get datajson
-      action: git repo=https://github.com/18F/ckanext-datajson dest=/usr/lib/ckan/src/ckanext-datajson version=noaa_merge
-
-    - name: get datesearch
-      action: git repo=https://github.com/18F/ckanext-datesearch dest=/usr/lib/ckan/src/ckanext-datesearch version=master
-
-# AJS -- switch this to 18F
-    - name: get spatial
-      action: git repo=https://github.com/18F/ckanext-spatial dest=/usr/lib/ckan/src/ckanext-spatial version=2.3
-#     action: git repo=https://github.com/ckan/ckanext-spatial dest=/usr/lib/ckan/src/ckanext-spatial version=5-postgis-2-support
-#     action: git repo=https://github.com/ckan/ckanext-spatial dest=/usr/lib/ckan/src/ckanext-spatial version=master
-
-#    - name: get harvest
- #     action: git repo=https://github.com/mwengren/ckanext-harvest dest=/usr/lib/ckan/src/ckanext-harvest version=master
-    - name: get harvest
-      action: git repo=https://github.com/ckan/ckanext-harvest dest=/usr/lib/ckan/src/ckanext-harvest version=master
-
-    - name: get extra data files
-      action: git repo=https://github.com/mwengren/ckanext-geodatagov-extras dest=/usr/lib/ckan/src/ckanext-geodatagov-extras version=master
+      action: git repo=https://github.com/GSA/ckanext-geodatagov.git dest=/usr/lib/ckan/src/ckanext-geodatagov version=ubuntu-install-ckan23
 
     - name: install requirements for geodatagov
-      action: pip requirements=/usr/lib/ckan/src/ckanext-geodatagov/pip-requirements.txt virtualenv=/usr/lib/ckan/ extra_args='--exists-action i'
+      action: pip requirements=/usr/lib/ckan/src/ckanext-geodatagov/pip-requirements.txt virtualenv=/usr/lib/ckan/
 
     - name: run setup.py develop for geodatagov
       action: command chdir=/usr/lib/ckan/src/ckanext-geodatagov/ ../../bin/python setup.py develop
 
-    - name: run setup.py develop for datesearch
-      action: command chdir=/usr/lib/ckan/src/ckanext-datesearch/ ../../bin/python setup.py develop
-
     - name: install requirements for harvest
-      action: pip requirements=/usr/lib/ckan/src/ckanext-harvest/pip-requirements.txt virtualenv=/usr/lib/ckan/ extra_args='--exists-action i'
+      action: pip requirements=/usr/lib/ckan/src/ckanext-harvest/pip-requirements.txt virtualenv=/usr/lib/ckan/
 
     - name: install requirements for spatial
-      action: pip requirements=/usr/lib/ckan/src/ckanext-spatial/pip-requirements.txt virtualenv=/usr/lib/ckan/ extra_args='--exists-action i'
+      action: pip requirements=/usr/lib/ckan/src/ckanext-spatial/pip-requirements.txt virtualenv=/usr/lib/ckan/
 
-#
-# use a new version of geoalchemy
-#pip install -e  git+https://github.com/chokoswitch/geoalchemy.git@master#egg=GeoAlchemy
-    - name: install geoalchemy
-      action: pip name='git+https://github.com/chokoswitch/geoalchemy.git@master#egg=GeoAlchemy' virtualenv=/usr/lib/ckan/
+    - name: get datajson extension
+      action: git repo=https://github.com/GSA/ckanext-datajson dest=/usr/lib/ckan/src/ckanext-datajson version=master
 
-    - name: install geoalchemy2
-      action: pip name=geoalchemy2 virtualenv=/usr/lib/ckan/
-
-# we need to remove geoalchemy from here
-# /usr/lib/ckan/src/ckanext-spatial/ckanext/spatial/model/package_extent.py
-#
-
+    - name: use a good version of jsonschema
+      replace: dest=/usr/lib/ckan/src/ckanext-datajson/pip-requirements.txt regexp='^jsonschema$' replace='jsonschema==2.4.0'
     - name: install requirements for datajson
-      action: pip requirements=/usr/lib/ckan/src/ckanext-datajson/requirements.txt virtualenv=/usr/lib/ckan/ extra_args='--exists-action i'
+      action: pip requirements=/usr/lib/ckan/src/ckanext-datajson/pip-requirements.txt virtualenv=/usr/lib/ckan/
 
     - name: run setup.py develop for datajson
       action: command chdir=/usr/lib/ckan/src/ckanext-datajson/ ../../bin/python setup.py develop
 
-    - name: install locations database
-      shell: "psql -d ckan -f /usr/lib/ckan/src/ckanext-geodatagov-extras/extras/locations.sql"
-      sudo: yes
-      sudo_user: postgres
-
-    - name: copy ogc viewer in place 
-      shell: "cp /usr/lib/ckan/src/ckanext-geodatagov-extras/extras/viewer.war /var/lib/tomcat6/webapps/ogc_viewer.war"
-
-    - name: set owner of ogc viewer
-      shell: "chown tomcat6 /var/lib/tomcat6/webapps/ogc_viewer.war"
+    - name: install requests 2.4.0
+      action: pip name=requests version=2.4.0 virtualenv=/usr/lib/ckan/ 
+    - name: install repoze.who 2.0
+      action: pip name=repoze.who version=2.0 virtualenv=/usr/lib/ckan/ 
+    - name: install new geoalchemy
+      action: command chdir=/usr/lib/ckan/src/ckanext-geodatagov/ ../../bin/pip install -e  git+https://github.com/chokoswitch/geoalchemy.git@master#egg=geoalchemy
 
     - name: set permissions of ogc viewer
-      shell: "chmod 750 /var/lib/tomcat6/webapps/ogc_viewer.war"
+      shell: "chmod 777 -R /usr/lib/ckan/src/ckanext-geodatagov/ckanext/geodatagov/dynamic_menu/"
 
-    - name: restarting tomcat service
-      action: service name=tomcat6 state=restarted
 
     - name: remove psycopg2
       action: pip name=psycopg2 virtualenv=/usr/lib/ckan/ state=absent
-
-    - name: install supervisor
-      action: pip name=supervisor virtualenv=/usr/lib/ckan/
-
-    - name: remove old repo
-      action: file path=/var/www/ckan-repo/master state=absent
 
     - name: create directories
       action: file path={{item}} state=directory
       with_items:
         - /etc/ckan
-        - /var/www/ckan-repo/master
-
-    - name: default apache removed
-      action: file path=/etc/httpd/conf.d/welcome.conf state=absent
 
     - name: default apache removed
       action: file path=/etc/apache2/sites-enabled/000-default.conf state=absent
@@ -280,253 +97,73 @@
       action: copy src={{item}} dest=/{{item}}
       with_items:
         - etc/ckan/who.ini
-        - etc/ckan/who.2.3.ini
         - etc/ckan/apache.wsgi
-        - etc/ckan/2.3noaaproduction.ini
         - etc/ckan/production.ini
-        - etc/ckan/2.3development.ini
-        - etc/supervisord.conf
-        #- etc/httpd/conf.d/ckan.conf
         - etc/apache2/sites-enabled/ckan.conf
-        - etc/apache2/sites-enabled/waf.conf
-        - etc/cron.d/ckan-harvest
-        - etc/cron.daily/remove_old_sessions
-        - etc/init/supervisor.conf
-        - var/lib/tomcat6/webapps/fgdc2iso.war
-        
+        - etc/ckan/robots.txt
+
     - name: copy executables
       action: copy src={{item}} dest=/{{item}} mode=744
       with_items:
         - usr/bin/ckan
-        - tmp/after_web.sh
-        - tmp/after_harvester.sh
-        - etc/init.d/ckanless
-
-    - name: create superviserctl symlink
-      action: file src=/usr/lib/ckan/bin/supervisorctl dest=/usr/bin/supervisorctl state=link
 
     - name: Apache | Enable some required modules
       action: command a2enmod rewrite headers 
       tags: common
 
+    - name: use disallowed robots.txt
+      shell: "cp /etc/ckan/robots.txt /usr/lib/ckan/src/ckan/ckan/public/"
+
+
+##
+## install a new version of libxml - needs to be greater than 2.9 for spatial plugin
+##
+     
+#   # - name: Download libxml2-2.9.2
+#   #   command: creates=~/libxml2-2.9.2.tar.gz chdir=~/ wget -T 40  ftp://xmlsoft.org/libxml2/libxml2-2.9.2.tar.gz
+
+#    # - name: unpack libxml2-2.9.2
+#    #   command: creates=~/libxml2-2.9.2/ chdir=~/ tar zxf libxml2-2.9.2.tar.gz
+
+#    # - name: configure libxml2-2.9.2
+#    #   command: creates=~/libxml2-2.9.2/Makefile chdir=~/libxml2-2.9.2/ ~/libxml2-2.9.2/configure --libdir=/usr/lib64
+
+#    # - name: compile and install libxml2-2.9.2
+#    #   command: creates=/usr/lib64/libxml2.so.2.9.2 chdir=~/libxml2-2.9.2/ make install
+
+
+## #
+## # missing Celery?
+## #
+##     - name: install Celery
+##       action: pip name=Celery virtualenv=/usr/lib/ckan/
+
+##     - name: point apache.wsgi to development.ini
+##       action: command sed -i 's/production.ini/development.ini/g' /etc/ckan/apache.wsgi
+
+# #pycsw setup
+#     - name: get pycsw version
+#       action: git repo=https://github.com/geopython/pycsw.git dest=/usr/lib/ckan/src/pycsw version=1.10.1
+
+#     - name: run setup build for pycsw
+#       action: command chdir=/usr/lib/ckan/src/pycsw/ ../../bin/python setup.py build
+
+#     - name: run setup install for pycsw
+#       action: command chdir=/usr/lib/ckan/src/pycsw/ ../../bin/python setup.py install
+
+#     - name: install pyproj
+#       action: pip name=pyproj virtualenv=/usr/lib/ckan/
+
+#     - name: install geolinks
+#       action: pip name=geolinks virtualenv=/usr/lib/ckan/
+
+#     - name: copy pycsw configuration files
+#       action: copy src={{item}} dest=/{{item}} mode=644
+#       with_items:
+#         - etc/ckan/pycsw-all.cfg
+#         - etc/ckan/pycsw-collection.cfg
+#         - etc/ckan/pycsw.wsgi
 
     - name: restart apache
       action: service name=apache2 state=restarted
 
-    - name: packages for web part are installed
-      action: apt pkg={{item}} state=installed
-      with_items:
-        - memcached
-        #- geos
-        - xmlsec1
-        - swig
-        - m2crypto
-
-    - name: make dynamic_menu / do we need this
-      shell: "mkdir -p /usr/lib/ckan/src/ckanext-geodatagov/ckanext/geodatagov/dynamic_menu/"
-
-    #- name: after web installation script
-    #  action: command /tmp/after_web.sh
-
-    - name: packages for harvester part
-      action: apt pkg={{item}} state=installed
-      with_items:
-        - redis-server
-        #- geos
-
-    - name: point apache.wsgi to development.ini
-      action: command sed -i 's/production.ini/development.ini/g' /etc/ckan/apache.wsgi
-
-
-    - name: remove default who.ini
-      action: file path=/etc/ckan/who.ini state=absent
-
-#    - name: download default ckan who.ini
-#      get_url: url="https://github.com/ckan/ckan/raw/366f1620da29ffaecf7e39d400b5223c8a56417e/ckan/config/who.ini" dest="/etc/ckan/who.ini"
-
-    - name: move new who.ini in place
-      shell: "mv /etc/ckan/who.2.3.ini /etc/ckan/who.ini"
-
-    - name: move new development.ini in place
-      shell: "mv /etc/ckan/2.3development.ini /etc/ckan/development.ini"
-
-
-#
-# missing Celery?
-#
-    - name: install Celery
-      action: pip name=Celery virtualenv=/usr/lib/ckan/
-
-    - name: get report
-      action: git repo=https://github.com/datagovuk/ckanext-report.git dest=/usr/lib/ckan/src/ckanext-report version=master
-
-    - name: run setup.py develop for report
-      action: command chdir=/usr/lib/ckan/src/ckanext-report/ ../../bin/python setup.py develop
-
-    - name: get deadoralive
-      action: pip name=ckanext-deadoralive virtualenv=/usr/lib/ckan/
-
-    - name: get pdfview
-      action: git repo=https://github.com/ckan/ckanext-pdfview.git dest=/usr/lib/ckan/src/ckanext-pdfview version=master
-
-    - name: run setup.py develop for pdfview
-      action: command chdir=/usr/lib/ckan/src/ckanext-pdfview/ ../../bin/python setup.py develop
-
-
-#
-#  we should swap the production ini in place?
-#
-    - name: production ini hack
-      shell: "mv /etc/ckan/production.ini /etc/ckan/production.ini.bak && ln -s /etc/ckan/2.3noaaproduction.ini /etc/ckan/production.ini"
-
-#
-# we probably need to change the permissions on the cache directory
-#
-    - name: make dynamic_menu / do we need this
-      shell: "mkdir -p /usr/lib/ckan/src/ckanext-geodatagov/ckanext/geodatagov/dynamic_menu/"
-
-    - name: fix permissions problem
-      shell: "chmod a+rw /usr/lib/ckan/src/ckanext-geodatagov/ckanext/geodatagov/dynamic_menu/"
-
-    - file: path=/usr/lib/ckan/src/ckanext-geodatagov/ckanext/geodatagov/dynamic_menu/menu.json state=touch mode=0666
-
-
-    - name: make /var/run/postgresql - do we need this
-      shell: "mkdir -p /var/run/postgresql"
-
-    - name: Initialize ckan db
-      action: command ckan db init
-
-#    - name: report initdb
-#      action: command chdir=/usr/lib/ckan/src/ckanext-report /usr/lib/ckan/bin/paster report initdb --config=/etc/ckan/production.ini
-
-# AJS - not sure why this is a mess
-    - name: make dynamic_menu / do we need this
-      shell: "mkdir -p /usr/lib/ckan/src/ckanext-geodatagov/ckanext/geodatagov/dynamic_menu/"
-
-#
-#  install nodejs and template changes
-#
-
-    - name: make sure packages are installed
-      action: apt pkg={{item}} state=installed
-      with_items:
-        - nodejs
-        - npm
-
-    - name: install node less
-      npm: name=less path=/usr/lib/ckan/src/ckan
-
-    - name: install node nodewatch
-      npm: name=nodewatch path=/usr/lib/ckan/src/ckan
- 
-    #- name: enabling node less ckan template service
-    #  command: chkconfig ckanless on
-
-    - name: starting ckanless service
-      action: service name=ckanless state=started
-
-    #- name: after harvester installation script
-    #  action: command /tmp/after_web.sh
-
-    #- name: after harvester installation script
-    #  action: command /tmp/after_harvester.sh
-
-    - name: start supervisor
-      action: command initctl start supervisor
-
-    - name: supervisor restart all
-      action: command supervisorctl restart all
-
-# After CKAN installation:
-# $ ckan search-index rebuild
-
-#pycsw setup
-    - name: get pycsw version
-      action: git repo=https://github.com/geopython/pycsw.git dest=/usr/lib/ckan/src/pycsw version=datagov
-
-    - name: run setup build for pycsw
-      action: command chdir=/usr/lib/ckan/src/pycsw/ ../../bin/python setup.py build
-
-    - name: run setup install for pycsw
-      action: command chdir=/usr/lib/ckan/src/pycsw/ ../../bin/python setup.py install
-
-    - name: install pyproj
-      action: pip name=pyproj virtualenv=/usr/lib/ckan/
-
-    - name: install geolinks
-      action: pip name=geolinks virtualenv=/usr/lib/ckan/
-
-    - name: copy pycsw configuration files
-      action: copy src={{item}} dest=/{{item}} mode=644
-      with_items:
-        - etc/ckan/pycsw-all.cfg
-        - etc/ckan/pycsw-collection.cfg
-        - etc/ckan/pycsw.wsgi
-        - etc/cron.d/ckan-pycsw
-        - usr/lib/ckan/bin/pycsw-db-admin.py
-        # - etc/httpd/conf.d/ckan.conf
-
-    - name: create pycsw database
-      action: postgresql_db name=pycsw owner=geo.gov
-
-    - name: install postgis for pycsw database
-      command: psql -d pycsw -c "CREATE EXTENSION postgis;"
-      sudo: yes
-      sudo_user: postgres
-
-    - name: create pycsw tables
-      action: command chdir=/usr/lib/ckan/src/ckanext-spatial /usr/lib/ckan/bin/paster ckan-pycsw setup -p /etc/ckan/pycsw-all.cfg
-
-
-#
-# until we fix this template, let's move it out of the way
-#
-   # -- seems to work well
-   # - name: fix the header template - for now move it out of the way
-   #   action: command chdir=/usr/lib/ckan/src/ckanext-geodatagov/ckanext/geodatagov/templates/ mv header.html header.html.broken
-
-    - debug: msg="FIXING problems that should be patches.. until we patch ckan and ckanext-harvest let's fix them up"
-
-#
-# not sure why we need this
-#
-    - name: remove the extra_key_not_in_root_schmema check -- why is this a problem?
-      action: command sed -i 's/not_empty, extra_key_not_in_root_schema, unicode/not_empty, unicode/g' /usr/lib/ckan/src/ckan/ckan/logic/schema.py
-
-
-#
-# AJS - something is goofy with the extras - if we don't pull this check out then we don't have harvest source in the extras tree
-#       on the package page
-#
-    - name: remove the harvest extra check
-      action: 'command sed -i ''s/if harvest_object and not context/if harvest_object: # and not context/g'' /usr/lib/ckan/src/ckanext-harvest/ckanext/harvest/plugin.py'
-
-
-#
-# the harvest extras are messed up - this fixes the /harvest/new submit bug
-#
-    - name: fix the extra problem so we can submit /harvest/new form
-      action: 'command sed -i ''/except KeyError:/i \            except IndexError:\n                current_pos = current_pos[0]'' /usr/lib/ckan/src/ckan/ckan/lib/navl/dictization_functions.py'
-
-
-    - name: supervisor restart all
-      action: command supervisorctl restart all
-
-    - name: restart apache
-      action: service name=apache2 state=restarted
-
-
-
-
-    - debug: msg="******************"
-    - debug: msg="Next Steps by Hand"
-    - debug: msg="******************"
-    - debug: msg="copy license saxon-license.lic into /etc/saxon-license.lic"
-    - debug: msg="saxon website http://www.saxonica.com/shop/index.html PE version of license"
-    - debug: msg="To add all the harvest sources, run the shell script"
-    - debug: msg="Create yourself an account"
-    - debug: msg="make yourself an admin   ckan sysadmin add <yourusername>"
-    - debug: msg="Create a NOAA organization for the harvest sources"
-    - debug: msg="national-oceanic-and-atmospheric-administration"
-    - debug: msg="/usr/lib/ckan/src/ckanext-geodatagov/deployment/shell_noaa_add_harvest_sources"
