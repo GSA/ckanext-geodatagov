@@ -713,6 +713,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         for item in harvest_pairs:
             model.Session.execute(sql, {'harvest_job_id': item['harvest_job_id']})
             model.Session.commit()
+            self.harvest_object_relink(item['harvest_source_id'])
             msg += str(datetime.datetime.now()) + ' Harvest source %s was forced to Finish.\n' % item[
                 'harvest_source_id']
         if not harvest_pairs:
@@ -721,7 +722,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         print msg
         email_log('harvest-job-cleanup', msg)
 
-    def harvest_object_relink(self):
+    def harvest_object_relink(self, harvest_source_id=None):
         print '%s: Fix packages which lost harvest objects.' % datetime.datetime.now()
 
         pkgs_problematic = set()
@@ -738,7 +739,16 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                     WHERE current='t'
                 )
         '''
-        results = model.Session.execute(sql)
+        if harvest_source_id:
+            sql += '''
+            AND
+                harvest_source_id = :harvest_source_id
+            '''
+            results = model.Session.execute(sql,
+                    {'harvest_source_id': harvest_source_id})
+        else:
+            results = model.Session.execute(sql)
+
         for row in results:
             pkgs_problematic.add(row['package_id'])
         total = len(pkgs_problematic)
@@ -783,7 +793,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                     datetime.datetime.now(), count, total, id)
 
         if not pkgs_problematic:
-            print '%s: All looks good. Nothing to do. ' % datetime.datetime.now()
+            print '%s: All harvest objects look good. Nothing to do. ' % datetime.datetime.now()
 
     def export_csv(self):
         domain = 'https://catalog.data.gov'
