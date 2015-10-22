@@ -92,10 +92,6 @@ class GeoDataGovHarvester(SpatialHarvester):
 
         package_dict['extras'].append({'key': 'metadata_type', 'value': 'geospatial'})
 
-        if not package_dict.get('resources'):
-            self._save_object_error('No resources invalid metadata', harvest_object, 'Import')
-            return None
-
         return package_dict
 
     def transform_to_iso(self, original_document, original_format, harvest_object):
