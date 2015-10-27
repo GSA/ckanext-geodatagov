@@ -937,5 +937,5 @@ def email_log(log_type, msg):
              }
     try:
         mailer.mail_recipient(**email)
-    except Exception:
-        pass
+    except Exception, e:
+        log.error('Error: %s; email: %s' % (e, email))
