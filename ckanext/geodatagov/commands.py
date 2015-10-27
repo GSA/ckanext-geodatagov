@@ -98,7 +98,10 @@ class GeoGovCommand(cli.CkanCommand):
         if cmd == 'harvest-job-cleanup':
             self.harvest_job_cleanup()
         if cmd == 'harvest-object-relink':
-            self.harvest_object_relink()
+            harvest_source_id = None
+            if len(self.args) == 2:
+                harvest_source_id = self.args[1]
+            self.harvest_object_relink(harvest_source_id)
         if cmd == 'export-csv':
             self.export_csv()
 
@@ -723,7 +726,8 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         email_log('harvest-job-cleanup', msg)
 
     def harvest_object_relink(self, harvest_source_id=None):
-        print '%s: Fix packages which lost harvest objects.' % datetime.datetime.now()
+        print '%s: Fix packages which lost harvest objects for harvest source %s.' % \
+                (datetime.datetime.now(), harvest_source_id if harvest_source_id else 'all')
 
         pkgs_problematic = set()
         # find packages that has no current harvest object
