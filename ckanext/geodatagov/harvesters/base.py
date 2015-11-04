@@ -61,7 +61,7 @@ class GeoDataGovHarvester(SpatialHarvester):
 
         self._set_source_config(harvest_object.source.config)
 
-        tags = iso_values.pop('tags')
+        tags = iso_values.pop('tags', [])
         # deal with something like
         # EARTH    SCIENCE > ATMOSPHERE > ATMOSPHERIC    ELECTRICITY > ATMOSPHERIC CONDUCTIVITY
         new_tags = []
