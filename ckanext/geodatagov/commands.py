@@ -799,9 +799,43 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         if not pkgs_problematic:
             print '%s: All harvest objects look good. Nothing to do. ' % datetime.datetime.now()
 
-    def export_csv(self):
+    @staticmethod
+    def export_group_and_tags(packages):
         domain = 'https://catalog.data.gov'
+        result = []
+        for pkg in packages:
+            package = dict()
 
+            package_groups = pkg.get('groups')
+            if not package_groups:
+                continue
+
+            extras = dict([(x['key'], x['value']) for x in pkg['extras']])
+            package['title'] = pkg.get('title').encode('ascii', 'xmlcharrefreplace')
+            package['url'] = domain + '/dataset/' + pkg.get('name')
+            package['organization'] = pkg.get('organization').get('title')
+            package['organizationUrl'] = domain + '/organization/' + pkg.get('organization').get('name')
+            package['harvestSourceTitle'] = extras.get('harvest_source_title', '')
+            package['harvestSourceUrl'] = ''
+            harvest_source_id = extras.get('harvest_source_id')
+            if harvest_source_id:
+                package['harvestSourceUrl'] = domain + '/harvest/' + harvest_source_id
+
+            for group in package_groups:
+                package = package.copy()
+                category_tag = '__category_tag_' + group.get('id')
+                package_categories = extras.get(category_tag)
+
+                package['topic'] = group.get('title')
+                package['topicCategories'] = ''
+                if package_categories:
+                    package_categories = package_categories.strip('"[],').split('","')
+                    package['topicCategories'] = ';'.join(package_categories)
+
+                result.append(package)
+        return result
+
+    def export_csv(self):
         print 'export started...'
 
         # cron job
@@ -847,35 +881,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                 break
 
             packages = query['results']
-            for pkg in packages:
-                package = dict()
-
-                package_groups = pkg.get('groups')
-                if not package_groups:
-                    continue
-
-                extras = dict([(x['key'], x['value']) for x in pkg['extras']])
-                package['title'] = pkg.get('title').encode('ascii', 'xmlcharrefreplace')
-                package['url'] = domain + '/dataset/' + pkg.get('name')
-                package['organization'] = pkg.get('organization').get('title')
-                package['organizationUrl'] = domain + '/organization/' + pkg.get('organization').get('name')
-                package['harvestSourceTitle'] = extras.get('harvest_source_title', '')
-                package['harvestSourceUrl'] = ''
-                harvest_source_id = extras.get('harvest_source_id')
-                if harvest_source_id:
-                    package['harvestSourceUrl'] = domain + '/harvest/' + harvest_source_id
-
-                for group in package_groups:
-                    category_tag = '__category_tag_' + group.get('id')
-                    package_categories = extras.get(category_tag)
-
-                    package['topic'] = group.get('title')
-                    package['topicCategories'] = ''
-                    if package_categories:
-                        package_categories = package_categories.strip('"[],').split('","')
-                        package['topicCategories'] = ';'.join(package_categories)
-
-                    result.append(package)
+            result = result + GeoGovCommand.export_group_and_tags(packages)
 
         if not result:
             return
