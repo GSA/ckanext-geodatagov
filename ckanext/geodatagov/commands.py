@@ -732,21 +732,24 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         pkgs_problematic = set()
         # find packages that has no current harvest object
         sql = '''
-            SELECT DISTINCT package_id
+            WITH temp_ho AS (
+              SELECT DISTINCT package_id
+                      FROM harvest_object
+                      WHERE current
+            )
+            SELECT DISTINCT harvest_object.package_id
             FROM harvest_object
+            LEFT JOIN temp_ho
+            ON harvest_object.package_id = temp_ho.package_id
             WHERE
-                state = 'COMPLETE'
+                temp_ho.package_id IS NULL
             AND
-                package_id NOT IN (
-                    SELECT DISTINCT package_id
-                    FROM harvest_object
-                    WHERE current='t'
-                )
+                harvest_object.state = 'COMPLETE'
         '''
         if harvest_source_id:
             sql += '''
             AND
-                harvest_source_id = :harvest_source_id
+                harvest_object.harvest_source_id = :harvest_source_id
             '''
             results = model.Session.execute(sql,
                     {'harvest_source_id': harvest_source_id})
