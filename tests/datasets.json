@@ -1,0 +1,661 @@
+[
+  {
+    "license_title": "License Not Specified",
+    "maintainer": "Shula Markland",
+    "relationships_as_object": [],
+    "private": false,
+    "maintainer_email": "Shula.Markland@HUD.gov",
+    "revision_timestamp": "2015-01-22T22:22:41.059982",
+    "id": "8e81ab5c-d959-4401-8ac1-d73f1820c55d",
+    "metadata_created": "2014-03-07T15:33:26.093768",
+    "owner_org": "6735b2b0-9015-492f-a855-fbcf03185e6c",
+    "metadata_modified": "2015-02-25T23:14:03.663554",
+    "author": null,
+    "author_email": null,
+    "state": "active",
+    "version": null,
+    "license_id": "notspecified",
+    "type": "dataset",
+    "resources": [
+      {
+        "resource_group_id": "3f519a2e-47b3-4144-9cc7-edf392a37a25",
+        "cache_last_updated": null,
+        "revision_timestamp": "2015-01-22T22:22:41.059982",
+        "webstore_last_updated": null,
+        "id": "febcfcad-bf7e-4753-8126-5928d012e39e",
+        "size": null,
+        "state": "active",
+        "hash": "",
+        "description": "subprime_2006_distributed.xls",
+        "format": "",
+        "tracking_summary": {
+          "total": 3,
+          "recent": 1
+        },
+        "mimetype_inner": null,
+        "no_real_name": true,
+        "mimetype": "application/xls",
+        "cache_url": null,
+        "name": "Web Page",
+        "created": "2014-03-07T10:33:26.623805",
+        "url": "http://www.HUDuser.org/portal/datasets/manu/subprime_2006_distributed.xls",
+        "webstore_url": null,
+        "last_modified": null,
+        "position": 0,
+        "revision_id": "c14bb9a3-dac6-495e-9c52-6e14956d5365",
+        "resource_type": null
+      }
+    ],
+    "num_resources": 1,
+    "tags": [
+      {
+        "vocabulary_id": null,
+        "display_name": "home-mortgage-disclosure-act-hmda-data",
+        "name": "home-mortgage-disclosure-act-hmda-data",
+        "revision_timestamp": "2014-03-07T15:33:26.093768",
+        "state": "active",
+        "id": "14a2f55a-2c09-4fb7-8de8-c107b908b461"
+      },
+      {
+        "vocabulary_id": null,
+        "display_name": "hud",
+        "name": "hud",
+        "revision_timestamp": "2014-03-07T15:33:26.093768",
+        "state": "active",
+        "id": "47b04cc1-3547-4bf3-b48a-12f7cbbc941a"
+      },
+      {
+        "vocabulary_id": null,
+        "display_name": "manufactured-home-lender-list",
+        "name": "manufactured-home-lender-list",
+        "revision_timestamp": "2014-03-07T15:33:26.093768",
+        "state": "active",
+        "id": "8a29d7cf-5fc1-48f4-809f-993c6c3e39c8"
+      },
+      {
+        "vocabulary_id": null,
+        "display_name": "manufactured-home-loan",
+        "name": "manufactured-home-loan",
+        "revision_timestamp": "2014-03-07T15:33:26.093768",
+        "state": "active",
+        "id": "e42c39db-c111-4360-9b9b-0cedc2869d09"
+      },
+      {
+        "vocabulary_id": null,
+        "display_name": "subprime-lender-list",
+        "name": "subprime-lender-list",
+        "revision_timestamp": "2014-03-07T15:33:26.093768",
+        "state": "active",
+        "id": "f66e2a66-1df7-48cf-a080-dd0686fe2a07"
+      },
+      {
+        "vocabulary_id": null,
+        "display_name": "subprime-loan",
+        "name": "subprime-loan",
+        "revision_timestamp": "2014-03-07T15:33:26.093768",
+        "state": "active",
+        "id": "ae9ad79e-92f2-4305-a051-7a9b2235ddb3"
+      }
+    ],
+    "tracking_summary": {
+      "total": 20,
+      "recent": 0
+    },
+    "groups": [
+      {
+        "title": "BusinessUSA",
+        "description": "",
+        "name": "businessusa4208",
+        "id": "39a03cb4-bc85-455a-b19c-892c7e29e24b"
+      },
+      {
+        "title": "Consumer",
+        "description": "",
+        "name": "consumer9350",
+        "id": "3b4e71c5-3c3c-43af-a3ff-81694225e453"
+      },
+      {
+        "title": "Energy",
+        "description": "",
+        "name": "energy9485",
+        "id": "b6db7c5a-d306-4da5-a0cd-b4128e1322ce"
+      },
+      {
+        "title": "Finance",
+        "description": "",
+        "name": "finance3432",
+        "id": "405b5dfb-24f8-4b77-9999-745076d64cb2"
+      }
+    ],
+    "relationships_as_subject": [],
+    "num_tags": 6,
+    "name": "hud-subprime-and-manufactured-home-lender-list-37073",
+    "isopen": false,
+    "url": null,
+    "notes": "The U.S. Department of Housing and Urban Development (HUD) periodically produce its HUD Subprime and Manufactured home Lender List for the lenders who specialize in either subprime or manufactured home lending, even though beginning with 2004 HMDA reporting, lenders are required to identify loans for manufactured housing and loans in which the APR on the loan exceeds a comparable Treasury APR. The HUD Subprime and Manufactured home Lender List contains the names of those lenders, their agency codes, and lender identification numbers. The agency code and lender identification numbers should be used to link to the individual HMDA loan application records (LARS). The file also contains a concatenated field, IDD, which is a combination of the agency code and lender identification number. The HUD Subprime and Manufactured home Lender List has annually been updated and revised in response to feedback from lenders, policy analysts, housing advocacy groups, and other users of the list. HUD deletes lenders and adds others based on that feedback.",
+    "title": "HUD Subprime and Manufactured Home Lender List",
+    "extras": [
+      {
+        "value": "US Department of Housing and Urban Development",
+        "key": "publisher"
+      },
+      {
+        "value": "HUD001",
+        "key": "identifier"
+      },
+      {
+        "value": "https://project-open-data.cio.gov/v1.1/schema/catalog.json",
+        "key": "catalog_describedBy"
+      },
+      {
+        "value": "991bcaf7-498f-4657-bed2-f6594e1bfbe7",
+        "key": "harvest_source_id"
+      },
+      {
+        "value": "https://project-open-data.cio.gov/v1.1/schema/catalog.jsonld",
+        "key": "catalog_@context"
+      },
+      {
+        "value": "Dataset",
+        "key": "resource-type"
+      },
+      {
+        "value": "1993/2005",
+        "key": "temporal"
+      },
+      {
+        "value": "[\"Finance\"]",
+        "key": "__category_tag_3b4e71c5-3c3c-43af-a3ff-81694225e453"
+      },
+      {
+        "value": "2006-12-01",
+        "key": "modified"
+      },
+      {
+        "value": "HUD JSON",
+        "key": "harvest_source_title"
+      },
+      {
+        "value": "1.1",
+        "key": "source_schema_version"
+      },
+      {
+        "value": true,
+        "key": "source_datajson_identifier"
+      },
+      {
+        "value": "https://project-open-data.cio.gov/v1.1/schema",
+        "key": "catalog_conformsTo"
+      },
+      {
+        "value": [
+          "025:09"
+        ],
+        "key": "bureauCode"
+      },
+      {
+        "value": "3f8d2db54151d52f212046d13211e6f0352a451a",
+        "key": "source_hash"
+      },
+      {
+        "value": [
+          "025:000"
+        ],
+        "key": "programCode"
+      },
+      {
+        "value": "public",
+        "key": "accessLevel"
+      },
+      {
+        "value": "b94b2c88-9de1-4b94-80f2-64cd21aebaae",
+        "key": "harvest_object_id"
+      },
+      {
+        "value": "http://www.HUDuser.org/portal/datasets/manu.html",
+        "key": "describedBy"
+      },
+      {
+        "value": "[\"Total Energy\"]",
+        "key": "__category_tag_b6db7c5a-d306-4da5-a0cd-b4128e1322ce"
+      }
+    ],
+    "organization": {
+      "description": "http://portal.hud.gov/hudportal/HUD",
+      "created": "2013-03-25T19:52:22.549643",
+      "title": "Department of Housing and Urban Development, Federal Government",
+      "name": "hud-gov",
+      "revision_timestamp": "2013-03-25T19:17:54.054528",
+      "is_organization": true,
+      "state": "active",
+      "image_url": "http://www.foia.gov/images/logo-hud.jpg",
+      "revision_id": "47279fb0-f7fd-402b-b0a4-dbd597987e76",
+      "type": "organization",
+      "id": "6735b2b0-9015-492f-a855-fbcf03185e6c",
+      "approval_status": "approved"
+    },
+    "revision_id": "c14bb9a3-dac6-495e-9c52-6e14956d5365"
+  },
+  {
+    "license_title": "License Not Specified",
+    "maintainer": "Shula Markland",
+    "relationships_as_object": [],
+    "private": false,
+    "maintainer_email": "Shula.Markland@HUD.gov",
+    "revision_timestamp": "2015-01-22T22:22:50.734743",
+    "id": "c7ef46a1-559f-4fb5-99c4-8797758e1537",
+    "metadata_created": "2014-03-07T15:33:28.483202",
+    "owner_org": "6735b2b0-9015-492f-a855-fbcf03185e6c",
+    "metadata_modified": "2015-02-25T23:14:17.594175",
+    "author": null,
+    "author_email": null,
+    "state": "active",
+    "version": null,
+    "license_id": "notspecified",
+    "type": "dataset",
+    "resources": [
+      {
+        "resource_group_id": "abd5a766-b6f6-47ac-a31c-73150799c6e3",
+        "cache_last_updated": null,
+        "revision_timestamp": "2015-01-22T22:22:50.734743",
+        "webstore_last_updated": null,
+        "id": "5234ad87-f0aa-4136-8b38-0212817d9ab1",
+        "size": null,
+        "state": "active",
+        "hash": "",
+        "description": "ascii_renter.exe",
+        "format": "EXE",
+        "tracking_summary": {
+          "total": 2,
+          "recent": 2
+        },
+        "mimetype_inner": null,
+        "no_real_name": true,
+        "mimetype": "text/csv",
+        "cache_url": null,
+        "name": "Windows Executable Program",
+        "created": "2014-03-07T10:33:28.640541",
+        "url": "http://www.HUDuser.org/portal/datasets/rfs/ascii_renter.exe",
+        "webstore_url": null,
+        "last_modified": null,
+        "position": 0,
+        "revision_id": "52d3e7bb-9364-4466-9645-ec5955cbb67a",
+        "resource_type": null
+      }
+    ],
+    "num_resources": 1,
+    "tags": [
+      {
+        "vocabulary_id": null,
+        "display_name": "housing",
+        "name": "housing",
+        "revision_timestamp": "2014-03-07T15:33:28.483202",
+        "state": "active",
+        "id": "cc2a8aab-2dfe-453c-927b-2c7669dad222"
+      },
+      {
+        "vocabulary_id": null,
+        "display_name": "mortgage-financing",
+        "name": "mortgage-financing",
+        "revision_timestamp": "2014-11-24T05:10:16.869020",
+        "state": "active",
+        "id": "bf929f8e-3c57-4b16-8e6b-8204b40426d9"
+      },
+      {
+        "vocabulary_id": null,
+        "display_name": "residential-property",
+        "name": "residential-property",
+        "revision_timestamp": "2014-11-24T05:10:16.869020",
+        "state": "active",
+        "id": "c508ee59-d2f8-4276-9f6d-278d67908b6e"
+      }
+    ],
+    "tracking_summary": {
+      "total": 14,
+      "recent": 0
+    },
+    "groups": [
+      {
+        "title": "BusinessUSA",
+        "description": "",
+        "name": "businessusa4208",
+        "id": "39a03cb4-bc85-455a-b19c-892c7e29e24b"
+      },
+      {
+        "title": "Consumer",
+        "description": "",
+        "name": "consumer9350",
+        "id": "3b4e71c5-3c3c-43af-a3ff-81694225e453"
+      },
+      {
+        "title": "Energy",
+        "description": "",
+        "name": "energy9485",
+        "id": "b6db7c5a-d306-4da5-a0cd-b4128e1322ce"
+      },
+      {
+        "title": "Finance",
+        "description": "",
+        "name": "finance3432",
+        "id": "405b5dfb-24f8-4b77-9999-745076d64cb2"
+      }
+    ],
+    "relationships_as_subject": [],
+    "num_tags": 3,
+    "name": "the-2001-residential-finance-survey-rental-property-file-e0238",
+    "isopen": false,
+    "url": null,
+    "notes": "The 2001 Residential Finance Survey (RFS) was sponsored by the Department of Housing and Urban Development and conducted by the Census Bureau. The RFS is a follow-on survey to the 2000 decennial census designed to collect, process, and produce information about the financing of all nonfarm, residential properties. The 1991 data is also available.",
+    "title": "The 2001 Residential Finance Survey - Rental Property File",
+    "extras": [
+      {
+        "value": "US Department of Housing and Urban Development",
+        "key": "publisher"
+      },
+      {
+        "value": "HUD017",
+        "key": "identifier"
+      },
+      {
+        "value": "https://project-open-data.cio.gov/v1.1/schema/catalog.json",
+        "key": "catalog_describedBy"
+      },
+      {
+        "value": "991bcaf7-498f-4657-bed2-f6594e1bfbe7",
+        "key": "harvest_source_id"
+      },
+      {
+        "value": "https://project-open-data.cio.gov/v1.1/schema/catalog.jsonld",
+        "key": "catalog_@context"
+      },
+      {
+        "value": "Dataset",
+        "key": "resource-type"
+      },
+      {
+        "value": "2001-01/2001-12",
+        "key": "temporal"
+      },
+      {
+        "value": "[\"Finance\"]",
+        "key": "__category_tag_3b4e71c5-3c3c-43af-a3ff-81694225e453"
+      },
+      {
+        "value": "2005-10-05",
+        "key": "modified"
+      },
+      {
+        "value": "HUD JSON",
+        "key": "harvest_source_title"
+      },
+      {
+        "value": "1.1",
+        "key": "source_schema_version"
+      },
+      {
+        "value": true,
+        "key": "source_datajson_identifier"
+      },
+      {
+        "value": "https://project-open-data.cio.gov/v1.1/schema",
+        "key": "catalog_conformsTo"
+      },
+      {
+        "value": [
+          "025:28"
+        ],
+        "key": "bureauCode"
+      },
+      {
+        "value": "e01eb75eb6bed1976436ae41ae3a37901ecedefb",
+        "key": "source_hash"
+      },
+      {
+        "value": [
+          "025:000"
+        ],
+        "key": "programCode"
+      },
+      {
+        "value": "public",
+        "key": "accessLevel"
+      },
+      {
+        "value": "7ea44e13-c53b-454b-bd9c-07c225f249ba",
+        "key": "harvest_object_id"
+      },
+      {
+        "value": "http://www.HUDuser.org/portal/datasets/rfs/rfs91puf_rv",
+        "key": "describedBy"
+      },
+      {
+        "value": "[\"Total Energy\"]",
+        "key": "__category_tag_b6db7c5a-d306-4da5-a0cd-b4128e1322ce"
+      }
+    ],
+    "organization": {
+      "description": "http://portal.hud.gov/hudportal/HUD",
+      "created": "2013-03-25T19:52:22.549643",
+      "title": "Department of Housing and Urban Development, Federal Government",
+      "name": "hud-gov",
+      "revision_timestamp": "2013-03-25T19:17:54.054528",
+      "is_organization": true,
+      "state": "active",
+      "image_url": "http://www.foia.gov/images/logo-hud.jpg",
+      "revision_id": "47279fb0-f7fd-402b-b0a4-dbd597987e76",
+      "type": "organization",
+      "id": "6735b2b0-9015-492f-a855-fbcf03185e6c",
+      "approval_status": "approved"
+    },
+    "revision_id": "52d3e7bb-9364-4466-9645-ec5955cbb67a"
+  },
+  {
+    "license_title": "License Not Specified",
+    "maintainer": "Shula Markland",
+    "relationships_as_object": [],
+    "private": false,
+    "maintainer_email": "Shula.Markland@HUD.gov",
+    "revision_timestamp": "2015-01-22T22:22:50.287432",
+    "id": "805c53bf-bdf6-4178-9868-1c5742f942dd",
+    "metadata_created": "2014-03-07T15:33:28.305105",
+    "owner_org": "6735b2b0-9015-492f-a855-fbcf03185e6c",
+    "metadata_modified": "2015-02-25T23:14:17.516932",
+    "author": null,
+    "author_email": null,
+    "state": "active",
+    "version": null,
+    "license_id": "notspecified",
+    "type": "dataset",
+    "resources": [
+      {
+        "resource_group_id": "32a05273-acb5-4fd5-9e3d-98b3ab953688",
+        "cache_last_updated": null,
+        "revision_timestamp": "2015-01-22T22:22:50.287432",
+        "webstore_last_updated": null,
+        "id": "64f5a510-0d3f-4f2e-a095-ffe8ebc3df6c",
+        "size": null,
+        "state": "active",
+        "hash": "",
+        "description": "ascii_owner.exe",
+        "format": "EXE",
+        "tracking_summary": {
+          "total": 1,
+          "recent": 1
+        },
+        "mimetype_inner": null,
+        "no_real_name": true,
+        "mimetype": "text/csv",
+        "cache_url": null,
+        "name": "Windows Executable Program",
+        "created": "2014-03-07T10:33:28.477247",
+        "url": "http://www.HUDuser.org/portal/datasets/rfs/ascii_owner.exe",
+        "webstore_url": null,
+        "last_modified": null,
+        "position": 0,
+        "revision_id": "5af1246f-21e6-4e1a-9b9c-67b0e58dc859",
+        "resource_type": null
+      }
+    ],
+    "num_resources": 1,
+    "tags": [
+      {
+        "vocabulary_id": null,
+        "display_name": "housing",
+        "name": "housing",
+        "revision_timestamp": "2014-03-07T15:33:28.305105",
+        "state": "active",
+        "id": "cc2a8aab-2dfe-453c-927b-2c7669dad222"
+      },
+      {
+        "vocabulary_id": null,
+        "display_name": "mortgage-financing",
+        "name": "mortgage-financing",
+        "revision_timestamp": "2014-11-24T05:10:12.449004",
+        "state": "active",
+        "id": "bf929f8e-3c57-4b16-8e6b-8204b40426d9"
+      },
+      {
+        "vocabulary_id": null,
+        "display_name": "residential-property",
+        "name": "residential-property",
+        "revision_timestamp": "2014-11-24T05:10:12.449004",
+        "state": "active",
+        "id": "c508ee59-d2f8-4276-9f6d-278d67908b6e"
+      }
+    ],
+    "tracking_summary": {
+      "total": 16,
+      "recent": 0
+    },
+    "groups": [
+      {
+        "title": "BusinessUSA",
+        "description": "",
+        "name": "businessusa4208",
+        "id": "39a03cb4-bc85-455a-b19c-892c7e29e24b"
+      },
+      {
+        "title": "Consumer",
+        "description": "",
+        "name": "consumer9350",
+        "id": "3b4e71c5-3c3c-43af-a3ff-81694225e453"
+      },
+      {
+        "title": "Energy",
+        "description": "",
+        "name": "energy9485",
+        "id": "b6db7c5a-d306-4da5-a0cd-b4128e1322ce"
+      },
+      {
+        "title": "Finance",
+        "description": "",
+        "name": "finance3432",
+        "id": "405b5dfb-24f8-4b77-9999-745076d64cb2"
+      }
+    ],
+    "relationships_as_subject": [],
+    "num_tags": 3,
+    "name": "the-2001-residential-finance-survey-owners-property-file-69c76",
+    "isopen": false,
+    "url": null,
+    "notes": "The 2001 Residential Finance Survey (RFS) was sponsored by the Department of Housing and Urban Development and conducted by the Census Bureau. The RFS is a follow-on survey to the 2000 decennial census designed to collect, process, and produce information about the financing of all nonfarm, residential properties. The 1991 data is also available",
+    "title": "The 2001 Residential Finance Survey - Owners Property File",
+    "extras": [
+      {
+        "value": "US Department of Housing and Urban Development",
+        "key": "publisher"
+      },
+      {
+        "value": "HUD016",
+        "key": "identifier"
+      },
+      {
+        "value": "https://project-open-data.cio.gov/v1.1/schema/catalog.json",
+        "key": "catalog_describedBy"
+      },
+      {
+        "value": "991bcaf7-498f-4657-bed2-f6594e1bfbe7",
+        "key": "harvest_source_id"
+      },
+      {
+        "value": "https://project-open-data.cio.gov/v1.1/schema/catalog.jsonld",
+        "key": "catalog_@context"
+      },
+      {
+        "value": "Dataset",
+        "key": "resource-type"
+      },
+      {
+        "value": "b0e02ccbf3e223baa7df46e8a68898dd4d194616",
+        "key": "source_hash"
+      },
+      {
+        "value": "[\"Finance\"]",
+        "key": "__category_tag_3b4e71c5-3c3c-43af-a3ff-81694225e453"
+      },
+      {
+        "value": "2005-09-30",
+        "key": "modified"
+      },
+      {
+        "value": "HUD JSON",
+        "key": "harvest_source_title"
+      },
+      {
+        "value": "1.1",
+        "key": "source_schema_version"
+      },
+      {
+        "value": true,
+        "key": "source_datajson_identifier"
+      },
+      {
+        "value": "https://project-open-data.cio.gov/v1.1/schema",
+        "key": "catalog_conformsTo"
+      },
+      {
+        "value": [
+          "025:28"
+        ],
+        "key": "bureauCode"
+      },
+      {
+        "value": [
+          "025:000"
+        ],
+        "key": "programCode"
+      },
+      {
+        "value": "public",
+        "key": "accessLevel"
+      },
+      {
+        "value": "2b292e5a-799b-4b12-9693-92cb1397a865",
+        "key": "harvest_object_id"
+      },
+      {
+        "value": "http://www.HUDuser.org/portal/datasets/rfs/rfs91puf_ho",
+        "key": "describedBy"
+      },
+      {
+        "value": "[\"Total Energy\"]",
+        "key": "__category_tag_b6db7c5a-d306-4da5-a0cd-b4128e1322ce"
+      }
+    ],
+    "organization": {
+      "description": "http://portal.hud.gov/hudportal/HUD",
+      "created": "2013-03-25T19:52:22.549643",
+      "title": "Department of Housing and Urban Development, Federal Government",
+      "name": "hud-gov",
+      "revision_timestamp": "2013-03-25T19:17:54.054528",
+      "is_organization": true,
+      "state": "active",
+      "image_url": "http://www.foia.gov/images/logo-hud.jpg",
+      "revision_id": "47279fb0-f7fd-402b-b0a4-dbd597987e76",
+      "type": "organization",
+      "id": "6735b2b0-9015-492f-a855-fbcf03185e6c",
+      "approval_status": "approved"
+    },
+    "revision_id": "5af1246f-21e6-4e1a-9b9c-67b0e58dc859"
+  }
+]

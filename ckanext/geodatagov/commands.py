@@ -732,21 +732,24 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         pkgs_problematic = set()
         # find packages that has no current harvest object
         sql = '''
-            SELECT DISTINCT package_id
+            WITH temp_ho AS (
+              SELECT DISTINCT package_id
+                      FROM harvest_object
+                      WHERE current
+            )
+            SELECT DISTINCT harvest_object.package_id
             FROM harvest_object
+            LEFT JOIN temp_ho
+            ON harvest_object.package_id = temp_ho.package_id
             WHERE
-                state = 'COMPLETE'
+                temp_ho.package_id IS NULL
             AND
-                package_id NOT IN (
-                    SELECT DISTINCT package_id
-                    FROM harvest_object
-                    WHERE current='t'
-                )
+                harvest_object.state = 'COMPLETE'
         '''
         if harvest_source_id:
             sql += '''
             AND
-                harvest_source_id = :harvest_source_id
+                harvest_object.harvest_source_id = :harvest_source_id
             '''
             results = model.Session.execute(sql,
                     {'harvest_source_id': harvest_source_id})
@@ -799,9 +802,43 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         if not pkgs_problematic:
             print '%s: All harvest objects look good. Nothing to do. ' % datetime.datetime.now()
 
-    def export_csv(self):
+    @staticmethod
+    def export_group_and_tags(packages):
         domain = 'https://catalog.data.gov'
+        result = []
+        for pkg in packages:
+            package = dict()
 
+            package_groups = pkg.get('groups')
+            if not package_groups:
+                continue
+
+            extras = dict([(x['key'], x['value']) for x in pkg['extras']])
+            package['title'] = pkg.get('title').encode('ascii', 'xmlcharrefreplace')
+            package['url'] = domain + '/dataset/' + pkg.get('name')
+            package['organization'] = pkg.get('organization').get('title')
+            package['organizationUrl'] = domain + '/organization/' + pkg.get('organization').get('name')
+            package['harvestSourceTitle'] = extras.get('harvest_source_title', '')
+            package['harvestSourceUrl'] = ''
+            harvest_source_id = extras.get('harvest_source_id')
+            if harvest_source_id:
+                package['harvestSourceUrl'] = domain + '/harvest/' + harvest_source_id
+
+            for group in package_groups:
+                package = package.copy()
+                category_tag = '__category_tag_' + group.get('id')
+                package_categories = extras.get(category_tag)
+
+                package['topic'] = group.get('title')
+                package['topicCategories'] = ''
+                if package_categories:
+                    package_categories = package_categories.strip('"[],').split('","')
+                    package['topicCategories'] = ';'.join(package_categories)
+
+                result.append(package)
+        return result
+
+    def export_csv(self):
         print 'export started...'
 
         # cron job
@@ -847,35 +884,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                 break
 
             packages = query['results']
-            for pkg in packages:
-                package = dict()
-
-                package_groups = pkg.get('groups')
-                if not package_groups:
-                    continue
-
-                extras = dict([(x['key'], x['value']) for x in pkg['extras']])
-                package['title'] = pkg.get('title').encode('ascii', 'xmlcharrefreplace')
-                package['url'] = domain + '/dataset/' + pkg.get('name')
-                package['organization'] = pkg.get('organization').get('title')
-                package['organizationUrl'] = domain + '/organization/' + pkg.get('organization').get('name')
-                package['harvestSourceTitle'] = extras.get('harvest_source_title', '')
-                package['harvestSourceUrl'] = ''
-                harvest_source_id = extras.get('harvest_source_id')
-                if harvest_source_id:
-                    package['harvestSourceUrl'] = domain + '/harvest/' + harvest_source_id
-
-                for group in package_groups:
-                    category_tag = '__category_tag_' + group.get('id')
-                    package_categories = extras.get(category_tag)
-
-                    package['topic'] = group.get('title')
-                    package['topicCategories'] = ''
-                    if package_categories:
-                        package_categories = package_categories.strip('"[],').split('","')
-                        package['topicCategories'] = ';'.join(package_categories)
-
-                    result.append(package)
+            result = result + GeoGovCommand.export_group_and_tags(packages)
 
         if not result:
             return
