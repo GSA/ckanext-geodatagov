@@ -16,6 +16,8 @@
       action: file path=/usr/lib/ckan/src state=absent
     - name: install epel
       action: command creates=/etc/yum.repos.d/epel.repo rpm -Uvh http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
+    - name: Get new libxml2-2.9.0
+      get_url: url="http://packages.reisys.com/ckan/ngds/libxml2.repo" dest="/etc/yum.repos.d/"
     - name: make sure packages are installed
       action: yum pkg={{ item }} state=installed
       with_items:
@@ -29,7 +31,7 @@
         - ruby-devel
         - postgresql-libs
         - postgresql-devel
-        - libxml2-devel
+        - libxml2-devel-2.9.0
         - libxslt-devel
         - postgresql
         - rpmdevtools
@@ -90,11 +92,23 @@
     - name: run setup.py develop for datajson
       action: command chdir=/usr/lib/ckan/src/ckanext-datajson/ ../../bin/python setup.py develop
 
+    - name: get extlink extension
+      action: git repo=https://github.com/GSA/ckanext-extlink dest=/usr/lib/ckan/src/ckanext-extlink version=master
+
+    - name: run setup.py develop for extlink
+      action: command chdir=/usr/lib/ckan/src/ckanext-extlink/ ../../bin/python setup.py develop
+
     - name: get report extension
       action: git repo=https://github.com/GSA/ckanext-report dest=/usr/lib/ckan/src/ckanext-report version=geoversion
 
     - name: run setup.py develop for report
       action: command chdir=/usr/lib/ckan/src/ckanext-report/ ../../bin/python setup.py develop
+
+    - name: get datagovtheme
+      action: git repo=https://github.com/GSA/ckanext-datagovtheme.git dest=/usr/lib/ckan/src/ckanext-datagovtheme
+
+    - name: run setup.py develop for datagovtheme
+      action: command chdir=/usr/lib/ckan/src/ckanext-datagovtheme/ ../../bin/python setup.py develop
 
     - name: remove psycopg2
       action: pip name=psycopg2 virtualenv=/usr/lib/ckan/ state=absent
@@ -129,6 +143,9 @@
         - etc/init/supervisor.conf
         - var/lib/tomcat6/webapps/fgdc2iso.war
 
+    - name: disable ckan.conf so puppet can work
+      command: mv /etc/httpd/conf.d/ckan.conf /etc/httpd/conf.d/ckan.conf.example
+
     - name: copy executables
       action: copy src={{ item }} dest=/{{ item }} mode=744
       with_items:
@@ -145,7 +162,7 @@
 
 #pycsw setup
     - name: get pycsw version
-      action: git repo=https://github.com/geopython/pycsw.git dest=/usr/lib/ckan/src/pycsw version=1.10.1
+      action: git repo=https://github.com/geopython/pycsw.git dest=/usr/lib/ckan/src/pycsw version=1.10.3
 
     - name: run setup build for pycsw
       action: command chdir=/usr/lib/ckan/src/pycsw/ ../../bin/python setup.py build
@@ -167,13 +184,14 @@
         - etc/ckan/pycsw.wsgi
         - etc/cron.d/ckan-pycsw
         - usr/lib/ckan/bin/pycsw-db-admin.py
+        - usr/lib/ckan/bin/pycsw-load.sh
 #//pycsw setup
 
     - name: restart apache
       action: service name=httpd state=restarted
 
     - name: build rpm main 
-      action: command chdir=/var/www/ckan-repo/master/ fpm -t rpm -s dir --description='geo.data.gov web frontend' --before-install=/tmp/before_web.sh --after-install=/tmp/after_web.sh -n geo.data.gov.web --iteration {{ iteration }} -v {{ version }} -d memcached -d postgresql -d httpd -d mod_wsgi -d geos -d cronie -d python-psycopg2 -d xmlsec1 -d xmlsec1-openssl -d swig -d m2crypto --config-files /etc/ckan/who.ini --config-files /etc/ckan/production.ini --config-files /etc/ckan/pycsw-all.cfg --config-files /etc/ckan/pycsw-collection.cfg --config-files /etc/httpd/conf.d/ckan.conf /etc/httpd/conf.d/ckan.conf /usr/bin/ckan /usr/lib/ckan/ /etc/ckan/ /etc/cron.daily/remove_old_sessions /etc/cron.d/ckan-fe
+      action: command chdir=/var/www/ckan-repo/master/ fpm -t rpm -s dir --description='geo.data.gov web frontend' --before-install=/tmp/before_web.sh --after-install=/tmp/after_web.sh -n geo.data.gov.web --iteration {{ iteration }} -v {{ version }} -d memcached -d postgresql -d httpd -d mod_wsgi -d geos -d cronie -d python-psycopg2 -d xmlsec1 -d xmlsec1-openssl -d swig -d m2crypto --config-files /etc/ckan/who.ini --config-files /etc/ckan/production.ini --config-files /etc/ckan/pycsw-all.cfg --config-files /etc/ckan/pycsw-collection.cfg /etc/httpd/conf.d/ckan.conf.example /usr/bin/ckan /usr/lib/ckan/ /etc/ckan/ /etc/cron.daily/remove_old_sessions /etc/cron.d/ckan-fe
 
     - name: build rpm harvester 
       action: command chdir=/var/www/ckan-repo/master/ fpm -t rpm -s dir --description='geo.data.gov harvester frontend' --before-install=/tmp/before_harvester.sh --after-install=/tmp/after_harvester.sh -n geo.data.gov.harvester --iteration {{ iteration }} -v {{ version }} -d geos -d postgresql -d redis -d python-psycopg2 -d tomcat6 -d java-openjdk -d libxslt -d libxml2 -d xmlsec1 -d xmlsec1-openssl -d swig -d m2crypto -d cronie --config-files /etc/ckan/who.ini --config-files /etc/ckan/production.ini --config-files /etc/ckan/pycsw-all.cfg --config-files /etc/ckan/pycsw-collection.cfg /usr/bin/ckan /usr/lib/ckan/ /etc/ckan/ /etc/init/supervisor.conf /etc/supervisord.conf /usr/bin/supervisorctl /var/lib/tomcat6/webapps/fgdc2iso.war /etc/cron.d/ckan-harvest /etc/cron.d/ckan-pycsw
