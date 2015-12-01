@@ -5,9 +5,8 @@
 -e git+https://github.com/ckan/ckanext-googleanalytics.git@stable#egg=ckanext-googleanalytics
 redis==2.7.2
 
--e git+https://github.com/asl2/PyZ3950.git#egg=py3250
+-e git+https://github.com/GSA/PyZ3950.git#egg=py3250
 ply==3.4
 
-
 -e git+https://github.com/GSA/ckanext-saml2.git@master#egg=ckanext-saml2
--e git+https://github.com/tobes/pysaml2.git@fixes#egg=pysaml2
+-e git+https://github.com/GSA/pysaml2.git@fixes#egg=pysaml2
