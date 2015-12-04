@@ -634,8 +634,9 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             email_log('harvest-job-cleanup', msg)
             return
 
-        harvest_pairs = []
-        # find those stuck ones with harvest objects
+        harvest_pairs_1 = []
+        harvest_pairs_2 = []
+        # find those stuck jobs with harvest source
         create_time_limit = '12 hours'
         fetch_time_limit = '6 hours'
         sql = '''
@@ -667,10 +668,29 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             'fetch_time_limit': fetch_time_limit,
         })
         for row in results:
-            harvest_pairs.append({
+            harvest_pairs_1.append({
                 'harvest_source_id': row['harvest_source_id'],
                 'harvest_job_id': row['harvest_job_id']
             })
+
+        # mark stuck harvest objects, and secretly truncate to minute
+        # precision so that we can indentify them on UI.
+        sql = '''
+            UPDATE
+                harvest_object
+            SET
+                state = 'STUCK',
+                import_finished = date_trunc('minute',
+                        CURRENT_TIMESTAMP AT TIME ZONE 'UTC')
+            WHERE
+                state NOT IN ('COMPLETE', 'ERROR', 'STUCK')
+            AND
+                harvest_job_id = :harvest_job_id
+        '''
+
+        for item in harvest_pairs_1:
+            model.Session.execute(sql, {'harvest_job_id': item['harvest_job_id']})
+            model.Session.commit()
 
         # some may not even have harvest objects
         sql = '''
@@ -697,7 +717,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             'create_time_limit': create_time_limit,
         })
         for row in results:
-            harvest_pairs.append({
+            harvest_pairs_2.append({
                 'harvest_source_id': row['harvest_source_id'],
                 'harvest_job_id': row['harvest_job_id']
             })
@@ -713,17 +733,20 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                 id = :harvest_job_id
         '''
 
-        for item in harvest_pairs:
+        for item in harvest_pairs_2:
             model.Session.execute(sql, {'harvest_job_id': item['harvest_job_id']})
             model.Session.commit()
-            self.harvest_object_relink(item['harvest_source_id'])
+
+        for item in harvest_pairs_1 + harvest_pairs_2:
             msg += str(datetime.datetime.now()) + ' Harvest source %s was forced to Finish.\n' % item[
                 'harvest_source_id']
-        if not harvest_pairs:
+
+        if not (harvest_pairs_1 + harvest_pairs_2):
             msg += str(datetime.datetime.now()) + ' Nothing to do.\n'
+        else:
+            email_log('harvest-job-cleanup', msg)
 
         print msg
-        email_log('harvest-job-cleanup', msg)
 
     def harvest_object_relink(self, harvest_source_id=None):
         print '%s: Fix packages which lost harvest objects for harvest source %s.' % \
