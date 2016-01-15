@@ -67,7 +67,7 @@ def package_show_rest(context, data_dict):
 
     data_dict = core_get.package_show_rest(context, data_dict)
     extras = data_dict.get('extras', {})
-    rollup = extras.pop('extras_rollup')
+    rollup = extras.pop('extras_rollup', None)
     if rollup:
         rollup = json.loads(rollup)
         for key, value in rollup.items():
