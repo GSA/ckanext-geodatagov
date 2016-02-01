@@ -25,7 +25,7 @@ import ckan.lib.munge as munge
 from pylons import config
 
 log = logging.getLogger()
-
+ckan_tmp_path = '/var/tmp/ckan'
 
 class GeoGovCommand(cli.CkanCommand):
     '''
@@ -608,7 +608,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         doc = minidom.Document()
         doc.appendChild(feed)
 
-        filename = '/usr/lib/ckan/src/ckanext-geodatagov/ckanext/geodatagov/dynamic_menu/usasearch-custom-feed.xml'
+        filename = ckan_tmp_path + '/usasearch-custom-feed.xml'
         with codecs.open(filename, "w", "utf-8") as out:
             doc.writexml(out, encoding="UTF-8")
 
@@ -885,7 +885,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         print 'writing csv...'
 
         date_suffix = datetime.datetime.strftime(datetime.datetime.now(), '%m%d%Y')
-        csv_dir = '/usr/lib/ckan/src/ckanext-geodatagov/ckanext/geodatagov/dynamic_menu/csv'
+        csv_dir = ckan_tmp_path + '/csv'
         if not os.path.isdir(csv_dir):
             os.mkdir(csv_dir)
         with open(csv_dir + '/topic_datasets_' + date_suffix + '.csv', 'w') as f:

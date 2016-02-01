@@ -1,2 +1,2 @@
 30 4 * * * root ckan --plugin=ckanext-geodatagov geodatagov combine-feeds -c /etc/ckan/production.ini >> /var/log/ckan-combine-feeds.log 2>&1
-2 2 * * * root ckan --plugin=ckanext-geodatagov geodatagov export-csv -c /etc/ckan/production.ini >> /var/log/ckan-export-csv.log 2>&1 && chown apache:apache -R /usr/lib/ckan/src/ckanext-geodatagov/ckanext/geodatagov/dynamic_menu/csv
+2 2 * * * root ckan --plugin=ckanext-geodatagov geodatagov export-csv -c /etc/ckan/production.ini >> /var/log/ckan-export-csv.log 2>&1 && chown apache:apache -R /var/tmp/ckan/csv
