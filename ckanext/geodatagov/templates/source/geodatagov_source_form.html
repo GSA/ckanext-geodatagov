@@ -45,19 +45,22 @@
 
 </fieldset>
 
+{% set source_config = h.get_harvest_source_config(data.id) %}
+{% set private_datasets = source_config.private_datasets %}
+
 <div class="control-group">
   <label for="field-private_datasets" class="control-label">{{ _('Dataset visibility') }}</label>
   <div class="controls">
     <select id="field-private_datasets" name="private_datasets">
       {% for option in [(true, _('Private')), (false, _('Public'))] %}
-      <option value="{{ option[0] }}" {% if option[0]|lower == data.private_datasets|lower %}selected="selected"{% endif %}>{{ option[1] }}</option>
+      <option value="{{ option[0] }}" {% if option[0]|lower == private_datasets|lower %}selected="selected"{% endif %}>{{ option[1] }}</option>
       {% endfor %}
     </select>
     <i class="icon-question-sign muted" title="{{ _('This will take effect the next time datasets are created or updated during a harvest job') }}" data-toggle="tooltip"></i>
   </div>
 </div>
 
-{% set existing_group = data.default_groups %}
+{% set existing_group = source_config.default_groups %}
 {% set groups_available = h.groups_available() %}
 {% if groups_available %}
 <div class="control-group">
@@ -67,7 +70,7 @@
       <option value="">{{ _('Select a group...') }}</option>
       {% for group in groups_available %}
         {# get out first org from users list only if there is not an existing org #}
-        {% set selected_group = (existing_group and existing_group == group.name) %}
+        {% set selected_group = (existing_group and (existing_group == group.name or group.name in existing_group)) %}
         <option value="{{ group.name }}" {% if selected_group %} selected="selected" {% endif %}>{{ group.name }}</option>
       {% endfor %}
     </select>

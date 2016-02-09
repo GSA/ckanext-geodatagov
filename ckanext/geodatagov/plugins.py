@@ -390,6 +390,7 @@ class Demo(p.SingletonPlugin):
                 'get_validation_schema': geodatagov_helpers.get_validation_schema,
                 'saml2_user_edit_url': self.saml2_user_edit_url,
                 'get_harvest_source_type': geodatagov_helpers.get_harvest_source_type,
+                'get_harvest_source_config': geodatagov_helpers.get_harvest_source_config,
                 'get_collection_package': geodatagov_helpers.get_collection_package,
                 }
 
