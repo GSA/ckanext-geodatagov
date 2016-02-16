@@ -634,9 +634,9 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             email_log('harvest-job-cleanup', msg)
             return
 
-        harvest_pairs_1 = []
-        harvest_pairs_2 = []
         # find those stuck jobs with harvest source
+        harvest_pairs_1 = [] # stuck jobs with harvest objects
+        harvest_pairs_2 = [] # stuck jobs without harvest objects
         create_time_limit = '12 hours'
         fetch_time_limit = '6 hours'
         sql = '''
@@ -733,11 +733,11 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                 id = :harvest_job_id
         '''
 
-        for item in harvest_pairs_2:
+        for item in harvest_pairs_1 + harvest_pairs_2:
             model.Session.execute(sql, {'harvest_job_id': item['harvest_job_id']})
             model.Session.commit()
-
-        for item in harvest_pairs_1 + harvest_pairs_2:
+            if item in harvest_pairs_1:
+                self.harvest_object_relink(item['harvest_source_id'])
             msg += str(datetime.datetime.now()) + ' Harvest source %s was forced to Finish.\n' % item[
                 'harvest_source_id']
 
