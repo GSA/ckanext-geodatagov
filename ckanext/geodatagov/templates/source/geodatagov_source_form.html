@@ -12,14 +12,15 @@
         {{ form.input('collection_metadata_url', id='feild-collection_metadata_url', label=_('Collection Metadata Url'), placeholder=_('eg. http://example.com/collection.xml'), value=data.collection_metadata_url, error=errors.port, classes=['control-full']) }}
         {{ form.input('extra_search_criteria', id='field-extra_search_criteria', label=_('Extra Search Criteria'), placeholder=_('eg. accountid:0123456789ABCDEF'), value=data.extra_search_criteria, error=errors.extra_search_criteria, classes=['control-full']) }}
 
-
+{% set source_config = h.get_harvest_source_config(data.id) %}
+{% set validator_profiles = source_config.validator_profiles %}
   <div data-module="reclinepreview" data-module-site_url="{{ h.dump_json(h.url('/', locale='default', qualified=true)) }}">
 
          <div class="control-group harvest-types">
            <label class="control-label">Validation</label>
            <div class="controls">
              {% for key, value in h.get_validation_profiles() %}
-               {% set checked = key == (data.validator_profiles or '')  %}
+               {% set checked = key == validator_profiles  %}
                <label class="radio">
                  <input type="radio" name="validator_profiles" value="{{ key }}" {{ "checked " if checked }}>
                  {{ value }}
@@ -45,7 +46,6 @@
 
 </fieldset>
 
-{% set source_config = h.get_harvest_source_config(data.id) %}
 {% set private_datasets = source_config.private_datasets %}
 
 <div class="control-group">

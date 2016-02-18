@@ -41,7 +41,12 @@ def get_harvest_source_type(harvester_id):
 
 
 def get_harvest_source_config(harvester_id):
-    source_config = None
+    source_config = {}
+    keys_lookfor =[
+            'default_groups',
+            'private_datasets',
+            'validator_profiles',
+    ]
     try:
         harvest_source = HarvestSource.get(harvester_id)
         source_config = json.loads(harvest_source.config)
@@ -50,12 +55,10 @@ def get_harvest_source_config(harvester_id):
 
     # convert single string element list to string
     if source_config:
-        default_groups = source_config.get('default_groups', '')
-        if type(default_groups) is list:
-            source_config['default_groups'] = default_groups[0]
-        private_datasets = source_config.get('private_datasets', '')
-        if type(private_datasets) is list:
-            source_config['private_datasets'] = private_datasets[0]
+        for key in keys_lookfor:
+            value = source_config.get(key, '')
+            if type(value) is list:
+                source_config[key] = value[0]
     return source_config
 
 
