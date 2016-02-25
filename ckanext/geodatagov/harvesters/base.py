@@ -61,13 +61,14 @@ class GeoDataGovHarvester(SpatialHarvester):
 
         self._set_source_config(harvest_object.source.config)
 
-        tags = iso_values.pop('tags', [])
+        tags = iso_values.get('tags', [])
         # deal with something like
         # EARTH    SCIENCE > ATMOSPHERE > ATMOSPHERIC    ELECTRICITY > ATMOSPHERIC CONDUCTIVITY
         new_tags = []
         for t in tags:
             tt = t.split('>')
             tt = [t.lower().strip() for t in tt]
+            tt = [t.lower().strip(';,') for t in tt]
             tt = [' '.join(t.split()) for t in tt]
             new_tags.extend(tt)
         new_tags = list(set(new_tags))
@@ -86,6 +87,8 @@ class GeoDataGovHarvester(SpatialHarvester):
                 package_dict['groups'].append({'name': group})
 
         package_dict['extras'].append({'key': 'tags', 'value': ', '.join(new_tags)})
+        # root level tags not needed any more
+        package_dict['tags'] = []
 
         package_dict['extras'].append({'key': 'metadata_type', 'value': 'geospatial'})
 
