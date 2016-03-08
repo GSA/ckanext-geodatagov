@@ -80,11 +80,15 @@ def organization_show(context, data_dict):
 
     return core_get.organization_show(context, data_dict)
 
+@side_effect_free
 def organization_list(context, data_dict):
 
     model = context['model']
 
     results = core_get.organization_list(context, data_dict)
+
+    if not data_dict.get('all_fields'):
+        return results
 
     query_results = model.Session.query(
         model.GroupExtra.group_id,
