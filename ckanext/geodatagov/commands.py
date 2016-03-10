@@ -401,17 +401,16 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         update package set state = 'to_delete' where owner_org is null;
         delete from package_role where package_id in (select id from package where state = 'to_delete' );
         delete from user_object_role where id not in (select user_object_role_id from package_role) and context = 'Package';
-        delete from resource_revision where resource_group_id in (select id from resource_group where package_id in (select id from package where state = 'to_delete'));
-        delete from resource_group_revision where package_id in (select id from package where state = 'to_delete');
+        delete from resource_revision where package_id in (select id from package where state = 'to_delete' );
         delete from package_tag_revision where package_id in (select id from package where state = 'to_delete');
         delete from member_revision where table_id in (select id from package where state = 'to_delete');
         delete from package_extra_revision where package_id in (select id from package where state = 'to_delete');
         delete from package_revision where id in (select id from package where state = 'to_delete');
         delete from package_tag where package_id in (select id from package where state = 'to_delete');
-        delete from resource where resource_group_id in (select id from resource_group where package_id in (select id from package where state = 'to_delete'));
+        delete from resource_view where resource_id in (select id from resource where package_id in (select id from package where state = 'to_delete'));
+        delete from resource where package_id in (select id from package where state = 'to_delete');
         delete from package_extra where package_id in (select id from package where state = 'to_delete');
         delete from member where table_id in (select id from package where state = 'to_delete');
-        delete from resource_group where package_id  in (select id from package where state = 'to_delete');
 
         delete from harvest_object_error hoe using harvest_object ho where ho.id = hoe.harvest_object_id and package_id  in (select id from package where state = 'to_delete');
         delete from harvest_object_extra hoe using harvest_object ho where ho.id = hoe.harvest_object_id and package_id  in (select id from package where state = 'to_delete');
