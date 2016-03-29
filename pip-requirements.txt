@@ -2,7 +2,7 @@
 -e git+https://github.com/GSA/ckanext-spatial.git@datagov#egg=ckanext-spatial
 -e git+https://github.com/GSA/ckanext-archiver.git@datagov#egg=ckanext-archiver
 -e git+https://github.com/GSA/ckanext-qa.git@datagov#egg=ckanext-qa
--e git+https://github.com/ckan/ckanext-googleanalytics.git@stable#egg=ckanext-googleanalytics
+-e git+https://github.com/GSA/ckanext-googleanalyticsbasic#egg=ckanext-googleanalyticsbasic
 redis==2.7.2
 
 -e git+https://github.com/GSA/PyZ3950.git#egg=py3250
