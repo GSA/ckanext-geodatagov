@@ -20,7 +20,7 @@ import ckan.lib.search as search
 import ckan.logic.schema as schema
 import ckan.lib.cli as cli
 import requests
-from ckanext.harvest.model import HarvestSource, HarvestJob
+from ckanext.harvest.model import HarvestSource, HarvestJob, HarvestSystemInfo
 import ckan.lib.munge as munge
 from pylons import config
 
@@ -619,15 +619,26 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         msg += str(datetime.datetime.now()) + ' Clean up stuck harvest jobs.\n'
 
         # is harvest job running regularly?
-        HARVESTER_LOG = '/var/log/harvester_run.log'
-        if not os.path.exists(HARVESTER_LOG):
-            msg += 'File %s not found.\n' % HARVESTER_LOG
+        from sqlalchemy.exc import ProgrammingError
+        harvest_system_info = None
+        try:
+            harvest_system_info = model.Session.query(HarvestSystemInfo).filter_by(key='last_run_time').first()
+        except ProgrammingError:
+            msg += 'No HarvestSystemInfo table defined.'
             print msg
             email_log('harvest-job-cleanup', msg)
             return
-        time_file = os.path.getmtime(HARVESTER_LOG)
+
+        if not harvest_system_info:
+            msg += 'Harvester is not running.'
+            print msg
+            email_log('harvest-job-cleanup', msg)
+            return
+
+        last_run_time = harvest_system_info.value
+        last_run_time = time.mktime(time.strptime(last_run_time, '%Y-%m-%d %H:%M:%S.%f'))
         time_current = time.time()
-        if (time_current - time_file) > 3600:
+        if (time_current - last_run_time) > 3600:
             msg += 'Harvester is not running, or not frequently enough.\n'
             print msg
             email_log('harvest-job-cleanup', msg)
