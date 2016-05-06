@@ -23,6 +23,7 @@ import requests
 from ckanext.harvest.model import HarvestSource, HarvestJob, HarvestSystemInfo
 import ckan.lib.munge as munge
 from pylons import config
+from ckan import plugins as p
 
 log = logging.getLogger()
 ckan_tmp_path = '/var/tmp/ckan'
@@ -727,8 +728,22 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             model.Session.execute(sql, {'harvest_job_id': item['harvest_job_id']})
             model.Session.commit()
             self.harvest_object_relink(item['harvest_source_id'])
-            msg += str(datetime.datetime.now()) + ' Harvest source %s was forced to Finish.\n' % item[
-                'harvest_source_id']
+            source_package = p.toolkit.get_action('harvest_source_show')({},
+                    {'id': item['harvest_source_id']})
+            source_info = ('organization: {0}, title: {1}, name: {2}, id: {3},'
+                    ' frequency: {4}, last_job_finished: {5}').format(
+                        source_package['organization']['title'] + " (" + \
+                                source_package['organization']['name'] + ")",
+                        source_package['title'],
+                        source_package['name'],
+                        source_package['id'],
+                        source_package['frequency'],
+                        "N/A" if not source_package['status'].get('last_job') \
+                              else source_package['status']['last_job'].get('finished')
+                    )
+            msg += str(datetime.datetime.now()) + (' Harvest job %s was '
+                    'forced to finish. Harvest source info: %s.\n\n') \
+                    % (item['harvest_job_id'], source_info)
         if not harvest_pairs:
             msg += str(datetime.datetime.now()) + ' Nothing to do.\n'
 
