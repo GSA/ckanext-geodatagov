@@ -240,8 +240,11 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
             harvest_object.package_id = previous_object.package_id
             previous_object.add()
 
-        context = {'model':model, 'session':Session, 'user':'harvest',
-                   'api_version': 3, 'extras_as_string': True} #TODO: user
+        context = {'model':model, 'session':Session, 'ignore_auth':True}
+        context['user'] = get_action('get_site_user')(context,{})['name']
+        context['api_version'] = 3
+        context['extras_as_string'] = True
+        context['ignore_auth'] = False
 
         if status == 'delete':
             # Delete package
