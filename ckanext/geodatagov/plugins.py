@@ -482,6 +482,8 @@ class Miscs(p.SingletonPlugin):
     def before_map(self, map):
         ctrl = 'ckanext.geodatagov.controllers:GeodatagovMiscsController'
         map.connect('usasearch_custom_feed', '/usasearch-custom-feed.xml', controller=ctrl, action='feed')
+        map.connect('topics_csv', '/topics-csv/{date}', controller=ctrl, action='csv')
+        map.connect('topics_csv', '/topics-csv', controller=ctrl, action='csv')
         return map
 
     ## IConfigurable

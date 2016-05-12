@@ -24,7 +24,7 @@ from ckanext.harvest.model import HarvestSource, HarvestJob, HarvestSystemInfo
 import ckan.lib.munge as munge
 from pylons import config
 from ckan import plugins as p
-from ckanext.geodatagov.model import MiscsFeed
+from ckanext.geodatagov.model import MiscsFeed, MiscsTopicCSV
 
 log = logging.getLogger()
 ckan_tmp_path = '/var/tmp/ckan'
@@ -846,6 +846,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         # - Topic Name
         # - Topic Categories
 
+        import io
         import csv
 
         limit = 100
@@ -907,41 +908,50 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                     result.append(package)
 
         if not result:
+            print 'nothing to do'
             return
 
         import datetime
 
-        print 'writing csv...'
+        print 'writing into db...'
 
-        date_suffix = datetime.datetime.strftime(datetime.datetime.now(), '%m%d%Y')
-        csv_dir = ckan_tmp_path + '/csv'
-        if not os.path.isdir(csv_dir):
-            os.mkdir(csv_dir)
-        with open(csv_dir + '/topic_datasets_' + date_suffix + '.csv', 'w') as f:
-            fieldnames = ['Dataset Title', 'Dataset URL', 'Organization Name', 'Organization Link',
-                          'Harvest Source Name', 'Harvest Source Link', 'Topic Name', 'Topic Categories']
-            csv_file = csv.writer(f)
-            csv_file.writerow(fieldnames)
-            for pkg in result:
-                try:
-                    csv_file.writerow(
-                        [
-                            pkg['title'],
-                            pkg['url'],
-                            pkg['organization'],
-                            pkg['organizationUrl'],
-                            pkg['harvestSourceTitle'],
-                            pkg['harvestSourceUrl'],
-                            pkg['topic'],
-                            pkg['topicCategories']
-                        ]
-                    )
-                except UnicodeEncodeError:
-                    pprint.pprint(pkg)
+        date_suffix = datetime.datetime.strftime(datetime.datetime.now(), '%Y%m%d')
+        csv_output = io.BytesIO()
 
-        print 'copying latest csv to a topic_datasets.csv ...'
-        copyfile(csv_dir + '/topic_datasets_' + date_suffix + '.csv', csv_dir + '/topic_datasets.csv')
+        fieldnames = ['Dataset Title', 'Dataset URL', 'Organization Name', 'Organization Link',
+                      'Harvest Source Name', 'Harvest Source Link', 'Topic Name', 'Topic Categories']
+        writer = csv.writer(csv_output)
+        writer.writerow(fieldnames)
+        for pkg in result:
+            try:
+                writer.writerow(
+                    [
+                        pkg['title'],
+                        pkg['url'],
+                        pkg['organization'],
+                        pkg['organizationUrl'],
+                        pkg['harvestSourceTitle'],
+                        pkg['harvestSourceUrl'],
+                        pkg['topic'],
+                        pkg['topicCategories']
+                    ]
+                )
+            except UnicodeEncodeError:
+                pprint.pprint(pkg)
 
+        content = csv_output.getvalue()
+
+        entry = model.Session.query(MiscsTopicCSV) \
+                .filter_by(date=date_suffix) \
+                .first()
+        if not entry:
+            # create the empty entry for the first time
+            entry = MiscsTopicCSV()
+            entry.date = date_suffix
+        entry.csv = content
+        entry.save()
+
+        print 'csv file topics-%s.csv is ready.' % date_suffix
 
 def get_response(url):
     req = Request(url)
