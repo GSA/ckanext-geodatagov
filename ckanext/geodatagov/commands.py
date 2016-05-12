@@ -24,6 +24,7 @@ from ckanext.harvest.model import HarvestSource, HarvestJob, HarvestSystemInfo
 import ckan.lib.munge as munge
 from pylons import config
 from ckan import plugins as p
+from ckanext.geodatagov.model import MiscsFeed
 
 log = logging.getLogger()
 ckan_tmp_path = '/var/tmp/ckan'
@@ -607,13 +608,16 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
 
         doc = minidom.Document()
         doc.appendChild(feed)
+        output = doc.toxml('utf-8')
+        entry = model.Session.query(MiscsFeed).first()
+        if not entry:
+            # create the empty entry for the first time
+            entry = MiscsFeed()
+        entry.feed = output
+        entry.save()
 
-        filename = ckan_tmp_path + '/usasearch-custom-feed.xml'
-        with codecs.open(filename, "w", "utf-8") as out:
-            doc.writexml(out, encoding="UTF-8")
+        print '%s combined feeds updated' % datetime.datetime.now()
 
-        print '%s combined feeds written to %s' % (datetime.datetime.now(),
-                                                   filename)
 
     def harvest_job_cleanup(self):
         msg = ''

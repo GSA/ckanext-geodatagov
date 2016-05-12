@@ -6,6 +6,8 @@ import mimetypes
 from paste.auth.auth_tkt import maybe_encode, encode_ip_timestamp
 from pylons import request
 
+import ckanext.geodatagov.model as geodatagovmodel
+
 mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
 
 ####  Monkey Patch libraris to make fips work ####
@@ -469,3 +471,19 @@ class Demo(p.SingletonPlugin):
                                 ])
         else:
             return facets_dict
+
+class Miscs(p.SingletonPlugin):
+    ''' Places for something that has nowhere to go otherwise.
+    '''
+    p.implements(p.IConfigurable)
+    p.implements(p.IRoutes, inherit=True)
+
+    ## IRoutes
+    def before_map(self, map):
+        ctrl = 'ckanext.geodatagov.controllers:GeodatagovMiscsController'
+        map.connect('usasearch_custom_feed', '/usasearch-custom-feed.xml', controller=ctrl, action='feed')
+        return map
+
+    ## IConfigurable
+    def configure(self, config):
+        geodatagovmodel.setup()
