@@ -437,8 +437,8 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
 
         if (response != 'error'):
 
-            print str(datetime.datetime.now()) + ' Deleting records from solr_pkg_ids.'
-            sql = '''delete from solr_pkg_ids'''
+            print str(datetime.datetime.now()) + ' Deleting records from miscs_solr_sync.'
+            sql = '''delete from miscs_solr_sync'''
             model.Session.execute(sql)
             model.Session.commit()
 
@@ -449,7 +449,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             start = 0
             chunk_size = 1000
 
-            print str(datetime.datetime.now()) + ' Starting insertion of records in solr_pkg_ids .'
+            print str(datetime.datetime.now()) + ' Starting insertion of records in miscs_solr_sync .'
 
             for x in range(0, int(math.ceil(rows / chunk_size)) + 1):
 
@@ -472,7 +472,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                     q = model.Session.execute(sql, {'pkg_id': results[x]['id']})
                     for row in q:
                         if (row['count'] == 0):
-                            sql = '''insert into solr_pkg_ids (pkg_id, action) values (:pkg_id, :action);'''
+                            sql = '''insert into miscs_solr_sync (pkg_id, action) values (:pkg_id, :action);'''
                             model.Session.execute(sql, {'pkg_id': results[x]['id'], 'action': 'notfound'})
                             model.Session.commit()
                         else:
@@ -484,11 +484,11 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                                       results[x]['id']
                                 print ' ' * 26 + ' Modified Date from Solr: ' + str(results[x]['metadata_modified'])
                                 print ' ' * 26 + ' Modified Date from Db: ' + pkg_dict['metadata_modified']
-                                sql = '''insert into solr_pkg_ids (pkg_id, action) values (:pkg_id, :action);'''
+                                sql = '''insert into miscs_solr_sync (pkg_id, action) values (:pkg_id, :action);'''
                                 model.Session.execute(sql, {'pkg_id': results[x]['id'], 'action': 'outsync'})
                                 model.Session.commit()
                             else:
-                                sql = '''insert into solr_pkg_ids (pkg_id, action) values (:pkg_id, :action);'''
+                                sql = '''insert into miscs_solr_sync (pkg_id, action) values (:pkg_id, :action);'''
                                 model.Session.execute(sql, {'pkg_id': results[x]['id'], 'action': 'insync'})
                                 model.Session.commit()
 
@@ -496,9 +496,9 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
 
             print str(datetime.datetime.now()) + ' Starting Database to Solr Sync'
 
-            # sql = '''Select id from package where id not in (select pkg_id from solr_pkg_ids); '''
+            # sql = '''Select id from package where id not in (select pkg_id from miscs_solr_sync); '''
             sql = '''Select p.id as pkg_id from package p
-                   left join solr_pkg_ids sp on sp.pkg_id = p.id
+                   left join miscs_solr_sync sp on sp.pkg_id = p.id
                    where sp.pkg_id is null; '''
 
             q = model.Session.execute(sql)
@@ -517,7 +517,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                 except:
                     raise
 
-            sql = '''Select pkg_id from solr_pkg_ids where action = 'outsync'; '''
+            sql = '''Select pkg_id from miscs_solr_sync where action = 'outsync'; '''
             q = model.Session.execute(sql)
             pkg_ids = set()
             for row in q:
@@ -536,7 +536,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
 
             print str(datetime.datetime.now()) + ' Starting Solr to Database Sync'
 
-            sql = '''Select pkg_id from solr_pkg_ids where action = 'notfound'; '''
+            sql = '''Select pkg_id from miscs_solr_sync where action = 'notfound'; '''
             q = model.Session.execute(sql)
             pkg_ids = set()
             for row in q:
