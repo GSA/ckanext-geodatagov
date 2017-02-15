@@ -829,6 +829,8 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                     WHERE
                         state = 'COMPLETE'
                     AND
+                        report_status <> 'deleted'
+                    AND
                         package_id = :id
                 )
             RETURNING 1
