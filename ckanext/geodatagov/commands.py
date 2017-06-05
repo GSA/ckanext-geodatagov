@@ -472,6 +472,8 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                     q = model.Session.execute(sql, {'pkg_id': results[x]['id']})
                     for row in q:
                         if (row['count'] == 0):
+                            sql = '''delete from miscs_solr_sync where pkg_id = :pkg_id;'''
+                            model.Session.execute(sql, {'pkg_id': results[x]['id']})
                             sql = '''insert into miscs_solr_sync (pkg_id, action) values (:pkg_id, :action);'''
                             model.Session.execute(sql, {'pkg_id': results[x]['id'], 'action': 'notfound'})
                             model.Session.commit()
@@ -484,10 +486,14 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                                       results[x]['id']
                                 print ' ' * 26 + ' Modified Date from Solr: ' + str(results[x]['metadata_modified'])
                                 print ' ' * 26 + ' Modified Date from Db: ' + pkg_dict['metadata_modified']
+                                sql = '''delete from miscs_solr_sync where pkg_id = :pkg_id;'''
+                                model.Session.execute(sql, {'pkg_id': results[x]['id']})
                                 sql = '''insert into miscs_solr_sync (pkg_id, action) values (:pkg_id, :action);'''
                                 model.Session.execute(sql, {'pkg_id': results[x]['id'], 'action': 'outsync'})
                                 model.Session.commit()
                             else:
+                                sql = '''delete from miscs_solr_sync where pkg_id = :pkg_id;'''
+                                model.Session.execute(sql, {'pkg_id': results[x]['id']})
                                 sql = '''insert into miscs_solr_sync (pkg_id, action) values (:pkg_id, :action);'''
                                 model.Session.execute(sql, {'pkg_id': results[x]['id'], 'action': 'insync'})
                                 model.Session.commit()
