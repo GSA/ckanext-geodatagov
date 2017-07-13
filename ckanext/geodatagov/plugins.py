@@ -484,6 +484,7 @@ class Miscs(p.SingletonPlugin):
         map.connect('usasearch_custom_feed', '/usasearch-custom-feed.xml', controller=ctrl, action='feed')
         map.connect('topics_csv', '/topics-csv/{date}', controller=ctrl, action='csv')
         map.connect('topics_csv', '/topics-csv', controller=ctrl, action='csv')
+        map.connect('s3sitemap', '/sitemap.xml', controller=ctrl, action='s3sitemap')
         return map
 
     ## IConfigurable

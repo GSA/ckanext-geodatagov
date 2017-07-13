@@ -2,6 +2,9 @@ from pylons.i18n import _
 
 from ckan.lib.base import BaseController, c, response, abort
 import ckan.model as model
+import ckan.lib.helpers as h
+from pylons import config
+from pylons.controllers.util import redirect_to
 
 from ckanext.geodatagov.model import MiscsFeed, MiscsTopicCSV
 
@@ -13,6 +16,12 @@ class GeodatagovMiscsController(BaseController):
             abort(404, _('The feed is not ready yet.'))
         response.content_type = 'application/atom+xml; charset=utf-8'
         return entry.feed
+
+    def s3sitemap(self):
+        s3sitemap_url = config.get('ckanext.s3sitemap.url')
+        if not s3sitemap_url:
+            abort(404, _('ckanext.s3sitemap.url is not defined in config.'))
+        return redirect_to(s3sitemap_url)
 
     def csv(self, date=None):
         if date:

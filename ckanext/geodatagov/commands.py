@@ -3,6 +3,7 @@ import datetime
 import json
 import xml.etree.ElementTree as ET
 from urllib2 import Request, urlopen, URLError, HTTPError
+from tempfile import mkstemp
 
 import time
 
@@ -19,6 +20,7 @@ import ckan.logic as logic
 import ckan.lib.search as search
 import ckan.logic.schema as schema
 import ckan.lib.cli as cli
+import ckan.lib.helpers as h
 import requests
 from ckanext.harvest.model import HarvestSource, HarvestJob, HarvestSystemInfo
 import ckan.lib.munge as munge
@@ -106,6 +108,8 @@ class GeoGovCommand(cli.CkanCommand):
             self.harvest_object_relink(harvest_source_id)
         if cmd == 'export-csv':
             self.export_csv()
+        if cmd == 'sitemap-to-s3':
+            self.sitemap_to_s3()
 
     def get_user_org_mapping(self, location):
         user_org_mapping = open(location)
@@ -993,6 +997,53 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         entry.save()
 
         print 'csv file topics-%s.csv is ready.' % date_suffix
+
+    def sitemap_to_s3(self):
+        print 'sitemap is being generated...'
+
+        # cron job
+        # paster --plugin=ckanext-geodatagov geodatagov sitemap-to-s3 --config=/etc/ckan/production.ini
+        # sql = '''Select id from package where id not in (select pkg_id from miscs_solr_sync); '''
+
+        package_query = search.query_for(model.Package)
+        count = package_query.get_count()
+        if not count:
+            print '0 record found.'
+            return
+        print '%i records to go.' % count
+
+        start = 0
+        page_size = 1000
+
+        # write to a temp file
+        fd, path = mkstemp(prefix="sitemap-", dir='/tmp/s3sitemap')
+        with open(path, "w") as f:
+            # write header
+            f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
+            f.write('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
+
+            for x in range(0, int(math.ceil(count / page_size)) + 1):
+                pkgs = package_query.get_paginated_entity_name_modtime(
+                    max_results=page_size, start=start
+                )
+
+                for pkg in pkgs:
+                    f.write('    <url>\n')
+                    f.write('        <loc>%s</loc>\n' % (
+                        config.get('ckan.site_url') + pkg.get('name'),
+                    ))
+                    f.write('        <lastmod>%s</lastmod>\n' % (
+                        pkg.get('metadata_modified').strftime('%Y-%m-%d'),
+                    ))
+                    f.write('    </url>\n')
+                print '%i to %i of %i records done.' % (start + 1, min(start + page_size, count), count)
+                start = start + page_size
+
+            # write footer
+            f.write('</urlset>\n')
+        os.close(fd)
+
+        print '=========\nAll done.'
 
 def get_response(url):
     req = Request(url)
