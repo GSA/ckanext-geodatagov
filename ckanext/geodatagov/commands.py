@@ -1016,7 +1016,10 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         page_size = 1000
 
         # write to a temp file
-        fd, path = mkstemp(prefix="sitemap-", dir='/tmp/s3sitemap')
+        DIR_S3SITEMAP = "/tmp/s3sitemap/"
+        if not os.path.exists(DIR_S3SITEMAP):
+            os.makedirs(DIR_S3SITEMAP)
+        fd, path = mkstemp(prefix="sitemap-", dir=DIR_S3SITEMAP)
         with open(path, "w") as f:
             # write header
             f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
@@ -1036,7 +1039,9 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                         pkg.get('metadata_modified').strftime('%Y-%m-%d'),
                     ))
                     f.write('    </url>\n')
-                print '%i to %i of %i records done.' % (start + 1, min(start + page_size, count), count)
+                print '%i to %i of %i records done.' % (
+                    start + 1, min(start + page_size, count), count
+                )
                 start = start + page_size
 
             # write footer
