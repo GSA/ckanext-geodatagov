@@ -10,6 +10,9 @@ import ckanext.geodatagov.model as geodatagovmodel
 
 mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
 
+## the patch below caused s3 upload fail. need to keep a copy of md5
+hashlib.md5_orig = hashlib.md5
+
 ####  Monkey Patch libraris to make fips work ####
 
 hashlib.md5 = hashlib.sha1
