@@ -3,13 +3,19 @@ import datetime
 import json
 import xml.etree.ElementTree as ET
 from urllib2 import Request, urlopen, URLError, HTTPError
+from tempfile import mkstemp
+import boto
+import mimetypes
+import hashlib
+import base64
 
 import time
 
 import math
 
 import logging
-from shutil import copyfile
+import gzip
+from shutil import copyfile, copyfileobj
 
 import os
 import re
@@ -19,6 +25,7 @@ import ckan.logic as logic
 import ckan.lib.search as search
 import ckan.logic.schema as schema
 import ckan.lib.cli as cli
+import ckan.lib.helpers as h
 import requests
 from ckanext.harvest.model import HarvestSource, HarvestJob, HarvestSystemInfo
 import ckan.lib.munge as munge
@@ -106,6 +113,8 @@ class GeoGovCommand(cli.CkanCommand):
             self.harvest_object_relink(harvest_source_id)
         if cmd == 'export-csv':
             self.export_csv()
+        if cmd == 'sitemap-to-s3':
+            self.sitemap_to_s3()
 
     def get_user_org_mapping(self, location):
         user_org_mapping = open(location)
@@ -994,6 +1003,73 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
 
         print 'csv file topics-%s.csv is ready.' % date_suffix
 
+    def sitemap_to_s3(self):
+        print str(datetime.datetime.now()) + ' sitemap is being generated...'
+
+        # cron job
+        # paster --plugin=ckanext-geodatagov geodatagov sitemap-to-s3 --config=/etc/ckan/production.ini
+        # sql = '''Select id from package where id not in (select pkg_id from miscs_solr_sync); '''
+
+        package_query = search.query_for(model.Package)
+        count = package_query.get_count()
+        if not count:
+            print '0 record found.'
+            return
+        print '%i records to go.' % count
+
+        start = 0
+        page_size = 1000
+
+        # write to a temp file
+        DIR_S3SITEMAP = "/tmp/s3sitemap/"
+        if not os.path.exists(DIR_S3SITEMAP):
+            os.makedirs(DIR_S3SITEMAP)
+        fd, path = mkstemp(suffix=".xml", prefix="sitemap-", dir=DIR_S3SITEMAP)
+        fd_gz, path_gz = mkstemp(suffix=".xml.gz", prefix="sitemap-", dir=DIR_S3SITEMAP)
+        # write header
+        os.write(fd, '<?xml version="1.0" encoding="UTF-8"?>\n')
+        os.write(fd, '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
+
+        for x in range(0, int(math.ceil(count / page_size)) + 1):
+            pkgs = package_query.get_paginated_entity_name_modtime(
+                max_results=page_size, start=start
+            )
+
+            for pkg in pkgs:
+                os.write(fd, '    <url>\n')
+                os.write(fd, '        <loc>%s</loc>\n' % (
+                    config.get('ckan.site_url') + pkg.get('name'),
+                ))
+                os.write(fd, '        <lastmod>%s</lastmod>\n' % (
+                    pkg.get('metadata_modified').strftime('%Y-%m-%d'),
+                ))
+                os.write(fd, '    </url>\n')
+            print '%i to %i of %i records done.' % (
+                start + 1, min(start + page_size, count), count
+            )
+            start = start + page_size
+
+        # write footer
+        os.write(fd, '</urlset>\n')
+        os.close(fd)
+        os.close(fd_gz)
+
+        print 'compress and send to s3...'
+
+        with open(path, 'rb') as f_in, gzip.open(path_gz, 'wb') as f_out:
+            copyfileobj(f_in, f_out)
+
+        bucket_name = config.get('ckanext.geodatagov.aws_bucket_name')
+        bucket_path = config.get('ckanext.geodatagov.s3sitemap.aws_storage_path', '')
+
+        bucket = get_s3_bucket(bucket_name)
+        upload_to_key(bucket, path_gz, bucket_path + 'sitemap.xml.gz')
+
+        os.remove(path)
+        os.remove(path_gz)
+        print str(datetime.datetime.now()) + ' Done.'
+
+
 def get_response(url):
     req = Request(url)
     try:
@@ -1023,3 +1099,60 @@ def email_log(log_type, msg):
         mailer.mail_recipient(**email)
     except Exception, e:
         log.error('Error: %s; email: %s' % (e, email))
+
+
+def get_s3_bucket(bucket_name):
+    if not config.get('ckanext.s3sitemap.aws_use_ami_role'):
+        p_key = config.get('ckanext.s3sitemap.aws_access_key_id')
+        s_key = config.get('ckanext.s3sitemap.aws_secret_access_key')
+    else:
+        p_key, s_key = (None, None)
+
+    # make s3 connection
+    S3_conn = boto.connect_s3(p_key, s_key)
+
+    # make sure bucket exists and that we can access
+    try:
+        bucket = S3_conn.get_bucket(bucket_name)
+    except boto.exception.S3ResponseError as e:
+        if e.status == 404:
+            raise Exception('Could not find bucket {0}: {1}'.\
+                    format(bucket_name, str(e)))
+        elif e.status == 403:
+            raise Exception('Access to bucket {0} denied'.\
+                    format(bucket_name))
+        else:
+            raise
+
+    return bucket
+
+
+def generate_md5_for_s3(filename):
+    # hashlib.md5 was set as sha1 in plugin.py
+    hash_md5 = hashlib.md5_orig()
+    with open(filename, 'rb') as f:
+        # read chunks of 4096 bytes sequentially to be mem efficient
+        for chunk in iter(lambda: f.read(4096), b""):
+            hash_md5.update(chunk)
+    md5_1 = hash_md5.hexdigest()
+    md5_2 = base64.b64encode(hash_md5.digest())
+    return (md5_1, md5_2)
+
+
+def upload_to_key(bucket, upload_filename, filename_on_s3):
+    content_type, x = mimetypes.guess_type(upload_filename)
+    headers = {}
+    if content_type:
+        headers.update({'Content-Type': content_type})
+    k = boto.s3.key.Key(bucket)
+    try:
+        k.key = filename_on_s3
+        k.set_contents_from_filename(
+            upload_filename,
+            headers = headers,
+            md5 = generate_md5_for_s3(upload_filename)
+        )
+    except Exception as e:
+        raise e
+    finally:
+        k.close()
