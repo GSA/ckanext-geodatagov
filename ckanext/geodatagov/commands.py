@@ -115,6 +115,8 @@ class GeoGovCommand(cli.CkanCommand):
             self.export_csv()
         if cmd == 'sitemap-to-s3':
             self.sitemap_to_s3()
+        if cmd == 'jsonl-export':
+            self.jsonl_export()
 
     def get_user_org_mapping(self, location):
         user_org_mapping = open(location)
@@ -1068,6 +1070,80 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         os.remove(path)
         os.remove(path_gz)
         print str(datetime.datetime.now()) + ' Done.'
+
+
+    def jsonl_export(self):
+
+        '''
+        cron job
+        paster --plugin=ckanext-geodatagov geodatagov jsonl-export --config=/etc/ckan/production.ini
+        '''
+
+        PAGINATION_SIZE = 1000
+
+        # write to a temp file
+        DIR_JSONL = "/tmp/jsonl/"
+        if not os.path.exists(DIR_JSONL):
+            os.makedirs(DIR_JSONL)
+        fd, path = mkstemp(suffix=".json", prefix="jsonl-", dir=DIR_JSONL)
+        fd_gz, path_gz = mkstemp(suffix=".json.gz", prefix="jsonl-", dir=DIR_JSONL)
+
+        context = {}
+        fq = 'collection_package_id:* OR *:* AND type:dataset AND organization_type:"Federal Government"'
+        data_dict = {
+            'fq': fq,
+            'rows': 0
+        }
+        query = p.toolkit.get_action('package_search')(context, data_dict)
+
+        count = query['count']
+        pages = int(math.ceil(1.0*count/PAGINATION_SIZE))
+
+        message = '{0:.19} jsonl is being generated, {1} pages, total {2} datasets to go.'.format(
+                    str(datetime.datetime.now()),
+                    pages,
+                    count
+        )
+        print message
+        for i in range(pages):
+            message = '{0:.19} doing page {1}/{2}...'.format(
+                    str(datetime.datetime.now()),
+                    i + 1,
+                    pages
+            )
+            print message
+
+            data_dict = {
+                'fq': fq,
+                'rows': PAGINATION_SIZE,
+                'start': i * PAGINATION_SIZE
+            }
+            query = p.toolkit.get_action('package_search')(context, data_dict)
+            datasets = query['results']
+
+            for n, dataset in enumerate(datasets):
+                os.write(fd, '%s\n' % dataset)
+
+        os.close(fd)
+        os.close(fd_gz)
+
+        print 'compress and send to s3...'
+
+        with open(path, 'rb') as f_in, gzip.open(path_gz, 'wb') as f_out:
+            copyfileobj(f_in, f_out)
+
+        bucket_name = config.get('ckanext.geodatagov.aws_bucket_name')
+        bucket_path = config.get('ckanext.geodatagov.jsonlexport.aws_storage_path', '')
+        bucket = get_s3_bucket(bucket_name)
+
+        # TODO: archive old keys
+        # bucket.copy_key('foo/file.tgz', 'somebucketname', bucket_path + 'dataset.jsonl.gz')
+
+        upload_to_key(bucket, path_gz, bucket_path + 'dataset.jsonl.gz')
+
+        os.remove(path)
+        os.remove(path_gz)
+        print '{0:.19} Done.'.format(str(datetime.datetime.now()))
 
 
 def get_response(url):
