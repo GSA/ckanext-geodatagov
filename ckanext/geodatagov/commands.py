@@ -1166,8 +1166,18 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         #cron job
         # paster --plugin=ckanext-geodatagov geodatagov metrics_csv --config=/etc/ckan/production.ini
 
-        start_date = '2016-12-01'
-        end_date = '2017-06-30'
+	today = datetime.datetime.today().date() 
+	first_of_month = today.replace(day=1)
+	end_date = first_of_month - datetime.timedelta(days=1)
+
+	with open("/tmp/python.log", "a") as mylog:
+    	    mylog.write("\n%s\n" % end_date)
+
+	start_date_approximate = end_date - datetime.timedelta(days = 270)
+	start_date = start_date_approximate.replace(day = 1)
+	
+	with open("/tmp/python.log", "a") as mylog:
+            mylog.write("\n%s\n" % start_date)
 
         DIR_TMP = "/tmp/"
         if not os.path.exists(DIR_TMP):
@@ -1186,9 +1196,17 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                 '''
 
         metrics_csv = model.Session.execute(sql_METRICS_CSV, {'start_date': start_date, 'end_date': end_date })
-        for row in metrics_csv:
-            with open("/tmp/python.log", "a") as mylog:
-                mylog.write("\n%s\n" % row)
+
+	with os.fdopen(fd, "w") as write_file:
+	    csv_writer = csv.writer(write_file)
+            for row in metrics_csv:
+		new_row = []
+		for r in row:
+		    try:
+		        new_row.append(r.encode('utf8'))
+		    except:
+			new_row.append(r)
+	        csv_writer.writerow(new_row)
         return
 
     
