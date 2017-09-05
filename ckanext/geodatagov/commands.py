@@ -117,6 +117,8 @@ class GeoGovCommand(cli.CkanCommand):
             self.sitemap_to_s3()
         if cmd == 'jsonl-export':
             self.jsonl_export()
+	if cmd == 'metrics_csv':
+            self.metrics_csv()
 
     def get_user_org_mapping(self, location):
         user_org_mapping = open(location)
@@ -1158,7 +1160,38 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         os.remove(path_gz)
         print '{0:.19} Done.'.format(str(datetime.datetime.now()))
 
+    def metrics_csv(self):
+        print str(datetime.datetime.now()) + ' metrics_csv is being generated...'
 
+        #cron job
+        # paster --plugin=ckanext-geodatagov geodatagov metrics_csv --config=/etc/ckan/production.ini
+
+        start_date = '2016-12-01'
+        end_date = '2017-06-30'
+
+        DIR_TMP = "/tmp/"
+        if not os.path.exists(DIR_TMP):
+            os.makedirs(DIR_TMP)
+        fd, path = mkstemp(suffix=".csv", prefix="metrics", dir=DIR_TMP)
+        fd_gz, path_gz = mkstemp(suffix=".csv.gz", prefix="metrics", dir=DIR_TMP)
+
+        sql_METRICS_CSV = '''
+                SELECT package_id, p.title AS "Dataset Title", g.title AS "Organization Name", sum(count) AS "Views per Month", to_char(tracking_date, 'MM-YYYY') AS "Date", to_char(tracking_date, 'YYYY-MM') AS "Date2"
+                FROM tracking_summary ts
+                INNER JOIN package p ON p.id = ts.package_id
+                INNER JOIN public.group g ON g.id = p.owner_org
+                WHERE tracking_date >= :start_date AND tracking_date <= :end_date
+                GROUP BY 1, 2, 3, 5, 6 HAVING sum(count) > 0
+                ORDER BY to_char(tracking_date, 'YYYY-MM') DESC, p.title;
+                '''
+
+        metrics_csv = model.Session.execute(sql_METRICS_CSV, {'start_date': start_date, 'end_date': end_date })
+        for row in metrics_csv:
+            with open("/tmp/python.log", "a") as mylog:
+                mylog.write("\n%s\n" % row)
+        return
+
+    
 def get_response(url):
     req = Request(url)
     try:
