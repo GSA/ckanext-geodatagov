@@ -1170,14 +1170,11 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
 	first_of_month = today.replace(day=1)
 	end_date = first_of_month - datetime.timedelta(days=1)
 
-	with open("/tmp/python.log", "a") as mylog:
-    	    mylog.write("\n%s\n" % end_date)
-
 	start_date_approximate = end_date - datetime.timedelta(days = 270)
 	start_date = start_date_approximate.replace(day = 1)
 	
-	with open("/tmp/python.log", "a") as mylog:
-            mylog.write("\n%s\n" % start_date)
+	print "starting date: ", start_date
+	print "end date: ", end_date
 
         DIR_TMP = "/tmp/"
         if not os.path.exists(DIR_TMP):
@@ -1199,6 +1196,8 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
 
 	with os.fdopen(fd, "w") as write_file:
 	    csv_writer = csv.writer(write_file)
+	    header_row = ["Package Id", "Dataset Title", "Organiation Name", "Views per Month", "Date", "Date2"]
+	    csv_writer.writerow(header_row)
             for row in metrics_csv:
 		new_row = []
 		for r in row:
@@ -1207,7 +1206,13 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
 		    except:
 			new_row.append(r)
 	        csv_writer.writerow(new_row)
-        return
+
+	print 'compressing'
+
+	with open(path, 'rb') as f_in, gzip.open(path_gz, 'wb') as f_out:
+            copyfileobj(f_in, f_out)
+
+        print str(datetime.datetime.now()) + ' Done.'
 
     
 def get_response(url):
