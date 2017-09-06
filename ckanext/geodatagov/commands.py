@@ -1228,13 +1228,16 @@ def generate_md5_for_s3(filename):
     return (md5_1, md5_2)
 
 
-def upload_to_key(bucket, upload_filename, filename_on_s3):
-    content_type, content_encoding = mimetypes.guess_type(upload_filename)
+def upload_to_key(bucket, upload_filename, filename_on_s3, content_calc=False):
     headers = {}
-    if content_type:
-        headers.update({'Content-Type': content_type})
-    if content_encoding:
-        headers.update({'Content-Encoding': content_encoding})
+    # if needed, help s3 to figure out the content type and encoding
+    if content_calc:
+        content_type, content_encoding = mimetypes.guess_type(upload_filename)
+        if content_type:
+            headers.update({'Content-Type': content_type})
+        if content_encoding:
+            headers.update({'Content-Encoding': content_encoding})
+
     k = boto.s3.key.Key(bucket)
     try:
         k.key = filename_on_s3
