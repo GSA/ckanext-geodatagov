@@ -1118,8 +1118,21 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                 'rows': PAGINATION_SIZE,
                 'start': i * PAGINATION_SIZE
             }
-            query = p.toolkit.get_action('package_search')(context, data_dict)
-            datasets = query['results']
+            attempts = 1
+            while attempts < 50:
+                try:
+                    query = p.toolkit.get_action('package_search')(context, data_dict)
+                except KeyboardInterrupt:
+                    raise
+                except:
+                    logging.error("Unexpected error: %s", sys.exc_info()[0])
+                else:
+                    datasets = query['results']
+                    break
+                wait_time = 2 * attempts # wait longer with each failed attempt
+                logging.info('wait %s seconds before next attempt...' % wait_time)
+                time.sleep(wait_time)
+                attempts += 1
 
             for n, dataset in enumerate(datasets):
                 os.write(fd, '%s\n' % dataset)
