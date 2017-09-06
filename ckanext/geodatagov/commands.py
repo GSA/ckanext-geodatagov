@@ -117,7 +117,7 @@ class GeoGovCommand(cli.CkanCommand):
             self.sitemap_to_s3()
         if cmd == 'jsonl-export':
             self.jsonl_export()
-	if cmd == 'metrics_csv':
+        if cmd == 'metrics_csv':
             self.metrics_csv()
 
     def get_user_org_mapping(self, location):
@@ -1166,15 +1166,15 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         #cron job
         # paster --plugin=ckanext-geodatagov geodatagov metrics_csv --config=/etc/ckan/production.ini
 
-	today = datetime.datetime.today().date() 
-	first_of_month = today.replace(day=1)
-	end_date = first_of_month - datetime.timedelta(days=1)
+        today = datetime.datetime.today().date() 
+        first_of_month = today.replace(day=1)
+        end_date = first_of_month - datetime.timedelta(days=1)
 
-	start_date_approximate = end_date - datetime.timedelta(days = 270)
-	start_date = start_date_approximate.replace(day = 1)
-	
-	print "starting date: ", start_date
-	print "end date: ", end_date
+        start_date_approximate = end_date - datetime.timedelta(days = 270)
+        start_date = start_date_approximate.replace(day = 1)
+        
+        print "starting date: ", start_date
+        print "end date: ", end_date
 
         DIR_TMP = "/tmp/"
         if not os.path.exists(DIR_TMP):
@@ -1194,22 +1194,22 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
 
         metrics_csv = model.Session.execute(sql_METRICS_CSV, {'start_date': start_date, 'end_date': end_date })
 
-	with os.fdopen(fd, "w") as write_file:
-	    csv_writer = csv.writer(write_file)
-	    header_row = ["Package Id", "Dataset Title", "Organiation Name", "Views per Month", "Date", "Date2"]
-	    csv_writer.writerow(header_row)
+        with os.fdopen(fd, "w") as write_file:
+            csv_writer = csv.writer(write_file)
+            header_row = ["Package Id", "Dataset Title", "Organiation Name", "Views per Month", "Date", "Date2"]
+            csv_writer.writerow(header_row)
             for row in metrics_csv:
-		new_row = []
-		for r in row:
-		    try:
-		        new_row.append(r.encode('utf8'))
-		    except:
-			new_row.append(r)
-	        csv_writer.writerow(new_row)
+                new_row = []
+                for r in row:
+                    try:
+                        new_row.append(r.encode('utf8'))
+                    except:
+                        new_row.append(r)
+                    csv_writer.writerow(new_row)
 
-	print 'compressing'
+        print 'compressing'
 
-	with open(path, 'rb') as f_in, gzip.open(path_gz, 'wb') as f_out:
+        with open(path, 'rb') as f_in, gzip.open(path_gz, 'wb') as f_out:
             copyfileobj(f_in, f_out)
 
         print str(datetime.datetime.now()) + ' Done.'
