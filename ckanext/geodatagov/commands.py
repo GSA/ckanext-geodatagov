@@ -1176,11 +1176,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         print "starting date: ", start_date
         print "end date: ", end_date
 
-        DIR_TMP = "/tmp/"
-        if not os.path.exists(DIR_TMP):
-            os.makedirs(DIR_TMP)
-        fd, path = mkstemp(suffix=".csv", prefix="metrics", dir=DIR_TMP)
-        fd_gz, path_gz = mkstemp(suffix=".csv.gz", prefix="metrics", dir=DIR_TMP)
+        fd, path = mkstemp(suffix=".csv", prefix="metrics")
 
         sql_METRICS_CSV = '''
                 SELECT package_id, p.title AS "Dataset Title", g.title AS "Organization Name", sum(count) AS "Views per Month", to_char(tracking_date, 'MM-YYYY') AS "Date", to_char(tracking_date, 'YYYY-MM') AS "Date2"
@@ -1208,9 +1204,6 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                     csv_writer.writerow(new_row)
 
         print 'compressing'
-
-        with open(path, 'rb') as f_in, gzip.open(path_gz, 'wb') as f_out:
-            copyfileobj(f_in, f_out)
 
         print str(datetime.datetime.now()) + ' Done.'
 
