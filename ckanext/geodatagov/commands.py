@@ -1203,7 +1203,15 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                         new_row.append(r)
                     csv_writer.writerow(new_row)
 
-        print 'compressing'
+        print 'Send to S3...'
+
+        bucket_name = config.get('ckanext.geodatagov.aws_bucket_name')
+        bucket_path = config.get('ckanext.geodatagov.metrics_csv.aws_storage_path', '')
+        bucket = get_s3_bucket(bucket_name)
+
+        upload_to_key(bucket, path, bucket_path + 'metrics.csv')
+
+	os.remove(path)
 
         print str(datetime.datetime.now()) + ' Done.'
 
