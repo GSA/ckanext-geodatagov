@@ -1211,7 +1211,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
 
         upload_to_key(bucket, path, bucket_path + 'metrics.csv')
 
-	os.remove(path)
+        os.remove(path)
 
         print str(datetime.datetime.now()) + ' Done.'
 
