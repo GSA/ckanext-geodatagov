@@ -1170,7 +1170,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         first_of_month = today.replace(day=1)
         end_date = first_of_month - datetime.timedelta(days=1)
 
-        start_date_approximate = end_date - datetime.timedelta(days = 270)
+        start_date_approximate = end_date - datetime.timedelta(days = 85)
         start_date = start_date_approximate.replace(day = 1)
         
         print "starting date: ", start_date
