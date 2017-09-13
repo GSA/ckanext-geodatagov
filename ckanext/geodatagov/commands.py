@@ -1,4 +1,5 @@
 import csv
+import sys
 import datetime
 import json
 import xml.etree.ElementTree as ET
@@ -1021,16 +1022,25 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
 
         start = 0
         page_size = 1000
+        max_per_page = 50000
+        filename_number = 1
+        file_list = []
 
         # write to a temp file
         DIR_S3SITEMAP = "/tmp/s3sitemap/"
         if not os.path.exists(DIR_S3SITEMAP):
             os.makedirs(DIR_S3SITEMAP)
-        fd, path = mkstemp(suffix=".xml", prefix="sitemap-", dir=DIR_S3SITEMAP)
-        fd_gz, path_gz = mkstemp(suffix=".xml.gz", prefix="sitemap-", dir=DIR_S3SITEMAP)
+
+        fd, path = mkstemp(suffix=".xml",
+                           prefix="sitemap-%s-" % filename_number,
+                           dir=DIR_S3SITEMAP)
         # write header
         os.write(fd, '<?xml version="1.0" encoding="UTF-8"?>\n')
         os.write(fd, '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
+        file_list.append({
+            'path': path,
+            'filename_s3': "sitemap-%s.xml" % filename_number
+        })
 
         for x in range(0, int(math.ceil(count / page_size)) + 1):
             pkgs = package_query.get_paginated_entity_name_modtime(
@@ -1040,7 +1050,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             for pkg in pkgs:
                 os.write(fd, '    <url>\n')
                 os.write(fd, '        <loc>%s</loc>\n' % (
-                    config.get('ckan.site_url') + pkg.get('name'),
+                    config.get('ckan.site_url') + '/' + pkg.get('name'),
                 ))
                 os.write(fd, '        <lastmod>%s</lastmod>\n' % (
                     pkg.get('metadata_modified').strftime('%Y-%m-%d'),
@@ -1051,24 +1061,70 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             )
             start = start + page_size
 
+            if start % max_per_page == 0 and \
+                    x != int(math.ceil(count / page_size)):
+
+                # write footer
+                os.write(fd, '</urlset>\n')
+                os.close(fd)
+
+                print 'done with %s.' % path
+
+                filename_number = filename_number +1
+                fd, path = mkstemp(suffix=".xml",
+                                   prefix="sitemap-%s-" % filename_number,
+                                   dir=DIR_S3SITEMAP)
+                # write header
+                os.write(fd, '<?xml version="1.0" encoding="UTF-8"?>\n')
+                os.write(fd, '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
+
+                file_list.append({
+                    'path': path,
+                    'filename_s3': "sitemap-%s.xml" % filename_number
+                })
+
+
         # write footer
         os.write(fd, '</urlset>\n')
         os.close(fd)
-        os.close(fd_gz)
 
-        print 'compress and send to s3...'
-
-        with open(path, 'rb') as f_in, gzip.open(path_gz, 'wb') as f_out:
-            copyfileobj(f_in, f_out)
+        print 'done with %s.' % path
 
         bucket_name = config.get('ckanext.geodatagov.aws_bucket_name')
         bucket_path = config.get('ckanext.geodatagov.s3sitemap.aws_storage_path', '')
-
         bucket = get_s3_bucket(bucket_name)
-        upload_to_key(bucket, path_gz, bucket_path + 'sitemap.xml.gz')
 
+        fd, path = mkstemp(suffix=".xml",
+                           prefix="sitemap-",
+                           dir=DIR_S3SITEMAP)
+
+        # write header
+        os.write(fd, '<?xml version="1.0" encoding="UTF-8"?>\n')
+        os.write(fd, '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
+
+        current_time = datetime.datetime.now().strftime('%Y-%m-%d')
+        for item in file_list:
+            upload_to_key(bucket, item['path'], 
+                          bucket_path + item['filename_s3'])
+            os.remove(item['path'])
+
+            # add to sitemap index file
+            os.write(fd, '    <sitemap>\n')
+            os.write(fd, '        <loc>%s</loc>\n' % (
+                config.get('ckanext.geodatagov.s3sitemap.aws_s3_url') + \
+                config.get('ckanext.geodatagov.s3sitemap.aws_storage_path') + \
+                item['filename_s3'],
+            ))
+            os.write(fd, '        <lastmod>%s</lastmod>\n' % (
+                current_time,
+            ))
+            os.write(fd, '    </sitemap>\n')
+        os.write(fd, '</sitemapindex>\n')
+        os.close(fd)
+
+        upload_to_key(bucket, path, bucket_path + 'sitemap.xml')
         os.remove(path)
-        os.remove(path_gz)
+
         print str(datetime.datetime.now()) + ' Done.'
 
 
@@ -1230,6 +1286,13 @@ def generate_md5_for_s3(filename):
 
 def upload_to_key(bucket, upload_filename, filename_on_s3, content_calc=False):
     headers = {}
+
+    # force .gz file to be downoaded
+    _throwaway, file_extension = os.path.splitext(upload_filename)
+    if file_extension == '.gz':
+        headers.update({'Content-Type': 'application/gzip'})
+        headers.update({'Content-Encoding': ''})
+
     # if needed, help s3 to figure out the content type and encoding
     if content_calc:
         content_type, content_encoding = mimetypes.guess_type(upload_filename)
