@@ -118,6 +118,8 @@ class GeoGovCommand(cli.CkanCommand):
             self.sitemap_to_s3()
         if cmd == 'jsonl-export':
             self.jsonl_export()
+        if cmd == 'metrics-csv':
+            self.metrics_csv()
 
     def get_user_org_mapping(self, location):
         user_org_mapping = open(location)
@@ -1214,7 +1216,63 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         os.remove(path_gz)
         print '{0:.19} Done.'.format(str(datetime.datetime.now()))
 
+    def metrics_csv(self):
+        print str(datetime.datetime.now()) + ' metrics_csv is being generated...'
 
+        #cron job
+        # paster --plugin=ckanext-geodatagov geodatagov metrics_csv --config=/etc/ckan/production.ini
+
+        today = datetime.datetime.today().date() 
+        first_of_month = today.replace(day=1)
+        end_date = first_of_month - datetime.timedelta(days=1)
+
+        start_date_approximate = end_date - datetime.timedelta(days = 85)
+        start_date = start_date_approximate.replace(day = 1)
+        
+        print "starting date: ", start_date
+        print "end date: ", end_date
+
+        fd, path = mkstemp(suffix=".csv", prefix="metrics")
+
+        sql_METRICS_CSV = '''
+                SELECT package_id, p.title AS "Dataset Title", g.title AS "Organization Name", sum(count) AS "Views per Month", to_char(tracking_date, 'MM-YYYY') AS "Date", to_char(tracking_date, 'YYYY-MM') AS "Date2"
+                FROM tracking_summary ts
+                INNER JOIN package p ON p.id = ts.package_id
+                INNER JOIN public.group g ON g.id = p.owner_org
+                WHERE tracking_date >= :start_date AND tracking_date <= :end_date
+                GROUP BY 1, 2, 3, 5, 6 HAVING sum(count) > 0
+                ORDER BY to_char(tracking_date, 'YYYY-MM') DESC, p.title;
+                '''
+
+        metrics_csv = model.Session.execute(sql_METRICS_CSV, {'start_date': start_date, 'end_date': end_date })
+
+        with os.fdopen(fd, "w") as write_file:
+            csv_writer = csv.writer(write_file)
+            header_row = ["Package Id", "Dataset Title", "Organiation Name", "Views per Month", "Date", "Date2"]
+            csv_writer.writerow(header_row)
+            for row in metrics_csv:
+                new_row = []
+                for r in row:
+                    try:
+                        new_row.append(r.encode('utf8'))
+                    except:
+                        new_row.append(r)
+                csv_writer.writerow(new_row)
+
+        print 'Send to S3...'
+
+        bucket_name = config.get('ckanext.geodatagov.aws_bucket_name')
+        bucket_path = config.get('ckanext.geodatagov.metrics_csv.aws_storage_path', '')
+        bucket = get_s3_bucket(bucket_name)
+
+        upload_to_key(bucket, path, '%smetrics-%s.csv' % (bucket_path,
+                                                          end_date)
+
+        os.remove(path)
+
+        print str(datetime.datetime.now()) + ' Done.'
+
+    
 def get_response(url):
     req = Request(url)
     try:
