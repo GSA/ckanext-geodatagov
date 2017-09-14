@@ -117,7 +117,7 @@ class GeoGovCommand(cli.CkanCommand):
             self.sitemap_to_s3()
         if cmd == 'jsonl-export':
             self.jsonl_export()
-        if cmd == 'metrics_csv':
+        if cmd == 'metrics-csv':
             self.metrics_csv()
 
     def get_user_org_mapping(self, location):
@@ -1201,7 +1201,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                         new_row.append(r.encode('utf8'))
                     except:
                         new_row.append(r)
-                    csv_writer.writerow(new_row)
+                csv_writer.writerow(new_row)
 
         print 'Send to S3...'
 
@@ -1209,7 +1209,8 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         bucket_path = config.get('ckanext.geodatagov.metrics_csv.aws_storage_path', '')
         bucket = get_s3_bucket(bucket_name)
 
-        upload_to_key(bucket, path, bucket_path + 'metrics.csv')
+        upload_to_key(bucket, path, '%smetrics-%s.csv' % (bucket_path,
+                                                          end_date)
 
         os.remove(path)
 
