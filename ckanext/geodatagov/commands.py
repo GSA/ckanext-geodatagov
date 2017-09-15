@@ -1265,8 +1265,8 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         bucket_path = config.get('ckanext.geodatagov.metrics_csv.aws_storage_path', '')
         bucket = get_s3_bucket(bucket_name)
 
-        upload_to_key(bucket, path, '%smetrics-%s.csv' % (bucket_path,
-                                                          end_date)
+        upload_to_key(bucket, path,
+                     '%smetrics-%s.csv' % (bucket_path, end_date))
 
         os.remove(path)
 
