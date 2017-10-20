@@ -13,6 +13,19 @@ Copy the saxon licence file to /var/lib/tomcat6/webapps/fgdc2iso/WEB-INF/lib/
 sudo service tomcat6 restart
 
 
+-------------
+WAR Packaging
+-------------
+
+An alternative way to install the webapp is packaging it into a single WAR file.
+
+Run this in the current directory to build the WAR file
+
+jar cvf fgdc2iso.war .
+
+Then drop the generated WAR file fgdc2iso.war to Tomcat's webapps directory. 
+
+
 ------
 USAGE
 ------
