@@ -1,3 +1,19 @@
--e git+https://github.com/asl2/PyZ3950.git#egg=py3250
-ply==3.4
+# many of these are dependencies for ckan
+babel
 boto
+ckan==2.3.5
+-e git+https://github.com/asl2/PyZ3950.git#egg=py3250
+fanstatic~=0.12.0
+genshi
+git+https://github.com/GSA/ckanext-harvest.git@datagov#egg=ckanext-harvest
+passlib
+PasteDeploy
+ply==3.4
+Pylons~=0.9.7
+python-dateutil
+pyutilib.component.core
+requests
+solrpy
+sqlalchemy~=0.9.7
+vdm
+WebOb~=1.0.0

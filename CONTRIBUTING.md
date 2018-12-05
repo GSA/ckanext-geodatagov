@@ -34,6 +34,10 @@ Install the dependencies.
 
     $ pip install -r requirements.txt
 
+Setup the extension for development.
+
+    $ python setup.py develop
+
 Run the tests.
 
     $ make test
