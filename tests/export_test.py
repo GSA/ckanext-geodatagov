@@ -1,11 +1,6 @@
 import json
-
-with open('datasets.json') as data_file:
-    packages = json.load(data_file)
-
-assert isinstance(packages, list)
-assert len(packages) == 3
-
+import os.path
+import unittest
 
 def export_group_and_tags(packages):
     domain = 'https://catalog.data.gov'
@@ -43,16 +38,28 @@ def export_group_and_tags(packages):
     return result
 
 
-result = export_group_and_tags(packages)
+class ExportTest(unittest.TestCase):
+    def setUp(self):
+        TEST_DIR = os.path.dirname(__file__)
+        with open(os.path.join(TEST_DIR, 'datasets.json')) as data_file:
+            self.packages = json.load(data_file)
 
-assert len(result) == 12
+    def test_datasets_json_loaded(self):
+        packages = self.packages
+        assert isinstance(packages, list)
+        assert len(packages) == 3
 
-assert result[8]['topic'] == 'BusinessUSA'
-assert result[9]['topic'] == 'Consumer'
-assert result[10]['topic'] == 'Energy'
-assert result[11]['topic'] == 'Finance'
+    def test_export_group_and_tags(self):
+        result = export_group_and_tags(self.packages)
 
-assert result[8]['topicCategories'] == ''
-assert result[9]['topicCategories'] == 'Finance'
-assert result[10]['topicCategories'] == 'Total Energy'
-assert result[11]['topicCategories'] == ''
+        assert len(result) == 12
+
+        assert result[8]['topic'] == 'BusinessUSA'
+        assert result[9]['topic'] == 'Consumer'
+        assert result[10]['topic'] == 'Energy'
+        assert result[11]['topic'] == 'Finance'
+
+        assert result[8]['topicCategories'] == ''
+        assert result[9]['topicCategories'] == 'Finance'
+        assert result[10]['topicCategories'] == 'Total Energy'
+        assert result[11]['topicCategories'] == ''

@@ -1,0 +1,3 @@
+boto==2.49.0
+ply==3.4
+-e git+https://github.com/asl2/PyZ3950.git@c2282c73182cef2beca0f65b1eb7699c9b24512e#egg=PyZ3950

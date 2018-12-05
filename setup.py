@@ -22,6 +22,7 @@ setup(
 	install_requires=[
 		# -*- Extra requirements: -*-
 	],
+	test_suite="tests",
 	entry_points=\
 	"""
         [ckan.plugins]

@@ -1,0 +1,30 @@
+---
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/python:2.7
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - python-v1-{{ checksum "requirements.txt" }}
+            - python-v1-
+      - run:
+          name: Install dependencies
+          command: |
+            virtualenv venv
+            source venv/bin/activate
+            pip install -r pip-requirements.txt
+      - save_cache:
+          key: python-v1-{{ checksum "requirements.txt" }}
+          paths:
+            - venv
+      - run: make test
+
+
+workflows:
+  version: 2
+  commit:
+    jobs:
+      - build
