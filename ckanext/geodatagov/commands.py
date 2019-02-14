@@ -401,8 +401,12 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         return harvestobj.text
 
     def clean_deleted(self):
-        print str(datetime.datetime.now()) + ' Starting delete'
-        sql = '''begin; update package set state = 'to_delete' where state <> 'active' and revision_id in (select id from revision where timestamp < now() - interval '1 day');
+        log.info('Starting delete for clean-deleted')
+        sql = '''begin;
+        update package set state = 'to_delete' where id in (
+          select id from package where state <> 'active'
+          limit 1000
+          );
         update package set state = 'to_delete' where owner_org is null;
         delete from package_role where package_id in (select id from package where state = 'to_delete' );
         delete from user_object_role where id not in (select user_object_role_id from package_role) and context = 'Package';
@@ -423,7 +427,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
 
         delete from package where id in (select id from package where state = 'to_delete'); commit;'''
         model.Session.execute(sql)
-        print str(datetime.datetime.now()) + ' Finished delete'
+        log.info('Finished delete for clean-deleted')
 
     # set([u'feed', u'webService', u'issued', u'modified', u'references', u'keyword', u'size', u'landingPage', u'title', u'temporal', u'theme', u'spatial', u'dataDictionary', u'description', u'format', u'granularity', u'accessLevel', u'accessURL', u'publisher', u'language', u'license', u'systemOfRecords', u'person', u'accrualPeriodicity', u'dataQuality', u'distribution', u'identifier', u'mbox'])
 
