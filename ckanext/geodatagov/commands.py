@@ -1052,7 +1052,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             for pkg in pkgs:
                 os.write(fd, '    <url>\n')
                 os.write(fd, '        <loc>%s</loc>\n' % (
-                    config.get('ckan.site_url') + '/' + pkg.get('name'),
+                    '%s/dataset/%s' % (config.get('ckan.site_url'), pkg.get('name')),
                 ))
                 os.write(fd, '        <lastmod>%s</lastmod>\n' % (
                     pkg.get('metadata_modified').strftime('%Y-%m-%d'),
