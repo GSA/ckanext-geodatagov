@@ -402,14 +402,31 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
 
     def clean_deleted(self):
         log.info('Starting delete for clean-deleted')
+        # TODO make the 90-day purge configurable
         sql = '''begin;
-        update package set state = 'to_delete' where id in (
-          select id from package where state <> 'active'
+        update package p
+        set state = 'to_delete'
+        where id in (
+          select p.id
+          from package p, revision r
+          where p.state <> 'active' and p.revision_id = r.id and r.timestamp < now() - interval '90 day'
           limit 1000
-          );
+        );
+
         update package set state = 'to_delete' where owner_org is null;
         delete from package_role where package_id in (select id from package where state = 'to_delete' );
-        delete from user_object_role where id not in (select user_object_role_id from package_role) and context = 'Package';
+
+        /*
+         * This query is obsurdly inefficient, but explains what we're after with the left outer join.
+         * delete from user_object_role where id not in (select user_object_role_id from package_role) and context = 'Package';
+         */
+        delete from user_object_role where id in (
+          select uor.id
+          from user_object_role uor
+          left outer join package_role pr ON pr.user_object_role_id = uor.id
+          where pr.user_object_role_id is NULL and uor.context = 'Package'
+        );
+
         delete from resource_revision where package_id in (select id from package where state = 'to_delete' );
         delete from package_tag_revision where package_id in (select id from package where state = 'to_delete');
         delete from member_revision where table_id in (select id from package where state = 'to_delete');
@@ -425,7 +442,9 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         delete from harvest_object_extra hoe using harvest_object ho where ho.id = hoe.harvest_object_id and package_id  in (select id from package where state = 'to_delete');
         delete from harvest_object where package_id in (select id from package where state = 'to_delete');
 
-        delete from package where id in (select id from package where state = 'to_delete'); commit;'''
+        delete from package where state = 'to_delete';
+        commit;
+        '''
         model.Session.execute(sql)
         log.info('Finished delete for clean-deleted')
 
