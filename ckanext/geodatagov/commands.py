@@ -439,6 +439,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         delete from resource where package_id in (select id from package where state = 'to_delete');
         delete from package_extra where package_id in (select id from package where state = 'to_delete');
         delete from member where table_id in (select id from package where state = 'to_delete');
+        delete from related_dataset where dataset_id in (select id from package where state = 'to_delete');
 
         delete from harvest_object_error hoe using harvest_object ho where ho.id = hoe.harvest_object_id and package_id  in (select id from package where state = 'to_delete');
         delete from harvest_object_extra hoe using harvest_object ho where ho.id = hoe.harvest_object_id and package_id  in (select id from package where state = 'to_delete');
