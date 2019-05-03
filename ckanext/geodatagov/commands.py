@@ -34,7 +34,9 @@ from pylons import config
 from ckan import plugins as p
 from ckanext.geodatagov.model import MiscsFeed, MiscsTopicCSV
 
-log = logging.getLogger(__name__)
+# https://github.com/GSA/ckanext-geodatagov/issues/117
+log = logging.getLogger('ckanext.geodatagov')
+
 ckan_tmp_path = '/var/tmp/ckan'
 
 class GeoGovCommand(cli.CkanCommand):
@@ -1193,12 +1195,12 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                 except KeyboardInterrupt:
                     raise
                 except:
-                    logging.error("Unexpected error: %s", sys.exc_info()[0])
+                    log.error("Unexpected error: %s", sys.exc_info()[0])
                 else:
                     datasets = query['results']
                     break
                 wait_time = 2 * attempts # wait longer with each failed attempt
-                logging.info('wait %s seconds before next attempt...' % wait_time)
+                log.info('wait %s seconds before next attempt...' % wait_time)
                 time.sleep(wait_time)
                 attempts += 1
 
