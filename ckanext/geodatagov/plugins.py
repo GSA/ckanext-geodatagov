@@ -373,7 +373,7 @@ def change_resource_details(resource):
     elif resource.get('name', '') in ['Unnamed resource', '', None]:
         if extension and not resource_format:
             resource['format'] = extension.upper()
-        resource['name'] = 'Web Page'
+        resource['name'] = 'Web Resource'
 
     if filename and not resource.get('description'):
         resource['description'] = filename
