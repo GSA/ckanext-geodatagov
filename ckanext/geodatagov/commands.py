@@ -34,7 +34,7 @@ from pylons import config
 from ckan import plugins as p
 from ckanext.geodatagov.model import MiscsFeed, MiscsTopicCSV
 
-log = logging.getLogger()
+log = logging.getLogger(__name__)
 ckan_tmp_path = '/var/tmp/ckan'
 
 class GeoGovCommand(cli.CkanCommand):
@@ -252,11 +252,10 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             context.pop('group', None)
             new_package = to_import[package_id]
             try:
-                print str(datetime.datetime.now()) + ' Created id ' + package_id
+                log.info('Creating id=%s', package_id)
                 logic.get_action('datajson_create')(context, new_package)
-            except Exception, e:
-                print str(datetime.datetime.now()) + ' Error when creating id ' + package_id
-                print e
+            except Exception:
+                log.exception('Error when creating id=%s', package_id)
 
         for package_id in collected_ids & existing_package_ids:
             context.pop('package', None)
@@ -264,22 +263,21 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             new_package = to_import[package_id]
             try:
                 logic.get_action('datajson_update')(context, new_package)
-            except Exception, e:
-                print str(datetime.datetime.now()) + ' Error when updating id ' + package_id
-                print e
+            except Exception:
+                log.exception('Error when updating id=%s', package_id)
+
         for package_id in existing_package_ids - collected_ids:
             context.pop('package', None)
             context.pop('group', None)
             try:
                 logic.get_action('package_delete')(context, {"id": package_id})
-            except Exception, e:
-                print str(datetime.datetime.now()) + ' Error when deleting id ' + package_id
-                print e
+            except Exception:
+                log.exception('Error when deleting id=%s', package_ida)
 
     def import_doi(self):
         doi_url = config.get('ckanext.geodatagov.doi.url', '')
         if not doi_url:
-            print 'ckanext.geodatagov.doi.url not defined in config.'
+            log.error('ckanext.geodatagov.doi.url not defined in config.')
             return
 
         url_list = doi_url + 'api/search/dataset?qjson={"fl":"id,extras_harvest_object_id","q":"harvest_object_id:[\\\"\\\"%20TO%20*],%20metadata_type:geospatial","sort":"id%20asc","start":0,"limit":0}'
@@ -288,9 +286,9 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
 
         try:
             requested = requests.get(url_list, verify=False).json()
-        except Exception, e:
-            print str(datetime.datetime.now()) + ' Error when accessing doi list at ' + url_list
-            print e
+        except Exception:
+            log.exception('Error when accessing doi list at %s', url_list)
+
         total = requested['count']
         pagination = 1000
         to_import = {}
@@ -302,9 +300,9 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             url_list_dataset = url_list_dataset.replace('"start":0', '"start":' + str(start))
             try:
                 input_records = requests.get(url_list_dataset, verify=False).json()
-            except Exception, e:
-                print str(datetime.datetime.now()) + ' Error when accessing doi list at ' + url_list
-                print e
+            except Exception:
+                log.exception('Error when accessing doi list at %s', url_list)
+
             input_records = input_records['results']
             for record in input_records:
                 to_import[record['id']] = record['extras']['harvest_object_id']
@@ -345,62 +343,53 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         job.save()
         context['harvest_job'] = job
 
-        print str(datetime.datetime.now()) + ' Start to import doi datasets.'
-        print 'Datasets found on remote doi server: ' + str(len(collected_ids)) + ', on local: ' + str(
-            len(existing_ids)) + '.'
+        log.info('Start to import doi datasets.')
+        log.info('Datasets found on remote doi server: %s, on local: %s', len(collected_ids), len(existing_ids))
 
         ids_to_add = collected_ids - existing_ids
-        print 'Datasets to be added as new: ' + str(len(ids_to_add)) + '.'
+        log.info('Datasets to be added as new: %s', len(ids_to_add))
         for num, doi_id in enumerate(ids_to_add):
             context.pop('package', None)
             context.pop('group', None)
             try:
                 new_package = self.get_doi_package(url_dataset + doi_id)
                 new_harvestobj = self.get_doi_harvestobj(url_harvestobj + to_import[doi_id])
-            except Exception, e:
-                print str(
-                    datetime.datetime.now()) + ' Error when downlaoding doi id ' + doi_id + ' and harvest object ' + \
-                      to_import[doi_id]
-                print e
+            except Exception:
+                log.exception('Error when downlaoding doi id=%s and harvest object %s', doi_id, to_import[doi_id])
 
             context['harvestobj'] = new_harvestobj
             try:
                 logic.get_action('doi_create')(context, new_package)
-            except Exception, e:
-                print str(datetime.datetime.now()) + ' Error when importing doi id ' + doi_id
-                print e
+            except Exception:
+                log.exception('Error when importing doi id=%s', doi_id)
 
         ids_to_update = collected_ids & existing_ids
-        print 'Datasets to check for update: ' + str(len(ids_to_update)) + '.'
+        log.info('Datasets to check for update: %s', len(ids_to_update))
         for num, doi_id in enumerate(ids_to_update):
             context.pop('package', None)
             context.pop('group', None)
             try:
                 new_package = self.get_doi_package(url_dataset + doi_id)
                 new_harvestobj = self.get_doi_harvestobj(url_harvestobj + to_import[doi_id])
-            except Exception, e:
-                print str(
-                    datetime.datetime.now()) + ' Error when downlaoding doi id ' + doi_id + ' and harvest object ' + \
-                      to_import[doi_id]
-                print e
+            except Exception:
+                log.exception('Error when downlaoding doi id=%s and harvest object %s', doi_id, to_import[doi_id])
+
             context['harvestobj'] = new_harvestobj
             try:
                 logic.get_action('doi_update')(context, new_package)
-            except Exception, e:
-                print str(datetime.datetime.now()) + ' Error when updating doi id ' + doi_id
-                print e
+            except Exception:
+                log.exception('Error when updating doi id=%s', doi_id)
 
         ids_to_delete = existing_ids - collected_ids
-        print 'Datasets to be deleted: ' + str(len(ids_to_delete)) + '.'
+        log.info('Datasets to be deleted: %s', len(ids_to_delete))
         for num, doi_id in enumerate(ids_to_delete):
             context.pop('package', None)
             context.pop('group', None)
             try:
                 logic.get_action('package_delete')(context, {"id": doi_id})
-                print str(datetime.datetime.now()) + ' Deleted doi id ' + doi_id
-            except Exception, e:
-                print str(datetime.datetime.now()) + ' Error when deleting doi id ' + doi_id
-                print e
+                log.info('Deleted doi id=%s', doi_id)
+            except Exception:
+                log.exception('Error when deleting doi id=%s', doi_id)
 
     def get_doi_package(self, url_dataset):
         dataset = requests.get(url_dataset, verify=False).json()
@@ -1009,7 +998,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         print 'csv file topics-%s.csv is ready.' % date_suffix
 
     def sitemap_to_s3(self):
-        print str(datetime.datetime.now()) + ' sitemap is being generated...'
+        log.info('sitemap is being generated...')
 
         # cron job
         # paster --plugin=ckanext-geodatagov geodatagov sitemap-to-s3 --config=/etc/ckan/production.ini
@@ -1017,10 +1006,10 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
 
         package_query = search.query_for(model.Package)
         count = package_query.get_count()
+        log.info('%s records found', count)
         if not count:
-            print '0 record found.'
+            log.info('Nothing to process, exiting.')
             return
-        print '%i records to go.' % count
 
         start = 0
         page_size = 1000
@@ -1052,15 +1041,13 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             for pkg in pkgs:
                 os.write(fd, '    <url>\n')
                 os.write(fd, '        <loc>%s</loc>\n' % (
-                    config.get('ckan.site_url') + '/' + pkg.get('name'),
+                    '%s/dataset/%s' % (config.get('ckan.site_url'), pkg.get('name')),
                 ))
                 os.write(fd, '        <lastmod>%s</lastmod>\n' % (
                     pkg.get('metadata_modified').strftime('%Y-%m-%d'),
                 ))
                 os.write(fd, '    </url>\n')
-            print '%i to %i of %i records done.' % (
-                start + 1, min(start + page_size, count), count
-            )
+            log.info('%i to %i of %i records done.', start + 1, min(start + page_size, count), count)
             start = start + page_size
 
             if start % max_per_page == 0 and \
@@ -1070,7 +1057,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                 os.write(fd, '</urlset>\n')
                 os.close(fd)
 
-                print 'done with %s.' % path
+                log.info('done with %s.', path)
 
                 filename_number = filename_number +1
                 fd, path = mkstemp(suffix=".xml",
@@ -1090,7 +1077,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         os.write(fd, '</urlset>\n')
         os.close(fd)
 
-        print 'done with %s.' % path
+        log.info('done with %s.', path)
 
         bucket_name = config.get('ckanext.geodatagov.aws_bucket_name')
         bucket_path = config.get('ckanext.geodatagov.s3sitemap.aws_storage_path', '')
@@ -1127,7 +1114,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         upload_to_key(bucket, path, bucket_path + 'sitemap.xml')
         os.remove(path)
 
-        print str(datetime.datetime.now()) + ' Done.'
+        log.info('Sitemap upload complete.')
 
 
     def jsonl_export(self):
