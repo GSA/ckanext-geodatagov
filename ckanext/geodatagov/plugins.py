@@ -440,6 +440,7 @@ class Demo(p.SingletonPlugin):
         p.toolkit.add_template_directory(config, 'templates')
 
     def configure(self, config):
+        log.info('plugin initialized: %s', self.__class__.__name__)
         self.__class__.edit_url = config.get('saml2.user_edit')
 
 
@@ -653,4 +654,5 @@ class Miscs(p.SingletonPlugin):
 
     ## IConfigurable
     def configure(self, config):
+        log.info('plugin initialized: %s', self.__class__.__name__)
         geodatagovmodel.setup()

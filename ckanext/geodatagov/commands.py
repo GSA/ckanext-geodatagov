@@ -34,7 +34,9 @@ from pylons import config
 from ckan import plugins as p
 from ckanext.geodatagov.model import MiscsFeed, MiscsTopicCSV
 
-log = logging.getLogger(__name__)
+# https://github.com/GSA/ckanext-geodatagov/issues/117
+log = logging.getLogger('ckanext.geodatagov')
+
 ckan_tmp_path = '/var/tmp/ckan'
 
 class GeoGovCommand(cli.CkanCommand):
@@ -401,11 +403,32 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         return harvestobj.text
 
     def clean_deleted(self):
-        print str(datetime.datetime.now()) + ' Starting delete'
-        sql = '''begin; update package set state = 'to_delete' where state <> 'active' and revision_id in (select id from revision where timestamp < now() - interval '1 day');
+        log.info('Starting delete for clean-deleted')
+        # TODO make the 90-day purge configurable
+        sql = '''begin;
+        update package p
+        set state = 'to_delete'
+        where id in (
+          select p.id
+          from package p, revision r
+          where p.state <> 'active' and p.revision_id = r.id and r.timestamp < now() - interval '90 day'
+          limit 1000
+        );
+
         update package set state = 'to_delete' where owner_org is null;
         delete from package_role where package_id in (select id from package where state = 'to_delete' );
-        delete from user_object_role where id not in (select user_object_role_id from package_role) and context = 'Package';
+
+        /*
+         * This query is obsurdly inefficient, but explains what we're after with the left outer join.
+         * delete from user_object_role where id not in (select user_object_role_id from package_role) and context = 'Package';
+         */
+        delete from user_object_role where id in (
+          select uor.id
+          from user_object_role uor
+          left outer join package_role pr ON pr.user_object_role_id = uor.id
+          where pr.user_object_role_id is NULL and uor.context = 'Package'
+        );
+
         delete from resource_revision where package_id in (select id from package where state = 'to_delete' );
         delete from package_tag_revision where package_id in (select id from package where state = 'to_delete');
         delete from member_revision where table_id in (select id from package where state = 'to_delete');
@@ -416,14 +439,17 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         delete from resource where package_id in (select id from package where state = 'to_delete');
         delete from package_extra where package_id in (select id from package where state = 'to_delete');
         delete from member where table_id in (select id from package where state = 'to_delete');
+        delete from related_dataset where dataset_id in (select id from package where state = 'to_delete');
 
         delete from harvest_object_error hoe using harvest_object ho where ho.id = hoe.harvest_object_id and package_id  in (select id from package where state = 'to_delete');
         delete from harvest_object_extra hoe using harvest_object ho where ho.id = hoe.harvest_object_id and package_id  in (select id from package where state = 'to_delete');
         delete from harvest_object where package_id in (select id from package where state = 'to_delete');
 
-        delete from package where id in (select id from package where state = 'to_delete'); commit;'''
+        delete from package where state = 'to_delete';
+        commit;
+        '''
         model.Session.execute(sql)
-        print str(datetime.datetime.now()) + ' Finished delete'
+        log.info('Finished delete for clean-deleted')
 
     # set([u'feed', u'webService', u'issued', u'modified', u'references', u'keyword', u'size', u'landingPage', u'title', u'temporal', u'theme', u'spatial', u'dataDictionary', u'description', u'format', u'granularity', u'accessLevel', u'accessURL', u'publisher', u'language', u'license', u'systemOfRecords', u'person', u'accrualPeriodicity', u'dataQuality', u'distribution', u'identifier', u'mbox'])
 
@@ -1170,12 +1196,12 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                 except KeyboardInterrupt:
                     raise
                 except:
-                    logging.error("Unexpected error: %s", sys.exc_info()[0])
+                    log.error("Unexpected error: %s", sys.exc_info()[0])
                 else:
                     datasets = query['results']
                     break
                 wait_time = 2 * attempts # wait longer with each failed attempt
-                logging.info('wait %s seconds before next attempt...' % wait_time)
+                log.info('wait %s seconds before next attempt...' % wait_time)
                 time.sleep(wait_time)
                 attempts += 1
 
