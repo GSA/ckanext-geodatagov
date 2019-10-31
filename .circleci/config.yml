@@ -1,0 +1,43 @@
+version: 2.1
+jobs:
+  build_ckan_28:
+    working_directory: ~/ckanext-geodatagov
+    machine:
+      image: circleci/classic:201708-01
+      # image: circleci/postgres:9.6-alpine
+    environment:
+      CKANVERSION=2.8
+    steps:
+      - checkout
+      - run:
+          name: install
+          command: bin/travis-build.bash
+      - run:
+          name: test
+          command: bin/travis-run.sh
+
+  # build_ckan_23:
+  #   working_directory: ~/ckanext-geodatagov
+  #   machine:
+  #     image: circleci/classic:201708-01
+  #     # image: circleci/postgres:9.6-alpine
+  #   environment:
+  #     CKANVERSION=2.3
+  #   steps:
+  #     - checkout
+  #     - run:
+  #         name: where am I
+  #         command: pwd && ls -la
+  #     - run:
+  #         name: install
+  #         command: bin/travis-build.bash
+  #     - run:
+  #         name: test
+  #         command: bin/travis-run.sh
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build_ckan_28
+      # - build_ckan_23
