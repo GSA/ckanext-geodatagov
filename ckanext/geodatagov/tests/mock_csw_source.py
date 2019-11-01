@@ -21,13 +21,13 @@ class MockCSWHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         self.test_name = None
         self.sample_datajson_file = None
         self.samples_path = 'data-samples'
-        if self.path == 'http://127.0.0.1:%s/sample1' % mock_csw_source.PORT:
+        if self.path == 'http://127.0.0.1:%s/sample1' % PORT:
             self.sample_file = 'sample1'
             self.test_name = 'Esri'
-        elif self.path == 'http://127.0.0.1:%s/404' % mock_csw_source.PORT:
+        elif self.path == 'http://127.0.0.1:%s/404' % PORT:
             self.test_name = 'e404'
             self.respond('Not found', status=404)
-        elif self.path == 'http://127.0.0.1:%s/500' % mock_csw_source.PORT:
+        elif self.path == 'http://127.0.0.1:%s/500' % PORT:
             self.test_name = 'e500'
             self.respond('Error', status=500)
         
