@@ -110,6 +110,11 @@ echo "Moving test.ini into a subdir..."
 mkdir subdir
 mv test.ini subdir
 
-paster geodatagov post-install-dbinit -c subdir/test.ini
+# paster geodatagov post-install-dbinit -c subdir/test.ini
+# Check if we need
+# error:
+# File "/usr/lib/python2.7/dist-packages/google_compute_engine/boto/compute_auth.py", line 19, in <module>
+#     from google_compute_engine import logger
+# ImportError: No module named google_compute_engine
 
 echo "travis-build.bash is done."
