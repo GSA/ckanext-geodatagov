@@ -74,17 +74,17 @@ class TestCSWHarvester(object):
         return harvest_object, result, dataset
 
     def test_sample1(self):
-        url = 'http://sample1.com:%s' % mock_csw_source.PORT
+        url = 'http://127.0.0.1:%s/sample1' % mock_csw_source.PORT
         harvest_object, result, dataset = self.run_source(url=url)
         #TODO
         raise NotImplementedError
 
     def test_datason_404(self):
-        url = 'http://some404.com:%s/data.json' % mock_csw_source.PORT
+        url = 'http://127.0.0.1:%s/404' % mock_csw_source.PORT
         with assert_raises(URLError) as harvest_context:
             self.run_source(url=url)
         
     def test_datason_500(self):
-        url = 'http://some500.com:%s/data.json' % mock_csw_source.PORT
+        url = 'http://127.0.0.1:%s/500' % mock_csw_source.PORT
         with assert_raises(URLError) as harvest_context:
             self.run_source(url=url)
