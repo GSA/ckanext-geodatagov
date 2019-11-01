@@ -46,7 +46,7 @@ class TestCSWHarvester(object):
         obj_ids = harvester.gather_stage(job)
         log.info('job.gather_errors=%s', job.gather_errors)
         log.info('obj_ids=%s', obj_ids)
-        if len(obj_ids) == 0:
+        if obj_ids is None or len(obj_ids) == 0:
             # nothing to see
             return
 
