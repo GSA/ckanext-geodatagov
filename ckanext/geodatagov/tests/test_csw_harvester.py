@@ -14,11 +14,8 @@ except ImportError:
 from ckan import model
 from ckan.plugins import toolkit
 from ckan.lib.munge import munge_title_to_name
-# from ckanext.harvest.tests.factories import (HarvestSourceObj, HarvestJobObj,
-#                                              HarvestObjectObj)
-from factories import (HarvestSourceObj,
-                       HarvestJobObj,
-                       HarvestObjectObj)
+from factories import (CSWHarvestSourceObj,
+                       HarvestJobObj)
 
 import ckanext.harvest.model as harvest_model
 from ckanext.harvest.harvesters.base import HarvesterBase
@@ -39,7 +36,7 @@ class TestCSWHarvester(object):
         harvest_model.setup()
 
     def run_source(self, url):
-        source = HarvestSourceObj(url=url)
+        source = CSWHarvestSourceObj(url=url)
         job = HarvestJobObj(source=source)
 
         harvester = GeoDataGovCSWHarvester()

@@ -14,7 +14,7 @@ class HarvestSource(factory.Factory):
     name = factory.Sequence(lambda n: 'test_source_{n}'.format(n=n))
     title = factory.Sequence(lambda n: 'test title {n}'.format(n=n))
     url = factory.Sequence(lambda n: 'http://{n}.test.com'.format(n=n))
-    source_type = 'datajson'
+    source_type = 'undefined'
     id = '{0}_id'.format(name).lower()
 
     @classmethod
@@ -38,6 +38,10 @@ class HarvestSource(factory.Factory):
 
 class HarvestSourceObj(HarvestSource):
     _return_type = 'obj'
+
+
+class CSWHarvestSourceObj(HarvestSourceObj):
+    source_type = 'csw'
 
 
 class HarvestJob(factory.Factory):
