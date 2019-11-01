@@ -1,3 +1,4 @@
 -e git+https://github.com/asl2/PyZ3950.git#egg=py3250
 ply==3.4
 boto
+lxml
