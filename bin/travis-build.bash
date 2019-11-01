@@ -35,8 +35,12 @@ elif [ $CKANVERSION == '2.3' ]
 then
 	git checkout release-v2.3
 fi
+
+# Unpin CKAN's psycopg2 dependency get an important bugfix
+# https://stackoverflow.com/questions/47044854/error-installing-psycopg2-2-6-2
+sed -i '/psycopg2/c\psycopg2' requirements.txt
+
 python setup.py develop
-cp ./ckan/public/base/css/main.css ./ckan/public/base/css/main.debug.css
 pip install -r requirements.txt
 pip install -r dev-requirements.txt
 
@@ -56,6 +60,14 @@ echo "Creating the PostgreSQL user and database..."
 sudo -u postgres psql -c "CREATE USER ckan_default WITH PASSWORD 'pass';"
 sudo -u postgres psql -c 'CREATE DATABASE ckan_test WITH OWNER ckan_default;'
 sudo -u postgres psql -c 'CREATE DATABASE datastore_test WITH OWNER ckan_default;'
+
+echo "Setting up PostGIS on the database..."
+sudo -u postgres psql -d ckan_test -c 'CREATE EXTENSION postgis;'
+sudo -u postgres psql -d ckan_test -c 'ALTER VIEW geometry_columns OWNER TO ckan_default;'
+sudo -u postgres psql -d ckan_test -c 'ALTER TABLE spatial_ref_sys OWNER TO ckan_default;'
+
+echo "Install other libraries required..."
+sudo apt-get install python-dev libxml2-dev libxslt1-dev libgeos-c1
 
 echo "-----------------------------------------------------------------"
 echo "Initialising the database..."
@@ -84,7 +96,7 @@ git checkout master
 python setup.py develop
 pip install -r pip-requirements.txt
 
-paster harvester initdb -c ../ckan/test-core.ini
+paster spatial initdb -c ../ckan/test-core.ini
 
 cd ..
 echo "-----------------------------------------------------------------"
