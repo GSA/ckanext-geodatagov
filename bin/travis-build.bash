@@ -76,6 +76,18 @@ paster harvester initdb -c ../ckan/test-core.ini
 
 cd ..
 echo "-----------------------------------------------------------------"
+echo "Installing Spatial"
+git clone https://github.com/ckan/ckanext-spatial
+cd ckanext-spatial
+git checkout master
+
+python setup.py develop
+pip install -r pip-requirements.txt
+
+paster harvester initdb -c ../ckan/test-core.ini
+
+cd ..
+echo "-----------------------------------------------------------------"
 echo "Installing ckanext-geodatagov and its requirements..."
 cd ckanext-geodatagov
 pip install -r pip-requirements.txt
