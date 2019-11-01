@@ -110,4 +110,6 @@ echo "Moving test.ini into a subdir..."
 mkdir subdir
 mv test.ini subdir
 
+paster geodatagov post-install-dbinit -c subdir/test.ini
+
 echo "travis-build.bash is done."
