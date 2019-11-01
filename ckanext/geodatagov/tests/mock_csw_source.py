@@ -19,7 +19,7 @@ class MockCSWHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         # differently in some way.
         # Its value is recorded and then removed from the path
         self.test_name = None
-        self.sample_datajson_file = None
+        self.sample_file = None
         self.samples_path = 'data-samples'
         if self.path == 'http://127.0.0.1:%s/sample1' % PORT:
             self.sample_file = 'sample1'
