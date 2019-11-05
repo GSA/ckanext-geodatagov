@@ -48,6 +48,8 @@ class TestCSWHarvester(object):
         log.info('GATHERING %s', url)
         obj_ids = harvester.gather_stage(job)
         log.info('job.gather_errors=%s', job.gather_errors)
+        if len(job.gather_errors):
+            raise Exception(job.gather_errors[0])
         log.info('obj_ids=%s', obj_ids)
         if obj_ids is None or len(obj_ids) == 0:
             # nothing to see
@@ -84,10 +86,12 @@ class TestCSWHarvester(object):
 
     def test_datason_404(self):
         url = 'http://127.0.0.1:%s/404' % mock_csw_source.PORT
-        with assert_raises(URLError) as harvest_context:
+        with assert_raises(Exception) as e:
             self.run_source(url=url)
+        assert 'HTTP Error 404' in str(e.exception)
         
     def test_datason_500(self):
         url = 'http://127.0.0.1:%s/500' % mock_csw_source.PORT
-        with assert_raises(URLError) as harvest_context:
+        with assert_raises(URLError) as e:
             self.run_source(url=url)
+        assert 'HTTP Error 500' in str(e.exception)

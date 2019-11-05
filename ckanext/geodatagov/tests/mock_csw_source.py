@@ -35,8 +35,8 @@ class MockCSWHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
             self.respond('Error', status=500)
         
         if self.sample_file is not None:
-            sample_file = '{}.json'.format(self.sample_file)
-            self.respond_json_sample_file(file_path=sample_file)
+            sample_file = '{}.xml'.format(self.sample_file)
+            self.respond_xml_sample_file(file_path=sample_file)
 
         if self.test_name == None:
             self.respond('Mock CSW doesnt recognize that call', status=400)
@@ -53,7 +53,15 @@ class MockCSWHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         return self.respond(content=content, status=status,
                             content_type='application/json')
 
-    def respond(self, content, status=200, content_type='application/json'):
+    def respond_xml_sample_file(self, file_path, status=200):
+        pt = os.path.join(self.samples_path, file_path)
+        data = open(pt, 'r')
+        content = data.read()
+        log.info('mock respond {}'.format(content[:90]))
+        return self.respond(content=content, status=status,
+                            content_type='application/xml')
+
+    def respond(self, content, status=200, content_type):
         self.send_response(status)
         self.send_header('Content-Type', content_type)
         self.end_headers()
