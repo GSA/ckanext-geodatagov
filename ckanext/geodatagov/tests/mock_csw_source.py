@@ -5,7 +5,7 @@ import json
 import re
 import copy
 import urllib
-
+import xml.etree.ElementTree as ET
 import SimpleHTTPServer
 import SocketServer
 from threading import Thread
@@ -44,18 +44,23 @@ class MockCSWHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
     def do_POST(self):
         # get params
-        self._set_headers()
         self.data_string = self.rfile.read(int(self.headers['Content-Length']))
-        data = json.loads(self.data_string)
+        """ sample 
+        <?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" outputSchema="http://www.isotc211.org/2005/gmd" outputFormat="application/xml" version="2.0.2" service="CSW" resultType="results" maxRecords="10" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd"><csw:Query typeNames="csw:Record"><csw:ElementSetName>brief</csw:ElementSetName><ogc:SortBy><ogc:SortProperty><ogc:PropertyName>dc:identifier</ogc:PropertyName><ogc:SortOrder>ASC</ogc:SortOrder></ogc:SortProperty></ogc:SortBy></csw:Query></csw:GetRecords>
+        """
+        # for JSON data = json.loads(self.data_string)
+        
+        myroot = ET.fromstring(data)
         
         self.test_name = None
         self.sample_file = None
         self.samples_path = 'ckanext/geodatagov/tests/data-samples'
         if self.path.startswith('/sample'):
             n = self.path[7]
-            if data['request'] == 'GetRecords':
+            if 'GetRecords' in myroot.tag:
                 self.sample_file = 'sample{}_getrecords2.xml'.format(n)
-            elif data['request'] == 'GetRecordById':
+            elif 'GetRecordById' in myroot.tag:
                 self.sample_file = 'sample{}_id_{}.xml'.format(n, data['id'])
             self.test_name = 'Sample {}'.format(n)
         
