@@ -25,11 +25,15 @@ log = logging.getLogger(__name__)
 
 import mock_csw_source
 
-# Start data json sources server we can test harvesting against it
-mock_csw_source.serve()
-
 
 class TestCSWHarvester(object):
+
+    @classmethod
+    def setup_class(cls):
+        log.info('Starting mock http server')
+        # Start data json sources server we can test harvesting against it
+        mock_csw_source.serve()
+        
     @classmethod
     def setup(cls):
         reset_db()

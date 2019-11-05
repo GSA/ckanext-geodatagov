@@ -9,25 +9,28 @@ import urllib
 import SimpleHTTPServer
 import SocketServer
 from threading import Thread
+import logging
+log = logging.getLogger("harvester")
 
 PORT = 8998
 
 
 class MockCSWHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
     def do_GET(self):
+        log.info('GET mock at: {}'.format(self.path))
         # test name is the first bit of the URL and makes CKAN behave
         # differently in some way.
         # Its value is recorded and then removed from the path
         self.test_name = None
         self.sample_file = None
-        self.samples_path = 'data-samples'
-        if self.path == 'http://127.0.0.1:%s/sample1' % PORT:
+        self.samples_path = 'ckanext/geodatagov/tests/datajson-samples'
+        if self.path == 'sample1':
             self.sample_file = 'sample1'
             self.test_name = 'Esri'
-        elif self.path == 'http://127.0.0.1:%s/404' % PORT:
+        elif self.path == '404':
             self.test_name = 'e404'
             self.respond('Not found', status=404)
-        elif self.path == 'http://127.0.0.1:%s/500' % PORT:
+        elif self.path == '500':
             self.test_name = 'e500'
             self.respond('Error', status=500)
         
@@ -44,8 +47,10 @@ class MockCSWHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
     
     def respond_json_sample_file(self, file_path, status=200):
         pt = os.path.join(self.samples_path, file_path)
-        data = json.load(open(pt, 'r'))
-        return self.respond(data, status=status,
+        data = open(pt, 'r')
+        content = data.read()
+        log.info('mock respond {}'.format(content[:90]))
+        return self.respond(content=content, status=status,
                             content_type='application/json')
 
     def respond(self, content, status=200, content_type='application/json'):
@@ -64,7 +69,9 @@ def serve(port=PORT):
 
     httpd = TestServer(("", PORT), MockCSWHandler)
 
-    print('Serving test HTTP server at port {}'.format(PORT))
+    info = 'Serving test HTTP server at port {}'.format(PORT)
+    print(info)
+    log.info(info)
 
     httpd_thread = Thread(target=httpd.serve_forever)
     httpd_thread.setDaemon(True)
