@@ -82,6 +82,9 @@ class TestCSWHarvester(object):
         return harvest_object, result, dataset
 
     def test_sample3(self):
+        # testing with geonode.state.gov 
+        # getrecords XML: http://geonode.state.gov/catalogue/csw?service=CSW&version=2.0.2&request=GetRecords&ElementSetName=full&typenames=csw:Record&constraints=[]&esn=brief&outputschema=http://www.isotc211.org/2005/gmd&maxrecords=9&resulttype=results
+        
         url = 'http://127.0.0.1:%s/sample3' % mock_csw_source.PORT
         with assert_raises(Exception) as e:
             self.run_source(url=url)

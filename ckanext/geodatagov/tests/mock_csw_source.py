@@ -43,25 +43,24 @@ class MockCSWHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
             self.respond('Mock CSW doesnt recognize that call', status=400)
 
     def do_POST(self):
-        # someting like for getrecords2 call
-        # {'typenames': 'csw:Record', 'maxrecords': 10, 'sortby': <owslib.fes.SortBy object at 0x7fc1eb7aa6d0>, 'outputschema': 'http://www.isotc211.org/2005/gmd', 'cql': None, 'startposition': 0, 'esn': 'brief', 'constraints': []}
-        """ get params
+        # get params
         self._set_headers()
         self.data_string = self.rfile.read(int(self.headers['Content-Length']))
         data = json.loads(self.data_string)
-        if data['typenames'] == 'csw:Record':
-        """
+        
         self.test_name = None
         self.sample_file = None
         self.samples_path = 'ckanext/geodatagov/tests/data-samples'
         if self.path.startswith('/sample'):
             n = self.path[7]
-            self.sample_file = 'sample{}'.format(n)
+            if data['request'] == 'GetRecords':
+                self.sample_file = 'sample{}_getrecords2.xml'.format(n)
+            elif data['request'] == 'GetRecordById':
+                self.sample_file = 'sample{}_id_{}.xml'.format(n, data['id'])
             self.test_name = 'Sample {}'.format(n)
         
         if self.sample_file is not None:
-            sample_file = '{}_getrecords2.xml'.format(self.sample_file)
-            self.respond_xml_sample_file(file_path=sample_file)
+            self.respond_xml_sample_file(file_path=self.sample_file)
 
         if self.test_name == None:
             self.respond('Mock CSW doesnt recognize that call', status=400)
