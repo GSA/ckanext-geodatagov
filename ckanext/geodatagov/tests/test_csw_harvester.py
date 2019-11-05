@@ -48,7 +48,7 @@ class TestCSWHarvester(object):
         log.info('GATHERING %s', url)
         obj_ids = harvester.gather_stage(job)
         log.info('job.gather_errors=%s', job.gather_errors)
-        if len(job.gather_errors):
+        if len(job.gather_errors) > 0:
             raise Exception(job.gather_errors[0])
         
         log.info('obj_ids=%s', obj_ids)
@@ -66,6 +66,8 @@ class TestCSWHarvester(object):
 
         log.info('ho errors=%s', harvest_object.errors)
         log.info('result 1=%s', result)
+        if len(harvest_object.errors) > 0:
+            raise Exception(harvest_object.errors[0])
 
         # fetch stage
         log.info('IMPORTING %s', url)
@@ -79,11 +81,11 @@ class TestCSWHarvester(object):
 
         return harvest_object, result, dataset
 
-    def test_sample1(self):
+    def test_sample3(self):
         url = 'http://127.0.0.1:%s/sample3' % mock_csw_source.PORT
-        harvest_object, result, dataset = self.run_source(url=url)
-        #TODO
-        raise NotImplementedError
+        with assert_raises(Exception) as e:
+            self.run_source(url=url)
+        assert 'Empty record' in str(e.exception)
 
     def test_datason_404(self):
         url = 'http://127.0.0.1:%s/404' % mock_csw_source.PORT
