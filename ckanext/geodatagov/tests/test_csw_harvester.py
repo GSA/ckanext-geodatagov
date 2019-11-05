@@ -80,7 +80,7 @@ class TestCSWHarvester(object):
         return harvest_object, result, dataset
 
     def test_sample1(self):
-        url = 'http://127.0.0.1:%s/sample1' % mock_csw_source.PORT
+        url = 'http://127.0.0.1:%s/sample3' % mock_csw_source.PORT
         harvest_object, result, dataset = self.run_source(url=url)
         #TODO
         raise NotImplementedError
