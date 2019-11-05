@@ -1,6 +1,5 @@
 #!/bin/bash
 set -e
-
 echo "This is travis-build.bash..."
 
 echo "-----------------------------------------------------------------"
