@@ -5,6 +5,7 @@ import json
 import re
 import copy
 import urllib
+from urlparse import parse_qs
 import xml.etree.ElementTree as ET
 import SimpleHTTPServer
 import SocketServer
@@ -21,13 +22,20 @@ class MockCSWHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         # test name is the first bit of the URL and makes CKAN behave
         # differently in some way.
         # Its value is recorded and then removed from the path
+        # getRecordById uses: /sample3?outputFormat=application%2Fxml&service=CSW&outputSchema=http%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd&request=GetRecordById&version=2.0.2&elementsetname=full&id=c540e08e-015c-11e5-853f-22000b8e85d8
         self.test_name = None
         self.sample_file = None
         self.samples_path = 'ckanext/geodatagov/tests/data-samples'
+        
+        params = parse_qs(self.path)
         if self.path.startswith('/sample'):
             n = self.path[7]
-            self.sample_file = 'sample{}'.format(n)
-            self.test_name = 'Sample {}'.format(n)
+            if params.get('request', None) == 'GetRecordById':
+                self.sample_file = 'sample{}_id_{}.xml'.format(n, params['id'])
+                self.test_name = 'Sample {} record'.format(n)
+            else:
+                self.sample_file = 'sample{}.xml'.format(n)
+                self.test_name = 'Sample {}'.format(n)
         elif self.path.startswith('/404'):
             self.test_name = 'e404'
             self.respond('Not found', status=404)
@@ -36,8 +44,7 @@ class MockCSWHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
             self.respond('Error', status=500)
         
         if self.sample_file is not None:
-            sample_file = '{}.xml'.format(self.sample_file)
-            self.respond_xml_sample_file(file_path=sample_file)
+            self.respond_xml_sample_file(file_path=self.sample_file)
 
         if self.test_name == None:
             self.respond('Mock CSW doesnt recognize that call', status=400)
@@ -45,13 +52,14 @@ class MockCSWHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
     def do_POST(self):
         # get params
         self.data_string = self.rfile.read(int(self.headers['Content-Length']))
+        log.info('POST mock: {}'.format(self.data_string))
         """ sample 
         <?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
 <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" outputSchema="http://www.isotc211.org/2005/gmd" outputFormat="application/xml" version="2.0.2" service="CSW" resultType="results" maxRecords="10" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd"><csw:Query typeNames="csw:Record"><csw:ElementSetName>brief</csw:ElementSetName><ogc:SortBy><ogc:SortProperty><ogc:PropertyName>dc:identifier</ogc:PropertyName><ogc:SortOrder>ASC</ogc:SortOrder></ogc:SortProperty></ogc:SortBy></csw:Query></csw:GetRecords>
         """
         # for JSON data = json.loads(self.data_string)
         
-        myroot = ET.fromstring(data)
+        myroot = ET.fromstring(self.data_string)
         
         self.test_name = None
         self.sample_file = None
@@ -60,8 +68,6 @@ class MockCSWHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
             n = self.path[7]
             if 'GetRecords' in myroot.tag:
                 self.sample_file = 'sample{}_getrecords2.xml'.format(n)
-            elif 'GetRecordById' in myroot.tag:
-                self.sample_file = 'sample{}_id_{}.xml'.format(n, data['id'])
             self.test_name = 'Sample {}'.format(n)
         
         if self.sample_file is not None:
