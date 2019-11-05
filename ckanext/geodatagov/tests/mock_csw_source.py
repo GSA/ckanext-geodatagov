@@ -24,9 +24,10 @@ class MockCSWHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         self.test_name = None
         self.sample_file = None
         self.samples_path = 'ckanext/geodatagov/tests/data-samples'
-        if self.path.startswith('/sample1'):
-            self.sample_file = 'sample1'
-            self.test_name = 'Esri'
+        if self.path.startswith('/sample'):
+            n = self.path[7]
+            self.sample_file = 'sample{}'.format(n)
+            self.test_name = 'Sample {}'.format(n)
         elif self.path.startswith('/404'):
             self.test_name = 'e404'
             self.respond('Not found', status=404)
