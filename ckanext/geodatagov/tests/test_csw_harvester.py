@@ -92,6 +92,6 @@ class TestCSWHarvester(object):
         
     def test_datason_500(self):
         url = 'http://127.0.0.1:%s/500' % mock_csw_source.PORT
-        with assert_raises(URLError) as e:
+        with assert_raises(Exception) as e:
             self.run_source(url=url)
         assert 'HTTP Error 500' in str(e.exception)
