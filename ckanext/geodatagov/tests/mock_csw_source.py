@@ -28,10 +28,11 @@ class MockCSWHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         self.samples_path = 'ckanext/geodatagov/tests/data-samples'
         
         params = parse_qs(self.path)
+        log.info('GET PARAMS {}'.format(params))
         if self.path.startswith('/sample'):
             n = self.path[7]
-            if params.get('request', None) == 'GetRecordById':
-                self.sample_file = 'sample{}_id_{}.xml'.format(n, params['id'])
+            if params.get('request', None) == ['GetRecordById']:
+                self.sample_file = 'sample{}_id_{}.xml'.format(n, params['id'][0])
                 self.test_name = 'Sample {} record'.format(n)
             else:
                 self.sample_file = 'sample{}.xml'.format(n)
