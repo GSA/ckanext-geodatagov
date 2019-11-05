@@ -42,6 +42,25 @@ class MockCSWHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         if self.test_name == None:
             self.respond('Mock CSW doesnt recognize that call', status=400)
 
+    def do_POST(self):
+        # someting like for getrecords2 call
+        # {'typenames': 'csw:Record', 'maxrecords': 10, 'sortby': <owslib.fes.SortBy object at 0x7fc1eb7aa6d0>, 'outputschema': 'http://www.isotc211.org/2005/gmd', 'cql': None, 'startposition': 0, 'esn': 'brief', 'constraints': []}
+        
+        self.test_name = None
+        self.sample_file = None
+        self.samples_path = 'ckanext/geodatagov/tests/data-samples'
+        if self.path.startswith('/sample'):
+            n = self.path[7]
+            self.sample_file = 'sample{}'.format(n)
+            self.test_name = 'Sample {}'.format(n)
+        
+        if self.sample_file is not None:
+            sample_file = '{}.json'.format(self.sample_file)
+            self.respond_json_sample_file(file_path=sample_file)
+
+        if self.test_name == None:
+            self.respond('Mock CSW doesnt recognize that call', status=400)
+        
     def respond_json(self, content_dict, status=200):
         return self.respond(json.dumps(content_dict), status=status,
                             content_type='application/json')
