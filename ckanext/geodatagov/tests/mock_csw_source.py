@@ -61,7 +61,7 @@ class MockCSWHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         return self.respond(content=content, status=status,
                             content_type='application/xml')
 
-    def respond(self, content, status=200, content_type):
+    def respond(self, content, status=200, content_type='application/json'):
         self.send_response(status)
         self.send_header('Content-Type', content_type)
         self.end_headers()
