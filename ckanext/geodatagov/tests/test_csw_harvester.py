@@ -31,7 +31,6 @@ class TestCSWHarvester(object):
     @classmethod
     def setup_class(cls):
         log.info('Starting mock http server')
-        # Start data json sources server we can test harvesting against it
         mock_csw_source.serve()
         
     @classmethod
