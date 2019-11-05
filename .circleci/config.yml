@@ -41,5 +41,5 @@ workflows:
     jobs:
       - build_ckan_28:  
       - build_ckan_23
-        requires:
-          - build_ckan_28
+          requires:
+            - build_ckan_28
