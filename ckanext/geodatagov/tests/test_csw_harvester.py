@@ -50,6 +50,7 @@ class TestCSWHarvester(object):
         log.info('job.gather_errors=%s', job.gather_errors)
         if len(job.gather_errors):
             raise Exception(job.gather_errors[0])
+        
         log.info('obj_ids=%s', obj_ids)
         if obj_ids is None or len(obj_ids) == 0:
             # nothing to see
