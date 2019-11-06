@@ -113,6 +113,7 @@ class TestCSWHarvester(object):
         assert len(obj_ids) == 2
         self.run_fetch()
         datasets = self.run_import()
+        assert len(datasets) == 2
         titles = ['Syria_RefugeeSites_2015Apr16_HIU_USDoS',
                   'Syria_IDPSites_2015Jun11_HIU_USDoS']
         for dataset in datasets:
@@ -130,6 +131,7 @@ class TestCSWHarvester(object):
         assert len(obj_ids) == 2
         self.run_fetch()
         datasets = self.run_import()
+        assert len(datasets) == 2
         titles = ['Alteration of Groundwater Flow due to Slow Landslide Failure, CA',
                   'High Resolution Topography of House Range Fault, Utah']
         for dataset in datasets:
