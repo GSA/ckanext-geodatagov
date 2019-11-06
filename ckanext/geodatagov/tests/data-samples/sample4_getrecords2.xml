@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<csw:GetRecordsResponse xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcmiBox="http://dublincore.org/documents/2000/07/11/dcmi-box/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gml="http://www.opengis.net/gml" xmlns:ows="http://www.opengis.net/ows" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<csw:SearchStatus timestamp="2019-11-06T11:46:08+00:00"/>
+<csw:SearchResults elementSet="full" nextRecord="0" numberOfRecordsMatched="2" numberOfRecordsReturned="2" recordSchema="http://www.opengis.net/cat/csw/2.0.2">
+<csw:Record>
+<dc:identifier scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:FileID">OT.102019.6339.1</dc:identifier>
+<dc:identifier scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:DocID">{49CA8278-CB22-4F8E-9681-B119AE2166A9}</dc:identifier>
+<dc:title>Alteration of Groundwater Flow due to Slow Landslide Failure, CA</dc:title>
+<dc:type scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:ContentType">downloadableData</dc:type>
+<dc:subject>geoscientificInformation</dc:subject>
+<dct:modified>2019-10-26T09:05:12+00:00</dct:modified>
+<dct:references scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:Server">https://doi.org/10.5069/G9SQ8XJP</dct:references>
+<dct:references scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:Document">https://portal.opentopography.org/geoportal/csw?getxml=%7B49CA8278-CB22-4F8E-9681-B119AE2166A9%7D</dct:references>
+<ows:WGS84BoundingBox>
+<ows:LowerCorner>-121.770011856093 37.4265765524366</ows:LowerCorner>
+<ows:UpperCorner>-121.726583556281 37.5300476782046</ows:UpperCorner>
+</ows:WGS84BoundingBox>
+<ows:BoundingBox>
+<ows:LowerCorner>-121.770011856093 37.4265765524366</ows:LowerCorner>
+<ows:UpperCorner>-121.726583556281 37.5300476782046</ows:UpperCorner>
+</ows:BoundingBox>
+</csw:Record>
+<csw:Record>
+<dc:identifier scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:FileID">OT.102019.6341.1</dc:identifier>
+<dc:identifier scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:DocID">{94A70D49-16BC-423C-9FAA-EC103266F5F7}</dc:identifier>
+<dc:title>High Resolution Topography of House Range Fault, Utah</dc:title>
+<dc:type scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:ContentType">downloadableData</dc:type>
+<dc:subject>geoscientificInformation</dc:subject>
+<dct:modified>2019-10-18T23:46:44+00:00</dct:modified>
+<dct:references scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:Server">https://doi.org/10.5069/G9348HH6</dct:references>
+<dct:references scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:Document">https://portal.opentopography.org/geoportal/csw?getxml=%7B94A70D49-16BC-423C-9FAA-EC103266F5F7%7D</dct:references>
+<ows:WGS84BoundingBox>
+<ows:LowerCorner>-113.400815532071 39.3611660433778</ows:LowerCorner>
+<ows:UpperCorner>-113.375895804237 39.4025830477492</ows:UpperCorner>
+</ows:WGS84BoundingBox>
+<ows:BoundingBox>
+<ows:LowerCorner>-113.400815532071 39.3611660433778</ows:LowerCorner>
+<ows:UpperCorner>-113.375895804237 39.4025830477492</ows:UpperCorner>
+</ows:BoundingBox>
+</csw:Record>
+</csw:SearchResults>
+</csw:GetRecordsResponse>

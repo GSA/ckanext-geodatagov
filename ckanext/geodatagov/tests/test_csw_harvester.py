@@ -77,7 +77,7 @@ class TestCSWHarvester(object):
         log.info('result 2=%s', result)
         if len(harvest_object.errors) > 0:
             raise Exception(harvest_object.errors[0])
-        
+
         log.info('ho pkg id=%s', harvest_object.package_id)
         dataset = model.Package.get(harvest_object.package_id)
         log.info('dataset name=%s', dataset.name)
@@ -94,12 +94,22 @@ class TestCSWHarvester(object):
         # o errors 2=[<HarvestObjectError id=ddec44bb-4dcc-494f-810e-f0d5918fa7c7 harvest_object_id=45f2c91f-82b3-40b2-8ed0-95f6f4b6bdcd message=Validation Error: {u'Extras': u'There is a schema field with the same name', u'Private': u"Datasets with no organization can't be private."} stage=Import line=None created=2019-11-05 19:11:41.127102>]
         assert 'There is a schema field with the same name' in str(e.exception)
 
+    def test_sample4(self):
+        # testing with portal.opentopography.org/geoportal/csw
+        # RECORDS
+        # https://portal.opentopography.org/geoportal/csw?service=CSW&version=2.0.2&request=GetRecords&ElementSetName=full&typenames=csw:Record&resulttype=results&constraints=[]&esn=brief&=outputschemahttp://www.isotc211.org/2005/gmd&maxrecords=9
+        # record by ID
+        # https://portal.opentopography.org/geoportal/csw?service=CSW&version=2.0.2&request=GetRecordById&ElementSetName=full&typenames=csw:Record&outputschema=http://www.isotc211.org/2005/gmd&id=OT.102019.6341.1&esn=full
+
+        url = 'http://127.0.0.1:%s/sample3' % mock_csw_source.PORT
+        self.run_source(url=url)
+
     def test_datason_404(self):
         url = 'http://127.0.0.1:%s/404' % mock_csw_source.PORT
         with assert_raises(Exception) as e:
             self.run_source(url=url)
         assert 'HTTP Error 404' in str(e.exception)
-        
+
     def test_datason_500(self):
         url = 'http://127.0.0.1:%s/500' % mock_csw_source.PORT
         with assert_raises(Exception) as e:
