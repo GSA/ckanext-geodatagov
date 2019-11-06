@@ -86,7 +86,11 @@ class GeoDataGovHarvester(SpatialHarvester):
             for group in default_groups:
                 package_dict['groups'].append({'name': group})
 
-        package_dict['tags'] = new_tags
+        # root level tags not needed any more
+        package_dict['tags'] = []
+        for tag in new_tags:
+            package_dict['tags'].append({'name': tag})
+        
         package_dict['extras'].append({'key': 'metadata_type', 'value': 'geospatial'})
 
         return package_dict

@@ -99,7 +99,6 @@ class TestCSWHarvester(object):
 
         url = 'http://127.0.0.1:%s/sample3' % mock_csw_source.PORT
         self.run_source(url=url)
-        
 
     def test_sample4(self):
         # testing with data from portal.opentopography.org/geoportal/csw
