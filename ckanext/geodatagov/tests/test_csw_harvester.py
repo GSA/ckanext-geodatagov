@@ -45,17 +45,16 @@ class TestCSWHarvester(object):
         org = call_action('organization_create',
                           context={'user': user_name},
                           name='test-org')
-        
 
-    def run_source(self, url):
+    def run_gather(self, url):
         source = CSWHarvestSourceObj(url=url, owner_org='test-org')
         job = HarvestJobObj(source=source)
 
-        harvester = GeoDataGovCSWHarvester()
+        self.harvester = GeoDataGovCSWHarvester()
 
         # gather stage
         log.info('GATHERING %s', url)
-        obj_ids = harvester.gather_stage(job)
+        obj_ids = self.harvester.gather_stage(job)
         log.info('job.gather_errors=%s', job.gather_errors)
         if len(job.gather_errors) > 0:
             raise Exception(job.gather_errors[0])
@@ -65,40 +64,59 @@ class TestCSWHarvester(object):
             # nothing to see
             return
 
-        harvest_object = harvest_model.HarvestObject.get(obj_ids[0])
-        log.info('ho guid=%s', harvest_object.guid)
-        log.info('ho content=%s', harvest_object.content)
+        self.harvest_objects = []
+        for obj_id in obj_ids:
+            harvest_object = harvest_model.HarvestObject.get(obj_id)
+            log.info('ho guid=%s', harvest_object.guid)
+            log.info('ho content=%s', harvest_object.content)
+            self.harvest_objects.append(harvest_object)
 
+        # this is a list of harvestObjects IDs. One for dataset
+        return obj_ids
+
+    def run_fetch(self):
         # fetch stage
-        log.info('FETCHING %s', url)
-        result = harvester.fetch_stage(harvest_object)
+        for harvest_object in self.harvest_objects:
+            log.info('FETCHING %s' % harvest_object.id)
+            result = self.harvester.fetch_stage(harvest_object)
 
-        log.info('ho errors=%s', harvest_object.errors)
-        log.info('result 1=%s', result)
-        if len(harvest_object.errors) > 0:
-            raise Exception(harvest_object.errors[0])
+            log.info('ho errors=%s', harvest_object.errors)
+            log.info('result 1=%s', result)
+            if len(harvest_object.errors) > 0:
+                raise Exception(harvest_object.errors[0])
 
+    def run_import(self):
         # fetch stage
-        log.info('IMPORTING %s', url)
-        result = harvester.import_stage(harvest_object)
+        datasets = []
+        for harvest_object in self.harvest_objects:
+            log.info('IMPORTING %s' % harvest_object.id)
+            result = self.harvester.import_stage(harvest_object)
 
-        log.info('ho errors 2=%s', harvest_object.errors)
-        log.info('result 2=%s', result)
-        if len(harvest_object.errors) > 0:
-            raise Exception(harvest_object.errors[0])
+            log.info('ho errors 2=%s', harvest_object.errors)
+            log.info('result 2=%s', result)
+            if len(harvest_object.errors) > 0:
+                raise Exception(harvest_object.errors[0])
 
-        log.info('ho pkg id=%s', harvest_object.package_id)
-        dataset = model.Package.get(harvest_object.package_id)
-        log.info('dataset name=%s', dataset.name)
+            log.info('ho pkg id=%s', harvest_object.package_id)
+            dataset = model.Package.get(harvest_object.package_id)
+            datasets.append(dataset)
+            log.info('dataset name=%s', dataset.name)
 
-        return harvest_object, result, dataset
+        return datasets
 
     def test_sample3(self):
         # testing with data from geonode.state.gov 
         # getrecords XML: http://geonode.state.gov/catalogue/csw?service=CSW&version=2.0.2&request=GetRecords&ElementSetName=full&typenames=csw:Record&constraints=[]&esn=brief&outputschema=http://www.isotc211.org/2005/gmd&maxrecords=9&resulttype=results
 
         url = 'http://127.0.0.1:%s/sample3' % mock_csw_source.PORT
-        self.run_source(url=url)
+        harvest_object, obj_ids = self.run_gather(url=url)
+        assert len(obj_ids) == 2
+        self.run_fetch()
+        datasets = self.run_import()
+        titles = ['Syria_RefugeeSites_2015Apr16_HIU_USDoS',
+                  'Syria_IDPSites_2015Jun11_HIU_USDoS']
+        for dataset in datasets:
+            assert dataset.title in titles
 
     def test_sample4(self):
         # testing with data from portal.opentopography.org/geoportal/csw
@@ -108,7 +126,14 @@ class TestCSWHarvester(object):
         # https://portal.opentopography.org/geoportal/csw?service=CSW&version=2.0.2&request=GetRecordById&ElementSetName=full&typenames=csw:Record&outputschema=http://www.isotc211.org/2005/gmd&id=OT.102019.6341.1&esn=full
 
         url = 'http://127.0.0.1:%s/sample4' % mock_csw_source.PORT
-        self.run_source(url=url)
+        harvest_object, obj_ids = self.run_gather(url=url)
+        assert len(obj_ids) == 2
+        self.run_fetch()
+        datasets = self.run_import()
+        titles = ['Alteration of Groundwater Flow due to Slow Landslide Failure, CA',
+                  'High Resolution Topography of House Range Fault, Utah']
+        for dataset in datasets:
+            assert dataset.title in titles
 
     def test_datason_404(self):
         url = 'http://127.0.0.1:%s/404' % mock_csw_source.PORT
