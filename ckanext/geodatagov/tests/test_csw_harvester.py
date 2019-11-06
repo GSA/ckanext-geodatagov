@@ -102,7 +102,9 @@ class TestCSWHarvester(object):
         # https://portal.opentopography.org/geoportal/csw?service=CSW&version=2.0.2&request=GetRecordById&ElementSetName=full&typenames=csw:Record&outputschema=http://www.isotc211.org/2005/gmd&id=OT.102019.6341.1&esn=full
 
         url = 'http://127.0.0.1:%s/sample3' % mock_csw_source.PORT
-        self.run_source(url=url)
+        with assert_raises(Exception) as e:
+            self.run_source(url=url)
+        assert 'There is a schema field with the same name' in str(e.exception)
 
     def test_datason_404(self):
         url = 'http://127.0.0.1:%s/404' % mock_csw_source.PORT
