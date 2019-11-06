@@ -85,7 +85,7 @@ class TestCSWHarvester(object):
         return harvest_object, result, dataset
 
     def test_sample3(self):
-        # testing with geonode.state.gov 
+        # testing with data from geonode.state.gov 
         # getrecords XML: http://geonode.state.gov/catalogue/csw?service=CSW&version=2.0.2&request=GetRecords&ElementSetName=full&typenames=csw:Record&constraints=[]&esn=brief&outputschema=http://www.isotc211.org/2005/gmd&maxrecords=9&resulttype=results
 
         url = 'http://127.0.0.1:%s/sample3' % mock_csw_source.PORT
@@ -95,7 +95,7 @@ class TestCSWHarvester(object):
         assert 'There is a schema field with the same name' in str(e.exception)
 
     def test_sample4(self):
-        # testing with portal.opentopography.org/geoportal/csw
+        # testing with data from portal.opentopography.org/geoportal/csw
         # RECORDS
         # https://portal.opentopography.org/geoportal/csw?service=CSW&version=2.0.2&request=GetRecords&ElementSetName=full&typenames=csw:Record&resulttype=results&constraints=[]&esn=brief&=outputschemahttp://www.isotc211.org/2005/gmd&maxrecords=9
         # record by ID
