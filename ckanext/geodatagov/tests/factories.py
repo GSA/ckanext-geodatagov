@@ -22,6 +22,8 @@ class HarvestSource(factory.Factory):
         if args:
             assert False, "Positional args aren't supported, use keyword args."
         context = {'user': _get_action_user_name(kwargs)}
+        if kwargs.get('owner_org', False):
+            context['owner_org'] = kwargs['owner_org']
         # If there is an existing source for this URL, and we can't create
         # another source with that URL, just return the original one.
         try:
