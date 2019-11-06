@@ -103,7 +103,7 @@ class TestCSWHarvester(object):
     def test_sample4(self):
         # testing with data from portal.opentopography.org/geoportal/csw
         # RECORDS
-        # https://portal.opentopography.org/geoportal/csw?service=CSW&version=2.0.2&request=GetRecords&ElementSetName=full&typenames=csw:Record&resulttype=results&constraints=[]&esn=brief&=outputschemahttp://www.isotc211.org/2005/gmd&maxrecords=9
+        # https://portal.opentopography.org/geoportal/csw?service=CSW&version=2.0.2&request=GetRecords&ElementSetName=full&typenames=csw:Record&resulttype=results&constraints=[]&esn=brief&outputschema=http://www.isotc211.org/2005/gmd&maxrecords=9
         # record by ID
         # https://portal.opentopography.org/geoportal/csw?service=CSW&version=2.0.2&request=GetRecordById&ElementSetName=full&typenames=csw:Record&outputschema=http://www.isotc211.org/2005/gmd&id=OT.102019.6341.1&esn=full
 
