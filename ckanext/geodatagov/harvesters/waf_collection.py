@@ -1,4 +1,5 @@
 import logging
+log = logging.getLogger(__name__)
 import hashlib
 import requests
 
@@ -24,6 +25,7 @@ class WAFCollectionHarvester(GeoDataGovWAFHarvester):
     def extra_schema(self):
         extra_schema = super(WAFCollectionHarvester, self).extra_schema()
         extra_schema['collection_metadata_url'] = [not_empty, unicode]
+        log.debug('Getting extra schema for WAFCollectionHarvester: {}'.format(extra_schema))
         return extra_schema
 
     def get_package_dict(self, iso_values, harvest_object):
@@ -49,9 +51,7 @@ class WAFCollectionHarvester(GeoDataGovWAFHarvester):
         return package_dict
 
     def gather_stage(self, harvest_job):
-        log = logging.getLogger(__name__ + '.WAF.gather')
         log.debug('WafHarvester gather_stage for job: %r', harvest_job)
-
 
         self.harvest_job = harvest_job
 

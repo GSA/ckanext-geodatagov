@@ -1,5 +1,7 @@
 import re
+import json
 import logging
+log = logging.getLogger(__name__)
 import urlparse
 
 import requests
@@ -15,7 +17,7 @@ from ckanext.harvest.model import HarvestObjectExtra as HOExtra
 from ckanext.spatial.harvesters.base import guess_standard
 
 from ckanext.spatial.validation import Validators
-
+# from ckanext.spatial.validation import ISO19139NGDCSchema
 from ckanext.spatial.harvesters.base import SpatialHarvester
 from ckanext.spatial.harvesters import CSWHarvester, WAFHarvester, DocHarvester
 
@@ -35,9 +37,17 @@ for custom_validator in custom_validators:
 
 
 def validate_profiles(profile):
-    if profile not in [p[0] for p in VALIDATION_PROFILES]:
+    if isinstance(profile, list) and len(profile) == 1:
+        profile = profile[0]
+    validation_profile_names = [p[0] for p in VALIDATION_PROFILES]
+    log.info('Validate {} ({}) in profiles func {}'.format(profile, type(profile), validation_profile_names))
+
+    if profile not in validation_profile_names:
+        log.error('Profile {} not found in {}'.format(profile, validation_profile_names))
         raise Invalid('Unknown validation profile: {0}'.format(profile))
-    return profile
+    
+    return [unicode(profile)]
+
 
 def default_groups_validator(value):
     # Check if default groups exist
@@ -48,13 +58,16 @@ def default_groups_validator(value):
 
     return value
 
+
 class GeoDataGovHarvester(SpatialHarvester):
 
     def extra_schema(self):
+        log.debug('Getting extra schema for GeoDataGovHarvester')
         return {
             'private_datasets': [ignore_empty, boolean_validator],
             'default_groups': [ignore_empty, default_groups_validator, lambda value: [value]],
-            'validator_profiles': [ignore_empty, unicode, validate_profiles, lambda value: [value]],
+            # 'validator_profiles': [ignore_empty, unicode, validate_profiles, lambda value: [value]],
+            'validator_profiles': [ignore_empty, validate_profiles],
         }
 
     def get_package_dict(self, iso_values, harvest_object):
@@ -106,18 +119,22 @@ class GeoDataGovHarvester(SpatialHarvester):
             return None
 
         # Validate against FGDC schema
+
         if self.source_config.get('validator_profiles'):
             profiles = self.source_config.get('validator_profiles')
         else:
             profiles = ['fgdc_minimal']
+        log.debug('Validatos profiles for transform iso {}'.format(profiles))
 
         validator = Validators(profiles=profiles)
         for custom_validator in custom_validators:
+            log.debug('Add validator: {}'.format(custom_validator))
             validator.add_validator(custom_validator)
 
         is_valid, profile, errors = self._validate_document(original_document, harvest_object,
                                                    validator=validator)
         if not is_valid:
+            log.error('Invalid document: {} with profile {}'.format(errors, profile))
             # TODO: Provide an option to continue anyway
             return None
 
@@ -200,7 +217,6 @@ class GeoDataGovGeoportalHarvester(CSWHarvester, GeoDataGovHarvester):
 
     def fetch_stage(self,harvest_object):
 
-        log = logging.getLogger(__name__ + '.geoportal.fetch')
         log.debug('CswHarvester fetch_stage for object: %s', harvest_object.id)
 
         url = harvest_object.source.url

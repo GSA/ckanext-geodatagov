@@ -5,6 +5,8 @@ try:
 except ImportError:
     from ckan.tests.factories import _get_action_user_name
 from ckan.plugins import toolkit
+import logging
+log = logging.getLogger(__name__)
 
 
 class HarvestSource(factory.Factory):
@@ -26,6 +28,7 @@ class HarvestSource(factory.Factory):
             context['owner_org'] = kwargs['owner_org']
         # If there is an existing source for this URL, and we can't create
         # another source with that URL, just return the original one.
+        log.info('Factory HarvestSource : {} : {}'.format(context, kwargs))
         try:
             source_dict = toolkit.get_action('harvest_source_show')(
                 context, dict(url=kwargs['url']))
@@ -44,6 +47,10 @@ class HarvestSourceObj(HarvestSource):
 
 class CSWHarvestSourceObj(HarvestSourceObj):
     source_type = 'csw'
+
+
+class WafCollectionHarvestSourceObj(HarvestSourceObj):
+    source_type = 'waf-collection'
 
 
 class HarvestJob(factory.Factory):
