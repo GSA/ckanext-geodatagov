@@ -1,9 +1,6 @@
 version: 2.1
 jobs:
   build_ckan_28:
-    branches:
-      only:
-        - master
     working_directory: ~/ckanext-geodatagov
     machine:
       image: circleci/classic:201708-01
@@ -20,9 +17,6 @@ jobs:
           command: bin/travis-run.sh
 
   build_ckan_23:
-    branches:
-      only:
-        - master
     working_directory: ~/ckanext-geodatagov
     machine:
       image: circleci/classic:201708-01
