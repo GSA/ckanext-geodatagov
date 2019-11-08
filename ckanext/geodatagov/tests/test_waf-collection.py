@@ -5,33 +5,35 @@ import json
 from mock import patch, MagicMock, Mock
 from requests.exceptions import HTTPError, RequestException
 
+from ckan import model
+from ckan.plugins import toolkit
+from ckan.lib.munge import munge_title_to_name
+from factories import (WafCollectionHarvestSourceObj,
+                       HarvestJobObj)
+
+import ckanext.harvest.model as harvest_model
+from ckanext.spatial.validation import all_validators
+from ckanext.geodatagov.harvesters.waf_collection import WAFCollectionHarvester
+
 try:
     from ckan.tests.helpers import reset_db, call_action
     from ckan.tests.factories import Organization, Group, _get_action_user_name
 except ImportError:
     from ckan.new_tests.helpers import reset_db, call_action
     from ckan.new_tests.factories import Organization, Group, _get_action_user_name
-from ckan import model
-from ckan.plugins import toolkit
-from ckan.lib.munge import munge_title_to_name
-from factories import (CSWHarvestSourceObj,
-                       HarvestJobObj)
 
-import ckanext.harvest.model as harvest_model
-from ckanext.harvest.harvesters.base import HarvesterBase
-from ckanext.geodatagov.harvesters.base import GeoDataGovCSWHarvester
 import logging
 log = logging.getLogger(__name__)
 
-import mock_csw_source
+import mock_xml_file_server
 
 
-class TestCSWHarvester(object):
+class TestWafCollectionHarvester(object):
 
     @classmethod
     def setup_class(cls):
         log.info('Starting mock http server')
-        mock_csw_source.serve()
+        mock_xml_file_server.serve()
         
     @classmethod
     def setup(cls):
@@ -46,12 +48,19 @@ class TestCSWHarvester(object):
                           context={'user': user_name},
                           name='test-org')
 
-    def run_gather(self, url):
-        source = CSWHarvestSourceObj(url=url, owner_org='test-org')
+    def run_gather(self, url, source_config):
+
+        sc = json.loads(source_config)
+        existing_profiles = [v.name for v in all_validators]
+        log.info('Existing validator profiles: {}'.format(existing_profiles))
+        source = WafCollectionHarvestSourceObj(url=url,
+                                               owner_org='test-org',
+                                               # config=source_config,
+                                               **sc)
         job = HarvestJobObj(source=source)
 
-        self.harvester = GeoDataGovCSWHarvester()
-
+        self.harvester = WAFCollectionHarvester()
+        
         # gather stage
         log.info('GATHERING %s', url)
         obj_ids = self.harvester.gather_stage(job)
@@ -104,47 +113,36 @@ class TestCSWHarvester(object):
 
         return datasets
 
-    def test_sample3(self):
-        # testing with data from geonode.state.gov 
-        # getrecords XML: http://geonode.state.gov/catalogue/csw?service=CSW&version=2.0.2&request=GetRecords&ElementSetName=full&typenames=csw:Record&constraints=[]&esn=brief&outputschema=http://www.isotc211.org/2005/gmd&maxrecords=9&resulttype=results
-
-        url = 'http://127.0.0.1:%s/sample3' % mock_csw_source.PORT
-        obj_ids = self.run_gather(url=url)
-        assert len(obj_ids) == 2
+    def test_sample1(self):
+        url = 'http://127.0.0.1:%s/waf-collection1/index.html' % mock_xml_file_server.PORT
+        
+        # http://meta.geo.census.gov/data/existing/decennial/GEO/GPMB/TIGERline/TIGER2013/SeriesCollection/SeriesCollection_tl_2013_county.shp.iso.xml
+        collection_metadata = "http://127.0.0.1:%s/waf-collection1/cfg/SeriesCollection_tl_2013_county.shp.iso.xml" % mock_xml_file_server.PORT
+        config = '{"collection_metadata_url": "%s", "validator_profiles": ["iso19139ngdc"], "private_datasets": false}' % collection_metadata
+        obj_ids = self.run_gather(url=url, source_config=config)
+        
         self.run_fetch()
         datasets = self.run_import()
-        assert len(datasets) == 2
-        titles = ['Syria_RefugeeSites_2015Apr16_HIU_USDoS',
-                  'Syria_IDPSites_2015Jun11_HIU_USDoS']
-        for dataset in datasets:
-            assert dataset.title in titles
+        assert len(datasets) == 1
+        assert datasets[0].name, 'tiger-line-shapefile-2013-nation-u-s-current-county-and-equivalent-national-shapefile'
 
-    def test_sample4(self):
-        # testing with data from portal.opentopography.org/geoportal/csw
-        # RECORDS
-        # https://portal.opentopography.org/geoportal/csw?service=CSW&version=2.0.2&request=GetRecords&ElementSetName=full&typenames=csw:Record&resulttype=results&constraints=[]&esn=brief&outputschema=http://www.isotc211.org/2005/gmd&maxrecords=9
-        # record by ID
-        # https://portal.opentopography.org/geoportal/csw?service=CSW&version=2.0.2&request=GetRecordById&ElementSetName=full&typenames=csw:Record&outputschema=http://www.isotc211.org/2005/gmd&id=OT.102019.6341.1&esn=full
-
-        url = 'http://127.0.0.1:%s/sample4' % mock_csw_source.PORT
-        obj_ids = self.run_gather(url=url)
-        assert len(obj_ids) == 2
+    def test_sample2(self):
+        url = 'http://127.0.0.1:%s/waf-collection2/index.html' % mock_xml_file_server.PORT
+        
+        # http://meta.geo.census.gov/data/existing/decennial/GEO/GPMB/TIGERline/TIGER2013/SeriesCollection/SeriesCollection_tl_2013_county.shp.iso.xml
+        collection_metadata = "http://127.0.0.1:%s/waf-collection2/cfg/SeriesCollection_tl_2013_county.shp.iso.xml" % mock_xml_file_server.PORT
+        config = '{"collection_metadata_url": "%s", "validator_profiles": ["iso19139ngdc"], "private_datasets": false}' % collection_metadata
+        obj_ids = self.run_gather(url=url, source_config=config)
+        
         self.run_fetch()
-        datasets = self.run_import()
-        assert len(datasets) == 2
-        titles = ['Alteration of Groundwater Flow due to Slow Landslide Failure, CA',
-                  'High Resolution Topography of House Range Fault, Utah']
-        for dataset in datasets:
-            assert dataset.title in titles
-
-    def test_404(self):
-        url = 'http://127.0.0.1:%s/404' % mock_csw_source.PORT
+        
+        # we don't manage IS0 19110
         with assert_raises(Exception) as e:
-            self.run_gather(url=url)
-        assert 'HTTP Error 404' in str(e.exception)
+            self.run_import()
+        assert 'Transformation to ISO failed' in str(e.exception)
 
-    def test_500(self):
-        url = 'http://127.0.0.1:%s/500' % mock_csw_source.PORT
-        with assert_raises(Exception) as e:
-            self.run_gather(url=url)
-        assert 'HTTP Error 500' in str(e.exception)
+    # def test_404(self):
+    #     url = 'http://127.0.0.1:%s/404' % mock_xml_file_server.PORT
+    #     with assert_raises(Exception) as e:
+    #         self.run_gather(url=url)
+    #     assert 'HTTP Error 404' in str(e.exception)

@@ -1,1 +1,2 @@
 mock
+flask_debugtoolbar
