@@ -117,14 +117,29 @@ class TestWafCollectionHarvester(object):
         url = 'http://127.0.0.1:%s/waf-collection1/index.html' % mock_xml_file_server.PORT
         
         # http://meta.geo.census.gov/data/existing/decennial/GEO/GPMB/TIGERline/TIGER2013/SeriesCollection/SeriesCollection_tl_2013_county.shp.iso.xml
-        collection_metadata = "http://127.0.0.1:%s/waf-collection1/cfgSeriesCollection_tl_2013_county.shp.iso.xml" % mock_xml_file_server.PORT
+        collection_metadata = "http://127.0.0.1:%s/waf-collection1/cfg/SeriesCollection_tl_2013_county.shp.iso.xml" % mock_xml_file_server.PORT
         config = '{"collection_metadata_url": "%s", "validator_profiles": ["iso19139ngdc"], "private_datasets": false}' % collection_metadata
         obj_ids = self.run_gather(url=url, source_config=config)
         
         self.run_fetch()
         datasets = self.run_import()
+        assert len(datasets) == 1
+        assert datasets[0].name, 'tiger-line-shapefile-2013-nation-u-s-current-county-and-equivalent-national-shapefile'
+
+    def test_sample2(self):
+        url = 'http://127.0.0.1:%s/waf-collection2/index.html' % mock_xml_file_server.PORT
         
-        raise NotImplementedError
+        # http://meta.geo.census.gov/data/existing/decennial/GEO/GPMB/TIGERline/TIGER2013/SeriesCollection/SeriesCollection_tl_2013_county.shp.iso.xml
+        collection_metadata = "http://127.0.0.1:%s/waf-collection2/cfg/SeriesCollection_tl_2013_county.shp.iso.xml" % mock_xml_file_server.PORT
+        config = '{"collection_metadata_url": "%s", "validator_profiles": ["iso19139ngdc"], "private_datasets": false}' % collection_metadata
+        obj_ids = self.run_gather(url=url, source_config=config)
+        
+        self.run_fetch()
+        
+        # we don't manage IS0 19110
+        with assert_raises(Exception) as e:
+            self.run_import()
+        assert 'Transformation to ISO failed' in str(e.exception)
 
     # def test_404(self):
     #     url = 'http://127.0.0.1:%s/404' % mock_xml_file_server.PORT
