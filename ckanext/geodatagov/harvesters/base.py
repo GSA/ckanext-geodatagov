@@ -122,7 +122,7 @@ class GeoDataGovHarvester(SpatialHarvester):
             profiles = self.source_config.get('validator_profiles')
         else:
             profiles = ['fgdc_minimal']
-        log.debug('Validatos profiles for transform iso {}'.format(profiles))
+        log.debug('Validates profiles for transform iso {}'.format(profiles))
 
         validator = Validators(profiles=profiles)
         for custom_validator in custom_validators:
