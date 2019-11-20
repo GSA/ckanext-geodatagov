@@ -65,7 +65,6 @@ class GeoDataGovHarvester(SpatialHarvester):
         return {
             'private_datasets': [ignore_empty, boolean_validator],
             'default_groups': [ignore_empty, default_groups_validator, lambda value: [value]],
-            # 'validator_profiles': [ignore_empty, unicode, validate_profiles, lambda value: [value]],
             'validator_profiles': [ignore_empty, validate_profiles],
         }
 
