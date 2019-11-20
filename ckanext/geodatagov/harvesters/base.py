@@ -17,7 +17,6 @@ from ckanext.harvest.model import HarvestObjectExtra as HOExtra
 from ckanext.spatial.harvesters.base import guess_standard
 
 from ckanext.spatial.validation import Validators
-# from ckanext.spatial.validation import ISO19139NGDCSchema
 from ckanext.spatial.harvesters.base import SpatialHarvester
 from ckanext.spatial.harvesters import CSWHarvester, WAFHarvester, DocHarvester
 
