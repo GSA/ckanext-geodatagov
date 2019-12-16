@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/datopian/ckanext-geodatagov.svg?style=svg)](https://circleci.com/gh/datopian/ckanext-geodatagov)
+[![CircleCI](https://circleci.com/gh/gsa/ckanext-geodatagov.svg?style=svg)](https://circleci.com/gh/datopian/ckanext-geodatagov)
 
 # Data.gov  
 
