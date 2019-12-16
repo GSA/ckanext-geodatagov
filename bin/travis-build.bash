@@ -29,7 +29,7 @@ git clone https://github.com/ckan/ckan
 cd ckan
 if [ $CKANVERSION == '2.8' ]
 then
-	git checkout master
+	git checkout 2.8
 elif [ $CKANVERSION == '2.3' ]
 then
 	git checkout release-v2.3
