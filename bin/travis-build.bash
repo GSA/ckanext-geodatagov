@@ -33,6 +33,7 @@ then
 elif [ $CKANVERSION == '2.3' ]
 then
 	git checkout release-v2.3
+	pip install wheel
 fi
 
 # Unpin CKAN's psycopg2 dependency get an important bugfix
