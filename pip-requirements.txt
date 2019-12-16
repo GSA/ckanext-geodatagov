@@ -2,3 +2,4 @@
 ply==3.4
 boto
 lxml
+pylons==0.9.7
