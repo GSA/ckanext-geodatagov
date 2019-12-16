@@ -4,7 +4,6 @@ jobs:
     working_directory: ~/ckanext-geodatagov
     machine:
       image: circleci/classic:201708-01
-      # image: circleci/postgres:9.6-alpine
     environment:
       CKANVERSION=2.8
     steps:
@@ -20,14 +19,10 @@ jobs:
     working_directory: ~/ckanext-geodatagov
     machine:
       image: circleci/classic:201708-01
-      # image: circleci/postgres:9.6-alpine
     environment:
       CKANVERSION=2.3
     steps:
       - checkout
-      - run:
-          name: where am I
-          command: pwd && ls -la
       - run:
           name: install
           command: bin/travis-build.bash
