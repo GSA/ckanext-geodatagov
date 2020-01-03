@@ -67,14 +67,9 @@ cd ..
 echo "-----------------------------------------------------------------"
 echo "Installing Harvester"
 
-# testing fix 
-git clone https://github.com/avdata99/ckanext-harvest
-# git clone https://github.com/GSA/ckanext-harvest
-
+git clone https://github.com/GSA/ckanext-harvest
 cd ckanext-harvest
-# git checkout datagov
-git checkout av-fix-get-harvest-by-url
-
+git checkout datagov
 
 python setup.py develop
 pip install -r pip-requirements.txt
