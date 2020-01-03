@@ -39,7 +39,7 @@ def validate_profiles(profile):
     if isinstance(profile, list) and len(profile) == 1:
         profile = profile[0]
     validation_profile_names = [p[0] for p in VALIDATION_PROFILES]
-    log.info('Validate {} ({}) in profiles func {}'.format(profile, type(profile), validation_profile_names))
+    log.debug('Validate {} ({}) in profiles func {}'.format(profile, type(profile), validation_profile_names))
 
     if profile not in validation_profile_names:
         log.error('Profile {} not found in {}'.format(profile, validation_profile_names))
