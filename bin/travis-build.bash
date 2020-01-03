@@ -66,7 +66,7 @@ paster db init -c test-core.ini
 cd ..
 echo "-----------------------------------------------------------------"
 echo "Installing Harvester"
-git clone https://github.com/ckan/ckanext-harvest
+git clone https://github.com/GSA/ckanext-harvest
 cd ckanext-harvest
 git checkout master
 
