@@ -16,14 +16,16 @@ cd .. # CircleCI starts inside ckanext-geodatagov folder
 pwd
 ls -la
 
-git clone https://github.com/ckan/ckan
-cd ckan
 if [ $CKANVERSION == '2.8' ]
 then
+	git clone https://github.com/ckan/ckan
+	cd ckan
 	git checkout 2.8
 elif [ $CKANVERSION == '2.3' ]
 then
-	git checkout release-v2.3
+	git clone https://github.com/GSA/ckan
+	cd ckan
+	git checkout datagov
 	pip install wheel
 fi
 
