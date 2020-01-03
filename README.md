@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/gsa/ckanext-geodatagov.svg?style=svg)](https://circleci.com/gh/datopian/ckanext-geodatagov)
+[![CircleCI](https://circleci.com/gh/gsa/ckanext-geodatagov.svg?style=svg)](https://circleci.com/gh/gsa/ckanext-geodatagov)
 
 # Data.gov  
 
@@ -16,4 +16,3 @@ Most Data.gov specific CKAN customizations are contained within this extension, 
 We're so glad you're thinking about contributing to Data.gov!
 
 Before contributing to this extension we encourage you to read our [CONTRIBUTING](https://github.com/GSA/ckanext-geodatagov/blob/master/CONTRIBUTING.md) guide, our [LICENSE](https://github.com/GSA/ckanext-geodatagov/blob/master/LICENSE.md), and our README (you are here), all of which should be in this repository. If you have any questions, you can email the Data.gov team at [datagov@gsa.gov](mailto:datagov@gsa.gov).
-
