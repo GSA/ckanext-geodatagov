@@ -66,9 +66,15 @@ paster db init -c test-core.ini
 cd ..
 echo "-----------------------------------------------------------------"
 echo "Installing Harvester"
-git clone https://github.com/GSA/ckanext-harvest
+
+# testing fix 
+git clone https://github.com/avdata99/ckanext-harvest
+# git clone https://github.com/GSA/ckanext-harvest
+
 cd ckanext-harvest
-git checkout master
+# git checkout datagov
+git checkout av-fix-get-harvest-by-url
+
 
 python setup.py develop
 pip install -r pip-requirements.txt
