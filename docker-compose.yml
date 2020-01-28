@@ -1,7 +1,8 @@
 version: "3.2"
 services:
   ckanextgeodatagov:
-    image: openknowledge/ckan-dev:2.8
+    build: 
+      context: ckan-docker
     env_file:
       - .env
     links:
@@ -13,6 +14,7 @@ services:
       - "0.0.0.0:${CKAN_PORT}:5000"
     volumes:
       - ckan_storage:/var/lib/ckan
+      - .:/srv/app/src_extensions/geodatagov
   db:
     image: ckan/postgresql
     expose:
