@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/gsa/ckanext-geodatagov.svg?style=svg)](https://circleci.com/gh/gsa/ckanext-geodatagov)
+[![CircleCI](https://circleci.com/gh/GSA/ckanext-geodatagov.svg?style=svg)](https://circleci.com/gh/GSA/ckanext-geodatagov)
 
 # Data.gov  
 
@@ -16,3 +16,23 @@ Most Data.gov specific CKAN customizations are contained within this extension, 
 We're so glad you're thinking about contributing to Data.gov!
 
 Before contributing to this extension we encourage you to read our [CONTRIBUTING](https://github.com/GSA/ckanext-geodatagov/blob/master/CONTRIBUTING.md) guide, our [LICENSE](https://github.com/GSA/ckanext-geodatagov/blob/master/LICENSE.md), and our README (you are here), all of which should be in this repository. If you have any questions, you can email the Data.gov team at [datagov@gsa.gov](mailto:datagov@gsa.gov).
+
+## Using the Docker Dev Environment
+
+### Build Environment
+
+To start environment, run:
+```docker-compose build```
+```docker-compose up```
+
+To shut down environment, run"
+
+```docker-compose down```
+
+CKAN will start at localhost:5000
+
+
+### Run Tests with Docker
+```docker exec -it ckanext-geodatagov_ckanextgeodatagov_1 /bin/bash -c "export TERM=xterm; exec bash"```
+
+```nosetests --ckan --with-pylons=src_extensions/geodatagov/test.ini src_extensions/geodatagov/```
