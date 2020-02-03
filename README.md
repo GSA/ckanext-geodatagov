@@ -33,6 +33,13 @@ CKAN will start at localhost:5000
 
 
 ### Run Tests with Docker
+
+Make sure docker environment is running.
+
+Docker exec into the CKAN container:
+
 ```docker exec -it ckanext-geodatagov_ckanextgeodatagov_1 /bin/bash -c "export TERM=xterm; exec bash"```
+
+Run the tests:
 
 ```nosetests --ckan --with-pylons=src_extensions/geodatagov/test.ini src_extensions/geodatagov/```
