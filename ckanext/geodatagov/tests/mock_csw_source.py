@@ -11,13 +11,10 @@ import SimpleHTTPServer
 import SocketServer
 from threading import Thread
 import logging
-log = logging.getLogger("harvester")
-cwd = os.getcwd()
+from ckanext import geodatagov
 
-if cwd == '/srv/app':
-    SAMPLES_PATH =  '/srv/app/src_extensions/geodatagov/ckanext/geodatagov/tests/data-samples'
-else:
-    SAMPLES_PATH =  'ckanext/geodatagov/tests/data-samples'
+log = logging.getLogger("harvester")
+SAMPLES_PATH = os.path.join(geodatagov.__path__[0], 'tests/data-samples')
 PORT = 8998
 
 
