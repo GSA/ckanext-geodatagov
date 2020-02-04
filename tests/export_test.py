@@ -1,6 +1,14 @@
 import json
+import os
 
-with open('datasets.json') as data_file:
+cwd = os.getcwd()
+
+if cwd == '/srv/app/src_extensions/geodatagov/ckanext/geodatagov/tests/data-samples':
+    test_file = "/srv/app/src_extensions/geodatagov/tests/datasets.json"
+else:
+    test_file = "datasets.json"
+
+with open(test_file) as data_file:
     packages = json.load(data_file)
 
 assert isinstance(packages, list)
