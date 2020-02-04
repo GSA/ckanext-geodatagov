@@ -1,12 +1,9 @@
 import json
 import os
+from ckanext import geodatagov
 
-cwd = os.getcwd()
+test_file = os.path.abspath(os.path.join(geodatagov.__path__[0], '../..', 'tests/datasets.json'))
 
-if cwd == '/srv/app/src_extensions/geodatagov/ckanext/geodatagov/tests/data-samples':
-    test_file = "/srv/app/src_extensions/geodatagov/tests/datasets.json"
-else:
-    test_file = "datasets.json"
 
 with open(test_file) as data_file:
     packages = json.load(data_file)
