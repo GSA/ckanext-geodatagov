@@ -12,7 +12,12 @@ import SocketServer
 from threading import Thread
 import logging
 log = logging.getLogger("harvester")
+cwd = os.getcwd()
 
+if cwd == '/srv/app':
+    SAMPLES_PATH =  '/srv/app/src_extensions/geodatagov/ckanext/geodatagov/tests/data-samples'
+else:
+    SAMPLES_PATH =  'ckanext/geodatagov/tests/data-samples'
 PORT = 8998
 
 
@@ -25,8 +30,6 @@ class MockCSWHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         # getRecordById uses: /sample3?outputFormat=application%2Fxml&service=CSW&outputSchema=http%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd&request=GetRecordById&version=2.0.2&elementsetname=full&id=c540e08e-015c-11e5-853f-22000b8e85d8
         self.test_name = None
         self.sample_file = None
-        self.samples_path = 'ckanext/geodatagov/tests/data-samples'
-        
         params = parse_qs(self.path)
         log.info('GET PARAMS {}'.format(params))
         if self.path.startswith('/sample'):
@@ -64,7 +67,6 @@ class MockCSWHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         
         self.test_name = None
         self.sample_file = None
-        self.samples_path = 'ckanext/geodatagov/tests/data-samples'
         if self.path.startswith('/sample'):
             n = self.path[7]
             if 'GetRecords' in myroot.tag:
@@ -82,7 +84,7 @@ class MockCSWHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
                             content_type='application/json')
     
     def respond_json_sample_file(self, file_path, status=200):
-        pt = os.path.join(self.samples_path, file_path)
+        pt = os.path.join(SAMPLES_PATH, file_path)
         data = open(pt, 'r')
         content = data.read()
         log.info('mock respond {}'.format(content[:90]))
@@ -90,7 +92,7 @@ class MockCSWHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
                             content_type='application/json')
 
     def respond_xml_sample_file(self, file_path, status=200):
-        pt = os.path.join(self.samples_path, file_path)
+        pt = os.path.join(SAMPLES_PATH, file_path)
         data = open(pt, 'r')
         content = data.read()
         log.info('mock respond {}'.format(content[:90]))
