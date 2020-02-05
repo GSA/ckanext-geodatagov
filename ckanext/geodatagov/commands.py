@@ -61,7 +61,7 @@ class GeoGovCommand(cli.CkanCommand):
         Parse command line arguments and call appropriate method.
         '''
         if not self.args or self.args[0] in ['--help', '-h', 'help']:
-            print GeoGovCommand.__doc__
+            print(GeoGovCommand.__doc__)
             return
 
         cmd = self.args[0]
@@ -74,33 +74,33 @@ class GeoGovCommand(cli.CkanCommand):
 
         if cmd == 'import-harvest-source':
             if not len(self.args) in [2]:
-                print GeoGovCommand.__doc__
+                print(GeoGovCommand.__doc__)
                 return
 
             self.import_harvest_source(self.args[1])
 
         if cmd == 'import-orgs':
             if not len(self.args) in [2, 3]:
-                print GeoGovCommand.__doc__
+                print(GeoGovCommand.__doc__)
                 return
 
             self.import_organizations(self.args[1])
         if cmd == 'import-dms':
             if not len(self.args) in [2]:
-                print GeoGovCommand.__doc__
+                print(GeoGovCommand.__doc__)
                 return
             self.import_dms(self.args[1])
         if cmd == 'import-doi':
             self.import_doi()
         if cmd == 'post-install-dbinit':
             f = open('/usr/lib/ckan/src/ckanext-geodatagov/what_to_alter.sql')
-            print "running what_to_alter.sql"
+            print("running what_to_alter.sql")
             test = model.Session.execute(f.read())
             f = open('/usr/lib/ckan/src/ckanext-geodatagov/constraints.sql')
-            print "running constraints.sql"
+            print("running constraints.sql")
             test = model.Session.execute(f.read())
             model.Session.commit()
-            print "Success"
+            print("Success")
         if cmd == 'clean-deleted':
             self.clean_deleted()
         if cmd == 'db_solr_sync':
@@ -191,7 +191,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                          'session': model.Session, 'api_version': 3},
                         harvest_source_dict
                     )
-                except ckan.logic.ValidationError, e:
+                except ckan.logic.ValidationError as e:
                     error_log.write(json.dumps(harvest_source_dict))
                     error_log.write(str(e))
                     error_log.write('\n')
@@ -459,14 +459,14 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
 
     def db_solr_sync(self):
 
-        print str(datetime.datetime.now()) + ' Entering Database Solr Sync function.'
+        print(str(datetime.datetime.now()) + ' Entering Database Solr Sync function.')
 
         url = config.get('solr_url') + "/select?q=*%3A*&sort=id+asc&fl=id%2Cmetadata_modified&wt=json&indent=true"
         response = get_response(url)
 
         if (response != 'error'):
 
-            print str(datetime.datetime.now()) + ' Deleting records from miscs_solr_sync.'
+            print(str(datetime.datetime.now()) + ' Deleting records from miscs_solr_sync.')
             sql = '''delete from miscs_solr_sync'''
             model.Session.execute(sql)
             model.Session.commit()
@@ -478,23 +478,23 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             start = 0
             chunk_size = 1000
 
-            print str(datetime.datetime.now()) + ' Starting insertion of records in miscs_solr_sync .'
+            print(str(datetime.datetime.now()) + ' Starting insertion of records in miscs_solr_sync .')
 
             for x in range(0, int(math.ceil(rows / chunk_size)) + 1):
 
                 if (x == 0):
                     start = 0
 
-                print str(datetime.datetime.now()) + ' Fetching ' + url + "&rows=" + str(chunk_size) + "&start=" + str(
-                    start)
+                print(str(datetime.datetime.now()) + ' Fetching ' + url + "&rows=" + str(chunk_size) + "&start=" + str(
+                    start))
 
                 response = get_response(url + "&rows=" + str(chunk_size) + "&start=" + str(start))
                 f = response.read()
                 data = json.loads(f)
                 results = data.get('response').get('docs')
 
-                print str(datetime.datetime.now()) + ' Inserting ' + str(start) + ' - ' + str(
-                    start + int(data.get('responseHeader').get('params').get('rows')) - 1) + ' of ' + str(rows)
+                print(str(datetime.datetime.now()) + ' Inserting ' + str(start) + ' - ' + str(
+                    start + int(data.get('responseHeader').get('params').get('rows')) - 1) + ' of ' + str(rows))
 
                 for x in range(0, len(results)):
                     sql = '''select count(id) as count from package where id = :pkg_id;'''
@@ -511,10 +511,10 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                                 {'model': model, 'ignore_auth': True, 'validate': False},
                                 {'id': results[x]['id']})
                             if (str(results[x]['metadata_modified'])[:19] != pkg_dict['metadata_modified'][:19]):
-                                print str(datetime.datetime.now()) + ' Action Type : outsync for Package Id: ' + \
-                                      results[x]['id']
-                                print ' ' * 26 + ' Modified Date from Solr: ' + str(results[x]['metadata_modified'])
-                                print ' ' * 26 + ' Modified Date from Db: ' + pkg_dict['metadata_modified']
+                                print(str(datetime.datetime.now()) + ' Action Type : outsync for Package Id: ' + \
+                                      results[x]['id'])
+                                print(' ' * 26 + ' Modified Date from Solr: ' + str(results[x]['metadata_modified']))
+                                print(' ' * 26 + ' Modified Date from Db: ' + pkg_dict['metadata_modified'])
                                 sql = '''delete from miscs_solr_sync where pkg_id = :pkg_id;'''
                                 model.Session.execute(sql, {'pkg_id': results[x]['id']})
                                 sql = '''insert into miscs_solr_sync (pkg_id, action) values (:pkg_id, :action);'''
@@ -529,7 +529,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
 
                 start = int(data.get('responseHeader').get('params').get('start')) + chunk_size
 
-            print str(datetime.datetime.now()) + ' Starting Database to Solr Sync'
+            print(str(datetime.datetime.now()) + ' Starting Database to Solr Sync')
 
             # sql = '''Select id from package where id not in (select pkg_id from miscs_solr_sync); '''
             sql = '''Select p.id as pkg_id from package p
@@ -542,12 +542,12 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                 pkg_ids.add(row['pkg_id'])
             for pkg_id in pkg_ids:
                 try:
-                    print str(datetime.datetime.now()) + ' Building Id: ' + pkg_id
+                    print(str(datetime.datetime.now()) + ' Building Id: ' + pkg_id)
                     search.rebuild(pkg_id)
                 except ckan.logic.NotFound:
-                    print "Error: Not Found."
+                    print("Error: Not Found.")
                 except KeyboardInterrupt:
-                    print "Stopped."
+                    print("Stopped.")
                     return
                 except:
                     raise
@@ -559,17 +559,17 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                 pkg_ids.add(row['pkg_id'])
             for pkg_id in pkg_ids:
                 try:
-                    print str(datetime.datetime.now()) + ' Rebuilding Id: ' + pkg_id
+                    print(str(datetime.datetime.now()) + ' Rebuilding Id: ' + pkg_id)
                     search.rebuild(pkg_id)
                 except ckan.logic.NotFound:
-                    print "Error: Not Found."
+                    print("Error: Not Found.")
                 except KeyboardInterrupt:
-                    print "Stopped."
+                    print("Stopped.")
                     return
                 except:
                     raise
 
-            print str(datetime.datetime.now()) + ' Starting Solr to Database Sync'
+            print(str(datetime.datetime.now()) + ' Starting Solr to Database Sync')
 
             sql = '''Select pkg_id from miscs_solr_sync where action = 'notfound'; '''
             q = model.Session.execute(sql)
@@ -580,14 +580,14 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                 try:
                     search.clear(pkg_id)
                 except ckan.logic.NotFound:
-                    print "Error: Not Found."
+                    print("Error: Not Found.")
                 except KeyboardInterrupt:
-                    print "Stopped."
+                    print ("Stopped.")
                     return
                 except:
                     raise
 
-            print str(datetime.datetime.now()) + " All Sync Done."
+            print(str(datetime.datetime.now()) + " All Sync Done.")
 
     def combine_feeds(self):
         from xml.dom import minidom
@@ -608,14 +608,14 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             retry = 5
             delay = 3
             while retry > 0:
-                print '%s fetching %s' % (datetime.datetime.now(), url)
+                print('%s fetching %s' % (datetime.datetime.now(), url))
                 try:
                     xml = urllib.urlopen(url_page_feed).read()
                     xml = re.sub(RE_XML_ILLEGAL, "?", xml)
                     dom = minidom.parseString(xml)
                 except ExpatError:
-                    print 'retry url: %s' % url
-                    print 'deplay %s seconds...' % (delay ** (6 - retry))
+                    print('retry url: %s' % url)
+                    print('deplay %s seconds...' % (delay ** (6 - retry)))
                     time.sleep(delay ** (6 - retry))
                     retry = retry - 1
                     continue
@@ -651,7 +651,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         entry.feed = output
         entry.save()
 
-        print '%s combined feeds updated' % datetime.datetime.now()
+        print('%s combined feeds updated' % datetime.datetime.now())
 
 
     def harvest_job_cleanup(self):
@@ -665,13 +665,13 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             harvest_system_info = model.Session.query(HarvestSystemInfo).filter_by(key='last_run_time').first()
         except ProgrammingError:
             msg += 'No HarvestSystemInfo table defined.'
-            print msg
+            print(msg)
             email_log('harvest-job-cleanup', msg)
             return
 
         if not harvest_system_info:
             msg += 'Harvester is not running.'
-            print msg
+            print(msg)
             email_log('harvest-job-cleanup', msg)
             return
 
@@ -680,7 +680,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         time_current = time.time()
         if (time_current - last_run_time) > 3600:
             msg += 'Harvester is not running, or not frequently enough.\n'
-            print msg
+            print(msg)
             email_log('harvest-job-cleanup', msg)
             return
 
@@ -811,11 +811,11 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         else:
             email_log('harvest-job-cleanup', msg)
 
-        print msg
+        print(msg)
 
     def harvest_object_relink(self, harvest_source_id=None):
-        print '%s: Fix packages which lost harvest objects for harvest source %s.' % \
-                (datetime.datetime.now(), harvest_source_id if harvest_source_id else 'all')
+        print('%s: Fix packages which lost harvest objects for harvest source %s.' % \
+                (datetime.datetime.now(), harvest_source_id if harvest_source_id else 'all'))
 
         pkgs_problematic = set()
         # find packages that has no current harvest object
@@ -847,7 +847,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         for row in results:
             pkgs_problematic.add(row['package_id'])
         total = len(pkgs_problematic)
-        print '%s packages to be fixed.' % total
+        print('%s packages to be fixed.' % total)
 
         # set last complete harvest object to be current
         sql = '''
@@ -876,21 +876,21 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             model.Session.commit()
             count = count + 1
             if result:
-                print '%s: %s/%s id %s fixed. Now pushing to solr... ' % (datetime.datetime.now(), count, total, id),
+                print('%s: %s/%s id %s fixed. Now pushing to solr... ' % (datetime.datetime.now(), count, total, id))
                 try:
                     search.rebuild(id)
                 except KeyboardInterrupt:
-                    print "Stopped."
+                    print("Stopped.")
                     return
                 except:
                     raise
-                print 'Done.'
+                print('Done.')
             else:
-                print '%s: %s/%s id %s has no valid harvest object. Need to inspect mannully. ' % (
-                    datetime.datetime.now(), count, total, id)
+                print('%s: %s/%s id %s has no valid harvest object. Need to inspect mannully. ' % (
+                    datetime.datetime.now(), count, total, id))
 
         if not pkgs_problematic:
-            print '%s: All harvest objects look good. Nothing to do. ' % datetime.datetime.now()
+            print('%s: All harvest objects look good. Nothing to do. ' % datetime.datetime.now())
 
     @staticmethod
     def export_group_and_tags(packages):
@@ -929,7 +929,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         return result
 
     def export_csv(self):
-        print 'export started...'
+        print('export started...')
 
         # cron job
         # paster --plugin=ckanext-geodatagov geodatagov export-csv --config=/etc/ckan/production.ini
@@ -978,12 +978,12 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             result = result + GeoGovCommand.export_group_and_tags(packages)
 
         if not result:
-            print 'nothing to do'
+            print('nothing to do')
             return
 
         import datetime
 
-        print 'writing into db...'
+        print('writing into db...')
 
         date_suffix = datetime.datetime.strftime(datetime.datetime.now(), '%Y%m%d')
         csv_output = io.BytesIO()
@@ -1021,7 +1021,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         entry.csv = content
         entry.save()
 
-        print 'csv file topics-%s.csv is ready.' % date_suffix
+        print('csv file topics-%s.csv is ready.' % date_suffix)
 
     def sitemap_to_s3(self):
         log.info('sitemap is being generated...')
@@ -1175,14 +1175,14 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                     pages,
                     count
         )
-        print message
+        print(message)
         for i in range(pages):
             message = '{0:.19} doing page {1}/{2}...'.format(
                     str(datetime.datetime.now()),
                     i + 1,
                     pages
             )
-            print message
+            print(message)
 
             data_dict = {
                 'fq': fq,
@@ -1211,7 +1211,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         os.close(fd)
         os.close(fd_gz)
 
-        print 'compress and send to s3...'
+        print('compress and send to s3...')
 
         with open(path, 'rb') as f_in, gzip.open(path_gz, 'wb') as f_out:
             copyfileobj(f_in, f_out)
@@ -1227,10 +1227,10 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
 
         os.remove(path)
         os.remove(path_gz)
-        print '{0:.19} Done.'.format(str(datetime.datetime.now()))
+        print('{0:.19} Done.'.format(str(datetime.datetime.now())))
 
     def metrics_csv(self):
-        print str(datetime.datetime.now()) + ' metrics_csv is being generated...'
+        print(str(datetime.datetime.now()) + ' metrics_csv is being generated...')
 
         #cron job
         # paster --plugin=ckanext-geodatagov geodatagov metrics_csv --config=/etc/ckan/production.ini
@@ -1242,8 +1242,8 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         start_date_approximate = end_date - datetime.timedelta(days = 85)
         start_date = start_date_approximate.replace(day = 1)
         
-        print "starting date: ", start_date
-        print "end date: ", end_date
+        print("starting date: ", start_date)
+        print("end date: ", end_date)
 
         fd, path = mkstemp(suffix=".csv", prefix="metrics")
 
@@ -1272,7 +1272,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                         new_row.append(r)
                 csv_writer.writerow(new_row)
 
-        print 'Send to S3...'
+        print('Send to S3...')
 
         bucket_name = config.get('ckanext.geodatagov.aws_bucket_name')
         bucket_path = config.get('ckanext.geodatagov.metrics_csv.aws_storage_path', '')
@@ -1283,7 +1283,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
 
         os.remove(path)
 
-        print str(datetime.datetime.now()) + ' Done.'
+        print(str(datetime.datetime.now()) + ' Done.')
 
     
 def get_response(url):
@@ -1291,12 +1291,12 @@ def get_response(url):
     try:
         response = urlopen(req)
     except HTTPError as e:
-        print 'The server couldn\'t fulfill the request.'
-        print 'Error code: ', e.code
+        print('The server couldn\'t fulfill the request.')
+        print('Error code: ', e.code)
         return 'error'
     except URLError as e:
-        print 'We failed to reach a server.'
-        print 'Reason: ', e.reason
+        print('We failed to reach a server.')
+        print('Reason: ', e.reason)
         return 'error'
     else:
         return response
@@ -1313,7 +1313,7 @@ def email_log(log_type, msg):
              }
     try:
         mailer.mail_recipient(**email)
-    except Exception, e:
+    except Exception as e:
         log.error('Error: %s; email: %s' % (e, email))
 
 

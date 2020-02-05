@@ -42,4 +42,4 @@ for key, value in config.items('main'):
 with open('{0}_mod'.format(XSLT_FILE), 'w') as f4:
     f4.write(xslt)
 
-print 'Done'
+print('Done')

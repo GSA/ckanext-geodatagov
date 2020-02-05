@@ -42,11 +42,11 @@ def transform(xmldoc, xslt=config.defualt_xslt):
         tFactory.setAttribute('http://saxon.sf.net/feature/licenseFileLocation', '/etc/saxon-license.lic')
         try:
             _transform = tFactory.newTransformer(StreamSource(JavaFile(xslt)))
-        except TransformerConfigurationException, tce:
-            print tce
-            print '*' * 70
-            print 'This is likely that your license file for saxon is '\
-                  'missing or that there is a genuine error in the XSLT'
+        except TransformerConfigurationException as tce:
+            print(tce)
+            print('*' * 70)
+            print('This is likely that your license file for saxon is '\
+                  'missing or that there is a genuine error in the XSLT')
 
     fid, path, = tempfile.mkstemp(prefix='tmp' + str(uuid.uuid4()))
     os.close(fid)
@@ -68,7 +68,7 @@ def handler(environ, start_response):
     request = environ['wsgi.input'].read().decode('utf-8')
     try:
         result = transform(request)
-    except TransformerException, e:
+    except TransformerException as e:
         logging.error("%s" % e)
         start_response("409 Integrity Error", [ ('content-type', 'text/xml') ])
         return ["%s" % e]
@@ -79,5 +79,5 @@ def handler(environ, start_response):
 
 if __name__ == '__main__':
     filename = sys.argv[1]
-    print transform(open(filename).read())
+    print(transform(open(filename).read()))
     

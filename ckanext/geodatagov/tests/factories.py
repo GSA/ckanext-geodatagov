@@ -32,7 +32,7 @@ class HarvestSource(factory.Factory):
         try:
             source_dict = toolkit.get_action('harvest_source_show')(
                 context, dict(url=kwargs['url']))
-        except (KeyError, toolkit.ObjectNotFound), e:
+        except (KeyError, toolkit.ObjectNotFound):
             source_dict = toolkit.get_action('harvest_source_create')(
                 context, kwargs)
         if cls._return_type == 'dict':

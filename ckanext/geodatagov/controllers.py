@@ -1,6 +1,6 @@
 from pylons.i18n import _
 
-from ckan.lib.base import BaseController, c, response, abort
+from ckan.lib.base import BaseController, response, abort
 import ckan.model as model
 
 from ckanext.geodatagov.model import MiscsFeed, MiscsTopicCSV

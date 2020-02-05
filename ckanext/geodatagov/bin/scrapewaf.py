@@ -44,12 +44,12 @@ def add_status():
                         content_doc = requests.get(extracted_waf[0][0], timeout=60).content
                         standard = guess_standard(content_doc)
                         row_dict['standard'] = standard
-                    except Exception, e:
-                        print 'Error guessing format. Error is', e
+                    except Exception as e:
+                        print('Error guessing format. Error is', e)
             else:
                 row_dict['count'] = "0"
                 row_dict['count_with_date'] = "0"
-        except Exception, e:
+        except Exception as e:
             row_dict['error'] = str(e)
             row_dict['count'] = "0"
             row_dict['count_with_date'] = "0"
@@ -117,17 +117,17 @@ def extract_waf(content, base_url, scraper, results = None, depth=0):
         if '..' not in url and url[0] != '/' and url[-1] == '/':
             new_depth = depth + 1
             if depth > 10:
-                print 'max depth reached'
+                print('max depth reached')
                 continue
             new_url = urlparse.urljoin(base_url, url)
             if not new_url.startswith(base_url):
                 continue
-            print 'new_url', new_url
+            print('new_url', new_url)
             try:
                 response = requests.get(new_url)
                 content = response.content
             except Exception, e:
-                print str(e)
+                print(str(e)
                 continue
             extract_waf(content, new_url, scraper, results, new_depth)
             continue

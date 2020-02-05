@@ -1,13 +1,8 @@
-import copy
-from urllib2 import URLError
-from nose.tools import assert_equal, assert_raises, assert_in
+from nose.tools import assert_raises
 import json
-from mock import patch, MagicMock, Mock
-from requests.exceptions import HTTPError, RequestException
 
 from ckan import model
-from ckan.plugins import toolkit
-from ckan.lib.munge import munge_title_to_name
+
 from factories import (WafCollectionHarvestSourceObj,
                        HarvestJobObj)
 
@@ -17,10 +12,8 @@ from ckanext.geodatagov.harvesters.waf_collection import WAFCollectionHarvester
 
 try:
     from ckan.tests.helpers import reset_db, call_action
-    from ckan.tests.factories import Organization, Group, _get_action_user_name
 except ImportError:
     from ckan.new_tests.helpers import reset_db, call_action
-    from ckan.new_tests.factories import Organization, Group, _get_action_user_name
 
 import logging
 log = logging.getLogger(__name__)

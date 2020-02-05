@@ -25,7 +25,7 @@ def serve(port=PORT):
     httpd = TestServer(("", PORT), Handler)
     
     info = 'Serving test HTTP server at port', PORT
-    print info
+    print(info)
     log.info(info)
 
     httpd_thread = Thread(target=httpd.serve_forever)

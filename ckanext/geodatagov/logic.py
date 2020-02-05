@@ -5,10 +5,9 @@ import ckan.plugins as p
 from ckan.logic import side_effect_free
 from ckan.logic.action import get as core_get
 from ckanext.geodatagov.plugins import change_resource_details
-import ckan.lib.munge as munge
 import ckan.plugins as p
 from ckanext.geodatagov.harvesters.arcgis import _slugify
-from ckanext.harvest.model import HarvestJob, HarvestObject
+from ckanext.harvest.model import HarvestObject
 import ckan.logic.schema as schema
 
 log = logging.getLogger(__name__)
@@ -253,7 +252,7 @@ def doi_create(context, data_dict):
     new_package["extras"].append({"key": "source_doi_import_identifier", "value": True})
     owner_org = model.Group.get(ORG_MAPPING.get(new_package['organization']['name']))
     if not owner_org:
-        print str(datetime.datetime.now()) + ' Fail to import doi id ' + new_package['id'] + '. Organization ' + new_package['organization']['name'] + ' does not exist.'
+        print(str(datetime.datetime.now()) + ' Fail to import doi id ' + new_package['id'] + '. Organization ' + new_package['organization']['name'] + ' does not exist.')
         return
     new_package['owner_org'] = owner_org.name
     group_name = new_package.pop('owner_name', None)
@@ -281,7 +280,7 @@ def doi_create(context, data_dict):
     context['schema']['id'] = [p.toolkit.get_validator('not_empty')]
     context['return_id_only'] = True
     p.toolkit.get_action('package_create')(context, new_package)
-    print str(datetime.datetime.now()) + ' Imported doi id ' + new_package['id']
+    print(str(datetime.datetime.now()) + ' Imported doi id ' + new_package['id'])
 
 def doi_update(context, data_dict):
     model = context['model']
@@ -297,7 +296,7 @@ def doi_update(context, data_dict):
        old_source_hash = None
 
     if source_hash == old_source_hash and old_package.get('state') =='active':
-        print str(datetime.datetime.now()) + ' No change for doi id ' + new_package['id']
+        print(str(datetime.datetime.now()) + ' No change for doi id ' + new_package['id'])
         return
 
     new_package["extras"].append({"key": "source_hash", "value": source_hash})
@@ -306,7 +305,7 @@ def doi_update(context, data_dict):
     new_package.pop("name", None)
     owner_org = model.Group.get(ORG_MAPPING.get(new_package['organization']['name']))
     if not owner_org:
-        print str(datetime.datetime.now()) + ' Fail to update doi id ' + new_package['id'] + '. Organization ' + new_package['organization']['name'] + ' does not exist.'
+        print(str(datetime.datetime.now()) + ' Fail to update doi id ' + new_package['id'] + '. Organization ' + new_package['organization']['name'] + ' does not exist.')
         return
     new_package['owner_org'] = owner_org.name
     group_name = new_package.pop('owner_name', None)
@@ -328,4 +327,4 @@ def doi_update(context, data_dict):
 
     context['return_id_only'] = True
     p.toolkit.get_action('package_update')(context, new_package)
-    print str(datetime.datetime.now()) + ' Updated doi id ' + new_package['id']
+    print(str(datetime.datetime.now()) + ' Updated doi id ' + new_package['id'])

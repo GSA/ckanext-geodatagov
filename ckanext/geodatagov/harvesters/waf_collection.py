@@ -69,7 +69,7 @@ class WAFCollectionHarvester(GeoDataGovWAFHarvester):
         try:
             response = requests.get(source_url, timeout=60)
             content = response.content
-        except Exception, e:
+        except Exception as e:
             self._save_gather_error('Unable to get content for URL: %s: %r' % \
                                         (source_url, e),harvest_job)
             return None

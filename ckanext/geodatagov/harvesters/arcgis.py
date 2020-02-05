@@ -132,7 +132,7 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
         new_metadata = {}
 
 
-        while start <> -1:
+        while start != -1:
             search_path = 'sharing/search?f=pjson&q={query}&num={num}&start={start}'.format(
                 query=query,
                 num=num,
@@ -143,7 +143,7 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
             try:
                 r = requests.get(url)
                 r.raise_for_status()
-            except requests.exceptions.RequestException, e:
+            except requests.exceptions.RequestException as e:
                 self._save_gather_error('Unable to get content for URL: %s: %r' % \
                                         (url, e),harvest_job)
                 return None
@@ -297,7 +297,7 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
             try:
                 package_id = get_action('package_create')(context, package_dict)
                 log.info('Created new package %s with guid %s', package_id, harvest_object.guid)
-            except ValidationError,e:
+            except ValidationError as e:
                 self._save_object_error('Validation Error: %s' % str(e.error_summary), harvest_object, 'Import')
                 return False
         elif status == 'changed':
@@ -309,7 +309,7 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
             try:
                 package_id = get_action('package_update')(context, package_dict)
                 log.info('Updated package %s with guid %s', package_id, harvest_object.guid)
-            except ValidationError,e:
+            except ValidationError as e:
                 self._save_object_error('Validation Error: %s' % str(e.error_summary), harvest_object, 'Import')
                 return False
 
@@ -326,7 +326,7 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
 
         name = name[:60]
         existing_pkg = model.Package.get(name)
-        if existing_pkg and existing_pkg.id <> harvest_object.package_id:
+        if existing_pkg and existing_pkg.id != harvest_object.package_id:
             name = name + '_' + content['id']
         title = content.get('title')
         tag_list = [tag.strip('"').strip() for tag in content.get('tags', [])]

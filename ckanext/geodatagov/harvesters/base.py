@@ -232,7 +232,7 @@ class GeoDataGovGeoportalHarvester(CSWHarvester, GeoDataGovHarvester):
         try:
             response = requests.get(url)
             content = response.content
-        except Exception, e:
+        except Exception as e:
             self._save_object_error('Error getting the record with GUID %s from %s' % 
                                     (identifier, url), harvest_object)
             return False
@@ -263,7 +263,7 @@ class GeoDataGovGeoportalHarvester(CSWHarvester, GeoDataGovHarvester):
                 harvest_object.report_status = 'ignored'
                 harvest_object.save()
                 return False
-        except Exception,e:
+        except Exception as e:
             self._save_object_error('Error saving the harvest object for GUID %s [%r]' % \
                                     (identifier, e), harvest_object)
             return False

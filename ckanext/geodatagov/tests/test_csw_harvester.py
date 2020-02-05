@@ -1,24 +1,14 @@
-import copy
-from urllib2 import URLError
-from nose.tools import assert_equal, assert_raises, assert_in
-import json
-from mock import patch, MagicMock, Mock
-from requests.exceptions import HTTPError, RequestException
+from nose.tools import assert_raises
 
 try:
     from ckan.tests.helpers import reset_db, call_action
-    from ckan.tests.factories import Organization, Group, _get_action_user_name
 except ImportError:
     from ckan.new_tests.helpers import reset_db, call_action
-    from ckan.new_tests.factories import Organization, Group, _get_action_user_name
 from ckan import model
-from ckan.plugins import toolkit
-from ckan.lib.munge import munge_title_to_name
 from factories import (CSWHarvestSourceObj,
                        HarvestJobObj)
 
 import ckanext.harvest.model as harvest_model
-from ckanext.harvest.harvesters.base import HarvesterBase
 from ckanext.geodatagov.harvesters.base import GeoDataGovCSWHarvester
 import logging
 log = logging.getLogger(__name__)

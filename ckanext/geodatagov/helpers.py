@@ -1,20 +1,16 @@
-import urllib, urllib2, json, re, HTMLParser, urlparse
-import os, time
+import json
 import logging
 
-from pylons import config, request
-
 from ckan import plugins as p
-from ckan.lib import helpers as h
-from ckanext.geodatagov.plugins import RESOURCE_MAPPING
 from ckanext.harvest.model import HarvestSource
+
 #from routes import url_for as _routes_default_url_for
 
 log = logging.getLogger(__name__)
 
 try:
     from ckanext.geodatagov.harvesters.base import VALIDATION_PROFILES
-except ImportError, e:
+except ImportError as e:
     log.critical('Harvester not available %s' % str(e))
 
 

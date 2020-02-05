@@ -82,7 +82,7 @@ class Z3950Harvester(GeoDataGovHarvester, SingletonPlugin):
                 obj.save()
                 ids.append(obj.id)
             return ids
-        except Exception,e:
+        except Exception as e:
             self._save_gather_error('Unable to get content for URL: %s: %r' % \
                                         (source_url, e),harvest_job)
             return None

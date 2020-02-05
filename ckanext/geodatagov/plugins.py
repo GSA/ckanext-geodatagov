@@ -56,7 +56,7 @@ log = logging.getLogger(__name__)
 
 try:
     from ckanext.harvest.logic.schema import harvest_source_show_package_schema
-except ImportError, e:
+except ImportError as e:
     log.critical('Harvester not available %s' % str(e))
 
 
@@ -321,7 +321,7 @@ class DataGovHarvest(ckanext.harvest.plugin.Harvest):
 
     def dataset_facets(self, facets_dict, package_type):
 
-        if package_type <> 'harvest':
+        if package_type != 'harvest':
             return facets_dict
 
         return OrderedDict([('organization_type', 'Organization Types'),
@@ -333,7 +333,7 @@ class DataGovHarvest(ckanext.harvest.plugin.Harvest):
 
     def organization_facets(self, facets_dict, organization_type, package_type):
 
-        if package_type <> 'harvest':
+        if package_type != 'harvest':
             return facets_dict
 
         return OrderedDict([('frequency', 'Frequency'),
