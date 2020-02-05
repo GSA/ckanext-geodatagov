@@ -4,13 +4,13 @@ import hashlib
 import requests
 
 from ckan import model
-from ckan.lib.navl.validators import ignore_empty, not_empty
+from ckan.lib.navl.validators import not_empty
 
 from ckanext.harvest.model import HarvestObject
 from ckanext.harvest.model import HarvestObjectExtra as HOExtra
 import ckanext.harvest.queue as queue
 
-from ckanext.geodatagov.harvesters.base import GeoDataGovWAFHarvester, validate_profiles
+from ckanext.geodatagov.harvesters.base import GeoDataGovWAFHarvester
 
 
 class WAFCollectionHarvester(GeoDataGovWAFHarvester):

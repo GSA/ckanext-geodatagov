@@ -1,5 +1,4 @@
 import re
-import json
 import logging
 log = logging.getLogger(__name__)
 import urlparse

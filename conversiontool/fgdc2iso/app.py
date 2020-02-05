@@ -2,25 +2,17 @@ import sys
 import os
 import logging
 import sys
-import datetime
-import urlparse
-import urllib
-import cgi
 import uuid
 import tempfile
 import threading
-import java.lang.System as System
-import java.lang.Class as Class
 import java.io.File as JavaFile
 import java.io.StringReader as StringReader
 import javax.xml.transform.TransformerConfigurationException as \
     TransformerConfigurationException
-import javax.xml.transform.Transformer as Transformer
 import javax.xml.transform.TransformerFactory as TransformerFactory
 import javax.xml.transform.TransformerException as TransformerException
 import javax.xml.transform.stream.StreamResult as StreamResult
 import javax.xml.transform.stream.StreamSource as StreamSource
-import net.sf.saxon.trans.XPathException as XPathException
 import config
 import threading
 

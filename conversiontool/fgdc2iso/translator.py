@@ -3,7 +3,6 @@ import sys
 import datetime
 import urlparse
 import urllib
-import cgi
 import tempfile
 import java.lang.System as System
 import java.lang.Class as Class
@@ -13,7 +12,6 @@ import javax.xml.transform.TransformerConfigurationException as \
     TransformerConfigurationException
 import java.sql.DriverManager as DriverManager
 import java.sql.SQLException as SQLException
-import javax.xml.transform.Transformer as Transformer
 import javax.xml.transform.TransformerFactory as TransformerFactory
 import javax.xml.transform.TransformerException as TransformerException
 import javax.xml.transform.stream.StreamResult as StreamResult

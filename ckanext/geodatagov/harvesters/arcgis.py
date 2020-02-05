@@ -6,7 +6,6 @@ import unicodedata
 import re
 import uuid
 from string import Template
-import mimetypes
 
 from ckan import logic
 from ckan import model

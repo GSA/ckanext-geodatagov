@@ -16,7 +16,7 @@ import math
 
 import logging
 import gzip
-from shutil import copyfile, copyfileobj
+from shutil import copyfileobj
 
 import os
 import re
@@ -24,9 +24,7 @@ import ckan
 import ckan.model as model
 import ckan.logic as logic
 import ckan.lib.search as search
-import ckan.logic.schema as schema
 import ckan.lib.cli as cli
-import ckan.lib.helpers as h
 import requests
 from ckanext.harvest.model import HarvestSource, HarvestJob, HarvestSystemInfo
 import ckan.lib.munge as munge
@@ -593,7 +591,6 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         from xml.dom import minidom
         from xml.parsers.expat import ExpatError
         import urllib
-        import codecs
 
         feed_url = config.get('ckan.site_url') + '/feeds/dataset.atom'
         # from http://boodebr.org/main/python/all-about-python-and-unicode#UNI_XML
