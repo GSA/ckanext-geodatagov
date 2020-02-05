@@ -1,5 +1,6 @@
 import json
 import os
+
 from ckanext import geodatagov
 
 test_file = os.path.abspath(os.path.join(geodatagov.__path__[0], '../..', 'tests/datasets.json'))
