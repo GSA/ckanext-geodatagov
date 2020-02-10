@@ -17,12 +17,10 @@ We're so glad you're thinking about contributing to Data.gov!
 
 Before contributing to this extension we encourage you to read our [CONTRIBUTING](https://github.com/GSA/ckanext-geodatagov/blob/master/CONTRIBUTING.md) guide, our [LICENSE](https://github.com/GSA/ckanext-geodatagov/blob/master/LICENSE.md), and our README (you are here), all of which should be in this repository. If you have any questions, you can email the Data.gov team at [datagov@gsa.gov](mailto:datagov@gsa.gov).
 
-<<<<<<< HEAD
 ## Tests
 
 All the tests lives in the [/ckanext/geodatagov/tests](/ckanext/geodatagov/tests) folder. After each commit, via the [CircleCI config](https://github.com/GSA/ckanext-geodatagov/blob/master/.circleci/config.yml), this tests will [run in CircleCI](https://circleci.com/gh/GSA/ckanext-geodatagov) with CKAN 2.3 (custom GSA fork) and CKAN 2.8.  
 
-=======
 ## Using the Docker Dev Environment
 
 ### Build Environment
@@ -31,22 +29,16 @@ To start environment, run:
 ```docker-compose build```
 ```docker-compose up```
 
-To shut down environment, run"
+CKAN will start at localhost:5000
+
+To shut down environment, run:
 
 ```docker-compose down```
 
-CKAN will start at localhost:5000
+To docker exec into the CKAN image, run:
 
+```docker-compose exec ckanextgeodatagov /bin/bash```
 
 ### Run Tests with Docker
 
-Make sure docker environment is running.
-
-Docker exec into the CKAN container:
-
-```docker exec -it ckanext-geodatagov_ckanextgeodatagov_1 /bin/bash -c "export TERM=xterm; exec bash"```
-
-Run the tests:
-
-```nosetests --ckan --with-pylons=src_extensions/geodatagov/test.ini src_extensions/geodatagov/```
->>>>>>> add docker setup for development environment
+```docker-compose exec ckanextgeodatagov /bin/bash -c "nosetests --ckan --with-pylons=src_extensions/geodatagov/test.ini src_extensions/geodatagov/"```
