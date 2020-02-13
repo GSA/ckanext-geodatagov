@@ -37,8 +37,8 @@ To shut down environment, run:
 
 To docker exec into the CKAN image, run:
 
-```docker-compose exec ckanextgeodatagov /bin/bash```
+```docker-compose exec ckan /bin/bash```
 
 ### Run Tests with Docker
 
-```docker-compose exec ckanextgeodatagov /bin/bash -c "nosetests --ckan --with-pylons=src_extensions/geodatagov/test.ini src_extensions/geodatagov/"```
+```docker-compose exec ckan /bin/bash -c "nosetests --ckan --with-pylons=src_extensions/geodatagov/docker_test.ini src_extensions/geodatagov/"```

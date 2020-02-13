@@ -1,6 +1,6 @@
 version: "3.2"
 services:
-  ckanextgeodatagov:
+  ckan:
     build: 
       context: ckan-docker
     env_file:
