@@ -9,10 +9,10 @@ import xml.etree.ElementTree as ET
 from threading import Thread
 from urlparse import parse_qs
 
+import pkg_resources
 from ckanext import geodatagov
 
 log = logging.getLogger("harvester")
-SAMPLES_PATH = os.path.join(geodatagov.__path__[0], 'tests/data-samples')
 PORT = 8998
 
 
@@ -79,7 +79,7 @@ class MockCSWHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
                             content_type='application/json')
 
     def respond_json_sample_file(self, file_path, status=200):
-        pt = os.path.join(SAMPLES_PATH, file_path)
+        pt = pkg_resources.resource_filename(__name__, "/data-samples/{}".format(file_path))
         data = open(pt, 'r')
         content = data.read()
         log.info('mock respond {}'.format(content[:90]))
@@ -87,7 +87,7 @@ class MockCSWHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
                             content_type='application/json')
 
     def respond_xml_sample_file(self, file_path, status=200):
-        pt = os.path.join(SAMPLES_PATH, file_path)
+        pt = pkg_resources.resource_filename(__name__, "/data-samples/{}".format(file_path))
         data = open(pt, 'r')
         content = data.read()
         log.info('mock respond {}'.format(content[:90]))
