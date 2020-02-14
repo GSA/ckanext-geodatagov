@@ -21,3 +21,24 @@ Before contributing to this extension we encourage you to read our [CONTRIBUTING
 
 All the tests lives in the [/ckanext/geodatagov/tests](/ckanext/geodatagov/tests) folder. After each commit, via the [CircleCI config](https://github.com/GSA/ckanext-geodatagov/blob/master/.circleci/config.yml), this tests will [run in CircleCI](https://circleci.com/gh/GSA/ckanext-geodatagov) with CKAN 2.3 (custom GSA fork) and CKAN 2.8.  
 
+## Using the Docker Dev Environment
+
+### Build Environment
+
+To start environment, run:
+```docker-compose build```
+```docker-compose up```
+
+CKAN will start at localhost:5000
+
+To shut down environment, run:
+
+```docker-compose down```
+
+To docker exec into the CKAN image, run:
+
+```docker-compose exec ckan /bin/bash```
+
+### Run Tests with Docker
+
+```docker-compose exec ckan /bin/bash -c "nosetests --ckan --with-pylons=src_extensions/geodatagov/docker_test.ini src_extensions/geodatagov/"```

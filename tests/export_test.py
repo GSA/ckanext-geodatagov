@@ -1,6 +1,13 @@
 import json
+import os
 
-with open('datasets.json') as data_file:
+import pkg_resources
+from ckanext import geodatagov
+
+test_file = pkg_resources.resource_filename(__name__, "datasets.json")
+
+
+with open(test_file) as data_file:
     packages = json.load(data_file)
 
 assert isinstance(packages, list)
