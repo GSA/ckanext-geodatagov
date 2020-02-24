@@ -6,9 +6,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: where am I
-          command: pwd && ls -la
-      - run:
           name: Install Docker Compose
           command: |
             set -x
