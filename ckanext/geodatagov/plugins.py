@@ -531,7 +531,7 @@ class Demo(p.SingletonPlugin):
 
         from ckanext.geodatagov import logic as geodatagov_logic
 
-        return {
+        actions = {
             'resource_show': geodatagov_logic.resource_show,
             'organization_show': geodatagov_logic.organization_show,
             'location_search': geodatagov_logic.location_search,
@@ -542,11 +542,26 @@ class Demo(p.SingletonPlugin):
             'datajson_update': geodatagov_logic.datajson_update,
             'doi_create': geodatagov_logic.doi_create,
             'doi_update': geodatagov_logic.doi_update,
-            'package_show_rest': geodatagov_logic.package_show_rest,
-            
-            'package_update': geodatagov_logic.package_update,
-            'package_create': geodatagov_logic.package_create,
+            'package_show_rest': geodatagov_logic.package_show_rest
         }
+
+        if p.toolkit.check_ckan_version(min_version='2.8'):
+            # "chain" actions to avoid using unexistent decorator at CKAN 2.3
+            update_func = geodatagov_logic.package_update
+            update_func.chained_action = True
+
+            create_func = geodatagov_logic.package_create
+            create_func.chained_action = True
+
+            actions.update({
+                'package_update': update_func,
+                'package_create': create_func })
+        else:  # we don't have "chained actions" in ckan 2.3
+            actions.update({
+                'package_update': geodatagov_logic.package_update_ckan_2_3,
+                'package_create': geodatagov_logic.package_create_ckan_2_3})
+
+        return actions
 
     ## IAuthFunctions
 

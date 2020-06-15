@@ -369,18 +369,28 @@ def rollup_save_action(context, data_dict):
     data_dict['extras'] = new_extras
 
 
-@p.toolkit.chained_action
 def package_update(up_func, context, data_dict):
-    """ before_package_update """
+    """ before_package_update for CKAN 2.8 """
     update_action(context, data_dict)
     rollup_save_action(context, data_dict)
 
     return up_func(context, data_dict)
 
 
-@p.toolkit.chained_action
 def package_create(up_func, context, data_dict):
-    """ before_package_create """
+    """ before_package_create for CKAN 2.8 """
     rollup_save_action(context, data_dict)
     return up_func(context, data_dict)
-    
+
+
+def package_update_ckan_2_3(context, data_dict):
+    """ before_package_update for CKAN 2.3 """
+    update_action(context, data_dict)
+    rollup_save_action(context, data_dict)
+    return core_update.package_update(context, data_dict)
+
+
+def package_create_ckan_2_3(context, data_dict):
+    """ before_package_create for CKAN 2.3 """
+    rollup_save_action(context, data_dict)
+    return core_create.package_create(context, data_dict)
