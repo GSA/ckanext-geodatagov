@@ -7,10 +7,6 @@ echo "Installing the packages that CKAN requires..."
 sudo apt-get update -qq
 sudo apt-get install solr-jetty libcommons-fileupload-java libpq-dev postgresql postgresql-contrib python-lxml postgresql-9.3-postgis-2.1
 
-pip install --upgrade
-pip install setuptools -U
-pip install wheel
-
 echo "-----------------------------------------------------------------"
 echo "Installing CKAN and its Python dependencies..."
 
@@ -29,6 +25,9 @@ then
 	cd ckan
 	git checkout datagov
 fi
+
+pip install --upgrade pip
+pip install setuptools -U
 
 python setup.py develop
 pip install -r requirements.txt
