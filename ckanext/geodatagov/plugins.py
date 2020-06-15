@@ -544,8 +544,8 @@ class Demo(p.SingletonPlugin):
             'doi_update': geodatagov_logic.doi_update,
             'package_show_rest': geodatagov_logic.package_show_rest,
             
-            'package_update': geodatagov_logic.pkg_update,
-            'package_create': geodatagov_logic.pkg_create,
+            'package_update': geodatagov_logic.package_update,
+            'package_create': geodatagov_logic.package_create,
         }
 
     ## IAuthFunctions

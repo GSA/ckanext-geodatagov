@@ -368,13 +368,19 @@ def rollup_save_action(context, data_dict):
                             'value': json.dumps(extras_rollup)})
     data_dict['extras'] = new_extras
 
-def pkg_update(context, data_dict):
+
+@p.toolkit.chained_action
+def package_update(up_func, context, data_dict):
     """ before_package_update """
     update_action(context, data_dict)
     rollup_save_action(context, data_dict)
-    return core_update.package_update(context, data_dict)
 
-def pkg_create(context, data_dict):
+    return up_func(context, data_dict)
+
+
+@p.toolkit.chained_action
+def package_create(up_func, context, data_dict):
     """ before_package_create """
     rollup_save_action(context, data_dict)
-    return core_create.package_create(context, data_dict)
+    return up_func(context, data_dict)
+    
