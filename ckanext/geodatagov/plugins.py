@@ -556,12 +556,47 @@ class Demo(p.SingletonPlugin):
             actions.update({
                 'package_update': update_func,
                 'package_create': create_func })
-        else:  # we don't have "chained actions" in ckan 2.3
-            actions.update({
-                'package_update': geodatagov_logic.package_update_ckan_2_3,
-                'package_create': geodatagov_logic.package_create_ckan_2_3})
-
+        
         return actions
+
+
+    UPDATE_CATEGORY_ACTIONS = ['package_update', 'dataset_update']
+    ROLLUP_SAVE_ACTIONS = ['package_create', 'dataset_create', 'package_update', 'dataset_update']
+
+    # source ignored as queried diretly
+    EXTRAS_ROLLUP_KEY_IGNORE = ["metadata-source", "tags"]
+
+    def before_action(self, action_name, context, data_dict):
+        """ before_action is a hook in CKAN 2.3 for ALL actions
+            This not exists at CKAN 2.8 and chained action do not exists at CKAN 2.3 """
+        if action_name in self.UPDATE_CATEGORY_ACTIONS:
+            pkg_dict = p.toolkit.get_action('package_show')(context, {'id': data_dict['id']})
+            if 'groups' not in data_dict:
+                data_dict['groups'] = pkg_dict.get('groups', [])
+            cats = {}
+            for extra in pkg_dict.get('extras', []):
+                if extra['key'].startswith('__category_tag_'):
+                        cats[extra['key']] = extra['value']
+            extras = data_dict.get('extras', [])
+            for item in extras:
+                if item['key'] in cats:
+                    del cats[item['key']]
+            for cat in cats:
+                extras.append({'key': cat, 'value': cats[cat]})
+
+        ### make sure rollup happens after any other actions
+        if action_name in self.ROLLUP_SAVE_ACTIONS:
+            extras_rollup = {}
+            new_extras = []
+            for extra in data_dict.get('extras', []):
+                if extra['key'] in self.EXTRAS_ROLLUP_KEY_IGNORE:
+                    new_extras.append(extra)
+                else:
+                    extras_rollup[extra['key']] = extra['value']
+            if extras_rollup:
+                new_extras.append({'key': 'extras_rollup',
+                                   'value': json.dumps(extras_rollup)})
+            data_dict['extras'] = new_extras
 
     ## IAuthFunctions
 

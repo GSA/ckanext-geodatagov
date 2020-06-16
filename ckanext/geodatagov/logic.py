@@ -1,19 +1,14 @@
 import json, hashlib, datetime, uuid, time
 import logging
 
-import ckan.plugins as p
-from ckan.logic import side_effect_free
-
-from ckan.logic.action import get as core_get
-from ckan.logic.action import create as core_create
-from ckan.logic.action import update as core_update
-
-from ckanext.geodatagov.plugins import change_resource_details
 import ckan.lib.munge as munge
+from ckan.logic import side_effect_free
+import ckan.logic.schema as schema
+from ckan.logic.action import get as core_get
 import ckan.plugins as p
+from ckanext.geodatagov.plugins import change_resource_details
 from ckanext.geodatagov.harvesters.arcgis import _slugify
 from ckanext.harvest.model import HarvestJob, HarvestObject
-import ckan.logic.schema as schema
 
 
 log = logging.getLogger(__name__)
@@ -381,16 +376,3 @@ def package_create(up_func, context, data_dict):
     """ before_package_create for CKAN 2.8 """
     rollup_save_action(context, data_dict)
     return up_func(context, data_dict)
-
-
-def package_update_ckan_2_3(context, data_dict):
-    """ before_package_update for CKAN 2.3 """
-    update_action(context, data_dict)
-    rollup_save_action(context, data_dict)
-    return core_update.package_update(context, data_dict)
-
-
-def package_create_ckan_2_3(context, data_dict):
-    """ before_package_create for CKAN 2.3 """
-    rollup_save_action(context, data_dict)
-    return core_create.package_create(context, data_dict)
