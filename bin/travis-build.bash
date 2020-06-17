@@ -74,18 +74,17 @@ git checkout master
 python setup.py develop
 pip install -r pip-requirements.txt
 
+paster harvester initdb -c ../ckan/test-core.ini
+
 cd ..
 echo "-----------------------------------------------------------------"
 echo "Installing DCAT-US/Data.json Harvester"
 
 git clone https://github.com/GSA/ckanext-datajson
 cd ckanext-datajson
-git checkout datagov
 
 python setup.py develop
 pip install -r pip-requirements.txt
-
-paster harvester initdb -c ../ckan/test-core.ini
 
 cd ..
 echo "-----------------------------------------------------------------"
