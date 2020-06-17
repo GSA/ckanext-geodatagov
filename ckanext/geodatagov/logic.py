@@ -6,12 +6,14 @@ from ckan.logic import side_effect_free
 import ckan.logic.schema as schema
 from ckan.logic.action import get as core_get
 import ckan.plugins as p
+from ckan import __version__ as ckan_version
 from ckanext.geodatagov.plugins import change_resource_details
 from ckanext.geodatagov.harvesters.arcgis import _slugify
 from ckanext.harvest.model import HarvestJob, HarvestObject
 
 
 log = logging.getLogger(__name__)
+
 
 @side_effect_free
 def location_search(context, data_dict):
@@ -366,6 +368,7 @@ def rollup_save_action(context, data_dict):
 
 def package_update(up_func, context, data_dict):
     """ before_package_update for CKAN 2.8 """
+    log.info('chained package_update {} {} {}'.format(ckan_version, context, data_dict))
     update_action(context, data_dict)
     rollup_save_action(context, data_dict)
 
@@ -374,5 +377,6 @@ def package_update(up_func, context, data_dict):
 
 def package_create(up_func, context, data_dict):
     """ before_package_create for CKAN 2.8 """
+    log.info('chained package_create {} {} {}'.format(ckan_version, context, data_dict))
     rollup_save_action(context, data_dict)
     return up_func(context, data_dict)

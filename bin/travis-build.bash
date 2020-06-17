@@ -18,7 +18,7 @@ if [ $CKANVERSION == '2.8' ]
 then
 	git clone https://github.com/ckan/ckan
 	cd ckan
-	git checkout 2.8
+	git checkout ckan-2.8.4
 elif [ $CKANVERSION == '2.3' ]
 then
 	git clone https://github.com/GSA/ckan
@@ -69,6 +69,17 @@ echo "Installing Harvester"
 
 git clone https://github.com/GSA/ckanext-harvest
 cd ckanext-harvest
+git checkout master
+
+python setup.py develop
+pip install -r pip-requirements.txt
+
+cd ..
+echo "-----------------------------------------------------------------"
+echo "Installing DCAT-US/Data.json Harvester"
+
+git clone https://github.com/GSA/ckanext-datajson
+cd ckanext-datajson
 git checkout datagov
 
 python setup.py develop

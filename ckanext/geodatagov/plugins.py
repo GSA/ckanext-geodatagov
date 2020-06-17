@@ -6,6 +6,7 @@ import mimetypes
 from paste.auth.auth_tkt import maybe_encode, encode_ip_timestamp
 from pylons import request
 import ckanext.geodatagov.model as geodatagovmodel
+from ckan import __version__ as ckan_version
 
 mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
 
@@ -407,6 +408,7 @@ class Demo(p.SingletonPlugin):
     def before_action(self, action_name, context, data_dict):
         """ before_action is a hook in CKAN 2.3 for ALL actions
             This not exists at CKAN 2.8 and chained action do not exists at CKAN 2.3 """
+        log.info('before_action CKAN {} {} {} {}'.format(ckan_version, action_name, context, data_dict))
         if action_name in self.UPDATE_CATEGORY_ACTIONS:
             pkg_dict = p.toolkit.get_action('package_show')(context, {'id': data_dict['id']})
             if 'groups' not in data_dict:
@@ -586,6 +588,7 @@ class Demo(p.SingletonPlugin):
 
         if p.toolkit.check_ckan_version(min_version='2.8'):
             # "chain" actions to avoid using unexistent decorator at CKAN 2.3
+            log.info('adding chained actions to {}'.format(ckan_version))
             update_func = geodatagov_logic.package_update
             update_func.chained_action = True
 
@@ -595,6 +598,8 @@ class Demo(p.SingletonPlugin):
             actions.update({
                 'package_update': update_func,
                 'package_create': create_func })
+        
+        log.info('get_actions {} {}'.format(ckan_version, actions))
         
         return actions
 
