@@ -5,8 +5,8 @@ import paste.auth.auth_tkt
 import mimetypes
 from paste.auth.auth_tkt import maybe_encode, encode_ip_timestamp
 from pylons import request
-
 import ckanext.geodatagov.model as geodatagovmodel
+from ckan import __version__ as ckan_version
 
 mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
 
@@ -398,6 +398,7 @@ class Demo(p.SingletonPlugin):
     p.implements(p.IFacets, inherit=True)
     edit_url = None
 
+
     UPDATE_CATEGORY_ACTIONS = ['package_update', 'dataset_update']
     ROLLUP_SAVE_ACTIONS = ['package_create', 'dataset_create', 'package_update', 'dataset_update']
 
@@ -405,6 +406,9 @@ class Demo(p.SingletonPlugin):
     EXTRAS_ROLLUP_KEY_IGNORE = ["metadata-source", "tags"]
 
     def before_action(self, action_name, context, data_dict):
+        """ before_action is a hook in CKAN 2.3 for ALL actions
+            This not exists at CKAN 2.8 and chained action do not exists at CKAN 2.3 """
+        log.info('before_action CKAN {} {} {} {}'.format(ckan_version, action_name, context, data_dict))
         if action_name in self.UPDATE_CATEGORY_ACTIONS:
             pkg_dict = p.toolkit.get_action('package_show')(context, {'id': data_dict['id']})
             if 'groups' not in data_dict:
@@ -568,7 +572,7 @@ class Demo(p.SingletonPlugin):
 
         from ckanext.geodatagov import logic as geodatagov_logic
 
-        return {
+        actions = {
             'resource_show': geodatagov_logic.resource_show,
             'organization_show': geodatagov_logic.organization_show,
             'location_search': geodatagov_logic.location_search,
@@ -579,8 +583,25 @@ class Demo(p.SingletonPlugin):
             'datajson_update': geodatagov_logic.datajson_update,
             'doi_create': geodatagov_logic.doi_create,
             'doi_update': geodatagov_logic.doi_update,
-            'package_show_rest': geodatagov_logic.package_show_rest,
+            'package_show_rest': geodatagov_logic.package_show_rest
         }
+
+        if p.toolkit.check_ckan_version(min_version='2.8'):
+            # "chain" actions to avoid using unexistent decorator at CKAN 2.3
+            log.info('adding chained actions to {}'.format(ckan_version))
+            update_func = geodatagov_logic.package_update
+            update_func.chained_action = True
+
+            create_func = geodatagov_logic.package_create
+            create_func.chained_action = True
+
+            actions.update({
+                'package_update': update_func,
+                'package_create': create_func })
+        
+        log.info('get_actions {} {}'.format(ckan_version, actions))
+        
+        return actions
 
     ## IAuthFunctions
 

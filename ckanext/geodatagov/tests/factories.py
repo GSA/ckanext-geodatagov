@@ -53,6 +53,10 @@ class WafCollectionHarvestSourceObj(HarvestSourceObj):
     source_type = 'waf-collection'
 
 
+class DataJsonHarvestSourceObj(HarvestSourceObj):
+    source_type = 'datajson'
+    
+
 class HarvestJob(factory.Factory):
     FACTORY_FOR = harvest_model.HarvestJob
     _return_type = 'dict'

@@ -1,17 +1,19 @@
 import json, hashlib, datetime, uuid, time
 import logging
 
-import ckan.plugins as p
-from ckan.logic import side_effect_free
-from ckan.logic.action import get as core_get
-from ckanext.geodatagov.plugins import change_resource_details
 import ckan.lib.munge as munge
+from ckan.logic import side_effect_free
+import ckan.logic.schema as schema
+from ckan.logic.action import get as core_get
 import ckan.plugins as p
+from ckan import __version__ as ckan_version
+from ckanext.geodatagov.plugins import change_resource_details
 from ckanext.geodatagov.harvesters.arcgis import _slugify
 from ckanext.harvest.model import HarvestJob, HarvestObject
-import ckan.logic.schema as schema
+
 
 log = logging.getLogger(__name__)
+
 
 @side_effect_free
 def location_search(context, data_dict):
@@ -329,3 +331,52 @@ def doi_update(context, data_dict):
     context['return_id_only'] = True
     p.toolkit.get_action('package_update')(context, new_package)
     print str(datetime.datetime.now()) + ' Updated doi id ' + new_package['id']
+
+def update_action(context, data_dict):
+    """ to run before update actions """
+    pkg_dict = p.toolkit.get_action('package_show')(context, {'id': data_dict['id']})
+    if 'groups' not in data_dict:
+        data_dict['groups'] = pkg_dict.get('groups', [])
+    cats = {}
+    for extra in pkg_dict.get('extras', []):
+        if extra['key'].startswith('__category_tag_'):
+                cats[extra['key']] = extra['value']
+    extras = data_dict.get('extras', [])
+    for item in extras:
+        if item['key'] in cats:
+            del cats[item['key']]
+    for cat in cats:
+        extras.append({'key': cat, 'value': cats[cat]})
+
+# source ignored as queried diretly
+EXTRAS_ROLLUP_KEY_IGNORE = ["metadata-source", "tags"]
+
+def rollup_save_action(context, data_dict):
+    """ to run before create actions """
+    extras_rollup = {}
+    new_extras = []
+    for extra in data_dict.get('extras', []):
+        if extra['key'] in EXTRAS_ROLLUP_KEY_IGNORE:
+            new_extras.append(extra)
+        else:
+            extras_rollup[extra['key']] = extra['value']
+    if extras_rollup:
+        new_extras.append({'key': 'extras_rollup',
+                            'value': json.dumps(extras_rollup)})
+    data_dict['extras'] = new_extras
+
+
+def package_update(up_func, context, data_dict):
+    """ before_package_update for CKAN 2.8 """
+    log.info('chained package_update {} {} {}'.format(ckan_version, context, data_dict))
+    update_action(context, data_dict)
+    rollup_save_action(context, data_dict)
+
+    return up_func(context, data_dict)
+
+
+def package_create(up_func, context, data_dict):
+    """ before_package_create for CKAN 2.8 """
+    log.info('chained package_create {} {} {}'.format(ckan_version, context, data_dict))
+    rollup_save_action(context, data_dict)
+    return up_func(context, data_dict)

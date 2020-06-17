@@ -22,9 +22,14 @@ def serve(port=PORT):
     class TestServer(SocketServer.TCPServer):
         allow_reuse_address = True
     
-    httpd = TestServer(("", PORT), Handler)
-    
-    info = 'Serving test HTTP server at port', PORT
+    try:
+        httpd = TestServer(("", port), Handler)
+    except Exception, e:
+        print('Serve error {}'.format(e))
+        if 'Address in use' not in str(e):
+            raise
+
+    info = 'Serving test HTTP server at port', port
     print info
     log.info(info)
 

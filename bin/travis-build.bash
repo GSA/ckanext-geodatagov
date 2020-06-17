@@ -7,10 +7,6 @@ echo "Installing the packages that CKAN requires..."
 sudo apt-get update -qq
 sudo apt-get install solr-jetty libcommons-fileupload-java libpq-dev postgresql postgresql-contrib python-lxml postgresql-9.3-postgis-2.1
 
-pip install --upgrade
-pip install setuptools -U
-pip install wheel
-
 echo "-----------------------------------------------------------------"
 echo "Installing CKAN and its Python dependencies..."
 
@@ -22,13 +18,16 @@ if [ $CKANVERSION == '2.8' ]
 then
 	git clone https://github.com/ckan/ckan
 	cd ckan
-	git checkout 2.8
+	git checkout ckan-2.8.4
 elif [ $CKANVERSION == '2.3' ]
 then
 	git clone https://github.com/GSA/ckan
 	cd ckan
 	git checkout datagov
 fi
+
+pip install --upgrade pip
+pip install setuptools -U
 
 python setup.py develop
 pip install -r requirements.txt
@@ -70,12 +69,22 @@ echo "Installing Harvester"
 
 git clone https://github.com/GSA/ckanext-harvest
 cd ckanext-harvest
-git checkout datagov
+git checkout master
 
 python setup.py develop
 pip install -r pip-requirements.txt
 
 paster harvester initdb -c ../ckan/test-core.ini
+
+cd ..
+echo "-----------------------------------------------------------------"
+echo "Installing DCAT-US/Data.json Harvester"
+
+git clone https://github.com/GSA/ckanext-datajson
+cd ckanext-datajson
+
+python setup.py develop
+pip install -r pip-requirements.txt
 
 cd ..
 echo "-----------------------------------------------------------------"
