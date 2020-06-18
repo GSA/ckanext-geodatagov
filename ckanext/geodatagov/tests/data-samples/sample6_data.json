@@ -1,0 +1,261 @@
+{
+    "conformsTo": "https://project-open-data.cio.gov/v1.1/schema",
+    "describedBy": "https://project-open-data.cio.gov/v1.1/schema/catalog.json",
+    "@context": "https://project-open-data.cio.gov/v1.1/schema/catalog.jsonld",
+    "@type": "dcat:Catalog",
+    "dataset": [
+        {
+            "@type": "dcat:Dataset",
+            "title": "Employee Relations Roundtables",
+            "description": "The U.S. Office of Personnel Management (OPM)'s Partnership and Labor Relations holds Roundtables periodically as an ongoing effort to develop a highly skilled cadre of Employee and Labor Relations practitioners.  Distinguished speakers present on a wide range of topics of interest for this community.  These training opportunities are interactive and allow the participants to ask questions of the presenters.",
+            "identifier": "OPM-ERround-0001",
+            "accessLevel": "public",
+            "modified": "2011-12-15",
+            "keyword": ["k1", "k2"],
+            "landingPage": "http://www.opm.gov/policy-data-oversight/employee-relations/training/#url=Roundtables",
+            "license": "http://www.usa.gov/publicdomain/label/1.0/",
+            "publisher": {
+                "@type": "org:Organization",
+                "name": "U.S. Office of Personnel Management"
+            },
+            "contactPoint": {
+                "@type": "vcard:Contact",
+                "fn": "LaShann Freeman",
+                "hasEmail": "mailto:lashann.freeman@opm.gov"
+            },
+            "bureauCode": ["027:00"],
+            "programCode": ["027:000"],
+            "language": ["en-US"]
+        },
+        {
+            "@type": "dcat:Dataset",
+            "title": "Addressing AWOL",
+            "description": "The U.S. Office of Personnel Management (OPM)'s Partnership and Labor Relations holds Roundtables periodically as an ongoing effort to develop a highly skilled cadre of Employee and Labor Relations practitioners. Distinguished speakers present on a wide range of topics of interest for this community. These training opportunities are interactive and allow the participants to ask questions of the presenters. This presentation covers Absence Without Leave (AWOL) and various aspects of handling leave abuse from placing an employee on leave restriction to taking a disciplinary or adverse action.  The session also contains federal case law regarding this topic.",
+            "modified": "2011-12-15",
+            "accessLevel": "public",
+            "identifier": "OPM-ERround-0001-AWOL",
+            "landingPage": "http://www.opm.gov/policy-data-oversight/employee-relations/training/#url=Roundtables",
+            "license": "http://www.usa.gov/publicdomain/label/1.0/",
+            "publisher": {
+                "@type": "org:Organization",
+                "name": "U.S. Office of Personnel Management"
+            },
+            "isPartOf": "OPM-ERround-0001",
+            "contactPoint": {
+                "@type": "vcard:Contact",
+                "fn": "LaShann Freeman",
+                "hasEmail": "mailto:lashann.freeman@opm.gov"
+            },
+            "distribution": [
+                {
+                    "@type": "dcat:Distribution",
+                    "mediaType": "application/pdf",
+                    "title": "Addressing AWOL",
+                    "downloadURL": "http://www.opm.gov/policy-data-oversight/employee-relations/training/presentationaddressingawol.pdf"
+                },
+                {
+                    "@type": "dcat:Distribution",
+                    "accessURL": "https://www.youtube.com/watch?v=08bK8zHH9No",
+                    "format": "video",
+                    "title": "Addressing AWOL"
+                }
+            ],
+            "keyword": [
+                "AWOL",
+                "Absence without Leave",
+                "LWOP",
+                "Leave without Pay",
+                "disciplinary procedures",
+                "employee relations",
+                "leave abuse",
+                "leave restriction",
+                "practitioners",
+                "roundtables",
+                "training",
+                "webcast"
+            ],
+            "bureauCode": [
+                "027:00"
+            ],
+            "programCode": [
+                "027:000"
+            ],
+            "language": [
+                "en-US"
+            ]
+        },
+        {
+            "@type": "dcat:Dataset",
+            "title": "Linking Employee Relations and Retirement",
+            "description": "The U.S. Office of Personnel Management (OPM)'s Partnership and Labor Relations holds Roundtables periodically as an ongoing effort to develop a highly skilled cadre of Employee and Labor Relations practitioners. Distinguished speakers present on a wide range of topics of interest for this community. These training opportunities are interactive and allow the participants to ask questions of the presenters. This presentation is on different types of Federal retirement (e.g., regular, early, or disability retirement).  Included are laws and regulatory provisions regarding retirement, the role of the U.S. Office of Personnel Management (OPM) and the importance of employee relations in cases involving medical issues, disability retirement, Office of Workers' Compensation Programs (OWCP), and reasonable accommodation.",
+            "modified": "2011-12-15",
+            "accessLevel": "public",
+            "identifier": "OPM-ERround-0001-Retire",
+            "landingPage": "http://www.opm.gov/policy-data-oversight/employee-relations/training/#url=Roundtables",
+            "license": "http://www.usa.gov/publicdomain/label/1.0/",
+            "publisher": {
+                "@type": "org:Organization",
+                "name": "U.S. Office of Personnel Management"
+            },
+            "isPartOf": "OPM-ERround-0001",
+            "contactPoint": {
+                "@type": "vcard:Contact",
+                "fn": "LaShann Freeman",
+                "hasEmail": "mailto:lashann.freeman@opm.gov"
+            },
+            "distribution": [
+                {
+                    "@type": "dcat:Distribution",
+                    "mediaType": "application/pdf",
+                    "title": "Linking Employee Relations and Retirement",
+                    "downloadURL": "http://www.opm.gov/policy-data-oversight/employee-relations/training/presentationemployeerelationsretirement.pdf"
+                },
+                {
+                    "@type": "dcat:Distribution",
+                    "accessURL": "https://www.youtube.com/watch?v=epGxaVa9E_c",
+                    "mediaType": "text/html",
+                    "format": "video",
+                    "title": "Linking Employee Relations and Retirement"
+                }
+            ],
+            "keyword": [
+                "Federal retirement",
+                "OCWP",
+                "Office of Workers Compensation Programs",
+                "disability retirement",
+                "employee relations",
+                "medical issues",
+                "practitioners",
+                "reasonable accommodation",
+                "roundtables",
+                "training",
+                "webcast"
+            ],
+            "bureauCode": [
+                "027:00"
+            ],
+            "programCode": [
+                "027:000"
+            ],
+            "language": [
+                "en-US"
+            ]
+        },
+
+
+        
+        {
+            "@type": "dcat:Dataset",
+            "title": "Addressing AWOL 2",
+            "description": "The U.S. Office of Personnel Management (OPM)'s Partnership and Labor Relations holds Roundtables periodically as an ongoing effort to develop a highly skilled cadre of Employee and Labor Relations practitioners. Distinguished speakers present on a wide range of topics of interest for this community. These training opportunities are interactive and allow the participants to ask questions of the presenters. This presentation covers Absence Without Leave (AWOL) and various aspects of handling leave abuse from placing an employee on leave restriction to taking a disciplinary or adverse action.  The session also contains federal case law regarding this topic.",
+            "modified": "2011-12-15",
+            "accessLevel": "public",
+            "identifier": "OPM-ERround-0001-AWOL-2",
+            "landingPage": "http://www.opm.gov/policy-data-oversight/employee-relations/training/#url=Roundtables",
+            "license": "http://www.usa.gov/publicdomain/label/1.0/",
+            "keyword": ["k1", "k2"],
+            "publisher": {
+                "@type": "org:Organization",
+                "name": "U.S. Office of Personnel Management"
+            },
+            "isPartOf": "OPM-ERround-0002",
+            "contactPoint": {
+                "@type": "vcard:Contact",
+                "fn": "LaShann Freeman",
+                "hasEmail": "mailto:lashann.freeman@opm.gov"
+            },
+            "distribution": [
+                {
+                    "@type": "dcat:Distribution",
+                    "mediaType": "application/pdf",
+                    "title": "Addressing AWOL",
+                    "downloadURL": "http://www.opm.gov/policy-data-oversight/employee-relations/training/presentationaddressingawol.pdf"
+                },
+                {
+                    "@type": "dcat:Distribution",
+                    "accessURL": "https://www.youtube.com/watch?v=08bK8zHH9No",
+                    "format": "video",
+                    "title": "Addressing AWOL"
+                }
+            ],
+            "bureauCode": [
+                "027:00"
+            ],
+            "programCode": [
+                "027:000"
+            ],
+            "language": [
+                "en-US"
+            ]
+        },
+        {
+            "@type": "dcat:Dataset",
+            "title": "Linking Employee Relations and Retirement 2",
+            "description": "The U.S. Office of Personnel Management (OPM)'s Partnership and Labor Relations holds Roundtables periodically as an ongoing effort to develop a highly skilled cadre of Employee and Labor Relations practitioners. Distinguished speakers present on a wide range of topics of interest for this community. These training opportunities are interactive and allow the participants to ask questions of the presenters. This presentation is on different types of Federal retirement (e.g., regular, early, or disability retirement).  Included are laws and regulatory provisions regarding retirement, the role of the U.S. Office of Personnel Management (OPM) and the importance of employee relations in cases involving medical issues, disability retirement, Office of Workers' Compensation Programs (OWCP), and reasonable accommodation.",
+            "modified": "2011-12-15",
+            "accessLevel": "public",
+            "keyword": ["k1", "k2"],
+            "identifier": "OPM-ERround-0001-Retire-2",
+            "landingPage": "http://www.opm.gov/policy-data-oversight/employee-relations/training/#url=Roundtables",
+            "license": "http://www.usa.gov/publicdomain/label/1.0/",
+            "publisher": {
+                "@type": "org:Organization",
+                "name": "U.S. Office of Personnel Management"
+            },
+            "isPartOf": "OPM-ERround-0002",
+            "contactPoint": {
+                "@type": "vcard:Contact",
+                "fn": "LaShann Freeman",
+                "hasEmail": "mailto:lashann.freeman@opm.gov"
+            },
+            "distribution": [
+                {
+                    "@type": "dcat:Distribution",
+                    "mediaType": "application/pdf",
+                    "title": "Linking Employee Relations and Retirement",
+                    "downloadURL": "http://www.opm.gov/policy-data-oversight/employee-relations/training/presentationemployeerelationsretirement.pdf"
+                },
+                {
+                    "@type": "dcat:Distribution",
+                    "accessURL": "https://www.youtube.com/watch?v=epGxaVa9E_c",
+                    "mediaType": "text/html",
+                    "format": "video",
+                    "title": "Linking Employee Relations and Retirement"
+                }
+            ],
+            "bureauCode": [
+                "027:00"
+            ],
+            "programCode": [
+                "027:000"
+            ],
+            "language": [
+                "en-US"
+            ]
+        },
+
+        {
+            "@type": "dcat:Dataset",
+            "title": "Employee Relations Roundtables 2",
+            "description": "The U.S. Office of Personnel Management (OPM)'s Partnership and Labor Relations holds Roundtables periodically as an ongoing effort to develop a highly skilled cadre of Employee and Labor Relations practitioners.  Distinguished speakers present on a wide range of topics of interest for this community.  These training opportunities are interactive and allow the participants to ask questions of the presenters.",
+            "identifier": "OPM-ERround-0002",
+            "landingPage": "http://www.opm.gov/policy-data-oversight/employee-relations/training/#url=Roundtables",
+            "accessLevel": "public",
+            "modified": "2011-12-15",
+            "keyword": ["k1", "k2"],
+            "license": "http://www.usa.gov/publicdomain/label/1.0/",
+            "publisher": {
+                "@type": "org:Organization",
+                "name": "U.S. Office of Personnel Management"
+            },
+            "contactPoint": {
+                "@type": "vcard:Contact",
+                "fn": "LaShann Freeman",
+                "hasEmail": "mailto:lashann.freeman@opm.gov"
+            },
+            "bureauCode": ["027:00"],
+            "programCode": ["027:000"],
+            "language": ["en-US"]
+        }
+    ]
+}

@@ -82,6 +82,8 @@ echo "Installing DCAT-US/Data.json Harvester"
 
 git clone https://github.com/GSA/ckanext-datajson
 cd ckanext-datajson
+# TODO temporary fix for test at CI
+git checkout harvest_remove_validation_for_children
 
 python setup.py develop
 pip install -r pip-requirements.txt

@@ -13,6 +13,7 @@ from factories import (DataJsonHarvestSourceObj,
 
 import ckanext.harvest.model as harvest_model
 from ckanext.datajson.harvester_datajson import DataJsonHarvester
+from nose.tools import assert_equal, assert_not_in
 import mock_static_file_server
 
 import logging
@@ -114,3 +115,44 @@ class TestDataJsonHarvester(object):
             extras = json.loads(dataset.extras['extras_rollup'])
             log.info('Dataset: {}. Extras: {}'.format(dataset.title, extras))
             assert extras["spatial"] == "United States"
+    
+    def test_harvesting_parent_child_collections(self):
+        """ Test that parent are beeing harvested first.
+            When we harvest a child the parent must exists
+            data.json from: https://www.opm.gov/data.json """
+
+        url = 'http://127.0.0.1:8996/sample6_data.json'
+        obj_ids = self.run_gather(url=url)
+        assert_equal(len(obj_ids), 6)
+        self.run_fetch()
+        datasets = self.run_import()
+        assert_equal(len(datasets), 6)
+        titles = ['Linking Employee Relations and Retirement',
+                  'Addressing AWOL',
+                  'Employee Relations Roundtables',
+                  'Linking Employee Relations and Retirement 2',
+                  'Addressing AWOL 2',
+                  'Employee Relations Roundtables 2']
+
+        parent_counter = 0
+        child_counter = 0
+        
+        for dataset in datasets:
+            assert dataset.title in titles
+            # test we get the spatial as we want: https://github.com/GSA/catalog.data.gov/issues/55
+            extras = json.loads(dataset.extras['extras_rollup'])
+            is_parent = extras.get('collection_metadata', 'false').lower() == 'true'
+            is_child = extras.get('collection_package_id', None) is not None
+
+            log.info('Harvested dataset {} {} {}'.format(dataset.title, is_parent, is_child))
+
+            if dataset.title in ['Employee Relations Roundtables', 'Employee Relations Roundtables 2']:
+                assert_equal(is_parent, True)
+                parent_counter += 1
+            else:
+                assert_equal(is_child, True)
+                child_counter += 1
+
+        assert_equal(child_counter, 4)
+        assert_equal(parent_counter, 2)
+            
