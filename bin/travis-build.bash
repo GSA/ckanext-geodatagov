@@ -100,12 +100,20 @@ paster spatial initdb -c ../ckan/test-core.ini
 
 cd ..
 echo "-----------------------------------------------------------------"
+echo "Installing DataGovTheme"
+git clone https://github.com/GSA/ckanext-datagovtheme
+cd ckanext-datagovtheme
+git checkout master
+
+python setup.py develop
+
+cd ..
+echo "-----------------------------------------------------------------"
 echo "Installing ckanext-geodatagov and its requirements..."
 cd ckanext-geodatagov
 pip install -r pip-requirements.txt
 python setup.py develop
 
-echo "-----------------------------------------------------------------"
 echo "Moving test.ini into a subdir..."
 mkdir subdir
 mv test.ini subdir

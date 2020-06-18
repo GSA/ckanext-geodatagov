@@ -514,25 +514,32 @@ class Demo(p.SingletonPlugin):
 
         return pkg_dict
 
-    def before_search(self, pkg_dict):
+    def before_search(self, search_params):
 
-        fq = pkg_dict.get('fq', '')
-
-        if pkg_dict.get('sort') in (None, 'rank'):
-            pkg_dict['sort'] = 'views_recent desc'
+        fq = search_params.get('fq', '')
+        
+        if search_params.get('sort') in (None, 'rank'):
+            search_params['sort'] = 'views_recent desc'
 		
-        if pkg_dict.get('sort') in ('none'):
-            pkg_dict['sort'] = 'score desc, name asc'
+        if search_params.get('sort') in ('none'):
+            search_params['sort'] = 'score desc, name asc'
 
         # only show collections on bulk update page and when the facet is explictely added
-
         try:
-            if 'collection_package_id' not in fq and 'bulk_process' not in request.path:
-                pkg_dict['fq'] = fq + ' -collection_package_id:["" TO *]'
-        except Exception:
-            pass
-
-        return pkg_dict
+            path = request.path
+        except:
+            # when there is no requests we get a 
+            # TypeError: No object (name: request) has been registered for this thread
+            path = ''    
+        
+        if 'collection_package_id' not in fq and 'bulk_process' not in path:
+            log.info('Added FQ to collection_package_id')
+            fq += ' -collection_package_id:["" TO *]'            
+        else:
+            log.info('NOT Added FQ to collection_package_id')
+        
+        search_params['fq'] = fq
+        return search_params
 
 
     def after_show(self, context, data_dict):
