@@ -133,6 +133,7 @@ class TestWafCollectionHarvester(object):
         parent = call_action('package_show', context={'user': 'dummy'}, id=extras['collection_package_id'])
         parent_keys = [extra['key'] for extra in parent['extras']]
         assert_in('collection_metadata', parent_keys)
+        assert_equal('true', [extra['value'] for extra in parent['extras'] if extra['key'] == 'collection_metadata'][0])
         assert_equal(parent['title'], 'TIGER/Line Shapefile, 2013, Series Information File for the Current county and Equivalent National Shapefile')
         assert_equal(parent['name'], 'tiger-line-shapefile-2013-series-information-file-for-the-current-county-and-equivalent-nationa')
         
