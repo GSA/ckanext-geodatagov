@@ -122,7 +122,7 @@ class TestWafCollectionHarvester(object):
         
         self.run_fetch()
         datasets = self.run_import()
-        assert_equal (len(datasets), 1)
+        assert_equal(len(datasets), 1)
         dataset = datasets[0]
         assert_equal(dataset.name, 'tiger-line-shapefile-2013-nation-u-s-current-county-and-equivalent-national-shapefile')
         extras = json.loads(dataset.extras['extras_rollup'])
