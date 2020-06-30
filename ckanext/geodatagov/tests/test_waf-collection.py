@@ -1,6 +1,6 @@
 import copy
 from urllib2 import URLError
-from nose.tools import assert_equal, assert_raises, assert_in
+from nose.tools import assert_equal, assert_raises, assert_in, assert_not_in
 import json
 from mock import patch, MagicMock, Mock
 from requests.exceptions import HTTPError, RequestException
@@ -113,26 +113,72 @@ class TestWafCollectionHarvester(object):
 
         return datasets
 
-    def test_sample1(self):
+    def get_datasets_from_waf_collection1_sample(self):
+        """ harvest waf-collection1/ folder as waf-collection source """
         url = 'http://127.0.0.1:%s/waf-collection1/index.html' % mock_static_file_server.PORT
         
-        # http://meta.geo.census.gov/data/existing/decennial/GEO/GPMB/TIGERline/TIGER2013/SeriesCollection/SeriesCollection_tl_2013_county.shp.iso.xml
         collection_metadata = "http://127.0.0.1:%s/waf-collection1/cfg/SeriesCollection_tl_2013_county.shp.iso.xml" % mock_static_file_server.PORT
         config = '{"collection_metadata_url": "%s", "validator_profiles": ["iso19139ngdc"], "private_datasets": false}' % collection_metadata
-        obj_ids = self.run_gather(url=url, source_config=config)
-        
+        self.run_gather(url=url, source_config=config)
         self.run_fetch()
         datasets = self.run_import()
-        assert len(datasets) == 1
-        assert datasets[0].name, 'tiger-line-shapefile-2013-nation-u-s-current-county-and-equivalent-national-shapefile'
 
-    def test_sample2(self):
+        return datasets
+    
+    def test_waf_collection1_datasets_count(self):
+        """ Get datasets from waf-collection1/ folder as waf-collection source 
+            and test we have one dataset with the expected name """
+        
+        datasets = self.get_datasets_from_waf_collection1_sample()
+        assert_equal(len(datasets), 1)
+        dataset = datasets[0]
+        assert_equal(dataset.name, 'tiger-line-shapefile-2013-nation-u-s-current-county-and-equivalent-national-shapefile')
+
+    def test_waf_collection1_datasets_as_child(self):
+        """ Harvest waf-collection1/ folder as waf-collection source 
+            and test we get one dataset and this dataset is a "child" (it have a "collection_package_id" extra)
+            and is not a "parent" (do not include the collection_metadata extra) """
+        
+        datasets = self.get_datasets_from_waf_collection1_sample()
+        dataset = datasets[0]
+
+        extras = json.loads(dataset.extras['extras_rollup'])
+        keys = [key for key in extras.keys()]
+        assert_in('collection_package_id', keys)
+        assert_not_in('collection_metadata', keys)
+
+    def test_waf_collection1_parent_exists(self):
+        """ Harvest waf-collection1/ folder as waf-collection source 
+            and test parent dataset exists (include the collection_metadata=true extra) """
+        
+        datasets = self.get_datasets_from_waf_collection1_sample()
+        dataset = datasets[0]
+        extras = json.loads(dataset.extras['extras_rollup'])
+
+        parent = call_action('package_show', context={'user': 'dummy'}, id=extras['collection_package_id'])
+        parent_keys = [extra['key'] for extra in parent['extras']]
+        assert_in('collection_metadata', parent_keys)
+        assert_equal('true', [extra['value'] for extra in parent['extras'] if extra['key'] == 'collection_metadata'][0])
+        
+    def test_waf_collection1_parent_title(self):
+        """ Harvest waf-collection1/ folder as waf-collection source 
+            and test parent dataset have the expected title and name """
+        
+        datasets = self.get_datasets_from_waf_collection1_sample()
+        dataset = datasets[0]
+        extras = json.loads(dataset.extras['extras_rollup'])
+
+        parent = call_action('package_show', context={'user': 'dummy'}, id=extras['collection_package_id'])
+        
+        assert_equal(parent['title'], 'TIGER/Line Shapefile, 2013, Series Information File for the Current county and Equivalent National Shapefile')
+        assert_equal(parent['name'], 'tiger-line-shapefile-2013-series-information-file-for-the-current-county-and-equivalent-nationa')
+        
+    def test_waf_collection_transformation_failed(self):
         url = 'http://127.0.0.1:%s/waf-collection2/index.html' % mock_static_file_server.PORT
         
-        # http://meta.geo.census.gov/data/existing/decennial/GEO/GPMB/TIGERline/TIGER2013/SeriesCollection/SeriesCollection_tl_2013_county.shp.iso.xml
         collection_metadata = "http://127.0.0.1:%s/waf-collection2/cfg/SeriesCollection_tl_2013_county.shp.iso.xml" % mock_static_file_server.PORT
         config = '{"collection_metadata_url": "%s", "validator_profiles": ["iso19139ngdc"], "private_datasets": false}' % collection_metadata
-        obj_ids = self.run_gather(url=url, source_config=config)
+        self.run_gather(url=url, source_config=config)
         
         self.run_fetch()
         
@@ -140,9 +186,3 @@ class TestWafCollectionHarvester(object):
         with assert_raises(Exception) as e:
             self.run_import()
         assert 'Transformation to ISO failed' in str(e.exception)
-
-    # def test_404(self):
-    #     url = 'http://127.0.0.1:%s/404' % mock_static_file_server.PORT
-    #     with assert_raises(Exception) as e:
-    #         self.run_gather(url=url)
-    #     assert 'HTTP Error 404' in str(e.exception)
