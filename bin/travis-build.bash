@@ -69,7 +69,14 @@ echo "Installing Harvester"
 
 git clone https://github.com/GSA/ckanext-harvest
 cd ckanext-harvest
-git checkout master
+
+if [ $CKANVERSION == '2.8' ]
+then
+	git checkout datagov-catalog
+elif [ $CKANVERSION == '2.3' ]
+then
+	git checkout datagov
+fi
 
 python setup.py develop
 pip install -r pip-requirements.txt
