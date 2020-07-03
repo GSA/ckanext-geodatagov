@@ -1,7 +1,10 @@
-from ckantoolkit.tests import helpers, factories
 from nose.tools import assert_equal, assert_in, assert_not_in
 import ckanext.harvest.model as harvest_model
 
+try:
+    from ckan.tests import helpers, factories
+except ImportError: 
+    from ckan.new_tests import helpers, factories
 
 class TestHarvestSourceForm(helpers.FunctionalTestBase):
 
@@ -17,8 +20,6 @@ class TestHarvestSourceForm(helpers.FunctionalTestBase):
 
     def test_create_harvest_source_form(self):
 
-        # sysadmin = factories.Sysadmin()
-        # self.extra_environ = {'REMOTE_USER': sysadmin['name'].encode('ascii')}
         self.app = self._get_test_app()
         
         # Create
