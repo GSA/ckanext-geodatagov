@@ -42,8 +42,6 @@ class TestHarvestSourceForm(helpers.FunctionalTestBase):
         res_redirect = self.app.get('/harvest/edit/{}'.format(harvest_source_name), extra_environ=self.extra_environ)
         
         # ensure we have the expected values
-        assert 'name="source_type" value="waf-collection" checked' in res_redirect
-        
         fv = res_redirect.forms['source-new']
         assert_equal(fv['collection_metadata_url'].value, 'https://meta.geo.census.gov/data/existing/decennial/GEO/GPMB/TIGERline/TIGER2018/SeriesInfo/SeriesCollection_tl_2018_concity.shp.iso.xml')
         assert_equal(fv['url'].value, 'https://meta.geo.census.gov/data/existing/decennial/GEO/GPMB/TIGERline/TIGER2018/concity/')
