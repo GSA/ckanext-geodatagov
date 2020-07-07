@@ -19,6 +19,10 @@ then
 	git clone https://github.com/ckan/ckan
 	cd ckan
 	git checkout ckan-2.8.4
+	# apply required patch
+	curl -L https://raw.githubusercontent.com/GSA/catalog.data.gov/75_fix_save_harvest_source/ckan/patches/ckan/unflattern_indexerror.patch > 1.patch
+	echo "Applying patch"
+	patch -p1 < 1.patch
 elif [ $CKANVERSION == '2.3' ]
 then
 	git clone https://github.com/GSA/ckan
