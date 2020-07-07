@@ -1,10 +1,14 @@
+import logging
 from nose.tools import assert_equal, assert_in, assert_not_in
 import ckanext.harvest.model as harvest_model
+from pylons import config
 
 try:
     from ckan.tests import helpers, factories
 except ImportError: 
     from ckan.new_tests import helpers, factories
+
+log = logging.getLogger(__name__)
 
 class TestHarvestSourceForm(helpers.FunctionalTestBase):
 
@@ -19,6 +23,10 @@ class TestHarvestSourceForm(helpers.FunctionalTestBase):
 
     def test_create_waf_collection_harvest_source_form(self):
 
+        # check config
+        log.info('Installed plugins: {}'.format(config.get('ckan.plugins', 'undefined')))
+        log.info('legacy_templates: {}'.format(config.get('ckan.legacy_templates', 'undefined')))
+        config['ckan.legacy_templates'] = False
         self.app = self._get_test_app()
         
         # Create
