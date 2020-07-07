@@ -17,10 +17,10 @@ from ckanext.geodatagov.harvesters.waf_collection import WAFCollectionHarvester
 
 try:
     from ckan.tests.helpers import reset_db, call_action
-    from ckan.tests.factories import Organization, Group, _get_action_user_name
+    from ckan.tests.factories import Organization, Group, _get_action_user_name, Sysadmin
 except ImportError:
     from ckan.new_tests.helpers import reset_db, call_action
-    from ckan.new_tests.factories import Organization, Group, _get_action_user_name
+    from ckan.new_tests.factories import Organization, Group, _get_action_user_name, Sysadmin
 
 import logging
 log = logging.getLogger(__name__)
@@ -39,11 +39,8 @@ class TestWafCollectionHarvester(object):
     def setup(cls):
         reset_db()
         harvest_model.setup()
-        user_name = 'dummy'
-        user = call_action('user_create',
-                            name=user_name,
-                            password='dummybummy',
-                            email='dummy@dummy.com')
+        sysadmin = Sysadmin(name='dummy')
+        user_name = sysadmin['name'].encode('ascii')
         org = call_action('organization_create',
                           context={'user': user_name},
                           name='test-org')
