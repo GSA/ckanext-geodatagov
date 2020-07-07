@@ -19,7 +19,7 @@ jobs:
           name: Wait for db
           command: dockerize -wait http://localhost:5000/dataset -timeout 120s
       - run:
-          name: Run ckanext-datajson Tests
+          name: Run Tests
           command: |
             docker-compose exec ckan /bin/bash -c "nosetests --ckan --with-pylons=src_extensions/geodatagov/docker_test.ini src_extensions/geodatagov/"
   build_ckan_28:

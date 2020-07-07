@@ -19,5 +19,11 @@ RUN pip install -e git+https://github.com/ckan/ckanext-spatial#egg=ckanext-spati
     pip install -e git+https://github.com/ckan/ckanext-harvest.git#egg=ckanext-harvest && \
     pip install -r https://raw.githubusercontent.com/ckan/ckanext-harvest/master/pip-requirements.txt && \
     pip install -e git+https://github.com/GSA/ckanext-datajson.git#egg=ckanext-datajson && \
-    pip install -r https://raw.githubusercontent.com/GSA/ckanext-datajson/master/pip-requirements.txt
+    pip install -r https://raw.githubusercontent.com/GSA/ckanext-datajson/master/pip-requirements.txt && \
+    pip install -e git+https://github.com/GSA/ckanext-datagovtheme#egg=ckanext-datagovtheme && \
+    pip install -e git+https://github.com/GSA/ckanext-geodatagov.git#egg=ckanext-geodatagov && \
+    pip install -r https://raw.githubusercontent.com/GSA/ckanext-geodatagov/master/pip-requirements.txt  
 
+# apply required patch
+ADD https://raw.githubusercontent.com/GSA/catalog.data.gov/75_fix_save_harvest_source/ckan/patches/ckan/unflattern_indexerror.patch /patches/1.patch
+RUN cd $SRC_DIR/ckan/ && patch -p1 < /patches/1.patch
