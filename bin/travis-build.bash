@@ -79,7 +79,7 @@ then
 	git checkout datagov-catalog
 elif [ $CKANVERSION == '2.3' ]
 then
-	git checkout datagov
+	git checkout 8eaf4e1021019d01b34e8ce58aed327a24f59c96
 fi
 
 python setup.py develop
