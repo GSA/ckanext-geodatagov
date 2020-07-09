@@ -1,3 +1,4 @@
+from ckan.plugins import toolkit
 import logging
 from nose.tools import assert_equal, assert_in, assert_not_in
 import ckanext.harvest.model as harvest_model
@@ -26,7 +27,8 @@ class TestHarvestSourceForm(helpers.FunctionalTestBase):
         # check config
         log.info('Installed plugins: {}'.format(config.get('ckan.plugins', 'undefined')))
         log.info('legacy_templates: {}'.format(config.get('ckan.legacy_templates', 'undefined')))
-        config['ckan.legacy_templates'] = False
+        if toolkit.check_ckan_version(max_version='2.7.99'):
+            config['ckan.legacy_templates'] = True
         self.app = self._get_test_app()
         
         # Create
@@ -56,6 +58,9 @@ class TestHarvestSourceForm(helpers.FunctionalTestBase):
 
     def test_create_z3950_harvest_source_form(self):
 
+        if toolkit.check_ckan_version(max_version='2.7.99'):
+            config['ckan.legacy_templates'] = True
+        
         self.app = self._get_test_app()
         
         # Create
