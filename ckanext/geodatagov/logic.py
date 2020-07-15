@@ -334,7 +334,8 @@ def doi_update(context, data_dict):
 
 def update_action(context, data_dict):
     """ to run before update actions """
-    pkg_dict = p.toolkit.get_action('package_show')(context, {'id': data_dict['id']})
+    id_or_name = data_dict.get('id', data_dict.get('name'))
+    pkg_dict = p.toolkit.get_action('package_show')(context, {'id': id_or_name})
     if 'groups' not in data_dict:
         data_dict['groups'] = pkg_dict.get('groups', [])
     cats = {}
