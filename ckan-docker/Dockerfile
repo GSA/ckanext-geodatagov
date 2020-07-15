@@ -25,5 +25,5 @@ RUN pip install -e git+https://github.com/ckan/ckanext-spatial#egg=ckanext-spati
     pip install -r https://raw.githubusercontent.com/GSA/ckanext-geodatagov/master/pip-requirements.txt  
 
 # apply required patch
-ADD https://raw.githubusercontent.com/GSA/catalog.data.gov/75_fix_save_harvest_source/ckan/patches/ckan/unflattern_indexerror.patch /patches/1.patch
+ADD https://raw.githubusercontent.com/GSA/catalog.data.gov/master/ckan/patches/ckan/unflattern_indexerror.patch /patches/1.patch
 RUN cd $SRC_DIR/ckan/ && patch -p1 < /patches/1.patch
