@@ -1,6 +1,6 @@
 from ckan.plugins import toolkit
 import logging
-from nose.tools import assert_equal
+from nose.tools import assert_equal, assert_not_in
 import ckanext.harvest.model as harvest_model
 from pylons import config
 
