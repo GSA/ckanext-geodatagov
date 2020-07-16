@@ -2,7 +2,6 @@ from __future__ import print_function
 
 import json
 import logging
-import os
 import SimpleHTTPServer
 import SocketServer
 import xml.etree.ElementTree as ET
@@ -10,7 +9,6 @@ from threading import Thread
 from urlparse import parse_qs
 
 import pkg_resources
-from ckanext import geodatagov
 
 log = logging.getLogger("harvester")
 PORT = 8998

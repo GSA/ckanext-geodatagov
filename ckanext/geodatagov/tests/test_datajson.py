@@ -1,5 +1,4 @@
 import json
-from nose.tools import assert_raises
 
 try:
     from ckan.tests.helpers import reset_db, call_action
