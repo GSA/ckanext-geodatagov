@@ -1,13 +1,7 @@
-import copy
-from urllib2 import URLError
 from nose.tools import assert_equal, assert_raises, assert_in, assert_not_in
 import json
-from mock import patch, MagicMock, Mock
-from requests.exceptions import HTTPError, RequestException
 
 from ckan import model
-from ckan.plugins import toolkit
-from ckan.lib.munge import munge_title_to_name
 from factories import (WafCollectionHarvestSourceObj,
                        HarvestJobObj)
 
