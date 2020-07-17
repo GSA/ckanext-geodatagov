@@ -102,9 +102,19 @@ pip install -r pip-requirements.txt
 cd ..
 echo "-----------------------------------------------------------------"
 echo "Installing Spatial"
-git clone https://github.com/ckan/ckanext-spatial
-cd ckanext-spatial
-git checkout master
+
+if [ $CKANVERSION == '2.8' ]
+then
+	git clone https://github.com/ckan/ckanext-spatial
+	cd ckanext-spatial
+	git checkout master
+
+elif [ $CKANVERSION == '2.3' ]
+then
+	git clone https://github.com/GSA/ckanext-spatial
+	cd ckanext-spatial
+	git checkout datagov
+fi
 
 python setup.py develop
 pip install -r pip-requirements.txt
