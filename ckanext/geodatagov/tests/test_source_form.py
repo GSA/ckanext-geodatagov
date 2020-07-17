@@ -24,11 +24,6 @@ class TestHarvestSourceForm(helpers.FunctionalTestBase):
 
     def test_create_waf_collection_harvest_source_form(self):
 
-        # check config
-        log.info('Installed plugins: {}'.format(config.get('ckan.plugins', 'undefined')))
-        log.info('legacy_templates: {}'.format(config.get('ckan.legacy_templates', 'undefined')))
-        if toolkit.check_ckan_version(max_version='2.7.99'):
-            config['ckan.legacy_templates'] = True
         self.app = self._get_test_app()
         
         # Create
@@ -58,9 +53,6 @@ class TestHarvestSourceForm(helpers.FunctionalTestBase):
 
     def test_create_z3950_harvest_source_form(self):
 
-        if toolkit.check_ckan_version(max_version='2.7.99'):
-            config['ckan.legacy_templates'] = True
-        
         self.app = self._get_test_app()
         
         # Create
