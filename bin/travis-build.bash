@@ -28,6 +28,8 @@ then
 	git clone https://github.com/GSA/ckan
 	cd ckan
 	git checkout datagov
+	echo "Fix debug css"
+	cp ckan/public/base/css/main.css ckan/public/base/css/main.debug.css
 fi
 
 pip install --upgrade pip
