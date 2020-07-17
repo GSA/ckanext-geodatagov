@@ -1,15 +1,15 @@
-from ckan.plugins import toolkit
 import logging
-from nose.tools import assert_equal, assert_not_in
+
 import ckanext.harvest.model as harvest_model
-from pylons import config
+from nose.tools import assert_equal, assert_not_in
 
 try:
     from ckan.tests import helpers, factories
-except ImportError: 
+except ImportError:
     from ckan.new_tests import helpers, factories
 
 log = logging.getLogger(__name__)
+
 
 class TestHarvestSourceForm(helpers.FunctionalTestBase):
 
@@ -23,19 +23,20 @@ class TestHarvestSourceForm(helpers.FunctionalTestBase):
         cls.extra_environ = {'REMOTE_USER': sysadmin['name'].encode('ascii')}
 
     def test_create_waf_collection_harvest_source_form(self):
-
+        WAF_HARVEST_SOURCE_URL = 'https://meta.geo.census.gov/data/existing/decennial/GEO/GPMB/TIGERline/TIGER2018/concity/'
+        COLLECTION_METADATA_URL = 'https://meta.geo.census.gov/data/existing/decennial/GEO/GPMB/TIGERline/TIGER2018/SeriesInfo/SeriesCollection_tl_2018_concity.shp.iso.xml'
         self.app = self._get_test_app()
-        
+
         # Create
         res = self.app.get('/harvest/new', extra_environ=self.extra_environ)
-        
-        harvest_source_name = u'test-waf-collection-harvest-source'
+
+        harvest_source_name = 'test-waf-collection-harvest-source'
         fv = res.forms['source-new']
-        fv['url'] = u'https://meta.geo.census.gov/data/existing/decennial/GEO/GPMB/TIGERline/TIGER2018/concity/'
-        fv['source_type'] = u'waf-collection'
-        fv['title'] = u'Test WAF colelction harvest source'
+        fv['url'] = WAF_HARVEST_SOURCE_URL
+        fv['source_type'] = 'waf-collection'
+        fv['title'] = 'Test WAF colelction harvest source'
         fv['name'] = harvest_source_name
-        fv['collection_metadata_url'] = 'https://meta.geo.census.gov/data/existing/decennial/GEO/GPMB/TIGERline/TIGER2018/SeriesInfo/SeriesCollection_tl_2018_concity.shp.iso.xml'
+        fv['collection_metadata_url'] = COLLECTION_METADATA_URL
 
         # Save
         res = fv.submit('save', extra_environ=self.extra_environ)
@@ -44,20 +45,20 @@ class TestHarvestSourceForm(helpers.FunctionalTestBase):
 
         # Go to the edit form
         res_redirect = self.app.get('/harvest/edit/{}'.format(harvest_source_name), extra_environ=self.extra_environ)
-        
+
         # ensure we have the expected values
         fv = res_redirect.forms['source-new']
-        assert_equal(fv['collection_metadata_url'].value, 'https://meta.geo.census.gov/data/existing/decennial/GEO/GPMB/TIGERline/TIGER2018/SeriesInfo/SeriesCollection_tl_2018_concity.shp.iso.xml')
-        assert_equal(fv['url'].value, 'https://meta.geo.census.gov/data/existing/decennial/GEO/GPMB/TIGERline/TIGER2018/concity/')
+        assert_equal(fv['collection_metadata_url'].value, COLLECTION_METADATA_URL)
+        assert_equal(fv['url'].value, WAF_HARVEST_SOURCE_URL)
         assert_equal(fv['source_type'].value, 'waf-collection')
 
     def test_create_z3950_harvest_source_form(self):
 
         self.app = self._get_test_app()
-        
+
         # Create
         res = self.app.get('/harvest/new', extra_environ=self.extra_environ)
-        
+
         harvest_source_name = u'test-harvest-source'
         fv = res.forms['source-new']
         fv['url'] = u'https://test.z3950.com/'
@@ -74,7 +75,7 @@ class TestHarvestSourceForm(helpers.FunctionalTestBase):
 
         # Go to the edit form
         res_redirect = self.app.get('/harvest/edit/{}'.format(harvest_source_name), extra_environ=self.extra_environ)
-        
+
         # ensure we have the expected values
         fv = res_redirect.forms['source-new']
         assert_equal(fv['url'].value, 'https://test.z3950.com/')
