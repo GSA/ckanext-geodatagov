@@ -19,11 +19,17 @@ then
 	git clone https://github.com/ckan/ckan
 	cd ckan
 	git checkout ckan-2.8.4
+	# apply required patch
+	curl -L https://raw.githubusercontent.com/GSA/catalog.data.gov/master/ckan/patches/ckan/unflattern_indexerror.patch > 1.patch
+	echo "Applying patch"
+	patch -p1 < 1.patch
 elif [ $CKANVERSION == '2.3' ]
 then
 	git clone https://github.com/GSA/ckan
 	cd ckan
 	git checkout datagov
+	echo "Fix debug css"
+	cp ckan/public/base/css/main.css ckan/public/base/css/main.debug.css
 fi
 
 pip install --upgrade pip
@@ -69,7 +75,14 @@ echo "Installing Harvester"
 
 git clone https://github.com/GSA/ckanext-harvest
 cd ckanext-harvest
-git checkout master
+
+if [ $CKANVERSION == '2.8' ]
+then
+	git checkout datagov-catalog
+elif [ $CKANVERSION == '2.3' ]
+then
+	git checkout datagov
+fi
 
 python setup.py develop
 pip install -r pip-requirements.txt
@@ -89,9 +102,19 @@ pip install -r pip-requirements.txt
 cd ..
 echo "-----------------------------------------------------------------"
 echo "Installing Spatial"
-git clone https://github.com/ckan/ckanext-spatial
-cd ckanext-spatial
-git checkout master
+
+if [ $CKANVERSION == '2.8' ]
+then
+	git clone https://github.com/ckan/ckanext-spatial
+	cd ckanext-spatial
+	git checkout master
+
+elif [ $CKANVERSION == '2.3' ]
+then
+	git clone https://github.com/GSA/ckanext-spatial
+	cd ckanext-spatial
+	git checkout datagov
+fi
 
 python setup.py develop
 pip install -r pip-requirements.txt
