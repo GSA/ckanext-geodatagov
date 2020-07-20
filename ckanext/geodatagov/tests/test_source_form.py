@@ -37,6 +37,7 @@ class TestHarvestSourceForm(helpers.FunctionalTestBase):
         fv['title'] = 'Test WAF colelction harvest source'
         fv['name'] = harvest_source_name
         fv['collection_metadata_url'] = COLLECTION_METADATA_URL
+        fv['validator_profiles'] = 'iso19139ngdc'
 
         # Save
         res = fv.submit('save', extra_environ=self.extra_environ)
@@ -51,6 +52,7 @@ class TestHarvestSourceForm(helpers.FunctionalTestBase):
         assert_equal(fv['collection_metadata_url'].value, COLLECTION_METADATA_URL)
         assert_equal(fv['url'].value, WAF_HARVEST_SOURCE_URL)
         assert_equal(fv['source_type'].value, 'waf-collection')
+        assert_equal(fv['validator_profiles'].value, 'iso19139ngdc')
 
     def test_create_z3950_harvest_source_form(self):
 
