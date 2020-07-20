@@ -17,7 +17,7 @@
         {{ form.input('collection_metadata_url', id='field-collection_metadata_url', label=_('Collection Metadata Url'), placeholder=_('eg. http://example.com/collection.xml'), value=collection_metadata_url, error=errors.port, classes=['control-full']) }}
         {{ form.input('extra_search_criteria', id='field-extra_search_criteria', label=_('Extra Search Criteria'), placeholder=_('eg. accountid:0123456789ABCDEF'), value=extra_search_criteria, error=errors.extra_search_criteria, classes=['control-full']) }}
 
-{% set validator_profiles = source_config.validator_profiles %}
+{% set validator_profiles = source_config.get('validator_profiles') or data.validator_profiles %}
   <div data-module="reclinepreview" data-module-site_url="{{ h.dump_json(h.url('/', locale='default', qualified=true)) }}">
 
          <div class="control-group harvest-types">
@@ -50,9 +50,9 @@
 
 </fieldset>
 
-{% set private_datasets = source_config.private_datasets %}
+{% set private_datasets = source_config.get('private_datasets') or data.private_datasets %}
 
-<div class="control-group">
+<div class="control-group form-group">
   <label for="field-private_datasets" class="control-label">{{ _('Dataset visibility') }}</label>
   <div class="controls">
     <select id="field-private_datasets" name="private_datasets">
@@ -67,7 +67,7 @@
 {% set existing_group = source_config.default_groups %}
 {% set groups_available = h.groups_available() %}
 {% if groups_available %}
-<div class="control-group">
+<div class="control-group form-group">
   <label for="field-default_groups" class="control-label">{{ _('Default Group') }}</label>
   <div class="controls">
     <select id="field-default_groups" name="default_groups" data-module="autocomplete">
