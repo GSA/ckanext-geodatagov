@@ -16,7 +16,7 @@ ls -la
 
 if [ $CKANVERSION == '2.8' ]
 then
-	git clone https://github.com/ckan/ckan
+	git clone https://github.com/GSA/ckan
 	cd ckan
 	git checkout datagov-newcatalog
 elif [ $CKANVERSION == '2.3' ]
