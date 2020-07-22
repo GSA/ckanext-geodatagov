@@ -1,6 +1,4 @@
 FROM openknowledge/ckan-dev:2.8
-ENV GIT_URL=https://github.com/GSA/ckan.git
-ENV GIT_BRANCH=datagov-newcatalog
 
 MAINTAINER Your Name Here <you@example.com>
 
@@ -15,6 +13,11 @@ RUN cd /geos && \
     ./configure && \
     make -j 1 && \
     make install
+
+RUN cd ${SRC_DIR}/ckan && \
+    git remote add gsa https://github.com/GSA/ckan.git && \
+    git fetch gsa && \
+    git checkout gsa/datagov-newcatalog
 
 RUN pip install -e git+https://github.com/ckan/ckanext-spatial#egg=ckanext-spatial && \
     pip install -r https://raw.githubusercontent.com/ckan/ckanext-spatial/master/pip-requirements.txt && \
