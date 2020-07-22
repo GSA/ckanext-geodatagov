@@ -1,5 +1,5 @@
 FROM openknowledge/ckan-dev:2.8
-ENV GIT_BRANCH=ckan-2.8.4
+
 MAINTAINER Your Name Here <you@example.com>
 
 RUN apk add py-cryptography
@@ -14,6 +14,11 @@ RUN cd /geos && \
     make -j 1 && \
     make install
 
+RUN cd ${SRC_DIR}/ckan && \
+    git remote add gsa https://github.com/GSA/ckan.git && \
+    git fetch gsa && \
+    git checkout gsa/datagov-newcatalog
+
 RUN pip install -e git+https://github.com/ckan/ckanext-spatial#egg=ckanext-spatial && \
     pip install -r https://raw.githubusercontent.com/ckan/ckanext-spatial/master/pip-requirements.txt && \
     pip install -e git+https://github.com/ckan/ckanext-harvest.git#egg=ckanext-harvest && \
@@ -23,7 +28,3 @@ RUN pip install -e git+https://github.com/ckan/ckanext-spatial#egg=ckanext-spati
     pip install -e git+https://github.com/GSA/ckanext-datagovtheme#egg=ckanext-datagovtheme && \
     pip install -e git+https://github.com/GSA/ckanext-geodatagov.git#egg=ckanext-geodatagov && \
     pip install -r https://raw.githubusercontent.com/GSA/ckanext-geodatagov/master/pip-requirements.txt  
-
-# apply required patch
-ADD https://raw.githubusercontent.com/GSA/catalog.data.gov/master/ckan/patches/ckan/unflattern_indexerror.patch /patches/1.patch
-RUN cd $SRC_DIR/ckan/ && patch -p1 < /patches/1.patch
