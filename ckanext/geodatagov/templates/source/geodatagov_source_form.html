@@ -11,16 +11,15 @@
         {% set collection_metadata_url = source_config.get('collection_metadata_url') or data.collection_metadata_url %}
         {% set extra_search_criteria = source_config.get('extra_search_criteria') or data.extra_search_criteria %}
 
-        {{ form.input('database', id='field-database', label=_('Database'), placeholder=_('eg. My Database'), value=database, error=errors.database, classes=['control-full'] ) }}
-        {{ form.input('port', id='field-port', label=_('Port'), placeholder=_('eg. 3452'), value=port, error=errors.port, classes=['control-full']) }}
+        {{ form.input('database', id='field-database', label=_('Database'), placeholder=_('eg. My Database'), value=database, error=errors.database, classes=['control-full', 'control-group'] ) }}
+        {{ form.input('port', id='field-port', label=_('Port'), placeholder=_('eg. 3452'), value=port, error=errors.port, classes=['control-full', 'control-group']) }}
 
-        {{ form.input('collection_metadata_url', id='field-collection_metadata_url', label=_('Collection Metadata Url'), placeholder=_('eg. http://example.com/collection.xml'), value=collection_metadata_url, error=errors.port, classes=['control-full']) }}
-        {{ form.input('extra_search_criteria', id='field-extra_search_criteria', label=_('Extra Search Criteria'), placeholder=_('eg. accountid:0123456789ABCDEF'), value=extra_search_criteria, error=errors.extra_search_criteria, classes=['control-full']) }}
+        {{ form.input('collection_metadata_url', id='field-collection_metadata_url', label=_('Collection Metadata Url'), placeholder=_('eg. http://example.com/collection.xml'), value=collection_metadata_url, error=errors.port, classes=['control-full', 'control-group']) }}
+        {{ form.input('extra_search_criteria', id='field-extra_search_criteria', label=_('Extra Search Criteria'), placeholder=_('eg. accountid:0123456789ABCDEF'), value=extra_search_criteria, error=errors.extra_search_criteria, classes=['control-full', 'control-group']) }}
 
 {% set validator_profiles = source_config.get('validator_profiles') or data.validator_profiles %}
   <div data-module="reclinepreview" data-module-site_url="{{ h.dump_json(h.url('/', locale='default', qualified=true)) }}">
-
-         <div class="control-group harvest-types">
+         <div class="harvest-types form-group control-group">
            <label class="control-label">Validation</label>
            <div class="controls">
              {% for key, value in h.get_validation_profiles() %}
@@ -33,7 +32,7 @@
            </div>
          </div>
 
-         <div class="control-group harvest-types">
+         <div class="harvest-types form-group control-group">
            <label class="control-label">Validation Schema</label>
            <div class="controls">
            {% if h.get_validation_schema() %}
@@ -64,7 +63,7 @@
   </div>
 </div>
 
-{% set existing_group = source_config.default_groups %}
+{% set existing_group = source_config.default_groups or data.default_groups %}
 {% set groups_available = h.groups_available() %}
 {% if groups_available %}
 <div class="control-group form-group">
