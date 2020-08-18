@@ -110,24 +110,21 @@ class TestWafHarvester(object):
         return datasets
 
     def test_waf1_datasets_count(self):
-        """ Get datasets from waf-collection1/ folder as waf-collection source
+        """ Get datasets from waf/ folder as waf source
             and test we have one dataset with the expected name """
 
         datasets = self.get_datasets_from_waf1_sample()
         assert_equal(len(datasets), 1)
         
     def test_waf1_datasets_privacy(self):
-        """ Harvest waf-collection1/ folder as waf-collection source
-            and test we get one dataset and this dataset is a "child" (it have a "collection_package_id" extra)
-            and is not a "parent" (do not include the collection_metadata extra) """
+        """ Harvest waf1/ folder as waf source and check the datasets are public"""
 
         datasets = self.get_datasets_from_waf1_sample()
         for dataset in datasets:
             assert_equal(dataset.private, False)
     
     def test_waf1_names(self):
-        """ Harvest waf-collection1/ folder as waf-collection source
-            and test parent dataset have the expected title and name """
+        """ Harvest waf1/ folder as waf source and test we have the names we expect """
 
         expected_names = ['2016-cartographic-boundary-file-division-for-united-states-1-500000']
         datasets = self.get_datasets_from_waf1_sample()
