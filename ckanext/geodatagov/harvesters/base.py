@@ -88,8 +88,8 @@ class GeoDataGovHarvester(SpatialHarvester):
         if not package_dict:
             return None
 
-        if self.source_config.get('private_datasets', True):
-            package_dict['private'] = True
+        if self.source_config.get('private_datasets'):
+            package_dict['private'] = self.source_config.get('private_datasets')
         else:
             package_dict['private'] = False
 
