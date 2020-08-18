@@ -90,6 +90,8 @@ class GeoDataGovHarvester(SpatialHarvester):
 
         if self.source_config.get('private_datasets', True):
             package_dict['private'] = True
+        else:
+            package_dict['private'] = False
 
         default_groups = self.source_config.get('default_groups', None)
         if default_groups  and len(default_groups):
