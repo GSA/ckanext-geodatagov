@@ -141,4 +141,3 @@ class TestWafHarvester(object):
         # we expect private_datasets as false, without quotes
         cfg = self.config1.replace('"false"', 'false')
         assert_equal(self.job.source.config, cfg)
-        
