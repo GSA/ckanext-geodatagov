@@ -131,10 +131,3 @@ class TestWafHarvester(object):
         datasets = self.get_datasets_from_waf1_sample()
         for dataset in datasets:
             assert_in(dataset.name, expected_names)
-    
-    def test_waf1_source_config(self):
-        """ we expect the same config after the harvest process finishes """
-
-        self.get_datasets_from_waf1_sample()
-        assert_equal(self.job.source.config, self.config1)
-        
