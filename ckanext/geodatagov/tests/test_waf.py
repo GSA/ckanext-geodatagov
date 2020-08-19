@@ -41,17 +41,18 @@ class TestWafHarvester(object):
         
         source = WafHarvestSourceObj(url=url,
                                     owner_org='test-org',
+                                    config=source_config,
                                     **sc)
-        job = HarvestJobObj(source=source)
+        self.job = HarvestJobObj(source=source)
 
         self.harvester = GeoDataGovWAFHarvester()
-
+        
         # gather stage
         log.info('GATHERING %s', url)
-        obj_ids = self.harvester.gather_stage(job)
-        log.info('job.gather_errors=%s', job.gather_errors)
-        if len(job.gather_errors) > 0:
-            raise Exception(job.gather_errors[0])
+        obj_ids = self.harvester.gather_stage(self.job)
+        log.info('job.gather_errors=%s', self.job.gather_errors)
+        if len(self.job.gather_errors) > 0:
+            raise Exception(self.job.gather_errors[0])
 
         log.info('obj_ids=%s', obj_ids)
         if obj_ids is None or len(obj_ids) == 0:
@@ -102,8 +103,8 @@ class TestWafHarvester(object):
         """ harvest waf1/ folder as waf source """
         url = 'http://127.0.0.1:%s/waf1/index.html' % mock_static_file_server.PORT
 
-        config = '{"private_datasets": false, "validator_profiles": ["iso19139ngdc"]}'
-        self.run_gather(url=url, source_config=config)
+        self.config1 = '{"private_datasets": false, "validator_profiles": ["iso19139ngdc"]}'
+        self.run_gather(url=url, source_config=self.config1)
         self.run_fetch()
         datasets = self.run_import()
 
@@ -130,3 +131,10 @@ class TestWafHarvester(object):
         datasets = self.get_datasets_from_waf1_sample()
         for dataset in datasets:
             assert_in(dataset.name, expected_names)
+    
+    def test_waf1_source_config(self):
+        """ we expect the same config after the harvest process finishes """
+
+        self.get_datasets_from_waf1_sample()
+        assert_equal(self.job.source.config, self.config1)
+        

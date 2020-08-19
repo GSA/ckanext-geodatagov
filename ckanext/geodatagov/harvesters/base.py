@@ -88,11 +88,8 @@ class GeoDataGovHarvester(SpatialHarvester):
         if not package_dict:
             return None
 
-        if self.source_config.get('private_datasets'):
-            package_dict['private'] = self.source_config.get('private_datasets')
-        else:
-            package_dict['private'] = True
-
+        package_dict['private'] = self.source_config.get('private_datasets', True)
+        
         default_groups = self.source_config.get('default_groups', None)
         if default_groups  and len(default_groups):
             package_dict['groups'] = []
