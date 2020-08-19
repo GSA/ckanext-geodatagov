@@ -6,14 +6,14 @@ import mock_static_file_server
 from ckan import model
 from ckanext.geodatagov.harvesters.base import GeoDataGovWAFHarvester
 from factories import HarvestJobObj, WafHarvestSourceObj
-from nose.tools import assert_equal, assert_in, assert_not_in, assert_raises
+from nose.tools import assert_equal, assert_in
 
 try:
     from ckan.tests.helpers import reset_db, call_action
-    from ckan.tests.factories import Organization, Group, _get_action_user_name, Sysadmin
+    from ckan.tests.factories import Sysadmin
 except ImportError:
     from ckan.new_tests.helpers import reset_db, call_action
-    from ckan.new_tests.factories import Organization, Group, _get_action_user_name, Sysadmin
+    from ckan.new_tests.factories import Sysadmin
 
 log = logging.getLogger(__name__)
 
@@ -38,16 +38,16 @@ class TestWafHarvester(object):
     def run_gather(self, url, source_config):
 
         sc = json.loads(source_config)
-        
+
         source = WafHarvestSourceObj(url=url,
-                                    owner_org='test-org',
-                                    config=source_config,
-                                    **sc)
-        
+                                     owner_org='test-org',
+                                     config=source_config,
+                                     **sc)
+
         log.info('Created source {}'.format(source))
         self.job = HarvestJobObj(source=source)
         self.harvester = GeoDataGovWAFHarvester()
-        
+
         # gather stage
         log.info('GATHERING %s', url)
         obj_ids = self.harvester.gather_stage(self.job)
@@ -117,14 +117,14 @@ class TestWafHarvester(object):
 
         datasets = self.get_datasets_from_waf1_sample()
         assert_equal(len(datasets), 1)
-        
+
     def test_waf1_datasets_privacy(self):
         """ Harvest waf1/ folder as waf source and check the datasets are public"""
 
         datasets = self.get_datasets_from_waf1_sample()
         for dataset in datasets:
             assert_equal(dataset.private, False)
-    
+
     def test_waf1_names(self):
         """ Harvest waf1/ folder as waf source and test we have the names we expect """
 
@@ -132,7 +132,7 @@ class TestWafHarvester(object):
         datasets = self.get_datasets_from_waf1_sample()
         for dataset in datasets:
             assert_in(dataset.name, expected_names)
-    
+
     def test_waf1_source_config(self):
         """ we expect the same config after the harvest process finishes """
 
