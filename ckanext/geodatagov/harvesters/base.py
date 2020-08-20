@@ -75,12 +75,13 @@ class GeoDataGovHarvester(SpatialHarvester):
         tags = iso_values.get('tags', [])
         # deal with something like
         # EARTH    SCIENCE > ATMOSPHERE > ATMOSPHERIC    ELECTRICITY > ATMOSPHERIC CONDUCTIVITY
+        # Truncate individual keywords to 100 characters since DB fields is varchar 100
         new_tags = []
         for t in tags:
             tt = t.split('>')
             tt = [t.lower().strip() for t in tt]
             tt = [t.lower().strip(';,') for t in tt]
-            tt = [' '.join(t.split()) for t in tt]
+            tt = [' '.join(t.split())[:100] for t in tt]
             new_tags.extend(tt)
         new_tags = list(set(new_tags))
 
