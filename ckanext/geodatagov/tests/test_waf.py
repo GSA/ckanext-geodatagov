@@ -141,3 +141,11 @@ class TestWafHarvester(object):
         # we expect private_datasets as false, without quotes
         cfg = self.config1.replace('"false"', 'false')
         assert_equal(self.job.source.config, cfg)
+
+    def test_waf1_limit_tags(self):
+        """ Expect tags to be compliant with the DB (under 100 characters) """
+        expected_tags = ['fill', 'in', 'tags', 'from', 'sample']
+        datasets = self.get_datasets_from_waf1_sample()
+        for dataset in datasets:
+            for tag in dataset.tags:
+                assert_in(tag, expected_tags)
