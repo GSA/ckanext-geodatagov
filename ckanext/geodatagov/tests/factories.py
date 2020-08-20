@@ -52,6 +52,8 @@ class CSWHarvestSourceObj(HarvestSourceObj):
 class WafCollectionHarvestSourceObj(HarvestSourceObj):
     source_type = 'waf-collection'
 
+class WafHarvestSourceObj(HarvestSourceObj):
+    source_type = 'waf'
 
 class DataJsonHarvestSourceObj(HarvestSourceObj):
     source_type = 'datajson'

@@ -291,8 +291,7 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
             model.Session.execute('SET CONSTRAINTS harvest_object_package_id_fkey DEFERRED')
             model.Session.flush()
 
-            if source_config.get('private_datasets', True):
-                package_dict['private'] = True
+            package_dict['private'] = self.source_config.get('private_datasets', False)
 
             try:
                 package_id = get_action('package_create')(context, package_dict)
