@@ -149,6 +149,7 @@ class TestWafHarvester(object):
         """ Expect tags to be compliant with the DB (under 100 characters) """
         datasets = self.get_datasets_from_waf1_sample()
         for dataset in datasets:
+            log.info('dataset= %s', dataset)
             for extra in dataset.extras:
                 if extra.keys == "tags":
                     tags = extra.value.split(',')
