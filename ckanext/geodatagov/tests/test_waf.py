@@ -128,7 +128,7 @@ class TestWafHarvester(object):
     def test_waf1_names(self):
         """ Harvest waf1/ folder as waf source and test we have the names we expect """
 
-        expected_names = ['2016-cartographic-boundary-file-division-for-united-states-1-500000']
+        expected_names = ['2016-cartographic-boundary-file-division-for-united-states-1-500000','coastwatch-regions-in-hdf-format']
         datasets = self.get_datasets_from_waf1_sample()
         for dataset in datasets:
             assert_in(dataset.name, expected_names)
