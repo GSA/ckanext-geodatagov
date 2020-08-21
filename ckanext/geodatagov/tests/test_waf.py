@@ -151,4 +151,5 @@ class TestWafHarvester(object):
         tag_objects = model.Tag.all()
         tag_list = [tag.name for tag in tag_objects]
         for tag in tag_list:
+            log.info("One of the tags that were inserted: %s", tag)
             assert len(tag) <= 100
