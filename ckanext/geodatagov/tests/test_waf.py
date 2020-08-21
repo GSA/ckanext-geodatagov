@@ -4,6 +4,7 @@ import logging
 import ckanext.harvest.model as harvest_model
 import mock_static_file_server
 from ckan import model
+import ckan.logic as logic
 from ckanext.geodatagov.harvesters.base import GeoDataGovWAFHarvester
 from factories import HarvestJobObj, WafHarvestSourceObj
 from nose.tools import assert_equal, assert_in
@@ -147,11 +148,7 @@ class TestWafHarvester(object):
 
     def test_waf1_limit_tags(self):
         """ Expect tags to be compliant with the DB (under 100 characters) """
-        datasets = self.get_datasets_from_waf1_sample()
-        for dataset in datasets:
-            log.info('dataset= %s', dataset)
-            for extra in dataset.extras:
-                if extra.keys == "tags":
-                    tags = extra.value.split(',')
-                    for tag in tags:
-                        assert len(tag.strip()) <= 100
+        self.get_datasets_from_waf1_sample()
+        tag_list = logic.get_action('tag_list')
+        for tag in tag_list:
+            assert len(tag) <= 100
