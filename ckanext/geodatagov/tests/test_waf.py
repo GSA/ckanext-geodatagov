@@ -116,7 +116,7 @@ class TestWafHarvester(object):
             and test we have one dataset with the expected name """
 
         datasets = self.get_datasets_from_waf1_sample()
-        assert_equal(len(datasets), 1)
+        assert_equal(len(datasets), 2)
 
     def test_waf1_datasets_privacy(self):
         """ Harvest waf1/ folder as waf source and check the datasets are public"""
@@ -128,7 +128,10 @@ class TestWafHarvester(object):
     def test_waf1_names(self):
         """ Harvest waf1/ folder as waf source and test we have the names we expect """
 
-        expected_names = ['2016-cartographic-boundary-file-division-for-united-states-1-500000']
+        expected_names = [
+            '2016-cartographic-boundary-file-division-for-united-states-1-500000',
+            'coastwatch-regions-in-hdf-format'
+        ]
         datasets = self.get_datasets_from_waf1_sample()
         for dataset in datasets:
             assert_in(dataset.name, expected_names)
@@ -141,3 +144,17 @@ class TestWafHarvester(object):
         # we expect private_datasets as false, without quotes
         cfg = self.config1.replace('"false"', 'false')
         assert_equal(self.job.source.config, cfg)
+
+    def test_waf1_limit_tags(self):
+        """ Expect tags to be compliant with the DB (under 100 characters) """
+        self.get_datasets_from_waf1_sample()
+        tag_objects = model.Tag.all().all()
+        log.info("Tags Output Objects: %s", tag_objects)
+        tag_list = [tag.name for tag in tag_objects]
+        log.info("Tags Output list: %s", tag_list)
+        tag_limit_errors = []
+        for tag in tag_list:
+            if len(tag) > 100:
+                tag_limit_errors.append(tag)
+        log.info("Tags that are greater than 100 character limit: %s", tag_limit_errors)
+        assert(len(tag_limit_errors) == 0)
