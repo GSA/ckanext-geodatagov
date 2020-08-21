@@ -149,6 +149,6 @@ class TestWafHarvester(object):
     def test_waf1_limit_tags(self):
         """ Expect tags to be compliant with the DB (under 100 characters) """
         self.get_datasets_from_waf1_sample()
-        tag_list = logic.get_action('tag_list')
+        tag_list = logic.get_action('tag_list')()
         for tag in tag_list:
             assert len(tag) <= 100
