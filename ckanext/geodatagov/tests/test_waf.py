@@ -148,8 +148,13 @@ class TestWafHarvester(object):
     def test_waf1_limit_tags(self):
         """ Expect tags to be compliant with the DB (under 100 characters) """
         self.get_datasets_from_waf1_sample()
-        tag_objects = model.Tag.all()
+        tag_objects = model.Tag.all().all()
+        log.info("Tags Output Objects: %s", tag_objects)
         tag_list = [tag.name for tag in tag_objects]
+        log.info("Tags Output list: %s", tag_list)
+        tag_limit_errors = []
         for tag in tag_list:
-            log.info("One of the tags that were inserted: %s", tag)
-            assert len(tag) <= 100
+            if len(tag) > 100:
+                tag_limit_errors.append(tag)
+        log.info("Tags that are greater than 100 character limit: %s", tag_limit_errors)
+        assert(len(tag_limit_errors) == 0)
