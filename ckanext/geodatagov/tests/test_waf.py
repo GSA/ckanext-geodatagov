@@ -116,7 +116,7 @@ class TestWafHarvester(object):
             and test we have one dataset with the expected name """
 
         datasets = self.get_datasets_from_waf1_sample()
-        assert_equal(len(datasets), 1)
+        assert_equal(len(datasets), 2)
 
     def test_waf1_datasets_privacy(self):
         """ Harvest waf1/ folder as waf source and check the datasets are public"""
@@ -128,7 +128,10 @@ class TestWafHarvester(object):
     def test_waf1_names(self):
         """ Harvest waf1/ folder as waf source and test we have the names we expect """
 
-        expected_names = ['2016-cartographic-boundary-file-division-for-united-states-1-500000','coastwatch-regions-in-hdf-format']
+        expected_names = [
+            '2016-cartographic-boundary-file-division-for-united-states-1-500000',
+            'coastwatch-regions-in-hdf-format'
+        ]
         datasets = self.get_datasets_from_waf1_sample()
         for dataset in datasets:
             assert_in(dataset.name, expected_names)
@@ -144,8 +147,7 @@ class TestWafHarvester(object):
 
     def test_waf1_limit_tags(self):
         """ Expect tags to be compliant with the DB (under 100 characters) """
-        expected_tags = ['fill', 'in', 'tags', 'from', 'sample']
         datasets = self.get_datasets_from_waf1_sample()
         for dataset in datasets:
             for tag in dataset.tags:
-                assert_in(tag, expected_tags)
+                assert len(tag) <= 100
