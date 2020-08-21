@@ -4,7 +4,6 @@ import logging
 import ckanext.harvest.model as harvest_model
 import mock_static_file_server
 from ckan import model
-import ckan.logic as logic
 from ckanext.geodatagov.harvesters.base import GeoDataGovWAFHarvester
 from factories import HarvestJobObj, WafHarvestSourceObj
 from nose.tools import assert_equal, assert_in
