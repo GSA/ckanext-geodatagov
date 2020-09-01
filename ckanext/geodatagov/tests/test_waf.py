@@ -111,6 +111,17 @@ class TestWafHarvester(object):
 
         return datasets
 
+    def get_datasets_from_waf_trim_tags(self):
+        """ harvest waf-trim-tags/ folder as waf source """
+        url = 'http://127.0.0.1:%s/waf-trim-tags/index.html' % mock_static_file_server.PORT
+
+        self.config1 = '{"validator_profiles": ["iso19139ngdc"], "private_datasets": "false"}'
+        self.run_gather(url=url, source_config=self.config1)
+        self.run_fetch()
+        datasets = self.run_import()
+
+        return datasets
+
     def test_waf1_datasets_count(self):
         """ Get datasets from waf/ folder as waf source
             and test we have one dataset with the expected name """
@@ -158,3 +169,24 @@ class TestWafHarvester(object):
                 tag_limit_errors.append(tag)
         log.info("Tags that are greater than 100 character limit: %s", tag_limit_errors)
         assert(len(tag_limit_errors) == 0)
+
+    def test_waf_trim_tags(self):
+        """
+            Expect tags to be split by delimiter chars ';,' and trimmed.
+            string 'tag1    /tag1 &gt; &gt;    tag2,  tag3; > tag4&gt;tag5;,TAG6      '
+            should be trimmed into a list
+            ['tag1 /tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6']
+        """
+
+        self.get_datasets_from_waf_trim_tags()
+        tag_objects = model.Tag.all().all()
+        log.info("Tags Output Objects: %s", tag_objects)
+
+        tag_list = [tag.name for tag in tag_objects]
+        log.info("Tags Output list: %s", tag_list)
+
+        expected_list = ['tag1 /tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6']
+        bad_list = list(set(tag_list) - set(expected_list))
+        log.info("Tags that are not trimmed: %s", bad_list)
+
+        assert(tag_list == expected_list)
