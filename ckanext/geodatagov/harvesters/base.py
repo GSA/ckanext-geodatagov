@@ -58,6 +58,19 @@ def default_groups_validator(value):
     return value
 
 
+def trim_tags(tags):
+    # deal with something like
+    # EARTH    SCIENCE > ATMOSPHERE > ATMOSPHERIC    ELECTRICITY > ATMOSPHERIC CONDUCTIVITY
+    # Truncate individual keywords to 100 characters since DB fields is varchar 100
+    new_tags = set()
+    for tag in tags:
+        trimmed = re.split(r'[;,>]', tag)
+        trimmed = [t.lower().strip() for t in trimmed]
+        trimmed = [' '.join(t.split())[:100] for t in trimmed if t != '']
+        new_tags.update(trimmed)
+    return list(new_tags)
+
+
 class GeoDataGovHarvester(SpatialHarvester):
 
     def extra_schema(self):
@@ -71,19 +84,6 @@ class GeoDataGovHarvester(SpatialHarvester):
     def get_package_dict(self, iso_values, harvest_object):
 
         self._set_source_config(harvest_object.source.config)
-
-        tags = iso_values.get('tags', [])
-        # deal with something like
-        # EARTH    SCIENCE > ATMOSPHERE > ATMOSPHERIC    ELECTRICITY > ATMOSPHERIC CONDUCTIVITY
-        # Truncate individual keywords to 100 characters since DB fields is varchar 100
-        new_tags = []
-        for t in tags:
-            tt = t.split('>')
-            tt = [t.lower().strip() for t in tt]
-            tt = [t.lower().strip(';,') for t in tt]
-            tt = [' '.join(t.split())[:100] for t in tt]
-            new_tags.extend(tt)
-        new_tags = list(set(new_tags))
 
         package_dict = super(GeoDataGovHarvester, self).get_package_dict(iso_values, harvest_object)
         if not package_dict:
@@ -99,7 +99,7 @@ class GeoDataGovHarvester(SpatialHarvester):
 
         # root level tags not needed any more
         package_dict['tags'] = []
-        for tag in new_tags:
+        for tag in trim_tags(iso_values.get('tags', [])):
             package_dict['tags'].append({'name': tag})
         
         package_dict['extras'].append({'key': 'metadata_type', 'value': 'geospatial'})
