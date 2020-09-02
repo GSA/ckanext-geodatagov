@@ -18,6 +18,7 @@
         {{ form.input('extra_search_criteria', id='field-extra_search_criteria', label=_('Extra Search Criteria'), placeholder=_('eg. accountid:0123456789ABCDEF'), value=extra_search_criteria, error=errors.extra_search_criteria, classes=['control-full', 'control-group']) }}
 
 {% set validator_profiles = source_config.get('validator_profiles') or data.validator_profiles %}
+{% set validator_schema = source_config.get('validator_schema') or data.validator_schema %}
   <div data-module="reclinepreview" data-module-site_url="{{ h.dump_json(h.url('/', locale='default', qualified=true)) }}">
          <div class="harvest-types form-group control-group">
            <label class="control-label">Validation</label>
