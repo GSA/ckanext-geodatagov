@@ -38,7 +38,7 @@
            <div class="controls">
            {% if h.get_validation_schema() %}
              {% for key, value in h.get_validation_schema() %}
-               {% set checked = key == (data.validator_schema or '')  %}
+               {% set checked = key == (validator_schema or '')  %}
                <label class="radio">
                  <input type="radio" name="validator_schema" value="{{ key }}" {{ "checked " if checked }}>
                  {{ value }}
