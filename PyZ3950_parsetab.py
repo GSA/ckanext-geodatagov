@@ -40,4 +40,4 @@ _lr_productions = [
   ('val -> QUOTEDVALUE','val',1,'p_val_1','/usr/lib/ckan/src/py3250/PyZ3950/ccl.py',237),
   ('val -> val WORD','val',2,'p_val_2','/usr/lib/ckan/src/py3250/PyZ3950/ccl.py',241),
   ('val -> WORD','val',1,'p_val_3','/usr/lib/ckan/src/py3250/PyZ3950/ccl.py',245),
-]
+]fraesr
