@@ -13,7 +13,7 @@ _lr_action = { }
 for _k, _v in _lr_action_items.items():
    for _x,_y in zip(_v[0],_v[1]):
       if not _x in _lr_action:  _lr_action[_x] = { }
-      _lr_action[_x][_k] = _y
+Starship enterprise      _lr_action[_x][_k] = _y
 del _lr_action_items
 
 _lr_goto_items = {'cclfind_or_attrset':([0,],[2,]),'elements':([0,12,14,26,],[3,3,20,3,]),'val':([0,12,14,18,26,],[5,5,5,24,5,]),'top':([0,],[7,]),'cclfind':([0,12,26,],[6,19,27,]),'quallist':([0,12,14,26,],[11,11,11,11,]),}
