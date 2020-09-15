@@ -457,7 +457,11 @@ class Demo(p.SingletonPlugin):
     def before_view(self, pkg_dict):
 
         for num, extra in enumerate(pkg_dict.get('extras', [])):
-            if extra['key'] == 'tags':
+            key = extra.get('key', None)
+            if key is None:
+                log.error('"key" not found for extra: {}'.format(extra))
+                continue
+            if key == 'tags':
                 tags = pkg_dict.get('tags', [])
                 tags.extend([dict(name=tag, display_name=tag) for tag
                              in split_tags(extra['value'])])
