@@ -28,7 +28,7 @@ import ckan.logic.schema as schema
 import ckan.lib.cli as cli
 import ckan.lib.helpers as h
 import requests
-from ckanext.harvest.model import HarvestSource, HarvestJob, HarvestSystemInfo
+from ckanext.harvest.model import HarvestSource, HarvestJob
 import ckan.lib.munge as munge
 from pylons import config
 from ckan import plugins as p
@@ -653,29 +653,36 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
 
         print '%s combined feeds updated' % datetime.datetime.now()
 
+    def get_harvester_last_run_time(self):
+        # # is harvest job running regularly?
+        # from sqlalchemy.exc import ProgrammingError
+        # harvest_system_info = None
+        # try:
+        #     harvest_system_info = model.Session.query(HarvestSystemInfo).filter_by(key='last_run_time').first()
+        # except ProgrammingError:
+        #     msg += 'No HarvestSystemInfo table defined.'
+        #     print msg
+        #     email_log('harvest-job-cleanup', msg)
+        #     return
+
+        # TODO, find a way to get the time (datetime.datetime.utcnow()) 
+        # of last harvest_jobs_run call
+        # https://github.com/GSA/ckanext-harvest/blob/bb4219462483029fd0b0d7a06403029987f38e89/ckanext/harvest/logic/action/update.py#L358 
+        return False
 
     def harvest_job_cleanup(self):
         msg = ''
         msg += str(datetime.datetime.now()) + ' Clean up stuck harvest jobs.\n'
 
-        # is harvest job running regularly?
-        from sqlalchemy.exc import ProgrammingError
-        harvest_system_info = None
-        try:
-            harvest_system_info = model.Session.query(HarvestSystemInfo).filter_by(key='last_run_time').first()
-        except ProgrammingError:
-            msg += 'No HarvestSystemInfo table defined.'
-            print msg
-            email_log('harvest-job-cleanup', msg)
-            return
+        harvester_last_run_time = self.get_harvester_last_run_time()
 
-        if not harvest_system_info:
+        if not harvester_last_run_time:
             msg += 'Harvester is not running.'
             print msg
             email_log('harvest-job-cleanup', msg)
             return
 
-        last_run_time = harvest_system_info.value
+        last_run_time = harvester_last_run_time.value
         last_run_time = time.mktime(time.strptime(last_run_time, '%Y-%m-%d %H:%M:%S.%f'))
         time_current = time.time()
         if (time_current - last_run_time) > 3600:
