@@ -1049,8 +1049,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                 time.sleep(wait_time)
                 attempts += 1
 
-            for n, dataset in enumerate(datasets):
-                os.write(fd, '%s\n' % dataset)
+            os.write(fd, json.dumps(datasets))
 
         os.close(fd)
         os.close(fd_gz)

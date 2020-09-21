@@ -49,4 +49,5 @@ class TestJSONExport(object):
             error = 'Error parsing {}: {}'.format(str_data[:90], str(e)[:90])
             raise Exception(error)
 
+        log.info('Data is JSON valid: {}'.format(data))
         assert data
