@@ -1,14 +1,15 @@
 import json
 import logging
-from ckan.common import config
 from nose.tools import assert_equal, assert_in
-
+from nose.plugins.skip import SkipTest
 try:
     from ckan.tests.helpers import reset_db
     from ckan.tests import factories
-except ImportError:
+    from ckan.common import config
+except ImportError:  # CKAN 2.3
     from ckan.new_tests.helpers import reset_db
     from ckan.new_tests import factories
+    from pylons import config
 
 from ckanext.geodatagov.commands import GeoGovCommand
 
