@@ -34,6 +34,9 @@ from pylons import config
 from ckan import plugins as p
 from ckanext.geodatagov.model import MiscsFeed, MiscsTopicCSV
 
+if p.toolkit.check_ckan_version(max_version='2.3'):
+    from ckanext.harvest.model HarvestSystemInfo
+
 # https://github.com/GSA/ckanext-geodatagov/issues/117
 log = logging.getLogger('ckanext.geodatagov')
 
@@ -654,7 +657,166 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         print '%s combined feeds updated' % datetime.datetime.now()
 
     def harvest_job_cleanup(self):
-        msg = 'Task removed since new ckanext-harvest include ckan.harvest.timeout to mark as finished stuck jobs'        
+        if p.toolkit.check_ckan_version(min_version='2.8'):
+            print 'Task removed since new ckanext-harvest include ckan.harvest.timeout to mark as finished stuck jobs'
+            return
+
+        msg = ''
+        msg += str(datetime.datetime.now()) + ' Clean up stuck harvest jobs.\n'
+
+        # is harvest job running regularly?
+        from sqlalchemy.exc import ProgrammingError
+        harvest_system_info = None
+        try:
+            harvest_system_info = model.Session.query(HarvestSystemInfo).filter_by(key='last_run_time').first()
+        except ProgrammingError:
+            msg += 'No HarvestSystemInfo table defined.'
+            print msg
+            email_log('harvest-job-cleanup', msg)
+            return
+
+        if not harvest_system_info:
+            msg += 'Harvester is not running.'
+            print msg
+            email_log('harvest-job-cleanup', msg)
+            return
+
+        last_run_time = harvest_system_info.value
+        last_run_time = time.mktime(time.strptime(last_run_time, '%Y-%m-%d %H:%M:%S.%f'))
+        time_current = time.time()
+        if (time_current - last_run_time) > 3600:
+            msg += 'Harvester is not running, or not frequently enough.\n'
+            print msg
+            email_log('harvest-job-cleanup', msg)
+            return
+
+        harvest_pairs_1 = [] # stuck jobs with harvest objects
+        harvest_pairs_2 = [] # stuck jobs without harvest objects
+        # find those stuck jobs with harvest source
+        create_time_limit = '12 hours'
+        fetch_time_limit = '6 hours'
+        sql = '''
+            SELECT
+                harvest_source_id, harvest_job_id
+            FROM
+              harvest_object
+            WHERE
+              harvest_job_id IN (
+                SELECT id
+                FROM harvest_job
+                WHERE
+                  status = 'Running'
+                AND (
+                  created IS NULL
+                  OR
+                  created < CURRENT_TIMESTAMP AT TIME ZONE 'UTC' - INTERVAL :create_time_limit
+                )
+              )
+              GROUP BY
+                harvest_source_id, harvest_job_id
+              HAVING
+                MAX(import_finished) IS NULL
+              OR
+                MAX(import_finished) < CURRENT_TIMESTAMP AT TIME ZONE 'UTC' - INTERVAL :fetch_time_limit
+        '''
+        results = model.Session.execute(sql, {
+            'create_time_limit': create_time_limit,
+            'fetch_time_limit': fetch_time_limit,
+        })
+        for row in results:
+            harvest_pairs_1.append({
+                'harvest_source_id': row['harvest_source_id'],
+                'harvest_job_id': row['harvest_job_id']
+            })
+
+        # mark stuck harvest objects, and secretly truncate to minute
+        # precision so that we can indentify them on UI.
+        sql = '''
+            UPDATE
+                harvest_object
+            SET
+                state = 'STUCK',
+                import_finished = date_trunc('minute',
+                        CURRENT_TIMESTAMP AT TIME ZONE 'UTC')
+            WHERE
+                state NOT IN ('COMPLETE', 'ERROR', 'STUCK')
+            AND
+                harvest_job_id = :harvest_job_id
+        '''
+
+        for item in harvest_pairs_1:
+            model.Session.execute(sql, {'harvest_job_id': item['harvest_job_id']})
+            model.Session.commit()
+
+        # some may not even have harvest objects
+        sql = '''
+            SELECT
+              harvest_job.source_id AS harvest_source_id,
+              harvest_job.id AS harvest_job_id
+            FROM
+              harvest_job
+            LEFT JOIN
+              harvest_object
+            ON
+              harvest_job.id = harvest_object.harvest_job_id
+            WHERE
+              harvest_object.id is NULL
+            AND
+              harvest_job.status = 'Running'
+            AND (
+              harvest_job.created IS NULL
+              OR
+              harvest_job.created < CURRENT_TIMESTAMP AT TIME ZONE 'UTC' - INTERVAL :create_time_limit
+            )
+        '''
+        results = model.Session.execute(sql, {
+            'create_time_limit': create_time_limit,
+        })
+        for row in results:
+            harvest_pairs_2.append({
+                'harvest_source_id': row['harvest_source_id'],
+                'harvest_job_id': row['harvest_job_id']
+            })
+
+        # secretly truncate to minute precision to indicate a reset job.
+        sql = '''
+            UPDATE
+                harvest_job
+            SET
+                status = 'Finished',
+                finished = date_trunc('minute', CURRENT_TIMESTAMP AT TIME ZONE 'UTC')
+            WHERE
+                id = :harvest_job_id
+        '''
+
+        for item in harvest_pairs_1 + harvest_pairs_2:
+            model.Session.execute(sql, {'harvest_job_id': item['harvest_job_id']})
+            model.Session.commit()
+            if item in harvest_pairs_1:
+                self.harvest_object_relink(item['harvest_source_id'])
+
+            source_package = p.toolkit.get_action('harvest_source_show')({},
+                    {'id': item['harvest_source_id']})
+            source_info = ('organization: {0}, title: {1}, name: {2}, id: {3},'
+                    ' frequency: {4}, last_job_finished: {5}').format(
+                        source_package['organization']['title'] + " (" + \
+                                source_package['organization']['name'] + ")",
+                        source_package['title'],
+                        source_package['name'],
+                        source_package['id'],
+                        source_package['frequency'],
+                        "N/A" if not source_package['status'].get('last_job') \
+                              else source_package['status']['last_job'].get('finished')
+                    )
+            msg += str(datetime.datetime.now()) + (' Harvest job %s was '
+                    'forced to finish. Harvest source info: %s.\n\n') \
+                    % (item['harvest_job_id'], source_info)
+
+        if not (harvest_pairs_1 + harvest_pairs_2):
+            msg += str(datetime.datetime.now()) + ' Nothing to do.\n'
+        else:
+            email_log('harvest-job-cleanup', msg)
+        
         print msg
 
     def harvest_object_relink(self, harvest_source_id=None):
