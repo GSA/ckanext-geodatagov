@@ -28,11 +28,14 @@ import ckan.logic.schema as schema
 import ckan.lib.cli as cli
 import ckan.lib.helpers as h
 import requests
-from ckanext.harvest.model import HarvestSource, HarvestJob, HarvestSystemInfo
+from ckanext.harvest.model import HarvestSource, HarvestJob
 import ckan.lib.munge as munge
 from pylons import config
 from ckan import plugins as p
 from ckanext.geodatagov.model import MiscsFeed, MiscsTopicCSV
+
+if p.toolkit.check_ckan_version(max_version='2.3'):
+    from ckanext.harvest.model HarvestSystemInfo
 
 # https://github.com/GSA/ckanext-geodatagov/issues/117
 log = logging.getLogger('ckanext.geodatagov')
@@ -653,8 +656,11 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
 
         print '%s combined feeds updated' % datetime.datetime.now()
 
-
     def harvest_job_cleanup(self):
+        if p.toolkit.check_ckan_version(min_version='2.8'):
+            print 'Task removed since new ckanext-harvest include ckan.harvest.timeout to mark as finished stuck jobs'
+            return
+
         msg = ''
         msg += str(datetime.datetime.now()) + ' Clean up stuck harvest jobs.\n'
 
@@ -810,7 +816,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             msg += str(datetime.datetime.now()) + ' Nothing to do.\n'
         else:
             email_log('harvest-job-cleanup', msg)
-
+        
         print msg
 
     def harvest_object_relink(self, harvest_source_id=None):
