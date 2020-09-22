@@ -1211,29 +1211,37 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                 time.sleep(wait_time)
                 attempts += 1
 
-            for n, dataset in enumerate(datasets):
-                os.write(fd, '%s\n' % dataset)
+            os.write(fd, json.dumps(datasets))
 
         os.close(fd)
         os.close(fd_gz)
 
-        print 'compress and send to s3...'
+        print 'Compressing ...'
 
         with open(path, 'rb') as f_in, gzip.open(path_gz, 'wb') as f_out:
             copyfileobj(f_in, f_out)
-
-        bucket_name = config.get('ckanext.geodatagov.aws_bucket_name')
-        bucket_path = config.get('ckanext.geodatagov.jsonlexport.aws_storage_path', '')
-        bucket = get_s3_bucket(bucket_name)
-
-        # TODO: archive old keys
-        # bucket.copy_key('foo/file.tgz', 'somebucketname', bucket_path + 'dataset.jsonl.gz')
-
-        upload_to_key(bucket, path_gz, bucket_path + 'dataset.jsonl.gz')
-
-        os.remove(path)
-        os.remove(path_gz)
+        
+        bucket_name = config.get('ckanext.geodatagov.aws_bucket_name', None)
+        if bucket_name is not None:
+            print 'Sending to s3 ...'
+            bucket = get_s3_bucket(bucket_name)
+            bucket_path = config.get('ckanext.geodatagov.jsonlexport.aws_storage_path', '')
+            # TODO: archive old keys
+            # bucket.copy_key('foo/file.tgz', 'somebucketname', bucket_path + 'dataset.jsonl.gz')
+            upload_to_key(bucket, path_gz, bucket_path + 'dataset.jsonl.gz')
+            # just remove if it was moved to AWS
+            os.remove(path)
+            os.remove(path_gz)
+        else:
+            print "No AWS destination, saved at: {}, {}".format(path, path_gz)
+        
         print '{0:.19} Done.'.format(str(datetime.datetime.now()))
+
+        # for local tests, return paths
+        if bucket_name is None:
+            return path, path_gz
+        else:
+            return None
 
     def metrics_csv(self):
         print str(datetime.datetime.now()) + ' metrics_csv is being generated...'

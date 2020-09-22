@@ -30,6 +30,7 @@ fi
 
 pip install --upgrade pip
 pip install setuptools -U
+pip install google_compute_engine
 
 python setup.py develop
 pip install -r requirements.txt
