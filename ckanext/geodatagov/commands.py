@@ -35,7 +35,7 @@ from ckan import plugins as p
 from ckanext.geodatagov.model import MiscsFeed, MiscsTopicCSV
 
 if p.toolkit.check_ckan_version(max_version='2.3'):
-    from ckanext.harvest.model HarvestSystemInfo
+    from ckanext.harvest.model import HarvestSystemInfo
 
 # https://github.com/GSA/ckanext-geodatagov/issues/117
 log = logging.getLogger('ckanext.geodatagov')

@@ -4,6 +4,7 @@ import logging
 import ckanext.harvest.model as harvest_model
 import mock_static_file_server
 from ckan import model
+from ckan.logic import get_action
 from ckanext.geodatagov.harvesters.base import GeoDataGovWAFHarvester
 from factories import HarvestJobObj, WafHarvestSourceObj
 from nose.tools import assert_equal, assert_in
@@ -190,3 +191,31 @@ class TestWafHarvester(object):
         log.info("Tags that are not trimmed: %s", bad_list)
 
         assert(tag_list == expected_list)
+
+    def test_extras_rollup(self):
+        """ Test https://github.com/GSA/datagov-deploy/issues/2166 """
+        datasets = self.get_datasets_from_waf1_sample()
+        package = datasets[0]
+        extras_rollup = json.loads(package.extras['extras_rollup'])
+
+        assert extras_rollup
+
+        # package.title = "Test change"
+
+        log.info("extras_rollup package info: %s", package)
+        sysadmin = Sysadmin(name='testUpdate')
+        user_name = sysadmin['name'].encode('ascii')
+        context = {'user': user_name}
+        get_action('package_update')(context, {
+            "id": package.name,
+            "title": "Test change"
+        })
+
+        updated_package = model.Package.get(package.id)
+
+        log.info("Updated Package: %s", updated_package)
+
+        up_ext_rollup = json.loads(updated_package.extras['extras_rollup'])
+
+        for extra in up_ext_rollup:
+            assert extra.key != "extras_rollup"

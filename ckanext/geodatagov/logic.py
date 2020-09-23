@@ -340,7 +340,7 @@ def update_action(context, data_dict):
     cats = {}
     for extra in pkg_dict.get('extras', []):
         if extra['key'].startswith('__category_tag_'):
-                cats[extra['key']] = extra['value']
+            cats[extra['key']] = extra['value']
     extras = data_dict.get('extras', [])
     for item in extras:
         if item['key'] in cats:
@@ -348,8 +348,10 @@ def update_action(context, data_dict):
     for cat in cats:
         extras.append({'key': cat, 'value': cats[cat]})
 
+
 # source ignored as queried diretly
-EXTRAS_ROLLUP_KEY_IGNORE = ["metadata-source", "tags"]
+EXTRAS_ROLLUP_KEY_IGNORE = ["metadata-source", "tags", "extras_rollup"]
+
 
 def rollup_save_action(context, data_dict):
     """ to run before create actions """
@@ -361,8 +363,12 @@ def rollup_save_action(context, data_dict):
         else:
             extras_rollup[extra['key']] = extra['value']
     if extras_rollup:
-        new_extras.append({'key': 'extras_rollup',
-                            'value': json.dumps(extras_rollup)})
+        extras_rollup_obj = [x for x in new_extras if x.key == 'extras_rollup']
+        if len(extras_rollup_obj) > 0:
+            extras_rollup_obj[0].values = json.dumps(extras_rollup)
+        else:
+            new_extras.append({'key': 'extras_rollup',
+                               'value': json.dumps(extras_rollup)})
     data_dict['extras'] = new_extras
 
 
