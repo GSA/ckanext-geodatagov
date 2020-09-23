@@ -196,26 +196,25 @@ class TestWafHarvester(object):
         """ Test https://github.com/GSA/datagov-deploy/issues/2166 """
         datasets = self.get_datasets_from_waf1_sample()
         package = datasets[0]
-        extras_rollup = json.loads(package.extras['extras_rollup'])
+        pkg = package.as_dict()
+        extras = pkg['extras']
+        extras_rollup = json.loads(extras['extras_rollup'])
+        log.info("Rolled up at create: {}".format(extras_rollup))
 
         assert extras_rollup
-
-        # package.title = "Test change"
 
         log.info("extras_rollup package info: %s", package)
         sysadmin = Sysadmin(name='testUpdate')
         user_name = sysadmin['name'].encode('ascii')
         context = {'user': user_name}
+        new_extras = [{'key': key, 'value': value} for key, value in extras.iteritems()]
+
         get_action('package_update')(context, {
-            "id": package.name,
-            "title": "Test change"
+            "id": package.id,
+            "title": "Test change",
+            "extras": new_extras
         })
-
+        
         updated_package = model.Package.get(package.id)
-
-        log.info("Updated Package: %s", updated_package)
-
-        up_ext_rollup = json.loads(updated_package.extras['extras_rollup'])
-
-        for extra in up_ext_rollup:
-            assert extra.key != "extras_rollup"
+        extras_rollup = json.loads(updated_package.extras['extras_rollup'])
+        assert 'extras_rollup' not in extras_rollup
