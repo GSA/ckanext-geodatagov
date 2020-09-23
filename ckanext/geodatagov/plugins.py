@@ -398,12 +398,11 @@ class Demo(p.SingletonPlugin):
     p.implements(p.IFacets, inherit=True)
     edit_url = None
 
-
     UPDATE_CATEGORY_ACTIONS = ['package_update', 'dataset_update']
     ROLLUP_SAVE_ACTIONS = ['package_create', 'dataset_create', 'package_update', 'dataset_update']
 
     # source ignored as queried diretly
-    EXTRAS_ROLLUP_KEY_IGNORE = ["metadata-source", "tags"]
+    EXTRAS_ROLLUP_KEY_IGNORE = ["metadata-source", "tags", "extras_rollup"]
 
     def before_action(self, action_name, context, data_dict):
         """ before_action is a hook in CKAN 2.3 for ALL actions
@@ -434,8 +433,12 @@ class Demo(p.SingletonPlugin):
                 else:
                     extras_rollup[extra['key']] = extra['value']
             if extras_rollup:
-                new_extras.append({'key': 'extras_rollup',
-                                   'value': json.dumps(extras_rollup)})
+                extras_rollup_obj = [x for x in new_extras if x.key == 'extras_rollup']
+                if len(extras_rollup_obj) > 0:
+                    extras_rollup_obj[0].values = json.dumps(extras_rollup)
+                else:
+                    new_extras.append({'key': 'extras_rollup',
+                                       'value': json.dumps(extras_rollup)})
             data_dict['extras'] = new_extras
 
     ## IConfigurer

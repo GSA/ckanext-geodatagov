@@ -340,7 +340,7 @@ def update_action(context, data_dict):
     cats = {}
     for extra in pkg_dict.get('extras', []):
         if extra['key'].startswith('__category_tag_'):
-                cats[extra['key']] = extra['value']
+            cats[extra['key']] = extra['value']
     extras = data_dict.get('extras', [])
     for item in extras:
         if item['key'] in cats:
@@ -348,27 +348,38 @@ def update_action(context, data_dict):
     for cat in cats:
         extras.append({'key': cat, 'value': cats[cat]})
 
+
 # source ignored as queried diretly
 EXTRAS_ROLLUP_KEY_IGNORE = ["metadata-source", "tags"]
+
 
 def rollup_save_action(context, data_dict):
     """ to run before create actions """
     extras_rollup = {}
     new_extras = []
+    new_extras_rollup = {}
+
     for extra in data_dict.get('extras', []):
+        
         if extra['key'] in EXTRAS_ROLLUP_KEY_IGNORE:
             new_extras.append(extra)
+        elif extra['key'] == "extras_rollup":
+            new_extras_rollup = json.loads(extra['value'])
         else:
             extras_rollup[extra['key']] = extra['value']
-    if extras_rollup:
-        new_extras.append({'key': 'extras_rollup',
-                            'value': json.dumps(extras_rollup)})
+    
+    # update new values
+    new_extras_rollup.update(extras_rollup)
+    
+    if new_extras_rollup:
+        new_extras.append({'key': 'extras_rollup', 'value': json.dumps(new_extras_rollup)})
+
     data_dict['extras'] = new_extras
 
 
 def package_update(up_func, context, data_dict):
     """ before_package_update for CKAN 2.8 """
-    log.info('chained package_update {} {} {}'.format(ckan_version, context, data_dict))
+    log.info('chained package_update {} {}'.format(ckan_version, data_dict['title']))
     update_action(context, data_dict)
     rollup_save_action(context, data_dict)
 
@@ -377,6 +388,6 @@ def package_update(up_func, context, data_dict):
 
 def package_create(up_func, context, data_dict):
     """ before_package_create for CKAN 2.8 """
-    log.info('chained package_create {} {} {}'.format(ckan_version, context, data_dict))
+    log.info('chained package_create {} {}'.format(ckan_version, data_dict['title']))
     rollup_save_action(context, data_dict)
     return up_func(context, data_dict)
