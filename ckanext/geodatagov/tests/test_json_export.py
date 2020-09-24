@@ -41,14 +41,13 @@ class TestJSONExport(object):
         cmd = GeoGovCommand('test')
         path, _ = cmd.jsonl_export()
         
-        f = open(path, 'r')
-        str_data = f.read()
-        f.close()
-        try:
-            data = json.loads(str_data)
-        except Exception as e:
-            error = 'Error parsing {}: {}'.format(str_data[:90], str(e)[:90])
-            raise Exception(error)
-
-        log.info('Data is JSON valid: {}'.format(data))
-        assert data
+        parsed_lines = 0
+        with open(path, 'r') as f:
+            line = f.readline()
+            while line:
+                data = json.loads(line)
+                parsed_lines += 1
+                line = f.readline()
+        
+        log.info('Data is JSON valid: {} parsed lines'.format(parsed_lines))
+        assert parsed_lines > 0
