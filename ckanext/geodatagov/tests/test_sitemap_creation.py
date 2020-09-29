@@ -1,5 +1,7 @@
 import json
 import logging
+import xml.etree.ElementTree as ET
+
 from nose.tools import assert_equal, assert_in
 from nose.plugins.skip import SkipTest
 try:
@@ -42,12 +44,33 @@ class TestSitemapExport(object):
         files = 0
         for site_file in file_list:
             files += 1
-
-            with open(site_file['path'], 'r') as f:
-                xml_data = f.read()
-                assert "/dataset/{}</loc>".format(self.dataset1['name']) in xml_data
-                assert "/dataset/{}</loc>".format(self.dataset2['name']) in xml_data
-                assert "/dataset/{}</loc>".format(self.dataset3['name']) in xml_data
-                assert "/dataset/{}</loc>".format(self.dataset4['name']) in xml_data
-        
+            """ expected something like
+                <?xml version="1.0" encoding="UTF-8"?>
+                <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+                    <url>
+                        <loc>http://ckan:5000/dataset/test_dataset_01</loc>
+                        <lastmod>2020-09-29</lastmod>
+                    </url>
+                    <url>
+                        <loc>http://ckan:5000/dataset/test_dataset_02</loc>
+                        <lastmod>2020-09-29</lastmod>
+                    </url>
+                    ...
+                </urlset>
+            """
+            tree = ET.parse(site_file['path'])
+            root = tree.getroot()
+            names = [
+                self.dataset1['name'],
+                self.dataset2['name'],
+                self.dataset3['name'],
+                self.dataset4['name']
+            ]
+            
+            for url in root.findall('url'):
+                assert_equal(url.tag, '{http://www.sitemaps.org/schemas/sitemap/0.9}url')
+                dataset_url = url.find('loc').text
+                dataset_name = dataset_url.split('/')[-1]
+                assert_in(dataset_name, names)
+                
         assert files == 1
