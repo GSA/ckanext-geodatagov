@@ -65,20 +65,26 @@ class TestSitemapExport(object):
             log.info('XML Root {}'.format(root))
             assert_equal(root.tag, '{http://www.sitemaps.org/schemas/sitemap/0.9}urlset')
             
-            names = [
-                self.dataset1['name'],
-                self.dataset2['name'],
-                self.dataset3['name'],
-                self.dataset4['name']
-            ]
-            
             prev_last_mod = ''
+
+            dataset1_found = False
+            dataset2_found = False
+            dataset3_found = False
+            dataset4_found = False
+            
             for url in root:
                 for child in url:
                     if child.tag == '{http://www.sitemaps.org/schemas/sitemap/0.9}loc':
                         dataset_url = child.text
                         dataset_name = dataset_url.split('/')[-1]
-                        assert_in(dataset_name, names)
+                        if dataset_name == self.dataset1['name']:
+                            dataset1_found = True
+                        elif dataset_name == self.dataset2['name']:
+                            dataset2_found = True
+                        elif dataset_name == self.dataset3['name']:
+                            dataset3_found = True
+                        elif dataset_name == self.dataset4['name']:
+                            dataset4_found = True
                         datasets += 1
                     elif child.tag == '{http://www.sitemaps.org/schemas/sitemap/0.9}lastmod':
                         last_mod = child.text
@@ -90,3 +96,7 @@ class TestSitemapExport(object):
 
         assert_equal(files, 1)
         assert datasets >= 4  # at least this four
+        assert dataset1_found
+        assert dataset2_found
+        assert dataset3_found
+        assert dataset4_found
