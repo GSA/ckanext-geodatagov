@@ -42,6 +42,7 @@ class TestSitemapExport(object):
         file_list = cmd.sitemap_to_s3(upload_to_s3=False, page_size=100, max_per_page=100)
         
         files = 0
+        datasets = 0
         for site_file in file_list:
             files += 1
             """ expected something like
@@ -58,8 +59,12 @@ class TestSitemapExport(object):
                     ...
                 </urlset>
             """
+            log.info('Opening file {}'.format(site_file['path']))
             tree = ET.parse(site_file['path'])
             root = tree.getroot()
+            log.info('XML Root {}'.format(root))
+            assert_equal(root.tag, '{http://www.sitemaps.org/schemas/sitemap/0.9}urlset')
+            
             names = [
                 self.dataset1['name'],
                 self.dataset2['name'],
@@ -67,10 +72,21 @@ class TestSitemapExport(object):
                 self.dataset4['name']
             ]
             
-            for url in root.findall('url'):
-                assert_equal(url.tag, '{http://www.sitemaps.org/schemas/sitemap/0.9}url')
-                dataset_url = url.find('loc').text
-                dataset_name = dataset_url.split('/')[-1]
-                assert_in(dataset_name, names)
-                
-        assert files == 1
+            prev_last_mod = ''
+            for url in root:
+                for child in url:
+                    if child.tag == '{http://www.sitemaps.org/schemas/sitemap/0.9}loc':
+                        dataset_url = child.text
+                        dataset_name = dataset_url.split('/')[-1]
+                        assert_in(dataset_name, names)
+                        datasets += 1
+                    elif child.tag == '{http://www.sitemaps.org/schemas/sitemap/0.9}lastmod':
+                        last_mod = child.text
+                        log.info('{} >= {} '.format(prev_last_mod, last_mod))
+                        assert last_mod >= prev_last_mod
+                        prev_last_mod = last_mod
+                    else:
+                        raise Exception('Unexpected tag')
+
+        assert_equal(files, 1)
+        assert datasets >= 4  # at least this four

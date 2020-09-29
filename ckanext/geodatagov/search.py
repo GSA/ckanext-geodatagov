@@ -39,7 +39,12 @@ class GeoPackageSearchQuery(PackageSearchQuery):
 
         conn = make_connection()
         try:
-            data = conn.search(query, fq=fq, rows=max_results, fields='name,metadata_modified', start=start)
+            data = conn.search(query,
+                               fq=fq,
+                               rows=max_results,
+                               fields='name,metadata_modified',
+                               start=start,
+                               sort='metadata_created asc')
         except Exception, e:
             error = 'Error in GeoPackageSearchQuery.get_paginated_entity_name_modtime: {}'.format(e)
             log.error(error)
