@@ -17,7 +17,7 @@ from ckanext.geodatagov.commands import GeoGovCommand
 log = logging.getLogger(__name__)
 
 
-class TestJSONExport(object):
+class TestSitemapExport(object):
 
     @classmethod
     def setup(cls):
