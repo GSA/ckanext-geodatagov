@@ -1,11 +1,6 @@
 FROM openknowledge/ckan-dev:2.8
 
-MAINTAINER Your Name Here <you@example.com>
-
-RUN apk add py-cryptography
-
-# Fix shapely lib error. Install geos
-# TODO consider moving to Alpine>=3.11 or to Bionic
+RUN apk add py-cryptography libressl-dev musl-dev libffi-dev vim
 
 ADD http://download.osgeo.org/geos/geos-3.7.0.tar.bz2 /geos/geos.tar.bz2
 RUN tar xf /geos/geos.tar.bz2 -C /geos --strip-components=1
@@ -19,12 +14,9 @@ RUN cd ${SRC_DIR}/ckan && \
     git fetch gsa && \
     git checkout gsa/datagov-newcatalog
 
-RUN pip install -e git+https://github.com/ckan/ckanext-spatial#egg=ckanext-spatial && \
-    pip install -r https://raw.githubusercontent.com/ckan/ckanext-spatial/master/pip-requirements.txt && \
-    pip install -e git+https://github.com/ckan/ckanext-harvest.git#egg=ckanext-harvest && \
-    pip install -r https://raw.githubusercontent.com/ckan/ckanext-harvest/master/pip-requirements.txt && \
-    pip install -e git+https://github.com/GSA/ckanext-datajson.git#egg=ckanext-datajson && \
-    pip install -r https://raw.githubusercontent.com/GSA/ckanext-datajson/master/pip-requirements.txt && \
-    pip install -e git+https://github.com/GSA/ckanext-datagovtheme#egg=ckanext-datagovtheme && \
-    pip install -e git+https://github.com/GSA/ckanext-geodatagov.git#egg=ckanext-geodatagov && \
-    pip install -r https://raw.githubusercontent.com/GSA/ckanext-geodatagov/master/pip-requirements.txt  
+# Use reqs from catalog-next repo (and skip GSA/CKAN instalation)
+ADD https://raw.githubusercontent.com/GSA/catalog.data.gov/master/ckan/requirements.txt ${APP_DIR}/requirements.txt
+RUN sed -i '/GSA\/ckan\.git/d' ${APP_DIR}/requirements.txt
+
+RUN pip install --upgrade pip && \
+    pip install -r ${APP_DIR}/requirements.txt

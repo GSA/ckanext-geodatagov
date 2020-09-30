@@ -16,22 +16,15 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Start CKAN
+          name: Build and test 
           command: |
             docker-compose build
             docker-compose up -d
-      - run:
-          name: install dockerize
-          command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
-          environment:
-            DOCKERIZE_VERSION: v0.3.0
-      - run:
-          name: Wait for db
-          command: dockerize -wait http://localhost:5000/dataset -timeout 120s
-      - run:
-          name: Run Tests
-          command: |
+            sleep 40
+            docker-compose logs db
+            docker-compose logs ckan
             docker-compose exec ckan /bin/bash -c "nosetests --ckan --with-pylons=src_extensions/geodatagov/docker_test.ini src_extensions/geodatagov/"
+
   build_ckan_28:
     working_directory: ~/ckanext-geodatagov
     machine:
