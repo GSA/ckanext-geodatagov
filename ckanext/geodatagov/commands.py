@@ -36,6 +36,8 @@ from ckanext.geodatagov.model import MiscsFeed, MiscsTopicCSV
 
 if p.toolkit.check_ckan_version(max_version='2.3'):
     from ckanext.harvest.model import HarvestSystemInfo
+else:
+    from ckanext.geodatagov.search import GeoPackageSearchQuery
 
 # https://github.com/GSA/ckanext-geodatagov/issues/117
 log = logging.getLogger('ckanext.geodatagov')
@@ -1029,14 +1031,20 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
 
         print 'csv file topics-%s.csv is ready.' % date_suffix
 
-    def sitemap_to_s3(self):
+    def sitemap_to_s3(self, upload_to_s3=True, page_size=1000, max_per_page=50000):
         log.info('sitemap is being generated...')
 
         # cron job
         # paster --plugin=ckanext-geodatagov geodatagov sitemap-to-s3 --config=/etc/ckan/production.ini
         # sql = '''Select id from package where id not in (select pkg_id from miscs_solr_sync); '''
 
-        package_query = search.query_for(model.Package)
+        if p.toolkit.check_ckan_version(max_version='2.3'):
+            # we use custom function in CKAN core
+            package_query = search.query_for(model.Package)
+        else:
+            # moved CKAN 2.3 fork core function to this extension
+            package_query = GeoPackageSearchQuery()
+
         count = package_query.get_count()
         log.info('%s records found', count)
         if not count:
@@ -1044,8 +1052,6 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             return
 
         start = 0
-        page_size = 1000
-        max_per_page = 50000
         filename_number = 1
         file_list = []
 
@@ -1110,6 +1116,11 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         os.close(fd)
 
         log.info('done with %s.', path)
+        
+        if not upload_to_s3:
+            log.info('Skip upload and finish.')
+            print('Done locally: File list\n{}'.format(json.dumps(file_list, indent=4)))
+            return file_list
 
         bucket_name = config.get('ckanext.geodatagov.aws_bucket_name')
         bucket_path = config.get('ckanext.geodatagov.s3sitemap.aws_storage_path', '')
