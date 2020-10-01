@@ -430,13 +430,17 @@ class Demo(p.SingletonPlugin):
             for extra in data_dict.get('extras', []):
                 if extra['key'] in self.EXTRAS_ROLLUP_KEY_IGNORE:
                     new_extras.append(extra)
+                    if extra['key'] == "extras_rollup":
+                        # Save this object reference for later update
+                        new_extras_rollup_obj = new_extras[len(new_extras) - 1]
                 else:
                     extras_rollup[extra['key']] = extra['value']
             if extras_rollup:
-                extras_rollup_obj = [x for x in new_extras if x.key == 'extras_rollup']
-                if len(extras_rollup_obj) > 0:
-                    extras_rollup_obj[0].values = json.dumps(extras_rollup)
+                if new_extras_rollup_obj:
+                    # Update
+                    new_extras_rollup_obj.values = json.dumps(extras_rollup)
                 else:
+                    # Insert
                     new_extras.append({'key': 'extras_rollup',
                                        'value': json.dumps(extras_rollup)})
             data_dict['extras'] = new_extras
