@@ -432,7 +432,7 @@ class Demo(p.SingletonPlugin):
                     new_extras.append(extra)
                     if extra['key'] == "extras_rollup":
                         # Save this object reference for later update
-                        new_extras_rollup_obj = new_extras[len(new_extras) - 1]
+                        new_extras_rollup_obj = new_extras[-1]
                 else:
                     extras_rollup[extra['key']] = extra['value']
             if extras_rollup:
