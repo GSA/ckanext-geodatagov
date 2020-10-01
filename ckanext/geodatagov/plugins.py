@@ -434,10 +434,10 @@ class Demo(p.SingletonPlugin):
                     extras_rollup[extra['key']] = extra['value']
             if extras_rollup:
                 found_extras_rollup = False
-                for extra in new_extras:
-                    if extra['key'] == "extras_rollup":
+                for new_extra in new_extras:
+                    if new_extra['key'] == "extras_rollup":
                         # Update extras_rollup
-                        extra.values = json.dumps(extras_rollup)
+                        new_extra.values = json.dumps(extras_rollup)
                         found_extras_rollup = True
                 if not found_extras_rollup:
                     # Insert extras_rollup if not found
