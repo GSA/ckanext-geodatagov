@@ -433,10 +433,14 @@ class Demo(p.SingletonPlugin):
                 else:
                     extras_rollup[extra['key']] = extra['value']
             if extras_rollup:
-                extras_rollup_obj = [x for x in new_extras if x.key == 'extras_rollup']
-                if len(extras_rollup_obj) > 0:
-                    extras_rollup_obj[0].values = json.dumps(extras_rollup)
-                else:
+                found_extras_rollup = False
+                for new_extra in new_extras:
+                    if new_extra['key'] == "extras_rollup":
+                        # Update extras_rollup
+                        new_extra.values = json.dumps(extras_rollup)
+                        found_extras_rollup = True
+                if not found_extras_rollup:
+                    # Insert extras_rollup if not found
                     new_extras.append({'key': 'extras_rollup',
                                        'value': json.dumps(extras_rollup)})
             data_dict['extras'] = new_extras
