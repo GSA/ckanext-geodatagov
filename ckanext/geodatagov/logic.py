@@ -7,7 +7,7 @@ import ckan.logic.schema as schema
 from ckan.logic.action import get as core_get
 import ckan.plugins as p
 from ckan import __version__ as ckan_version
-from ckanext.geodatagov.plugins import change_resource_details
+from ckanext.geodatagov.plugins import change_resource_details, split_tags
 from ckanext.geodatagov.harvesters.arcgis import _slugify
 from ckanext.harvest.model import HarvestJob, HarvestObject
 
@@ -382,7 +382,7 @@ def package_update(up_func, context, data_dict):
     log.info('chained package_update {} {}'.format(ckan_version, data_dict['title']))
     update_action(context, data_dict)
     rollup_save_action(context, data_dict)
-
+    data_dict = fix_dataset(data_dict)
     return up_func(context, data_dict)
 
 
@@ -390,4 +390,31 @@ def package_create(up_func, context, data_dict):
     """ before_package_create for CKAN 2.8 """
     log.info('chained package_create {} {}'.format(ckan_version, data_dict['title']))
     rollup_save_action(context, data_dict)
+    data_dict = fix_dataset(data_dict)
     return up_func(context, data_dict)
+
+def fix_dataset(data_dict):
+    """ final changes before create or update a dataset """
+   
+    # stop using tags as extras
+    # CKAN don't allow extras with the same name as fields
+    extra_tags = None
+    for extra in data_dict['extras']:
+        if extra['key'] == 'tags':
+            extra_tags = extra['value']
+            # remove, it will generate an error
+            data_dict['extras'].remove(extra)
+
+    if extra_tags is not None:
+        tags = data_dict.get('tags', [])
+        extra_tags = [dict(name=tag, display_name=tag) for tag in split_tags(extra_tags)]
+        log.info('dataset tag found \n\t{}\nUpdate with\n\t{}'.format(tags, extra_tags))
+        # avoid duplicates
+        final_tags = extra_tags
+        for tag in tags:
+            if tag['name'] not in [et['name'] for et in extra_tags]:
+                final_tags.append(tag)
+        data_dict['tags'] = final_tags
+
+    return data_dict
+    
