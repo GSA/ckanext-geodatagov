@@ -1,7 +1,6 @@
 import json, hashlib, datetime, uuid, time
 import logging
 
-import ckan.lib.munge as munge
 from ckan.logic import side_effect_free
 import ckan.logic.schema as schema
 from ckan.logic.action import get as core_get
@@ -395,13 +394,13 @@ def package_create(up_func, context, data_dict):
 
 def fix_dataset(data_dict):
     """ final changes before create or update a dataset """
-   
     # stop using tags as extras
     # CKAN don't allow extras with the same name as fields
     extra_tags = None
     for extra in data_dict['extras']:
         if extra['key'] == 'tags':
             extra_tags = extra['value']
+            log.info('extra tags found\n\t{}'.format(extra_tags))
             # remove, it will generate an error
             data_dict['extras'].remove(extra)
 
@@ -417,4 +416,3 @@ def fix_dataset(data_dict):
         data_dict['tags'] = final_tags
 
     return data_dict
-    
