@@ -81,37 +81,46 @@ class TestExportCSV(object):
         # total results = groups in packages 
         assert_equal(len(results), 8)
 
-        assert_equal(results[0]['title'], "Dataset 1")
-        assert_equal(results[0]['topic'], "Test Group 00")
-        assert_equal(results[0]['topicCategories'], "g1c1")
+        r = results[0]
+        assert_equal(r['title'], "Dataset 1")
+        # CKAN 2.3 give us "Test Group 0" and CKAN 2.8 "Test Group 00"
+        assert_in(r['topic'], ["Test Group 0", "Test Group 00"])
+        assert_equal(r['topicCategories'], "g1c1")
         
-        assert_equal(results[1]['title'], "Dataset 1")
-        assert_equal(results[1]['topic'], "Test Group 01")
-        assert_equal(results[1]['topicCategories'], "")
+        r = results[1]
+        assert_equal(r['title'], "Dataset 1")
+        assert_in(r['topic'], ["Test Group 1", "Test Group 01"])
+        assert_equal(r['topicCategories'], "")
         
-        assert_equal(results[2]['title'], "Dataset 2")
-        assert_equal(results[2]['topic'], "Test Group 01")
-        assert_equal(results[2]['topicCategories'], "g2c1;g2c2")
-        
-        assert_equal(results[3]['title'], "Dataset 2")
-        assert_equal(results[3]['topic'], "Test Group 02")
-        assert_equal(results[3]['topicCategories'], "")
+        r = results[2]
+        assert_equal(r['title'], "Dataset 2")
+        assert_in(r['topic'], ["Test Group 1", "Test Group 01"])
+        assert_equal(r['topicCategories'], "g2c1;g2c2")
+    
+        r = results[3]
+        assert_equal(r['title'], "Dataset 2")
+        assert_in(r['topic'], ["Test Group 2", "Test Group 02"])
+        assert_equal(r['topicCategories'], "")
 
-        assert_equal(results[4]['title'], "Dataset 3")
-        assert_equal(results[4]['topic'], "Test Group 02")
-        assert_equal(results[4]['topicCategories'], "g3c1;g3c2")
+        r = results[4]
+        assert_equal(r['title'], "Dataset 3")
+        assert_in(r['topic'], ["Test Group 2", "Test Group 02"])
+        assert_equal(r['topicCategories'], "g3c1;g3c2")
         
-        assert_equal(results[5]['title'], "Dataset 3")
-        assert_equal(results[5]['topic'], "Test Group 03")
-        assert_equal(results[5]['topicCategories'], "")
+        r = results[5]
+        assert_equal(r['title'], "Dataset 3")
+        assert_in(r['topic'], ["Test Group 3", "Test Group 03"])
+        assert_equal(r['topicCategories'], "")
 
-        assert_equal(results[6]['title'], "Dataset 4")
-        assert_equal(results[6]['topic'], "Test Group 00")
-        assert_equal(results[6]['topicCategories'], "")
+        r = results[6]
+        assert_equal(r['title'], "Dataset 4")
+        assert_in(r['topic'], ["Test Group 0", "Test Group 00"])
+        assert_equal(r['topicCategories'], "")
         
-        assert_equal(results[7]['title'], "Dataset 4")
-        assert_equal(results[7]['topic'], "Test Group 03")
-        assert_equal(results[7]['topicCategories'], "g4c1")
+        r = results[7]
+        assert_equal(r['title'], "Dataset 4")
+        assert_in(r['topic'], ["Test Group 3", "Test Group 03"])
+        assert_equal(r['topicCategories'], "g4c1")
 
         assert_equal(entry.date, datetime.strftime(datetime.now(), '%Y%m%d'))
 
