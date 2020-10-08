@@ -5,11 +5,11 @@ import pkg_resources
 from nose.tools import assert_equal, assert_in
 
 try:
-    from ckan.tests.helpers import reset_db
+    from ckan.tests.helpers import reset_db, FunctionalTestBase
     from ckan.tests import factories
     from ckan.common import config
 except ImportError:  # CKAN 2.3
-    from ckan.new_tests.helpers import reset_db
+    from ckan.new_tests.helpers import reset_db, FunctionalTestBase
     from ckan.new_tests import factories
     from pylons import config
 
@@ -19,7 +19,7 @@ from ckanext.geodatagov.commands import GeoGovCommand
 log = logging.getLogger(__name__)
 
 
-class TestExportCSV(object):
+class TestExportCSV(FunctionalTestBase):
 
     @classmethod
     def setup(cls):
@@ -131,7 +131,18 @@ class TestExportCSV(object):
             assert_in(topic, entry.csv)
             topics_found.append(cat['value'])
                 
-        
+    def test_topics_csv_url(self):
+        """ test the /topics-csv url """
+        self.create_datasets()
+        cmd = GeoGovCommand('test')
+        results, entry = cmd.export_csv()
+
+        self.app = self._get_test_app()
+        res = self.app.get('/topics-csv')
+        for cat in self.category_tags:
+            topic = ';'.join(cat['value'].strip('"[],').split('","'))
+            assert_in(topic, res)
+            
     def create_datasets(self):
 
         group1 = factories.Group()
