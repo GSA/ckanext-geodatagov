@@ -5,6 +5,7 @@ import paste.auth.auth_tkt
 import mimetypes
 from paste.auth.auth_tkt import maybe_encode, encode_ip_timestamp
 from pylons import request
+from ckan.lib.munge import munge_tag
 import ckanext.geodatagov.model as geodatagovmodel
 from ckan import __version__ as ckan_version
 
@@ -285,13 +286,11 @@ RESOURCE_MAPPING = {
 
 }
 
-
-
 def split_tags(tag):
     tags = []
     for tag in tag.split(','):
         tags.extend(tag.split('>'))
-    return [tag.strip().lower() for tag in tags]
+    return [munge_tag(tag) for tag in tags if munge_tag(tag) != '']
 
 ##copied from harvest but deals withe single item list keys like validation
 def harvest_source_convert_from_config(key,data,errors,context):
