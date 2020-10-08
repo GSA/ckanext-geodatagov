@@ -414,7 +414,7 @@ class Demo(p.SingletonPlugin):
             cats = {}
             for extra in pkg_dict.get('extras', []):
                 if extra['key'].startswith('__category_tag_'):
-                        cats[extra['key']] = extra['value']
+                    cats[extra['key']] = extra['value']
             extras = data_dict.get('extras', [])
             for item in extras:
                 if item['key'] in cats:

@@ -173,15 +173,22 @@ def create_data_dict(record):
     return data_dict
 
 def group_catagory_tag_update(context, data_dict):
+    """ If data_dict include "categories" a new 
+        extra will be added:
+            __category_tag_{group.id} = categories
+        """ 
     p.toolkit.check_access('group_catagory_tag_update', context)
+    categories = data_dict.get('categories', None)
+    if categories is None:
+        return data_dict
+    
     package_id = data_dict.get('id')
     group_id = data_dict.get('group_id')
-    categories = data_dict.get('categories')
 
     model = context['model']
     group = model.Group.get(group_id)
     if not group:
-        raise
+        raise Exception('A group is required')
     key = '__category_tag_%s' % group.id
 
     pkg_dict = p.toolkit.get_action('package_show')(context, {'id': package_id})
@@ -191,6 +198,7 @@ def group_catagory_tag_update(context, data_dict):
     for extra in extras:
         if extra.get('key') != key:
             new_extras.append(extra)
+    
     if categories:
         new_extras.append({'key': key, 'value': json.dumps(categories)})
 
@@ -333,13 +341,19 @@ def doi_update(context, data_dict):
 
 def update_action(context, data_dict):
     """ to run before update actions """
+
+    # get groups from previous dataset version
     pkg_dict = p.toolkit.get_action('package_show')(context, {'id': data_dict['id']})
     if 'groups' not in data_dict:
         data_dict['groups'] = pkg_dict.get('groups', [])
+    
+    # search __category_tag_'s in previous dataset version
     cats = {}
     for extra in pkg_dict.get('extras', []):
         if extra['key'].startswith('__category_tag_'):
             cats[extra['key']] = extra['value']
+    
+    # check extras in new datasets and append
     extras = data_dict.get('extras', [])
     for item in extras:
         if item['key'] in cats:
