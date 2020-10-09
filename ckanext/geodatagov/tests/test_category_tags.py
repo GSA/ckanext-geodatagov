@@ -18,7 +18,6 @@ class TestCategoryTags(object):
     @classmethod
     def setup(cls):
         reset_db()
-         
 
     def create_datasets(self):
         organization = factories.Organization()
