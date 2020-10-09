@@ -40,6 +40,11 @@ class TestCategoryTags(object):
         pkg_dict = p.toolkit.get_action('package_show')(context, {'id': self.dataset1["id"]})
         assert_in(expected_extra, pkg_dict["extras"])
 
+        # test if we preserve category tag extras while we update the dataset
+        pkg_dict['Title'] = 'Change title 02'
+        pkg_dict = p.toolkit.get_action('package_update')(context, pkg_dict)
+        assert_in(expected_extra, pkg_dict["extras"])
+
         self.dataset2['categories'] = '["cat2"]'
         self.dataset2['group_id'] = self.group2["id"]
         p.toolkit.get_action('group_catagory_tag_update')(context, self.dataset2)
@@ -47,12 +52,7 @@ class TestCategoryTags(object):
         pkg_dict = p.toolkit.get_action('package_show')(context, {'id': self.dataset2["id"]})
         assert_in(expected_extra, pkg_dict["extras"])
 
-
-    # TODO
-    # def test_update_and_check_tags(self):
-    #     self.create_datasets()
-    #     context = {'user': self.user_name, 'ignore_auth':True}
-
-    #     pkg_dict = p.toolkit.get_action('package_update')(context, self.dataset1)
-        
-        
+        # test if we preserve category tag extras while we update the dataset
+        pkg_dict['Title'] = 'Change title 03'
+        pkg_dict = p.toolkit.get_action('package_update')(context, pkg_dict)
+        assert_in(expected_extra, pkg_dict["extras"])

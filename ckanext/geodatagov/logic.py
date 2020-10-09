@@ -339,8 +339,8 @@ def doi_update(context, data_dict):
     p.toolkit.get_action('package_update')(context, new_package)
     print str(datetime.datetime.now()) + ' Updated doi id ' + new_package['id']
 
-def update_action(context, data_dict):
-    """ to run before update actions """
+def preserve_category_tags(context, data_dict):
+    """ Look category tags in previous version before update dataset """
 
     # get groups from previous dataset version
     pkg_dict = p.toolkit.get_action('package_show')(context, {'id': data_dict['id']})
@@ -393,7 +393,7 @@ def rollup_save_action(context, data_dict):
 def package_update(up_func, context, data_dict):
     """ before_package_update for CKAN 2.8 """
     log.info('chained package_update {} {}'.format(ckan_version, data_dict['title']))
-    update_action(context, data_dict)
+    preserve_category_tags(context, data_dict)
     rollup_save_action(context, data_dict)
     data_dict = fix_dataset(data_dict)
     return up_func(context, data_dict)
