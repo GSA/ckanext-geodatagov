@@ -901,8 +901,8 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             print '%s: All harvest objects look good. Nothing to do. ' % datetime.datetime.now()
 
     @staticmethod
-    def export_group_and_tags(packages):
-        domain = 'https://catalog.data.gov'
+    def export_group_and_tags(packages, domain='https://catalog.data.gov'):
+        
         result = []
         for pkg in packages:
             package = dict()
@@ -936,7 +936,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                 result.append(package)
         return result
 
-    def export_csv(self):
+    def export_csv(self, domain='https://catalog.data.gov'):
         print 'export started...'
 
         # cron job
@@ -983,7 +983,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                 break
 
             packages = query['results']
-            result = result + GeoGovCommand.export_group_and_tags(packages)
+            result = result + GeoGovCommand.export_group_and_tags(packages=packages, domain=domain)
 
         if not result:
             print 'nothing to do'
@@ -1030,6 +1030,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         entry.save()
 
         print 'csv file topics-%s.csv is ready.' % date_suffix
+        return result, entry
 
     def sitemap_to_s3(self, upload_to_s3=True, page_size=1000, max_per_page=50000):
         log.info('sitemap is being generated...')
