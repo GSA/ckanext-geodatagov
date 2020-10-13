@@ -12,7 +12,8 @@ jobs:
             flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics 
   test_local_docker:
     working_directory: ~/ckanext-geodatagov
-    machine: true
+    machine: 
+      docker_layer_caching: true
     steps:
       - checkout
       - run:
