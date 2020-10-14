@@ -10,11 +10,11 @@ from factories import HarvestJobObj, WafHarvestSourceObj
 from nose.tools import assert_equal, assert_in
 
 try:
-    from ckan.tests.helpers import reset_db, call_action
-    from ckan.tests.factories import Sysadmin
+    from ckan.tests.helpers import reset_db
+    from ckan.tests.factories import Organization, Sysadmin
 except ImportError:
-    from ckan.new_tests.helpers import reset_db, call_action
-    from ckan.new_tests.factories import Sysadmin
+    from ckan.new_tests.helpers import reset_db
+    from ckan.new_tests.factories import Organization, Sysadmin
 
 log = logging.getLogger(__name__)
 
@@ -29,19 +29,14 @@ class TestWafHarvester(object):
     @classmethod
     def setup(cls):
         reset_db()
-        harvest_model.setup()
-        sysadmin = Sysadmin(name='dummy')
-        user_name = sysadmin['name'].encode('ascii')
-        call_action('organization_create',
-                    context={'user': user_name},
-                    name='test-org')
+        cls.organization = Organization()
 
     def run_gather(self, url, source_config):
 
         sc = json.loads(source_config)
 
         source = WafHarvestSourceObj(url=url,
-                                     owner_org='test-org',
+                                     owner_org=self.organization['id'],
                                      config=source_config,
                                      **sc)
 

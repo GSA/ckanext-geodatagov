@@ -1,11 +1,11 @@
 from nose.tools import assert_raises
 
 try:
-    from ckan.tests.helpers import reset_db, call_action
-    from ckan.tests.factories import Organization, Group, _get_action_user_name
+    from ckan.tests.helpers import reset_db
+    from ckan.tests.factories import Organization
 except ImportError:
-    from ckan.new_tests.helpers import reset_db, call_action
-    from ckan.new_tests.factories import Organization, Group, _get_action_user_name
+    from ckan.new_tests.helpers import reset_db
+    from ckan.new_tests.factories import Organization
 from ckan import model
 from factories import (CSWHarvestSourceObj,
                        HarvestJobObj)
@@ -28,18 +28,11 @@ class TestCSWHarvester(object):
     @classmethod
     def setup(cls):
         reset_db()
-        harvest_model.setup()
-        user_name = 'dummy'
-        user = call_action('user_create',
-                            name=user_name,
-                            password='dummybummy',
-                            email='dummy@dummy.com')
-        org = call_action('organization_create',
-                          context={'user': user_name},
-                          name='test-org')
+        cls.organization = Organization()
+        
 
     def run_gather(self, url):
-        source = CSWHarvestSourceObj(url=url, owner_org='test-org')
+        source = CSWHarvestSourceObj(url=url, owner_org=self.organization['id'])
         job = HarvestJobObj(source=source)
 
         self.harvester = GeoDataGovCSWHarvester()

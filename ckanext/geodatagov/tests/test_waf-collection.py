@@ -11,10 +11,10 @@ from nose.tools import assert_equal, assert_in, assert_not_in, assert_raises
 
 try:
     from ckan.tests.helpers import reset_db, call_action
-    from ckan.tests.factories import Organization, Group, _get_action_user_name, Sysadmin
+    from ckan.tests.factories import Organization
 except ImportError:
     from ckan.new_tests.helpers import reset_db, call_action
-    from ckan.new_tests.factories import Organization, Group, _get_action_user_name, Sysadmin
+    from ckan.new_tests.factories import Organization
 
 log = logging.getLogger(__name__)
 
@@ -29,12 +29,7 @@ class TestWafCollectionHarvester(object):
     @classmethod
     def setup(cls):
         reset_db()
-        harvest_model.setup()
-        sysadmin = Sysadmin(name='dummy')
-        user_name = sysadmin['name'].encode('ascii')
-        call_action('organization_create',
-                    context={'user': user_name},
-                    name='test-org')
+        cls.organization = Organization()
 
     def run_gather(self, url, source_config):
 
@@ -42,7 +37,7 @@ class TestWafCollectionHarvester(object):
         existing_profiles = [v.name for v in all_validators]
         log.info('Existing validator profiles: {}'.format(existing_profiles))
         source = WafCollectionHarvestSourceObj(url=url,
-                                               owner_org='test-org',
+                                               owner_org=self.organization['id'],
                                                # config=source_config,
                                                **sc)
         job = HarvestJobObj(source=source)
