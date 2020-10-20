@@ -9,8 +9,8 @@ wget https://raw.githubusercontent.com/GSA/catalog.data.gov/master/tools/ci-scri
 sudo chmod +x circleci-build-catalog-next.bash
 source circleci-build-catalog-next.bash
 
-echo "Update ckanext-datajson"
+echo "Update ckanext-geodatagov"
 python setup.py develop
 
-echo "TESTING ckanext-datajson"
+echo "TESTING ckanext-geodatagov"
 nosetests --ckan --with-pylons=test-catalog-next.ini ckanext/geodatagov --debug=ckanext
