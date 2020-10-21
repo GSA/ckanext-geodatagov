@@ -1,7 +1,7 @@
 version: "3.2"
 services:
   ckan:
-    image: datagov/catalog-next:latest
+    image: datagov/catalog.data.gov:latest
     env_file:
       - .env
     depends_on:
