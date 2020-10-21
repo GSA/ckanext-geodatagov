@@ -21,7 +21,17 @@ jobs:
           command: |
             docker-compose build
             docker-compose up -d
-            sleep 40
+      - run:
+          name: install dockerize
+          command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+          environment:
+            DOCKERIZE_VERSION: v0.3.0
+      - run:
+          name: Wait for db
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - run:
+          name: Test extension
+          command: |
             docker-compose logs db
             docker-compose logs ckan
             docker-compose exec ckan /bin/bash -c "nosetests --ckan --with-pylons=src_extensions/geodatagov/docker_test.ini src_extensions/geodatagov/"
@@ -35,11 +45,8 @@ jobs:
     steps:
       - checkout
       - run:
-          name: install
-          command: bin/travis-build.bash
-      - run:
-          name: test
-          command: bin/travis-run.sh
+          name: install and test
+          command: bin/travis-build-2.8.bash
 
   build_ckan_23:
     working_directory: ~/ckanext-geodatagov
