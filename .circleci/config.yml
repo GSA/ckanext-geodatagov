@@ -33,7 +33,7 @@ jobs:
           command: |
             docker-compose logs db
             docker-compose logs ckan
-            docker-compose exec ckan /bin/bash -c "nosetests --ckan --with-pylons=src_extensions/geodatagov/docker_test.ini src_extensions/geodatagov/"
+            docker-compose exec ckan /bin/bash -c "nosetests --ckan --with-pylons=src/ckan/test-catalog-next.ini src_extensions/geodatagov/"
 
   build_ckan_28:
     working_directory: ~/ckanext-geodatagov

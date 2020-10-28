@@ -23,7 +23,7 @@ All the tests lives in the [/ckanext/geodatagov/tests](/ckanext/geodatagov/tests
 
 ### Run Tests with Docker
 
-```docker-compose exec ckan /bin/bash -c "nosetests --ckan --with-pylons=src_extensions/geodatagov/docker_test.ini src_extensions/geodatagov/"```
+```docker-compose exec ckan /bin/bash -c "nosetests --ckan --with-pylons=src/ckan/test-catalog-next.ini src_extensions/geodatagov/"```
 
 ## Using the Docker Dev Environment
 
