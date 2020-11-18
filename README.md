@@ -12,6 +12,19 @@ Currently this repository is only used for source version control on the code fo
 
 Most Data.gov specific CKAN customizations are contained within this extension, but the extension also provides additional geospatial capabilities.
 
+### Customization
+
+The migration process from CKAN 2.3 (forked version) to CKAN 2.8 includes a significant reduction in custom code (and a large reduction in the time required to maintain this code).
+This new version of the catalog (called _Catalog-Next_) begins to use the official versions of:
+  - CKAN
+  - ckanext-harvest
+  - ckanext-spatial
+
+In this way of reducing custom code this extension should be reviewed. Some features should be removed or moved to the official community versions:
+  - [Stop rolling up the extras](https://github.com/GSA/ckanext-geodatagov/issues/178)
+  - [Move to the official search by geolocation](https://github.com/GSA/datagov-deploy/issues/2440) (probably sharing our version that has improvements)
+  - Do a general analysis of this extension to detect other personalized functionalities that should be discontinued.
+
 ## Ways to Contribute
 We're so glad you're thinking about contributing to Data.gov!
 
