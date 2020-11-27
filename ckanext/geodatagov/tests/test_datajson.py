@@ -10,10 +10,11 @@ from ckan import model
 from factories import (DataJsonHarvestSourceObj,
                        HarvestJobObj)
 
+from ckan import plugins as p
 import ckanext.harvest.model as harvest_model
 from ckanext.datajson.harvester_datajson import DataJsonHarvester
 import mock_static_file_server
-
+from nose.tools import assert_equal
 import logging
 log = logging.getLogger(__name__)
 
@@ -102,6 +103,15 @@ class TestDataJsonHarvester(object):
         for dataset in datasets:
             assert dataset.title in titles
             # test we get the spatial as we want: https://github.com/GSA/catalog.data.gov/issues/55
-            extras = json.loads(dataset.extras['extras_rollup'])
-            log.info('Dataset: {}. Extras: {}'.format(dataset.title, extras))
-            assert extras["spatial"] == "United States"
+            # we expect a data transformation here
+            pkg = dataset.as_dict()
+            extras = json.loads(pkg["extras"]['extras_rollup'])
+            
+            if p.toolkit.check_ckan_version(min_version='2.8'):
+                assert_equal(pkg["extras"]["spatial"], '{"type":"Polygon","coordinates":[[[-124.733253,24.544245],[-124.733253,49.388611],[-66.954811,49.388611],[-66.954811,24.544245],[-124.733253,24.544245]]]}')
+                assert_equal(extras['old-spatial'], 'United States')
+            else:
+                assert_equal(extras["spatial"], 'United States')
+            
+            assert_equal(extras['programCode'], ['000:000'])
+            
