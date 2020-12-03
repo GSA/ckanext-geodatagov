@@ -14,11 +14,11 @@ services:
       - ckan_storage:/var/lib/ckan
       - .:/srv/app/src_extensions/geodatagov
   db:
-    image: ckan/postgresql
+    image: datagov/catalog.data.gov.db
     expose:
       - "5432"
   solr:
-    image: ckan/solr
+    image: datagov/catalog.data.gov.solr
     restart: always
     expose:
       - "8983"

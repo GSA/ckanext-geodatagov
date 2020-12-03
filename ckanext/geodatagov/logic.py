@@ -4,12 +4,17 @@ import logging
 from ckan.logic import side_effect_free
 import ckan.logic.schema as schema
 from ckan.logic.action import get as core_get
+import ckan.model as model
 import ckan.plugins as p
 from ckan import __version__ as ckan_version
 from ckanext.geodatagov.plugins import change_resource_details, split_tags
 from ckanext.geodatagov.harvesters.arcgis import _slugify
 from ckanext.harvest.model import HarvestJob, HarvestObject
 
+try:
+    from ckan.common import config
+except ImportError:  # CKAN 2.3
+    from pylons import config
 
 log = logging.getLogger(__name__)
 
@@ -384,12 +389,83 @@ def rollup_save_action(context, data_dict):
     # update new values
     new_extras_rollup.update(extras_rollup)
     
+    ## If we use SOLR, try to index (with ckanext-spatial) a valid spatial data
+    if p.toolkit.check_ckan_version(min_version='2.8'):
+        search_backend = config.get('ckanext.spatial.search_backend', 'postgis')
+        log.debug('Search backend {}'.format(search_backend))
+        if search_backend == 'solr':
+            old_spatial = new_extras_rollup.get('spatial', None)
+            if old_spatial is not None:
+                log.info('Old Spatial found {}'.format(old_spatial))
+                new_spatial = translate_spatial(old_spatial)
+                if new_spatial is not None:
+                    log.info('New Spatial transformed {}'.format(new_spatial))
+                    # add the real spatial
+                    new_extras.append({'key': 'spatial', 'value': new_spatial})
+                    # remove rolled spatial to skip run this process again
+                    new_extras_rollup['old-spatial'] = new_extras_rollup.pop('spatial')
+    
     if new_extras_rollup:
         new_extras.append({'key': 'extras_rollup', 'value': json.dumps(new_extras_rollup)})
 
     data_dict['extras'] = new_extras
 
+def translate_spatial(old_spatial):
+    """ catalog-classic use a non-valid spatial extra. 
+        Sometimes uses words (like "California") or raw coordinates (like "-96.8518,43.4659,-96.5944,43.6345")
+        catalog-next use ckan/spatial and require spatial to be valid geojson 
+        When possible we need to transform this data so before_index at 
+        ckanext-spatial could save in solr.
+        To save in solr we need a polygon like this: 
+        {
+            "type":"Polygon",
+            "coordinates":[
+                [
+                    [2.05827, 49.8625],
+                    [2.05827, 55.7447], 
+                    [-6.41736, 55.7447], 
+                    [-6.41736, 49.8625], 
+                    [2.05827, 49.8625]
+                ]
+            ]
+        } """
 
+    # Analyze with type of data is JSON valid
+
+    try:
+        geometry = json.loads(old_spatial)
+        # If we already have a good geometry, use it
+        return old_spatial
+    except:
+        pass
+
+    geojson_tpl = '{{"type": "Polygon", "coordinates": [[[{minx}, {miny}], [{minx}, {maxy}], [{maxx}, {maxy}], [{maxx}, {miny}], [{minx}, {miny}]]]}}'
+    
+    # If we have 4 numbers separated by commas, transforme them as GeoJSON
+    parts = old_spatial.strip().split(',')
+    if len(parts) == 4:
+        minx, miny, maxx, maxy = parts
+        params = {"minx": minx, "miny": miny, "maxx": maxx, "maxy": maxy}
+        new_spatial = geojson_tpl.format(**params)
+        return new_spatial
+
+    g = get_geo_from_string(old_spatial)
+    return g
+
+def get_geo_from_string(location_name):
+    """ get a geometry from the locations table using the location name (e.g. California, New York)
+        If not table or location_name not exists, return None"""
+
+    sql = 'SELECT ST_AsGeoJSON(the_geom) AS geom FROM locations WHERE name = :location_name;'
+    try:  # maybe locations table is not installed
+        row = model.Session.execute(sql, {"location_name": location_name}).first()
+    except Exception as e:
+        log.error('Error querying locations table {}:\n\t"{}"'.format(e, sql))
+        model.Session.rollback()
+        return None
+
+    return None if row is None else row['geom']
+    
 def package_update(up_func, context, data_dict):
     """ before_package_update for CKAN 2.8 """
     log.info('chained package_update {} {}'.format(ckan_version, data_dict['title']))
