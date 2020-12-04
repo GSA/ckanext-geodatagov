@@ -6,7 +6,6 @@ import ckan.logic.schema as schema
 from ckan.logic.action import get as core_get
 import ckan.model as model
 import ckan.plugins as p
-from ckan import __version__ as ckan_version
 from ckanext.geodatagov.plugins import change_resource_details, split_tags
 from ckanext.geodatagov.harvesters.arcgis import _slugify
 from ckanext.harvest.model import HarvestJob, HarvestObject
@@ -468,7 +467,6 @@ def get_geo_from_string(location_name):
     
 def package_update(up_func, context, data_dict):
     """ before_package_update for CKAN 2.8 """
-    log.info('chained package_update {} {}'.format(ckan_version, data_dict['title']))
     preserve_category_tags(context, data_dict)
     rollup_save_action(context, data_dict)
     data_dict = fix_dataset(data_dict)
@@ -477,7 +475,6 @@ def package_update(up_func, context, data_dict):
 
 def package_create(up_func, context, data_dict):
     """ before_package_create for CKAN 2.8 """
-    log.info('chained package_create {} {}'.format(ckan_version, data_dict['title']))
     rollup_save_action(context, data_dict)
     data_dict = fix_dataset(data_dict)
     return up_func(context, data_dict)
