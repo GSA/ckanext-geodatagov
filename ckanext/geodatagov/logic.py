@@ -396,6 +396,11 @@ def rollup_save_action(context, data_dict):
             old_spatial = new_extras_rollup.get('spatial', None)
             if old_spatial is not None:
                 log.info('Old Spatial found {}'.format(old_spatial))
+                
+                # TODO look for more not-found location names
+                if old_spatial in ['National', 'US']:
+                    old_spatial = 'United States'
+
                 new_spatial = translate_spatial(old_spatial)
                 if new_spatial is not None:
                     log.info('New Spatial transformed {}'.format(new_spatial))
@@ -459,7 +464,7 @@ def get_geo_from_string(location_name):
     try:  # maybe locations table is not installed
         row = model.Session.execute(sql, {"location_name": location_name}).first()
     except Exception as e:
-        log.error('Error querying locations table {}:\n\t"{}"'.format(e, sql))
+        log.error('Error querying "{}" locations table {}:\n\t"{}"'.format(location_name, e, sql))
         model.Session.rollback()
         return None
 
