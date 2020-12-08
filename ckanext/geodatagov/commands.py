@@ -1341,23 +1341,37 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         transformed = 0
         failed = 0
         skipped = 0
+        results = {
+            'datasets': {}
+        }
         for dataset in datasets: 
             c += 1
             print 'Transforming {}/{}: {}. {} skipped, {} failed, {} transformed'.format(c, total, dataset.name, skipped, failed, transformed)
-        
+            results['datasets'][dataset.id] = {'name': dataset.name}
             dataset_dict = dataset.as_dict()
             extras = dataset_dict['extras']
             rolled_up = extras.get('extras_rollup', None)
             if rolled_up is None:
+                results['datasets'][dataset.id]['skip'] = 'No rolled up extras'
                 skipped += 1
                 continue
             new_extras_rollup = json.loads(rolled_up)
 
             old_spatial = new_extras_rollup.get('spatial', None)
             if old_spatial is None:
+                results['datasets'][dataset.id]['skip'] = 'No rolled up spatial extra found'
                 skipped += 1
                 continue
             print ' - Old Spatial found "{}"'.format(old_spatial)
+
+            try:
+                # check if already we have spatial valid data
+                json.loads(old_spatial)
+                results['datasets'][dataset.id]['spatial-already-done'] = old_spatial
+                skipped += 1
+                continue
+            except:
+                pass
 
             # update package, the translate_spatial function will fix spatial data
             context = {'user': self.user_name, 'ignore_auth':True}
@@ -1372,6 +1386,9 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
                     if old_spatial != extra['value']:
                         transformed += 1
                         new_spatial = extra['value']
+                        results['datasets'][dataset.id]['transformation'] = [old_spatial, new_spatial]
+                    else:
+                        results['datasets'][dataset.id]['transformation'] = [old_spatial, 'not found']
                     
             if new_spatial is None:
                 failed += 1
@@ -1380,7 +1397,14 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
             print ' - NEW Spatial: "{}"'.format(new_spatial)
         
         print 'Final results {} total datasets. {} skipped, {} failed, {} transformed'.format(total, skipped, failed, transformed)
-        return c, transformed, failed
+        
+        results.update({
+            'total': c, 
+            'transformed': transformed, 
+            'skipped': skipped, 
+            'failed': failed
+        })
+        return results
 
     
 def get_response(url):
