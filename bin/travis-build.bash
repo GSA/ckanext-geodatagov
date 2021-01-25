@@ -28,7 +28,7 @@ then
 	cp ckan/public/base/css/main.css ckan/public/base/css/main.debug.css
 fi
 
-pip install --upgrade pip
+pip install pip==20.3.3
 pip install setuptools -U
 pip install google_compute_engine
 
