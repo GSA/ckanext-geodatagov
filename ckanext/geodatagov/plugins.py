@@ -47,6 +47,10 @@ def ping_connection(dbapi_connection, connection_record, connection_proxy):
 import ckan.plugins as p
 import ckan.model as model
 import ckanext.harvest.plugin
+from ckanext.harvest.utils import (
+    DATASET_TYPE_NAME
+)
+from ckanext.harvest.model import HarvestSource, HarvestJob, HarvestObject
 import json
 from ckan.logic.converters import convert_from_extras
 from ckan.lib.navl.validators import ignore_missing
@@ -286,6 +290,15 @@ RESOURCE_MAPPING = {
 
 }
 
+
+def _add_extra(data_dict, key, value):
+    if 'extras' not in data_dict:
+        data_dict['extras'] = []
+
+    data_dict['extras'].append({
+        'key': key, 'value': value,
+    })
+
 def split_tags(tag):
     tags = []
     for tag in tag.split(','):
@@ -307,6 +320,62 @@ class DataGovHarvest(ckanext.harvest.plugin.Harvest):
 
     def package_form(self):
         return 'source/geodatagov_source_form.html'
+
+    # This is overwriting ckan-harvest after_show, this
+    #   actually adds the harvest info at package_show time
+    #   to allow for parsing data
+    def after_show(self, context, data_dict):
+
+        if 'type' in data_dict and data_dict['type'] == DATASET_TYPE_NAME:
+            # This is a harvest source dataset, add extra info from the
+            # HarvestSource object
+            source = HarvestSource.get(data_dict['id'])
+            if not source:
+                log.error('Harvest source not found for dataset {0}'.format(data_dict['id']))
+                return data_dict
+
+            st_action_name = 'harvest_source_show_status'
+            try:
+                status_action = p.toolkit.get_action(st_action_name)
+            except KeyError:
+                logic.clear_actions_cache()
+                status_action = p.toolkit.get_action(st_action_name)
+
+            data_dict['status'] = status_action(context, {'id': source.id})
+
+        elif 'type' not in data_dict or data_dict['type'] != DATASET_TYPE_NAME:
+            # This is a normal dataset, check if it was harvested and if so, add
+            # info about the HarvestObject and HarvestSource
+
+            harvest_object = model.Session.query(HarvestObject) \
+                    .filter(HarvestObject.package_id == data_dict['id']) \
+                    .filter(HarvestObject.current == True).first() # noqa
+
+            # If the harvest extras are there, remove them. This can happen eg
+            # when calling package_update or resource_update, which call
+            # package_show
+            if data_dict.get('extras'):
+                data_dict['extras'][:] = [e for e in data_dict.get('extras', [])
+                                          if not e['key']
+                                          in ('harvest_object_id', 'harvest_source_id', 'harvest_source_title',)]
+
+            # We only want to add these extras at index time so they are part
+            # of the cached data_dict used to display, search results etc. We
+            # don't want them added when editing the dataset, otherwise we get
+            # duplicated key errors.
+            # The only way to detect indexing right now is checking that
+            # validate is set to False.
+            # **Overwriting this to default to False if context['validate'] is
+            # not set.
+            if harvest_object and not context.get('validate', False):
+                for key, value in [
+                    ('harvest_object_id', harvest_object.id),
+                    ('harvest_source_id', harvest_object.source.id),
+                    ('harvest_source_title', harvest_object.source.title),
+                        ]:
+                    _add_extra(data_dict, key, value)
+
+        return data_dict
 
     def show_package_schema(self):
         '''
