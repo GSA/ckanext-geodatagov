@@ -20,6 +20,13 @@ test-legacy: ## Run legacy nose tests in an existing container
 	@# TODO wait for CKAN to be up; use docker-compose run instead
 	docker-compose exec ckan /bin/bash -c "nosetests --ckan --with-pylons=src/ckan/test-catalog-next.ini src_extensions/datajson/ckanext/datajson/tests/nose"
 
+lint-all:
+	docker-compose exec -T ckan \
+		bash -c "cd $(CKAN_HOME)/src && \
+		 		 pip install pip==20.3.3  && \
+				 pip install flake8 && \
+				 flake8 . --count --select=E9 --show-source --statistics"
+
 up: ## Start the containers
 	CKAN_VERSION=$(CKAN_VERSION) docker-compose -f $(COMPOSE_FILE) up
 
