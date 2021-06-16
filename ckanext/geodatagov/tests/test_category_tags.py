@@ -3,12 +3,8 @@ import logging
 import json
 from nose.tools import assert_equal, assert_in
 from ckan import plugins as p
-try:
-    from ckan.tests.helpers import reset_db
-    from ckan.tests import factories
-except ImportError:
-    from ckan.new_tests.helpers import reset_db
-    from ckan.new_tests import factories
+from ckan.tests.helpers import reset_db
+from ckan.tests import factories
 
 log = logging.getLogger(__name__)
 

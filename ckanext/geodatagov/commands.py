@@ -34,10 +34,7 @@ from pylons import config
 from ckan import plugins as p
 from ckanext.geodatagov.model import MiscsFeed, MiscsTopicCSV
 
-if p.toolkit.check_ckan_version(max_version='2.3'):
-    from ckanext.harvest.model import HarvestSystemInfo
-else:
-    from ckanext.geodatagov.search import GeoPackageSearchQuery
+from ckanext.geodatagov.search import GeoPackageSearchQuery
 
 # https://github.com/GSA/ckanext-geodatagov/issues/117
 log = logging.getLogger('ckanext.geodatagov')
@@ -1042,12 +1039,7 @@ select DOCUUID, TITLE, OWNER, APPROVALSTATUS, HOST_URL, Protocol, PROTOCOL_TYPE,
         # paster --plugin=ckanext-geodatagov geodatagov sitemap-to-s3 --config=/etc/ckan/production.ini
         # sql = '''Select id from package where id not in (select pkg_id from miscs_solr_sync); '''
 
-        if p.toolkit.check_ckan_version(max_version='2.3'):
-            # we use custom function in CKAN core
-            package_query = search.query_for(model.Package)
-        else:
-            # moved CKAN 2.3 fork core function to this extension
-            package_query = GeoPackageSearchQuery()
+        package_query = GeoPackageSearchQuery()
 
         count = package_query.get_count()
         log.info('%s records found', count)

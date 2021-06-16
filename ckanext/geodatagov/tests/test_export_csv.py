@@ -4,14 +4,9 @@ import logging
 import pkg_resources
 from nose.tools import assert_equal, assert_in
 
-try:
-    from ckan.tests.helpers import reset_db, FunctionalTestBase
-    from ckan.tests import factories
-    from ckan.common import config
-except ImportError:  # CKAN 2.3
-    from ckan.new_tests.helpers import reset_db, FunctionalTestBase
-    from ckan.new_tests import factories
-    from pylons import config
+from ckan.tests.helpers import reset_db, FunctionalTestBase
+from ckan.tests import factories
+from ckan.common import config
 
 from ckanext.geodatagov.commands import GeoGovCommand
 

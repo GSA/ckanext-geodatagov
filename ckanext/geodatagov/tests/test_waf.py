@@ -9,12 +9,8 @@ from ckanext.geodatagov.harvesters.base import GeoDataGovWAFHarvester
 from factories import HarvestJobObj, WafHarvestSourceObj
 from nose.tools import assert_equal, assert_in
 
-try:
-    from ckan.tests.helpers import reset_db
-    from ckan.tests.factories import Organization, Sysadmin
-except ImportError:
-    from ckan.new_tests.helpers import reset_db
-    from ckan.new_tests.factories import Organization, Sysadmin
+from ckan.tests.helpers import reset_db
+from ckan.tests.factories import Organization, Sysadmin
 
 log = logging.getLogger(__name__)
 

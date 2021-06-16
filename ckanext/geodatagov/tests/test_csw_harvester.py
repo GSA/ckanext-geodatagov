@@ -1,11 +1,7 @@
 from nose.tools import assert_raises
 
-try:
-    from ckan.tests.helpers import reset_db
-    from ckan.tests.factories import Organization
-except ImportError:
-    from ckan.new_tests.helpers import reset_db
-    from ckan.new_tests.factories import Organization
+from ckan.tests.helpers import reset_db
+from ckan.tests.factories import Organization
 from ckan import model
 from factories import (CSWHarvestSourceObj,
                        HarvestJobObj)

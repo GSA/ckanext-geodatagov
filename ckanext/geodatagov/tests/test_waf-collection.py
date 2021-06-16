@@ -9,12 +9,8 @@ from ckanext.spatial.validation import all_validators
 from factories import HarvestJobObj, WafCollectionHarvestSourceObj
 from nose.tools import assert_equal, assert_in, assert_not_in, assert_raises
 
-try:
-    from ckan.tests.helpers import reset_db, call_action
-    from ckan.tests.factories import Organization
-except ImportError:
-    from ckan.new_tests.helpers import reset_db, call_action
-    from ckan.new_tests.factories import Organization
+from ckan.tests.helpers import reset_db, call_action
+from ckan.tests.factories import Organization
 
 log = logging.getLogger(__name__)
 
