@@ -1,5 +1,6 @@
 -e git+https://github.com/asl2/PyZ3950.git#egg=py3250
-ply==3.4
-boto
-lxml
 -e git+https://github.com/ckan/ckanext-harvest.git@e2e8acbb6d87d44663e92c5ff5cbd67401588c2d#egg=ckanext-harvest
+boto
+ckantoolkit==0.0.3
+lxml
+ply==3.4
