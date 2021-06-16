@@ -28,7 +28,6 @@ services:
     volumes:
       - .:/app
       - ckan_storage:/var/lib/ckan
-      - .:/srv/app/src_extensions/geodatagov
   db:
     image: ckan/ckan-postgres-dev:${CKAN_VERSION}
     environment:
