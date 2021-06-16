@@ -14,7 +14,7 @@ clean: ## Clean workspace and containers
 	CKAN_VERSION=$(CKAN_VERSION) docker-compose -f $(COMPOSE_FILE) down -v --remove-orphan
 
 test: ## Run tests in a new container
-	CKAN_VERSION=$(CKAN_VERSION) docker-compose -f $(COMPOSE_FILE) run --rm app ./test.sh
+	CKAN_VERSION=$(CKAN_VERSION) docker-compose -f $(COMPOSE_FILE) run --rm ckan /bin/bash -c "nosetests --ckan --with-pylons=src/ckan/test-catalog-next.ini src_extensions/geodatagov/"
 
 test-legacy: ## Run legacy nose tests in an existing container
 	@# TODO wait for CKAN to be up; use docker-compose run instead
