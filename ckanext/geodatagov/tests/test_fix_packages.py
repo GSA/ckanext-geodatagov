@@ -12,11 +12,6 @@ log = logging.getLogger(__name__)
 class TestFixPkg(object):
 
     @classmethod
-    def setup_class(cls):
-        if p.toolkit.check_ckan_version(max_version='2.3'):
-            raise SkipTest('Just for CKAN 2.8, we just change tags behaviour for 2.8')
-
-    @classmethod
     def setup(cls):
         reset_db()
         cls.organization = factories.Organization() 

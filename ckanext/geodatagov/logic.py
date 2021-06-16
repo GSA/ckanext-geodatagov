@@ -10,10 +10,7 @@ from ckanext.geodatagov.plugins import change_resource_details, split_tags
 from ckanext.geodatagov.harvesters.arcgis import _slugify
 from ckanext.harvest.model import HarvestJob, HarvestObject
 
-try:
-    from ckan.common import config
-except ImportError:  # CKAN 2.3
-    from pylons import config
+from ckan.common import config
 
 log = logging.getLogger(__name__)
 
