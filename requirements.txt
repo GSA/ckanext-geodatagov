@@ -1,6 +1,16 @@
--e git+https://github.com/asl2/PyZ3950.git#egg=py3250
+-e git+https://github.com/GSA/ckanext-datagovtheme.git@a36ea77cf6e13d69c11dcd6985f082e06269f43f#egg=ckanext-datagovtheme
+-e git+https://github.com/GSA/ckanext-datajson.git@4ca1ca31cfcc23d6610c13693049fcfc83696d08#egg=ckanext-datajson
 -e git+https://github.com/ckan/ckanext-harvest.git@e2e8acbb6d87d44663e92c5ff5cbd67401588c2d#egg=ckanext-harvest
+-e git+https://github.com/ckan/ckanext-spatial.git@4ac25f19aa4eb9c798451f5eeb3084f907ccc003#egg=ckanext-spatial
+-e git+https://github.com/asl2/PyZ3950.git#egg=py3250
 boto
 ckantoolkit==0.0.3
-lxml
+future==0.18.2
+geoalchemy2==0.5.0
+jsonschema==2.4.0
+lxml==4.6.3
+owslib==0.8.6
+pika==1.2.0
 ply==3.4
+pyyaml==5.4
+shapely==1.7.1
