@@ -4,6 +4,7 @@ syntax: glob
 *.egg-info
 *.swo
 *.swp
+.coverage
 conversiontool/run.sh
 conversiontool/errors.log
 conversiontool/debug.xml
