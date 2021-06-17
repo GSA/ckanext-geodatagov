@@ -1,2 +1,7 @@
 factory-boy==2.1.1
 mock==1.0.1
+flake8
+pycodestyle
+pytest
+pytest-ckan
+pytest-cov
