@@ -10,7 +10,7 @@ services:
     env_file:
       - .env
     environment:
-      CKAN_SQLALCHEMY_URL: postgresql://ckan_default:pass@db/ckan_test
+      #CKAN_SQLALCHEMY_URL: postgresql://ckan:ckan@db/ckan_test
       CKAN_DATASTORE_WRITE_URL: postgresql://datastore_write:pass@db/datastore_test
       CKAN_DATASTORE_READ_URL: postgresql://datastore_read:pass@db/datastore_test
       CKAN_SOLR_URL: http://solr:8983/solr/ckan
@@ -29,18 +29,18 @@ services:
       - .:/app
       - ckan_storage:/var/lib/ckan
   db:
-    image: ckan/ckan-postgres-dev:${CKAN_VERSION}
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres
+    image: datagov/catalog.data.gov.db:latest
+    env_file:
+      - .env
     healthcheck:
-      test: ["CMD", "pg_isready"]
+      test: ["CMD", "pg_isready -u postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
     ports:
       - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
   redis:
     image: redis:alpine
   solr:

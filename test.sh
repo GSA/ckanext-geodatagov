@@ -31,4 +31,4 @@ while ! ckan_wrapper --plugin=ckan db init; do
   sleep 5
 done
 
-pytest --ckan-ini=test.ini --cov=ckanext.datajson --disable-warnings ckanext/datajson/tests/
+pytest --ckan-ini=test.ini --cov=ckanext.datajson --disable-warnings ckanext/geodatagov/tests/
