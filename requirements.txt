@@ -14,3 +14,4 @@ pika==1.2.0
 ply==3.4
 pyyaml==5.4
 shapely==1.7.1
+six==1.16.0
