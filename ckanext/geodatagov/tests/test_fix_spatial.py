@@ -4,17 +4,14 @@ from nose.tools import assert_in, assert_true, assert_equal
 import ckan.model as model
 import ckan.plugins as p
 
-if p.toolkit.check_ckan_version(min_version='2.8'):
-    import ckan.tests.factories as factories
-    import ckan.tests.helpers as helpers
+import ckan.tests.factories as factories
+import ckan.tests.helpers as helpers
     
 
 class TestSpatialField:
 
     @classmethod
     def setup_class(cls):
-        if not p.toolkit.check_ckan_version(min_version='2.8'):
-            raise SkipTest('Feature for CKAN 2.8')
         model.Repository.tables_created_and_initialised = True
         helpers.reset_db()
         cls.user = factories.Sysadmin(name='spatial_user')
