@@ -7,6 +7,7 @@ from nose.tools import assert_equal, assert_in, assert_not_in
 from ckan.tests.helpers import reset_db
 from ckan.tests import factories
 from ckan.common import config
+from ckan import model
 
 from nose.plugins.skip import SkipTest
 from ckanext.geodatagov.commands import GeoGovCommand
