@@ -24,6 +24,7 @@ class TestDataJsonHarvester(object):
 
     @classmethod
     def setup(cls):
+        model.Repository.tables_created_and_initialised = True
         reset_db()
         cls.organization = Organization()
 

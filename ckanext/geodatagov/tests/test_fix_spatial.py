@@ -15,6 +15,7 @@ class TestSpatialField:
     def setup_class(cls):
         if not p.toolkit.check_ckan_version(min_version='2.8'):
             raise SkipTest('Feature for CKAN 2.8')
+        model.Repository.tables_created_and_initialised = True
         helpers.reset_db()
         cls.user = factories.Sysadmin(name='spatial_user')
 

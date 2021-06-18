@@ -12,6 +12,7 @@ from nose.tools import assert_equal, assert_in
 from ckan.tests.helpers import reset_db
 from ckan.tests.factories import Organization, Sysadmin
 
+
 log = logging.getLogger(__name__)
 
 
@@ -24,6 +25,7 @@ class TestWafHarvester(object):
 
     @classmethod
     def setup(cls):
+        model.Repository.tables_created_and_initialised = True
         reset_db()
         cls.organization = Organization()
 

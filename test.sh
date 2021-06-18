@@ -54,4 +54,4 @@ ckan_wrapper --plugin=ckanext-spatial spatial initdb
 # echo "Cleaning"
 # rm -f $DEST_FOLDER/locations.sql.gz
 
-pytest -s --ckan-ini=test.ini --cov=ckanext.datajson --disable-warnings ckanext/geodatagov/tests/test_export_csv.py
+pytest --ckan-ini=test.ini --cov=ckanext.datajson --disable-warnings ckanext/geodatagov/tests/

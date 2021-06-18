@@ -13,6 +13,7 @@ class TestCategoryTags(object):
 
     @classmethod
     def setup(cls):
+        model.Repository.tables_created_and_initialised = True
         reset_db()
 
     def create_datasets(self):

@@ -22,6 +22,7 @@ class TestUpdateGeo(object):
     def setup(cls):
         if not p.toolkit.check_ckan_version(min_version='2.8'):
             raise SkipTest('Just for CKAN 2.8')
+        model.Repository.tables_created_and_initialised = True
         reset_db()
     
     def test_translations(self):
