@@ -1,5 +1,7 @@
 name: Tests
 on: [push, pull_request]
+env:
+  CODE_COVERAGE_THRESHOLD_REQUIRED: 33
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -65,5 +67,5 @@ jobs:
         paster --plugin=ckan db init -c test.ini
         paster --plugin=ckanext-harvest harvester initdb -c test.ini
     - name: Run tests
-      run: pytest --ckan-ini=test.ini --cov=ckanext.harvest --disable-warnings ckanext/harvest/tests
+      run: pytest --ckan-ini=test.ini --cov=ckanext.datagovtheme --cov-fail-under=${CODE_COVERAGE_THRESHOLD_REQUIRED} --disable-warnings ckanext/datagovtheme/tests
 
