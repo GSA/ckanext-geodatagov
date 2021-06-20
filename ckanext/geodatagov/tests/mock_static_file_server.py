@@ -25,13 +25,13 @@ def serve(port=PORT):
     skip_connection = False
     try:
         httpd = TestServer(("", port), Handler)
-    except Exception, e:
+    except Exception as e:
         print('Serve error {}'.format(e))
         skip_connection = True
 
     if skip_connection is False:
         info = 'Serving test HTTP server at port', port
-        print info
+        print(info)
         log.info(info)
 
         httpd_thread = Thread(target=httpd.serve_forever)

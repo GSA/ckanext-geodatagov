@@ -20,13 +20,12 @@ class TestCSWHarvester(object):
     def setup_class(cls):
         log.info('Starting mock http server')
         mock_csw_source.serve()
-        
+
     @classmethod
     def setup(cls):
         model.Repository.tables_created_and_initialised = True
         reset_db()
         cls.organization = Organization()
-        
 
     def run_gather(self, url):
         source = CSWHarvestSourceObj(url=url, owner_org=self.organization['id'])
@@ -40,7 +39,7 @@ class TestCSWHarvester(object):
         log.info('job.gather_errors=%s', job.gather_errors)
         if len(job.gather_errors) > 0:
             raise Exception(job.gather_errors[0])
-        
+
         log.info('obj_ids=%s', obj_ids)
         if obj_ids is None or len(obj_ids) == 0:
             # nothing to see
@@ -87,8 +86,13 @@ class TestCSWHarvester(object):
         return datasets
 
     def test_sample3(self):
-        # testing with data from geonode.state.gov 
-        # getrecords XML: http://geonode.state.gov/catalogue/csw?service=CSW&version=2.0.2&request=GetRecords&ElementSetName=full&typenames=csw:Record&constraints=[]&esn=brief&outputschema=http://www.isotc211.org/2005/gmd&maxrecords=9&resulttype=results
+        # testing with data from geonode.state.gov
+        # getrecords XML:
+        '''
+            http://geonode.state.gov/catalogue/csw?service=CSW&version=2.0.2&request=GetRecords
+            &ElementSetName=full&typenames=csw:Record&constraints=[]&esn=brief
+            &outputschema=http://www.isotc211.org/2005/gmd&maxrecords=9&resulttype=results
+        '''
 
         url = 'http://127.0.0.1:%s/sample3' % mock_csw_source.PORT
         obj_ids = self.run_gather(url=url)

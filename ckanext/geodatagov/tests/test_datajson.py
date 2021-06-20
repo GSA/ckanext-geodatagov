@@ -6,7 +6,6 @@ from ckan import model
 from factories import (DataJsonHarvestSourceObj,
                        HarvestJobObj)
 
-from ckan import plugins as p
 import ckanext.harvest.model as harvest_model
 from ckanext.datajson.harvester_datajson import DataJsonHarvester
 import mock_static_file_server
@@ -103,9 +102,11 @@ class TestDataJsonHarvester(object):
             # we expect a data transformation here
             pkg = dataset.as_dict()
             extras = json.loads(pkg["extras"]['extras_rollup'])
-            
-            assert_equal(pkg["extras"]["spatial"], '{"type":"Polygon","coordinates":[[[-124.733253,24.544245],[-124.733253,49.388611],[-66.954811,49.388611],[-66.954811,24.544245],[-124.733253,24.544245]]]}')
+
+            assert_equal(pkg["extras"]["spatial"], '{"type":"Polygon",\
+                                                     "coordinates":[[[-124.733253,24.544245],[-124.733253,49.388611],\
+                                                                     [-66.954811,49.388611],[-66.954811,24.544245],\
+                                                                     [-124.733253,24.544245]]]}')
             assert_equal(extras['old-spatial'], 'United States')
-            
+
             assert_equal(extras['programCode'], ['000:000'])
-            

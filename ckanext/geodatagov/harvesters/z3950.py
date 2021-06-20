@@ -15,6 +15,7 @@ from ckanext.geodatagov.harvesters import GeoDataGovHarvester
 from ckan.lib.navl.validators import not_empty, convert_int, ignore_empty
 from ckan.logic.validators import boolean_validator
 
+
 class Z3950Harvester(GeoDataGovHarvester, SingletonPlugin):
     '''
     A Harvester for z3950.
@@ -27,13 +28,14 @@ class Z3950Harvester(GeoDataGovHarvester, SingletonPlugin):
             'name': 'z3950',
             'title': 'Z39.50',
             'description': 'A remote database supporting the Z39.50 protocol'
-            }
+        }
+
     def extra_schema(self):
         return {'private_datasets': [ignore_empty, boolean_validator],
-                'database': [not_empty, unicode],
+                'database': [not_empty, str],
                 'port': [not_empty, convert_int]}
 
-    def gather_stage(self,harvest_job):
+    def gather_stage(self, harvest_job):
 
         log = logging.getLogger(__name__ + '.WAF.gather')
         log.debug('z3950Harvester gather_stage for job: %r', harvest_job)
@@ -46,8 +48,9 @@ class Z3950Harvester(GeoDataGovHarvester, SingletonPlugin):
         self._set_source_config(harvest_job.source.config)
 
         # get current objects out of db
-        query = model.Session.query(HarvestObject.guid, HarvestObject.package_id).filter(HarvestObject.current==True).\
-                                    filter(HarvestObject.harvest_source_id==harvest_job.source.id)
+        query = model.Session.query(HarvestObject.guid, HarvestObject.package_id).filter(
+            True if HarvestObject.current else False).\
+            filter(HarvestObject.harvest_source_id == harvest_job.source.id)
 
         guid_to_package_id = dict((res[0], res[1]) for res in query)
         current_guids = set(guid_to_package_id.keys())
@@ -59,8 +62,8 @@ class Z3950Harvester(GeoDataGovHarvester, SingletonPlugin):
             conn.databaseName = self.source_config.get('database', '')
             conn.preferredRecordSyntax = 'XML'
             conn.elementSetName = 'T'
-            query = zoom.Query ('CCL', 'metadata')
-            res = conn.search (query)
+            query = zoom.Query('CCL', 'metadata')
+            res = conn.search(query)
             ids = []
             for num, result in enumerate(res):
                 hash = hashlib.md5(result.data).hexdigest()
@@ -82,12 +85,10 @@ class Z3950Harvester(GeoDataGovHarvester, SingletonPlugin):
                 obj.save()
                 ids.append(obj.id)
             return ids
-        except Exception,e:
-            self._save_gather_error('Unable to get content for URL: %s: %r' % \
-                                        (source_url, e),harvest_job)
+        except Exception as e:
+            self._save_gather_error('Unable to get content for URL: %s: %r' %
+                                    (source_url, e), harvest_job)
             return None
-
 
     def fetch_stage(self, harvest_object):
         return True
-

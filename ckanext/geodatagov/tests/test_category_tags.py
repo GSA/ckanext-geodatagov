@@ -1,7 +1,7 @@
 
 import logging
 import json
-from nose.tools import assert_equal, assert_in
+from nose.tools import assert_in  # , assert_equal
 from ckan import plugins as p
 from ckan import model
 from ckan.tests.helpers import reset_db
@@ -25,15 +25,16 @@ class TestCategoryTags(object):
         self.dataset2 = factories.Dataset(owner_org=organization['id'], groups=[{"name": self.group2["name"]}])
         sysadmin = factories.Sysadmin(name='testUpdate')
         self.user_name = sysadmin['name'].encode('ascii')
-       
+
     def test_group_catagory_tag_update(self):
         self.create_datasets()
-        context = {'user': self.user_name, 'ignore_auth':True}
+        context = {'user': self.user_name, 'ignore_auth': True}
 
         self.dataset1['categories'] = '["cat1"]'
         self.dataset1['group_id'] = self.group1["id"]
         p.toolkit.get_action('group_catagory_tag_update')(context, self.dataset1)
-        expected_extra = {"key": "__category_tag_{}".format(self.group1["id"]), "value": json.dumps(self.dataset1['categories'])}
+        expected_extra = {"key": "__category_tag_{}".format(self.group1["id"]),
+                          "value": json.dumps(self.dataset1['categories'])}
         pkg_dict = p.toolkit.get_action('package_show')(context, {'id': self.dataset1["id"]})
         assert_in(expected_extra, pkg_dict["extras"])
 
@@ -45,7 +46,8 @@ class TestCategoryTags(object):
         self.dataset2['categories'] = '["cat2"]'
         self.dataset2['group_id'] = self.group2["id"]
         p.toolkit.get_action('group_catagory_tag_update')(context, self.dataset2)
-        expected_extra = {"key": "__category_tag_{}".format(self.group2["id"]), "value": json.dumps(self.dataset2['categories'])}
+        expected_extra = {"key": "__category_tag_{}".format(self.group2["id"]),
+                          "value": json.dumps(self.dataset2['categories'])}
         pkg_dict = p.toolkit.get_action('package_show')(context, {'id': self.dataset2["id"]})
         assert_in(expected_extra, pkg_dict["extras"])
 

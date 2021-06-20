@@ -207,7 +207,7 @@ class TestWafHarvester(object):
             "title": "Test change",
             "extras": new_extras
         })
-        
+
         updated_package = model.Package.get(package.id)
         extras_rollup = json.loads(updated_package.extras['extras_rollup'])
         assert 'extras_rollup' not in extras_rollup

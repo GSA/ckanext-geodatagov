@@ -23,7 +23,8 @@ class TestHarvestSourceForm(helpers.FunctionalTestBase):
 
     def test_create_waf_collection_harvest_source_form(self):
         WAF_HARVEST_SOURCE_URL = 'https://meta.geo.census.gov/data/existing/decennial/GEO/GPMB/TIGERline/TIGER2018/concity/'
-        COLLECTION_METADATA_URL = 'https://meta.geo.census.gov/data/existing/decennial/GEO/GPMB/TIGERline/TIGER2018/SeriesInfo/SeriesCollection_tl_2018_concity.shp.iso.xml'
+        COLLECTION_METADATA_URL = 'https://meta.geo.census.gov/data/existing/decennial/GEO/GPMB/TIGERline/TIGER2018/\
+                                    SeriesInfo/SeriesCollection_tl_2018_concity.shp.iso.xml'
         self.app = self._get_test_app()
 
         # Create

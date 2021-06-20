@@ -19,7 +19,7 @@ class MinimalFGDCValidator(BaseValidator):
         ('Identification Spatial Domain South Bounding Coordinate', '/metadata/idinfo/spdom/bounding/southbc'),
         ('Metadata Reference Information Contact Address Type', '/metadata/metainfo/metc/cntinfo/cntaddr/addrtype'),
         ('Metadata Reference Information Contact Address State', '/metadata/metainfo/metc/cntinfo/cntaddr/state'),
-        ]
+    ]
 
     @classmethod
     def is_valid(cls, xml):
@@ -44,7 +44,7 @@ class FGDCValidator(XsdValidator):
     @classmethod
     def is_valid(cls, xml):
         xsd_filepath = os.path.join(os.path.dirname(__file__),
-                                        cls._xsd_path, cls._xsd_file)
+                                    cls._xsd_path, cls._xsd_file)
         return cls._is_valid(xml, xsd_filepath, 'FGDC Schema ({0})'.format(cls._xsd_file))
 
 
@@ -72,7 +72,6 @@ class FGDC1999Schema(FGDCValidator):
 
     name = 'fgdc_std_001.1_1999'
     title = 'FGDC CSDGM Biological Data Profile (FGDC-STD-001.1-1999)'
-
 
 
 class FGDC2001Schema(FGDCValidator):

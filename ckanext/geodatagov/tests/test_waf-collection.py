@@ -97,8 +97,10 @@ class TestWafCollectionHarvester(object):
         """ harvest waf-collection1/ folder as waf-collection source """
         url = 'http://127.0.0.1:%s/waf-collection1/index.html' % mock_static_file_server.PORT
 
-        collection_metadata = "http://127.0.0.1:%s/waf-collection1/cfg/SeriesCollection_tl_2013_county.shp.iso.xml" % mock_static_file_server.PORT
-        config = '{"collection_metadata_url": "%s", "validator_profiles": ["iso19139ngdc"], "private_datasets": false}' % collection_metadata
+        collection_metadata = "http://127.0.0.1:%s/waf-collection1/cfg/SeriesCollection_tl_2013_county.shp.iso.xml" %\
+            mock_static_file_server.PORT
+        config = '{"collection_metadata_url": "%s", "validator_profiles": ["iso19139ngdc"], "private_datasets": false}' %\
+            collection_metadata
         self.run_gather(url=url, source_config=config)
         self.run_fetch()
         datasets = self.run_import()
@@ -150,14 +152,21 @@ class TestWafCollectionHarvester(object):
 
         parent = call_action('package_show', context={'user': 'dummy'}, id=extras['collection_package_id'])
 
-        assert_equal(parent['title'], 'TIGER/Line Shapefile, 2013, Series Information File for the Current county and Equivalent National Shapefile')
-        assert_equal(parent['name'], 'tiger-line-shapefile-2013-series-information-file-for-the-current-county-and-equivalent-nationa')
+        assert_equal(parent['title'],
+                     'TIGER/Line Shapefile, \
+                      2013, \
+                      Series Information File for the Current county and Equivalent National Shapefile')
+        assert_equal(parent['name'],
+                     'tiger-line-shapefile-2013-\
+                      series-information-file-for-the-current-county-and-equivalent-nationa')
 
     def test_waf_collection_transformation_failed(self):
         url = 'http://127.0.0.1:%s/waf-collection2/index.html' % mock_static_file_server.PORT
 
-        collection_metadata = "http://127.0.0.1:%s/waf-collection2/cfg/SeriesCollection_tl_2013_county.shp.iso.xml" % mock_static_file_server.PORT
-        config = '{"collection_metadata_url": "%s", "validator_profiles": ["iso19139ngdc"], "private_datasets": false}' % collection_metadata
+        collection_metadata = "http://127.0.0.1:%s/waf-collection2/cfg/SeriesCollection_tl_2013_county.shp.iso.xml" %\
+            mock_static_file_server.PORT
+        config = '{"collection_metadata_url": "%s", "validator_profiles": ["iso19139ngdc"], "private_datasets": false}' %\
+            collection_metadata
         self.run_gather(url=url, source_config=config)
 
         self.run_fetch()

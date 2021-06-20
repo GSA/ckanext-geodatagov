@@ -1,5 +1,5 @@
 import re
-import json
+# import json
 import logging
 log = logging.getLogger(__name__)
 import urlparse
@@ -20,12 +20,12 @@ from ckanext.spatial.validation import Validators
 from ckanext.spatial.harvesters.base import SpatialHarvester
 from ckanext.spatial.harvesters import CSWHarvester, WAFHarvester, DocHarvester
 
-from ckanext.geodatagov.validation import (MinimalFGDCValidator,
-        FGDC1998Schema, FGDC1999Schema, FGDC2001Schema, FGDC2002Schema)
+from ckanext.geodatagov.validation import (MinimalFGDCValidator, FGDC1998Schema,
+                                           FGDC1999Schema, FGDC2001Schema, FGDC2002Schema)
 
 
-custom_validators = [MinimalFGDCValidator, FGDC1998Schema, FGDC1999Schema,
-        FGDC2001Schema, FGDC2002Schema]
+custom_validators = [
+    MinimalFGDCValidator, FGDC1998Schema, FGDC1999Schema, FGDC2001Schema, FGDC2002Schema]
 
 
 VALIDATION_PROFILES = [('', 'Autodetect'),
@@ -44,8 +44,8 @@ def validate_profiles(profile):
     if profile not in validation_profile_names:
         log.error('Profile {} not found in {}'.format(profile, validation_profile_names))
         raise Invalid('Unknown validation profile: {0}'.format(profile))
-    
-    return [unicode(profile)]
+
+    return [str(profile)]
 
 
 def default_groups_validator(value):
@@ -90,9 +90,9 @@ class GeoDataGovHarvester(SpatialHarvester):
             return None
 
         package_dict['private'] = self.source_config.get('private_datasets', False)
-        
+
         default_groups = self.source_config.get('default_groups', None)
-        if default_groups  and len(default_groups):
+        if default_groups and len(default_groups):
             package_dict['groups'] = []
             for group in default_groups:
                 package_dict['groups'].append({'name': group})
@@ -101,7 +101,7 @@ class GeoDataGovHarvester(SpatialHarvester):
         package_dict['tags'] = []
         for tag in trim_tags(iso_values.get('tags', [])):
             package_dict['tags'].append({'name': tag})
-        
+
         package_dict['extras'].append({'key': 'metadata_type', 'value': 'geospatial'})
 
         return package_dict
@@ -130,13 +130,13 @@ class GeoDataGovHarvester(SpatialHarvester):
             validator.add_validator(custom_validator)
 
         is_valid, profile, errors = self._validate_document(original_document, harvest_object,
-                                                   validator=validator)
+                                                            validator=validator)
         if not is_valid:
             log.error('Invalid document: {} with profile {}'.format(errors, profile))
             # TODO: Provide an option to continue anyway
             return None
 
-        original_document = re.sub('<\?xml(.*)\?>', '', original_document)
+        original_document = re.sub('<\?xml(.*)\?>', '', original_document)  # NOQA W605 
 
         tree = etree.fromstring(original_document)
         comments = tree.xpath('//comment()')
@@ -155,7 +155,7 @@ class GeoDataGovHarvester(SpatialHarvester):
         themekt = tree.xpath('//placekt')
         for num, node in enumerate(themekt):
             p = node.getparent()
-            ###remove all but first
+            # remove all but first
             if p and num > 0:
                 p.remove(node)
 
@@ -174,7 +174,7 @@ class GeoDataGovHarvester(SpatialHarvester):
                 msg += ': [{0}] {1}'.format(response.status_code, response.content)
             elif response.error:
                 msg += ': {0}'.format(response.error)
-            self._save_object_error(msg ,harvest_object,'Import')
+            self._save_object_error(msg, harvest_object, 'Import')
             return None
 
 
@@ -183,10 +183,12 @@ class GeoDataGovCSWHarvester(CSWHarvester, GeoDataGovHarvester):
     A Harvester for CSW servers, with customizations for geo.data.gov
     '''
 
+
 class GeoDataGovWAFHarvester(WAFHarvester, GeoDataGovHarvester):
     '''
     A Harvester for Web Accessible Folders, with customizations for geo.data.gov
     '''
+
 
 class GeoDataGovDocHarvester(DocHarvester, GeoDataGovHarvester):
     '''
@@ -197,7 +199,8 @@ class GeoDataGovDocHarvester(DocHarvester, GeoDataGovHarvester):
             'name': 'single-doc',
             'title': 'Single spatial metadata document',
             'description': 'A single FGDC or ISO 19139 .xml file'
-            }
+        }
+
 
 class GeoDataGovGeoportalHarvester(CSWHarvester, GeoDataGovHarvester):
     '''
@@ -208,12 +211,12 @@ class GeoDataGovGeoportalHarvester(CSWHarvester, GeoDataGovHarvester):
             'name': 'geoportal',
             'title': 'Geoportal Server',
             'description': 'A Geoportal Server CSW endpoint',
-            }
+        }
 
     def output_schema(self):
         return 'csw'
 
-    def fetch_stage(self,harvest_object):
+    def fetch_stage(self, harvest_object):
 
         log.debug('CswHarvester fetch_stage for object: %s', harvest_object.id)
 
@@ -232,8 +235,8 @@ class GeoDataGovGeoportalHarvester(CSWHarvester, GeoDataGovHarvester):
         try:
             response = requests.get(url)
             content = response.content
-        except Exception, e:
-            self._save_object_error('Error getting the record with GUID %s from %s' % 
+        except Exception:
+            self._save_object_error('Error getting the record with GUID %s from %s' %
                                     (identifier, url), harvest_object)
             return False
 
@@ -241,34 +244,32 @@ class GeoDataGovGeoportalHarvester(CSWHarvester, GeoDataGovHarvester):
             # Save the fetch contents in the HarvestObject
             # Contents come from csw_client already declared and encoded as utf-8
             # Remove original XML declaration
-            content = re.sub('<\?xml(.*)\?>', '', content)
-            
+            content = re.sub('<\?xml(.*)\?>', '', content)  # NOQA W605
+
             document_format = guess_standard(content)
             if document_format == 'iso':
                 harvest_object.content = content
                 harvest_object.save()
             elif document_format == 'fgdc':
                 extra = HOExtra(
-                        object=harvest_object,
-                        key='original_document',
-                        value=content)
+                    object=harvest_object,
+                    key='original_document',
+                    value=content)
                 extra.save()
 
                 extra = HOExtra(
-                        object=harvest_object,
-                        key='original_format',
-                        value=document_format)
+                    object=harvest_object,
+                    key='original_format',
+                    value=document_format)
                 extra.save()
             else:
                 harvest_object.report_status = 'ignored'
                 harvest_object.save()
                 return False
-        except Exception,e:
-            self._save_object_error('Error saving the harvest object for GUID %s [%r]' % \
+        except Exception as e:
+            self._save_object_error('Error saving the harvest object for GUID %s [%r]' %
                                     (identifier, e), harvest_object)
             return False
 
         log.debug('XML content saved (len %s)', len(content))
         return True
-
-
