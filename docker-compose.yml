@@ -44,7 +44,7 @@ services:
   redis:
     image: redis:alpine
   solr:
-    image: ckan/ckan-solr-dev:${CKAN_VERSION}
+    image: datagov/catalog.data.gov.solr:latest
     ports:
       - "8983:8983"
 
