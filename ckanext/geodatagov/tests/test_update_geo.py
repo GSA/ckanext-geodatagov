@@ -1,3 +1,4 @@
+from builtins import object
 import json
 import logging
 from nose.tools import assert_equal, assert_in, assert_not_in
@@ -94,7 +95,7 @@ class TestUpdateGeo(object):
         assert_equal(d1['skip'], 'No rolled up spatial extra found')
         extras = {x['key']: x['value'] for x in self.dataset1['extras']}
         assert_equal(extras['old-spatial'], 'United States')
-        keys = json.loads(extras['spatial']).keys()
+        keys = list(json.loads(extras['spatial']).keys())
         assert_in('coordinates', keys)
 
         # this dataset transformed its spatial data
@@ -102,21 +103,21 @@ class TestUpdateGeo(object):
         assert_equal(d2['skip'], 'No rolled up spatial extra found')
         extras = {x['key']: x['value'] for x in self.dataset2['extras']}
         assert_equal(extras['old-spatial'], '34.1,25.2,26.2,27.9')
-        keys = json.loads(extras['spatial']).keys()
+        keys = list(json.loads(extras['spatial']).keys())
         assert_in('coordinates', keys)
 
         # this dataset don't have any spatial data
         d3 = results['datasets'][self.dataset3['id']]
         assert_equal(d3['skip'], 'No rolled up extras')
         extras = {x['key']: x['value'] for x in self.dataset3['extras']}
-        assert_not_in('old-spatial', extras.keys())
-        assert_not_in('spatial', extras.keys())
+        assert_not_in('old-spatial', list(extras.keys()))
+        assert_not_in('spatial', list(extras.keys()))
 
         # This dataset already include good spatial data
         d4 = results['datasets'][self.dataset4['id']]
         assert_equal(d4['skip'], 'No rolled up spatial extra found')
         extras = {x['key']: x['value'] for x in self.dataset4['extras']}
-        assert_in('old-spatial', extras.keys())
-        keys = json.loads(extras['spatial']).keys()
+        assert_in('old-spatial', list(extras.keys()))
+        keys = list(json.loads(extras['spatial']).keys())
         assert_in('coordinates', keys)
         assert_equal(extras['old-spatial'], extras['spatial'])

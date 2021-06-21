@@ -1,3 +1,5 @@
+from __future__ import print_function
+from builtins import str
 import datetime
 import hashlib
 import logging
@@ -78,7 +80,7 @@ def package_show_rest(context, data_dict):
     rollup = extras.pop('extras_rollup', None)
     if rollup:
         rollup = json.loads(rollup)
-        for key, value in rollup.items():
+        for key, value in list(rollup.items()):
             extras[key] = value
     return data_dict
 
@@ -168,7 +170,7 @@ def create_data_dict(record):
                                        'format': distribution['format'],
                                        'size_text': distribution.get('size')})
 
-    for key, value in record.items():
+    for key, value in list(record.items()):
         new_key = MAPPING.get(key)
         if not new_key:
             continue

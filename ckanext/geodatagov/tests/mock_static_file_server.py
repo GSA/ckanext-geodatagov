@@ -1,7 +1,10 @@
+from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
 import os
 
-import SimpleHTTPServer
-import SocketServer
+import http.server
+import socketserver
 from threading import Thread
 import logging
 log = logging.getLogger(__name__)
@@ -17,9 +20,9 @@ def serve(port=PORT):
     os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)),
                           'data-samples'))
 
-    Handler = SimpleHTTPServer.SimpleHTTPRequestHandler
+    Handler = http.server.SimpleHTTPRequestHandler
 
-    class TestServer(SocketServer.TCPServer):
+    class TestServer(socketserver.TCPServer):
         allow_reuse_address = True
 
     skip_connection = False

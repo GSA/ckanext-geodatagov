@@ -1,4 +1,7 @@
-import urlparse
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+import urllib.parse
 import requests
 import json
 import logging
@@ -18,7 +21,7 @@ from ckanext.spatial.harvesters.base import SpatialHarvester
 from ckan.logic import get_action, ValidationError
 from ckan.lib.navl.validators import not_empty, ignore_empty
 from ckan.logic.validators import boolean_validator
-from HTMLParser import HTMLParser
+from html.parser import HTMLParser
 
 TYPES = ['Web Map', 'KML', 'Mobile Application',
          'Web Mapping Application', 'WMS', 'Map Service']
@@ -141,7 +144,7 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
                 num=num,
                 start=start,
             )
-            url = urlparse.urljoin(source_url, search_path)
+            url = urllib.parse.urljoin(source_url, search_path)
 
             try:
                 r = requests.get(url)
@@ -364,13 +367,13 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
         format = content['type'].upper()
 
         if content['type'] in ['Web Map']:
-            resource_url = urlparse.urljoin(
+            resource_url = urllib.parse.urljoin(
                 source_url,
                 'home/webmap/viewer.html?webmap=' + content['id']
             )
 
         if content['type'] in ['Map Service']:
-            resource_url = urlparse.urljoin(
+            resource_url = urllib.parse.urljoin(
                 source_url,
                 'home/webmap/viewer.html?services=' + content['id']
             )
@@ -381,7 +384,7 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
             return False
 
         if not resource_url.startswith('http'):
-            resource_url = urlparse.urljoin(
+            resource_url = urllib.parse.urljoin(
                 source_url, resource_url)
 
         if content['type'] in ['Web Map', 'Web Mapping Application']:

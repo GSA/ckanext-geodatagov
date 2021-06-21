@@ -1,3 +1,5 @@
+from builtins import str
+from builtins import object
 import json
 import logging
 
@@ -125,7 +127,7 @@ class TestWafCollectionHarvester(object):
         dataset = datasets[0]
 
         extras = json.loads(dataset.extras['extras_rollup'])
-        keys = [key for key in extras.keys()]
+        keys = [key for key in list(extras.keys())]
         assert_in('collection_package_id', keys)
         assert_not_in('collection_metadata', keys)
 

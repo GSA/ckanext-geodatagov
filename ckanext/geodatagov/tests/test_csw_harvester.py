@@ -1,3 +1,5 @@
+from builtins import str
+from builtins import object
 from nose.tools import assert_raises
 
 from ckan.tests.helpers import reset_db

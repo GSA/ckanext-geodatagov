@@ -1,3 +1,4 @@
+from builtins import object
 import json
 import logging
 
@@ -200,7 +201,7 @@ class TestWafHarvester(object):
         sysadmin = Sysadmin(name='testUpdate')
         user_name = sysadmin['name'].encode('ascii')
         context = {'user': user_name}
-        new_extras = [{'key': key, 'value': value} for key, value in extras.iteritems()]
+        new_extras = [{'key': key, 'value': value} for key, value in list(extras.items())]
 
         get_action('package_update')(context, {
             "id": package.id,

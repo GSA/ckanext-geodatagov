@@ -1,8 +1,11 @@
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
 import re
 # import json
 import logging
 log = logging.getLogger(__name__)
-import urlparse
+import urllib.parse
 
 import requests
 from pylons import config
@@ -224,8 +227,8 @@ class GeoDataGovGeoportalHarvester(CSWHarvester, GeoDataGovHarvester):
 
         identifier = harvest_object.guid
 
-        parts = urlparse.urlparse(url)
-        url = urlparse.urlunparse((
+        parts = urllib.parse.urlparse(url)
+        url = urllib.parse.urlunparse((
             parts.scheme,
             parts.netloc,
             '/'.join(parts.path.rstrip('/').split('/')[:-2]),

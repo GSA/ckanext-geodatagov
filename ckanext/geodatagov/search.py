@@ -1,3 +1,4 @@
+from __future__ import print_function
 import logging
 from ckan.common import config
 # from ckan.lib.search.common import make_connection

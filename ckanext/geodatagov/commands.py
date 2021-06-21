@@ -1,9 +1,19 @@
+from __future__ import division
+from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
+from builtins import chr
+from builtins import zip
+from builtins import str
+from builtins import range
+from past.utils import old_div
 import csv
 import sys
 import datetime
 import json
 import xml.etree.ElementTree as ET
-from urllib2 import Request, urlopen, URLError, HTTPError
+from urllib.request import Request, urlopen
+from urllib.error import URLError, HTTPError
 from tempfile import mkstemp
 import boto
 import mimetypes
@@ -155,7 +165,7 @@ class GeoGovCommand(cli.CkanCommand):
             csv_reader = csv.reader(harvest_sources)
             import re
             for row in csv_reader:
-                row = dict(zip(fields, row))
+                row = dict(list(zip(fields, row)))
 
                 # neeeds some fix
                 # if row['PROTOCOL_TYPE'].lower() not in ('waf', 'csw', 'z3950'):
@@ -221,7 +231,7 @@ class GeoGovCommand(cli.CkanCommand):
             all_rows.add(tuple(row))
 
         for num, row in enumerate(all_rows):
-            row = dict(zip(fields, row))
+            row = dict(list(zip(fields, row)))
             org = logic.get_action('organization_create')(  # NOQA F841
                 {'model': model, 'user': user['name'],
                  'session': model.Session},
@@ -499,7 +509,7 @@ class GeoGovCommand(cli.CkanCommand):
 
             print(str(datetime.datetime.now()) + ' Starting insertion of records in miscs_solr_sync .')
 
-            for x in range(0, int(math.ceil(rows / chunk_size)) + 1):
+            for x in range(0, int(math.ceil(old_div(rows, chunk_size))) + 1):
 
                 if (x == 0):
                     start = 0
@@ -610,7 +620,9 @@ class GeoGovCommand(cli.CkanCommand):
     def combine_feeds(self):
         from xml.dom import minidom
         from xml.parsers.expat import ExpatError
-        import urllib
+        import urllib.error
+        import urllib.parse
+        import urllib.request
 
         feed_url = config.get('ckan.site_url') + '/feeds/dataset.atom'
         # from http://boodebr.org/main/python/all-about-python-and-unicode#UNI_XML
@@ -627,7 +639,7 @@ class GeoGovCommand(cli.CkanCommand):
             while retry > 0:
                 print('%s fetching %s' % (datetime.datetime.now(), url))
                 try:
-                    xml = urllib.urlopen(url_page_feed).read()
+                    xml = urllib.request.urlopen(url_page_feed).read()
                     xml = re.sub(RE_XML_ILLEGAL, "?", xml)
                     dom = minidom.parseString(xml)
                 except ExpatError:
@@ -921,7 +933,7 @@ class GeoGovCommand(cli.CkanCommand):
             'filename_s3': "sitemap-%s.xml" % filename_number
         })
 
-        for x in range(0, int(math.ceil(count / page_size)) + 1):
+        for x in range(0, int(math.ceil(old_div(count, page_size))) + 1):
             pkgs = package_query.get_paginated_entity_name_modtime(
                 max_results=page_size, start=start
             )
@@ -939,7 +951,7 @@ class GeoGovCommand(cli.CkanCommand):
             start = start + page_size
 
             if start % max_per_page == 0 and \
-                    x != int(math.ceil(count / page_size)):
+                    x != int(math.ceil(old_div(count, page_size))):
 
                 # write footer
                 os.write(fd, '</urlset>\n')
@@ -1032,7 +1044,7 @@ class GeoGovCommand(cli.CkanCommand):
         query = p.toolkit.get_action('package_search')(context, data_dict)
 
         count = query['count']
-        pages = int(math.ceil(1.0 * count / PAGINATION_SIZE))
+        pages = int(math.ceil(old_div(1.0 * count, PAGINATION_SIZE)))
 
         message = '{0: .19} jsonl is being generated, {1} pages, total {2} datasets to go.'.format(
             str(datetime.datetime.now()),
@@ -1115,8 +1127,8 @@ class GeoGovCommand(cli.CkanCommand):
         start_date_approximate = end_date - datetime.timedelta(days=85)
         start_date = start_date_approximate.replace(day=1)
 
-        print("starting date: ", start_date)
-        print("end date: ", end_date)
+        print(("starting date: ", start_date))
+        print(("end date: ", end_date))
 
         fd, path = mkstemp(suffix=".csv", prefix="metrics")
 
@@ -1259,11 +1271,11 @@ def get_response(url):
         response = urlopen(req)
     except HTTPError as e:
         print('The server couldn\'t fulfill the request.')
-        print('Error code: ', e.code)
+        print(('Error code: ', e.code))
         return 'error'
     except URLError as e:
         print('We failed to reach a server.')
-        print('Reason: ', e.reason)
+        print(('Reason: ', e.reason))
         return 'error'
     else:
         return response

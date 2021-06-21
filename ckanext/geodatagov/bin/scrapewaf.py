@@ -1,7 +1,12 @@
+from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
+from builtins import zip
+from builtins import str
 import csv
 import requests.exceptions
 import pyparsing as parse
-import urlparse
+import urllib.parse
 import dateutil.parser
 from ckanext.spatial.harvesters.base import guess_standard
 
@@ -16,7 +21,7 @@ def add_status():
     )
 
     for row in records:
-        row_dict = dict(zip('id unapproved url'.split(), row.split()))
+        row_dict = dict(list(zip('id unapproved url'.split(), row.split())))
         try:
             response = requests.get(row_dict['url'], timeout=60)
             content = response.content
@@ -41,7 +46,7 @@ def add_status():
                         standard = guess_standard(content_doc)
                         row_dict['standard'] = standard
                     except Exception as e:
-                        print('Error guessing format. Error is', e)
+                        print(('Error guessing format. Error is ', e))
             else:
                 row_dict['count'] = "0"
                 row_dict['count_with_date'] = "0"
@@ -109,10 +114,10 @@ def extract_waf(content, base_url, scraper, results=None, depth=0):
             if depth > 10:
                 print('max depth reached')
                 continue
-            new_url = urlparse.urljoin(base_url, url)
+            new_url = urllib.parse.urljoin(base_url, url)
             if not new_url.startswith(base_url):
                 continue
-            print('new_url', new_url)
+            print(('new_url', new_url))
             try:
                 response = requests.get(new_url)
                 content = response.content
@@ -129,7 +134,7 @@ def extract_waf(content, base_url, scraper, results=None, depth=0):
                 date = str(dateutil.parser.parse(date))
             except Exception:
                 date = None
-        results.append((urlparse.urljoin(base_url, record.url), date))
+        results.append((urllib.parse.urljoin(base_url, record.url), date))
 
     return results
 

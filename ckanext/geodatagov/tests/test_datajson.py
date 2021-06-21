@@ -1,3 +1,4 @@
+from builtins import object
 import json
 
 from ckan.tests.helpers import reset_db

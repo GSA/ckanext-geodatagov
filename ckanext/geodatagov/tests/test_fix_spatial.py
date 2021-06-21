@@ -1,3 +1,4 @@
+from builtins import object
 from nose.tools import assert_true, assert_equal  # , assert_in
 import ckan.model as model
 import ckan.plugins as p
@@ -6,7 +7,7 @@ import ckan.tests.factories as factories
 import ckan.tests.helpers as helpers
 
 
-class TestSpatialField:
+class TestSpatialField(object):
 
     @classmethod
     def setup_class(cls):

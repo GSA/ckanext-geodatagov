@@ -1,5 +1,8 @@
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
 import hashlib
-import urlparse
+import urllib.parse
 import logging
 import paste.auth.auth_tkt
 import mimetypes
@@ -303,7 +306,7 @@ def harvest_source_convert_from_config(key, data, errors, context):
     config = data[key]
     if config:
         config_dict = json.loads(config)
-        for key, value in config_dict.iteritems():
+        for key, value in list(config_dict.items()):
             if isinstance(value, list):
                 data[(key, )] = value[0]
             else:
@@ -354,7 +357,7 @@ def get_filename_and_extension(resource):
         return '', ''
     if 'URL' in url:
         return '', ''
-    url = urlparse.urlparse(url).path
+    url = urllib.parse.urlparse(url).path
     split = url.split('/')
     last_part = split[-1]
     ending = last_part.split('.')[-1].lower()
@@ -364,7 +367,7 @@ def get_filename_and_extension(resource):
 
 
 def change_resource_details(resource):
-    formats = RESOURCE_MAPPING.keys()
+    formats = list(RESOURCE_MAPPING.keys())
     resource_format = resource.get('format', '').lower().lstrip('.')
     filename, extension = get_filename_and_extension(resource)
     if not resource_format:
@@ -561,7 +564,7 @@ class Demo(p.SingletonPlugin):
         for extra in current_extras:
             if extra['key'] == 'extras_rollup':
                 rolledup_extras = json.loads(extra['value'])
-                for key, value in rolledup_extras.iteritems():
+                for key, value in list(rolledup_extras.items()):
                     new_extras.append({"key": key, "value": value})
             else:
                 new_extras.append(extra)

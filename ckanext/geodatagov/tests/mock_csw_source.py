@@ -1,12 +1,14 @@
 from __future__ import print_function
 
+from future import standard_library
+standard_library.install_aliases()
 import json
 import logging
-import SimpleHTTPServer
-import SocketServer
+import http.server
+import socketserver
 import xml.etree.ElementTree as ET
 from threading import Thread
-from urlparse import parse_qs
+from urllib.parse import parse_qs
 
 import pkg_resources
 
@@ -14,7 +16,7 @@ log = logging.getLogger("harvester")
 PORT = 8998
 
 
-class MockCSWHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
+class MockCSWHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         log.info('GET mock at: {}'.format(self.path))
         # test name is the first bit of the URL and makes CKAN behave
@@ -114,7 +116,7 @@ class MockCSWHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 def serve(port=PORT):
     '''Runs a CKAN-alike app (over HTTP) that is used for harvesting tests'''
 
-    class TestServer(SocketServer.TCPServer):
+    class TestServer(socketserver.TCPServer):
         allow_reuse_address = True
 
     httpd = TestServer(("", PORT), MockCSWHandler)

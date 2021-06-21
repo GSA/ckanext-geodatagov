@@ -1,4 +1,5 @@
 
+from builtins import object
 import logging
 import json
 from nose.tools import assert_in  # , assert_equal
