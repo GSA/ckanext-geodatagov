@@ -1,5 +1,3 @@
-from __future__ import print_function
-from builtins import str
 import datetime
 import hashlib
 import logging
@@ -27,8 +25,8 @@ def location_search(context, data_dict):
     Basic bounding box geocoder for countries, US states, US counties
     and US postal codes.
 
-    : param q: The search term. It must have at least 3 characters.
-    : type q: string
+    :param q: The search term. It must have at least 3 characters.
+    :type q: string
 
     Returns an ordered list of locations matching the query, where the
     order is defined by the entity type (countries > states > counties > postal
@@ -36,12 +34,12 @@ def location_search(context, data_dict):
 
     Each result contains the following keys:
 
-    : param id: Location identifier
-    : type id: integer
-    : param text: Location display name
-    : type text: string
-    : param geom: GeoJSON-like representation of the bbox geometry
-    : type geom: dict
+    :param id: Location identifier
+    :type id: integer
+    :param text: Location display name
+    :type text: string
+    :param geom: GeoJSON-like representation of the bbox geometry
+    :type geom: dict
 
     '''
     term = data_dict.get('q')
@@ -54,7 +52,7 @@ def location_search(context, data_dict):
     model = context['model']
     sql = '''SELECT id, display_name, ST_AsGeoJSON(the_geom) AS geom
             FROM locations
-            WHERE lower(name) LIKE : term
+            WHERE lower(name) LIKE :term
             ORDER BY type_order, display_name'''
     q = model.Session.execute(sql, {'term': '{0}%'.format(term.lower())})
 
@@ -80,7 +78,7 @@ def package_show_rest(context, data_dict):
     rollup = extras.pop('extras_rollup', None)
     if rollup:
         rollup = json.loads(rollup)
-        for key, value in list(rollup.items()):
+        for key, value in rollup.items():
             extras[key] = value
     return data_dict
 
@@ -148,7 +146,7 @@ MAPPING = {"title": "title",
            "license": "extras__licence",
            "dataQuality": "extras__data-quality"}
 
-ORG_MAPPING = {'national-park-service': 'nps-gov',
+ORG_MAPPING = {'natiional-park-service': 'nps-gov',
                'u-s-fish-and-wildlife-service': 'fws-gov',
                'u-s-geological-survey': 'usgs-gov',
                'bureau-of-land-management': 'blm-gov',
@@ -159,7 +157,7 @@ ORG_MAPPING = {'national-park-service': 'nps-gov',
 
 def create_data_dict(record):
     data_dict = {"extras": [{"key": "metadata-source", "value": "dms"},
-                 {"key": "resource-type", "value": "Dataset"}, ],
+                            {"key": "resource-type", "value": "Dataset"}, ],
                  "resources": []}
     extras = data_dict["extras"]
 
@@ -170,7 +168,7 @@ def create_data_dict(record):
                                        'format': distribution['format'],
                                        'size_text': distribution.get('size')})
 
-    for key, value in list(record.items()):
+    for key, value in record.items():
         new_key = MAPPING.get(key)
         if not new_key:
             continue
@@ -227,7 +225,7 @@ def datajson_create(context, data_dict):
     new_package = create_data_dict(data_dict)
     owner_org = model.Group.get(new_package['owner_org'])
     group_name = new_package.pop('owner_name', None)
-    new_package['name'] = _slugify(new_package['title'])[: 80]
+    new_package['name'] = _slugify(new_package['title'])[:80]
     existing_package = model.Package.get(new_package['name'])
     if existing_package:
         new_package['name'] = new_package['name'] + '-' + new_package['id'].lower()
@@ -278,12 +276,12 @@ def doi_create(context, data_dict):
     new_package["extras"].append({"key": "source_doi_import_identifier", "value": True})
     owner_org = model.Group.get(ORG_MAPPING.get(new_package['organization']['name']))
     if not owner_org:
-        print(str(datetime.datetime.now()) + ' Fail to import doi id ' + new_package[
-              'id'] + '. Organization ' + new_package['organization']['name'] + ' does not exist.')
+        print(str((datetime.datetime.now()) + ' Fail to import doi id ' + new_package['id'] + ''
+                  '. Organization ' + new_package['organization']['name'] + ' does not exist.'))
         return
     new_package['owner_org'] = owner_org.name
     group_name = new_package.pop('owner_name', None)  # NOQA F841
-    new_package['name'] = _slugify(new_package['title'])[: 80]
+    new_package['name'] = _slugify(new_package['title'])[:80]
     existing_package = model.Package.get(new_package['name'])
     if existing_package:
         new_package['name'] = new_package['name'] + '-' + str(int(time.time()))
@@ -333,8 +331,8 @@ def doi_update(context, data_dict):
     new_package.pop("name", None)
     owner_org = model.Group.get(ORG_MAPPING.get(new_package['organization']['name']))
     if not owner_org:
-        print(str(datetime.datetime.now()) + ' Fail to update doi id ' + new_package[
-              'id'] + '. Organization ' + new_package['organization']['name'] + ' does not exist.')
+        print(str(datetime.datetime.now()) + ' Fail to update doi id ' + new_package['id'] + ''
+              '. Organization ' + new_package['organization']['name'] + ' does not exist.')
         return
     new_package['owner_org'] = owner_org.name
     group_name = new_package.pop('owner_name', None)  # NOQA F841
@@ -393,7 +391,6 @@ def rollup_save_action(context, data_dict):
     new_extras_rollup = {}
 
     for extra in data_dict.get('extras', []):
-
         if extra['key'] in EXTRAS_ROLLUP_KEY_IGNORE:
             new_extras.append(extra)
         elif extra['key'] == "extras_rollup":
@@ -433,14 +430,14 @@ def rollup_save_action(context, data_dict):
 
 def translate_spatial(old_spatial):
     """ catalog-classic use a non-valid spatial extra.
-        Sometimes uses words (like "California") or raw coordinates (like "-96.8518, 43.4659, -96.5944, 43.6345")
+        Sometimes uses words (like "California") or raw coordinates (like "-96.8518,43.4659,-96.5944,43.6345")
         catalog-next use ckan/spatial and require spatial to be valid geojson
         When possible we need to transform this data so before_index at
         ckanext-spatial could save in solr.
         To save in solr we need a polygon like this:
         {
-            "type": "Polygon",
-            "coordinates": [
+            "type":"Polygon",
+            "coordinates":[
                 [
                     [2.05827, 49.8625],
                     [2.05827, 55.7447],
@@ -460,12 +457,12 @@ def translate_spatial(old_spatial):
     except BaseException:
         pass
 
-    geojson_tpl = ('{{"type": "Polygon",'
+    geojson_tpl = ('{{"type": "Polygon", '
                    '"coordinates": [[[{minx}, {miny}], [{minx}, {maxy}], '
                    '[{maxx}, {maxy}], [{maxx}, {miny}], [{minx}, {miny}]]]}}')
 
     # If we have 4 numbers separated by commas, transforme them as GeoJSON
-    parts = old_spatial.strip().split(', ')
+    parts = old_spatial.strip().split(',')
     if len(parts) == 4:
         minx, miny, maxx, maxy = parts
         params = {"minx": minx, "miny": miny, "maxx": maxx, "maxy": maxy}
@@ -484,7 +481,7 @@ def get_geo_from_string(location_name):
     try:  # maybe locations table is not installed
         row = model.Session.execute(sql, {"location_name": location_name}).first()
     except Exception as e:
-        log.error('Error querying "{}" locations table {}: \n\t"{}"'.format(location_name, e, sql))
+        log.error('Error querying "{}" locations table {}:\n\t"{}"'.format(location_name, e, sql))
         model.Session.rollback()
         return None
 

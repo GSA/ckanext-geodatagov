@@ -29,7 +29,7 @@ class TestSpatialField(object):
         }
         dataset = p.toolkit.get_action('package_create')(context, pkg)
 
-        expected_spatial = ('{"type": "Polygon", "coordinates": [[[10.0, 0.0], [10.0, 5.0], [15.0, 5.0],'
+        expected_spatial = ('{"type": "Polygon", "coordinates": [[[10.0, 0.0], [10.0, 5.0], [15.0, 5.0], '
                             '[15.0, 0.0], [10.0, 0.0]]]}')
 
         spatial_extra_exists = False
