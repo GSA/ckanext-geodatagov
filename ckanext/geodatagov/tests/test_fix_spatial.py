@@ -29,8 +29,8 @@ class TestSpatialField(object):
         }
         dataset = p.toolkit.get_action('package_create')(context, pkg)
 
-        expected_spatial = '{"type": "Polygon", "coordinates": [[[10.0, 0.0], [10.0, 5.0], [15.0, 5.0],\
-                                                                 [15.0, 0.0], [10.0, 0.0]]]}'
+        expected_spatial = ('{"type": "Polygon", "coordinates": [[[10.0, 0.0], [10.0, 5.0], [15.0, 5.0],'
+                            '[15.0, 0.0], [10.0, 0.0]]]}')
 
         spatial_extra_exists = False
         for extra in dataset['extras']:
@@ -62,9 +62,9 @@ class TestSpatialField(object):
         }
         dataset = p.toolkit.get_action('package_create')(context, pkg)
 
-        expected_spatial = '{"type":"Polygon",\
-                             "coordinates":[[[-124.3926,32.5358],[-124.3926,42.0022],[-114.1252,42.0022],\
-                                             [-114.1252,32.5358],[-124.3926,32.5358]]]}'
+        expected_spatial = ('{"type":"Polygon",'
+                            '"coordinates":[[[-124.3926,32.5358],[-124.3926,42.0022],[-114.1252,42.0022],'
+                            '[-114.1252,32.5358],[-124.3926,32.5358]]]}')
         spatial_extra_exists = False
         for extra in dataset['extras']:
             if extra['key'] == 'spatial':

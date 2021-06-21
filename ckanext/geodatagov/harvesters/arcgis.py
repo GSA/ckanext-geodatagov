@@ -69,9 +69,10 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
 
     implements(IHarvester)
 
-    extent_template = Template('''
-       {"type": "Polygon", "coordinates": [[[$minx, $miny], [$minx, $maxy], [$maxx, $maxy], [$maxx, $miny], [$minx, $miny]]]}
-    ''')
+    extent_template = Template(('{"type": "Polygon", '
+                                '"coordinates": [[[$minx, $miny], '
+                                '[$minx, $maxy], [$maxx, $maxy], '
+                                '[$maxx, $miny], [$minx, $miny]]]}'))
 
     def info(self):
         '''

@@ -460,10 +460,9 @@ def translate_spatial(old_spatial):
     except BaseException:
         pass
 
-    geojson_tpl = '{{"type": "Polygon",\
-                     "coordinates": [[[{minx}, {miny}], [{minx}, {maxy}],\
-                                      [{maxx}, {maxy}], [{maxx}, {miny}],\
-                                      [{minx}, {miny}]]]}}'
+    geojson_tpl = ('{{"type": "Polygon",'
+                   '"coordinates": [[[{minx}, {miny}], [{minx}, {maxy}], '
+                   '[{maxx}, {maxy}], [{maxx}, {miny}], [{minx}, {miny}]]]}}')
 
     # If we have 4 numbers separated by commas, transforme them as GeoJSON
     parts = old_spatial.strip().split(', ')
@@ -481,7 +480,7 @@ def get_geo_from_string(location_name):
     """ get a geometry from the locations table using the location name (e.g. California, New York)
         If not table or location_name not exists, return None"""
 
-    sql = 'SELECT ST_AsGeoJSON(the_geom) AS geom FROM locations WHERE name = : location_name;'
+    sql = 'SELECT ST_AsGeoJSON(the_geom) AS geom FROM locations WHERE name = :location_name;'
     try:  # maybe locations table is not installed
         row = model.Session.execute(sql, {"location_name": location_name}).first()
     except Exception as e:

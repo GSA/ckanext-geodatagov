@@ -25,13 +25,11 @@ class TestUpdateGeo(object):
         """ test translate_spatial function """
 
         # Test place in locations table
-        us = '{"type":"Polygon",\
-               "coordinates":[[[-124.733253,24.544245],[-124.733253,49.388611],[-66.954811,49.388611],\
-                               [-66.954811,24.544245],[-124.733253,24.544245]]]}'
+        us = ('{"type":"Polygon","coordinates":[[[-124.733253,24.544245],[-124.733253,49.388611],'
+              '[-66.954811,49.388611],[-66.954811,24.544245],[-124.733253,24.544245]]]}')
         assert_equal(translate_spatial('United States'), us)
-        california = '{"type":"Polygon",\
-                       "coordinates":[[[-124.3926,32.5358],[-124.3926,42.0022],[-114.1252,42.0022],\
-                                       [-114.1252,32.5358],[-124.3926,32.5358]]]}'
+        california = ('{"type":"Polygon","coordinates":[[[-124.3926,32.5358],[-124.3926,42.0022],'
+                      '[-114.1252,42.0022],[-114.1252,32.5358],[-124.3926,32.5358]]]}')
         assert_equal(translate_spatial('California'), california)
 
         # test numeric versions

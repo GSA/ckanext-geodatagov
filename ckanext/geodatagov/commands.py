@@ -299,10 +299,10 @@ class GeoGovCommand(cli.CkanCommand):
             log.error('ckanext.geodatagov.doi.url not defined in config.')
             return
 
-        url_list = doi_url + 'api/search/dataset?qjson={"fl": "id,extras_harvest_object_id",\
-                                                        "q": "harvest_object_id: [\\\"\\\"%20TO%20*],%20\
-                                                              metadata_type: geospatial",\
-                                                        "sort": "id%20asc","start": 0,"limit": 0}'
+        url_list = doi_url + ('api/search/dataset?qjson={'
+                              '"fl": "id,extras_harvest_object_id",'
+                              '"q": "harvest_object_id: [\\\"\\\"%20TO%20*],%20metadata_type: geospatial",'
+                              '"sort": "id%20asc","start": 0,"limit": 0}')
         url_dataset = doi_url + 'api/action/package_show?id='
         url_harvestobj = doi_url + 'harvest/object/'
 
@@ -1036,7 +1036,7 @@ class GeoGovCommand(cli.CkanCommand):
         fd_gz, path_gz = mkstemp(suffix=".json.gz", prefix="jsonl-", dir=DIR_JSONL)
 
         context = {}
-        fq = 'collection_package_id: * OR *: * AND type: dataset AND organization_type: "Federal Government"'
+        fq = 'collection_package_id: * OR *:* AND type:dataset AND organization_type:"Federal Government"'
         data_dict = {
             'fq': fq,
             'rows': 0
@@ -1046,14 +1046,14 @@ class GeoGovCommand(cli.CkanCommand):
         count = query['count']
         pages = int(math.ceil(old_div(1.0 * count, PAGINATION_SIZE)))
 
-        message = '{0: .19} jsonl is being generated, {1} pages, total {2} datasets to go.'.format(
+        message = '{0:.19} jsonl is being generated, {1} pages, total {2} datasets to go.'.format(
             str(datetime.datetime.now()),
             pages,
             count
         )
         print(message)
         for i in range(pages):
-            message = '{0: .19} doing page {1}/{2}...'.format(
+            message = '{0:.19} doing page {1}/{2}...'.format(
                 str(datetime.datetime.now()),
                 i + 1,
                 pages
@@ -1106,7 +1106,7 @@ class GeoGovCommand(cli.CkanCommand):
         else:
             print("No AWS destination, saved at: {}, {}".format(path, path_gz))
 
-        print('{0: .19} Done.'.format(str(datetime.datetime.now())))
+        print('{0:.19} Done.'.format(str(datetime.datetime.now())))
 
         # for local tests, return paths
         if bucket_name is None:

@@ -155,12 +155,11 @@ class TestWafCollectionHarvester(object):
         parent = call_action('package_show', context={'user': 'dummy'}, id=extras['collection_package_id'])
 
         assert_equal(parent['title'],
-                     'TIGER/Line Shapefile, \
-                      2013, \
-                      Series Information File for the Current county and Equivalent National Shapefile')
+                     ('TIGER/Line Shapefile, 2013, '
+                      'Series Information File for the Current county and Equivalent National Shapefile'))
         assert_equal(parent['name'],
-                     'tiger-line-shapefile-2013-\
-                      series-information-file-for-the-current-county-and-equivalent-nationa')
+                     ('tiger-line-shapefile-2013-'
+                      'series-information-file-for-the-current-county-and-equivalent-nationa'))
 
     def test_waf_collection_transformation_failed(self):
         url = 'http://127.0.0.1:%s/waf-collection2/index.html' % mock_static_file_server.PORT
