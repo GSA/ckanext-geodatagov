@@ -31,27 +31,22 @@ while ! ckan_wrapper --plugin=ckan db init; do
   sleep 5
 done
 
-ckan_wrapper --plugin=ckanext-harvest harvester initdb
-ckan_wrapper --plugin=ckanext-spatial spatial initdb
+HOST=db
+DB_NAME=ckan
+DB_USER=ckan
+PASS=ckan
 
-## Depreciated, but may be relevant
-# 
-# echo "-----------------------------------------------------------------"
-# echo "Installing locations table"
-# DEST_FOLDER=/tmp
-# HOST=db
-# DB_NAME=ckan_test
-# DB_USER=ckan
-# PASS=ckan
-# 
-# echo "Downloading locations table"
-# wget https://github.com/GSA/datagov-deploy/raw/71936f004be1882a506362670b82c710c64ef796/ansible/roles/software/ec2/ansible/files/locations.sql.gz -O $DEST_FOLDER/locations.sql.gz
-# 
-# echo "Creating locations table"
-# PGPASSWORD=${PASS} psql -h $HOST -U $DB_USER -d $DB_NAME -c "CREATE EXTENSION postgis;"
-# gunzip -c ${DEST_FOLDER}/locations.sql.gz | PGPASSWORD=${PASS} psql -h $HOST -U $DB_USER -d $DB_NAME -v ON_ERROR_STOP=1
-# 
-# echo "Cleaning"
-# rm -f $DEST_FOLDER/locations.sql.gz
+#PGPASSWORD=${PASS} psql -h $HOST -U $DB_USER -d $DB_NAME -c "create EXTENSION postgis;"
+#PGPASSWORD=${PASS} psql -h $HOST -U $DB_USER -d $DB_NAME -f ./postgis.sql
+#PGPASSWORD=${PASS} psql -h $HOST -U $DB_USER -d $DB_NAME -f ./spatial_ref_sys.sql
+#PGPASSWORD=${PASS} psql -h $HOST -U $DB_USER -d $DB_NAME -c "drop extension IF EXISTS postgis cascade;"
+#PGPASSWORD=${PASS} psql -h $HOST -U $DB_USER -d $DB_NAME -c "DROP TABLE spatial_ref_sys CASCADE;"
+#PGPASSWORD=${PASS} psql -h $HOST -U $DB_USER -d $DB_NAME -c "drop EXTENSION PostGIS;"
+#PGPASSWORD=${PASS} psql -h $HOST -U $DB_USER -d $DB_NAME -f /usr/local/share/postgresql/contrib/postgis-2.5/postgis.sql
 
-pytest --ckan-ini=test.ini --cov=ckanext.datajson --disable-warnings ckanext/geodatagov/tests/
+#ckan_wrapper --plugin=ckan db clean
+
+ckan_wrapper --plugin=ckanext-harvest harvester initdb  -c test.ini
+ckan_wrapper --plugin=ckanext-spatial spatial initdb -c test.ini
+
+pytest --ckan-ini=test.ini --cov=ckanext.geodatagov --disable-warnings ckanext/geodatagov/tests/
