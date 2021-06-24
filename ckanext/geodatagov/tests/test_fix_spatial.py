@@ -1,5 +1,6 @@
 from builtins import object
 from nose.tools import assert_true, assert_equal  # , assert_in
+
 import ckan.model as model
 import ckan.plugins as p
 
@@ -11,7 +12,6 @@ class TestSpatialField(object):
 
     @classmethod
     def setup_class(cls):
-        model.Repository.tables_created_and_initialised = True
         helpers.reset_db()
         cls.user = factories.Sysadmin(name='spatial_user')
 

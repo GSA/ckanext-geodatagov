@@ -13,9 +13,8 @@ class TestHarvestSourceForm(helpers.FunctionalTestBase):
 
     @classmethod
     def setup_class(cls):
-
-        model.Repository.tables_created_and_initialised = True
         helpers.reset_db()
+
         super(TestHarvestSourceForm, cls).setup_class()
         harvest_model.setup()
         sysadmin = factories.Sysadmin()

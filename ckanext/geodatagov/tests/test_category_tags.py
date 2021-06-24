@@ -2,11 +2,13 @@
 from builtins import object
 import logging
 import json
+import os
 from nose.tools import assert_in  # , assert_equal
 from ckan import plugins as p
 from ckan import model
 from ckan.tests.helpers import reset_db
 from ckan.tests import factories
+
 
 log = logging.getLogger(__name__)
 
@@ -15,8 +17,11 @@ class TestCategoryTags(object):
 
     @classmethod
     def setup(cls):
-        model.Repository.tables_created_and_initialised = True
+        os.system("PGPASSWORD=ckan psql -h db -U ckan -d ckan -c 'drop extension IF EXISTS postgis cascade;'")
         reset_db()
+        os.system("PGPASSWORD=ckan psql -h db -U ckan -d ckan -c 'create extension postgis;'")
+        os.system("paster --plugin=ckanext-harvest harvester initdb  -c test.ini")
+        os.system("paster --plugin=ckanext-spatial spatial initdb -c test.ini")
 
     def create_datasets(self):
         organization = factories.Organization()

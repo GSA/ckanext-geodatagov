@@ -24,7 +24,6 @@ class TestDataJsonHarvester(object):
 
     @classmethod
     def setup(cls):
-        model.Repository.tables_created_and_initialised = True
         reset_db()
         cls.organization = Organization()
 
@@ -104,11 +103,11 @@ class TestDataJsonHarvester(object):
             pkg = dataset.as_dict()
             extras = json.loads(pkg["extras"]['extras_rollup'])
 
-            assert_equal(pkg["extras"]["spatial"], ('{"type":"Polygon",'
-                                                    '"coordinates":[[[-124.733253,24.544245],'
-                                                    '[-124.733253,49.388611],'
-                                                    '[-66.954811,49.388611],'
-                                                    '[-66.954811,24.544245],'
+            assert_equal(pkg["extras"]["spatial"], ('{"type":"Polygon", '
+                                                    '"coordinates":[[[-124.733253,24.544245], '
+                                                    '[-124.733253,49.388611], '
+                                                    '[-66.954811,49.388611], '
+                                                    '[-66.954811,24.544245], '
                                                     '[-124.733253,24.544245]]]}'))
             assert_equal(extras['old-spatial'], 'United States')
 
