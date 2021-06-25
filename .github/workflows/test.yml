@@ -11,7 +11,7 @@ jobs:
         with:
           python-version: '3.6'
       - name: Install requirements
-        run: pip install flake8 pycodestyle
+        run: pip install flake8 pycodestyle pytest pytest-ckan pytest-cov
       - name: Check syntax
         run: flake8 . --count --select=E901,E999,F821,F822,F823 --show-source --statistics --exclude ckan
       - name: Run flake8
@@ -21,7 +21,7 @@ jobs:
     needs: lint
     strategy:
       matrix:
-        ckan-version: [2.9, 2.9-py2, 2.8, 2.7]
+        ckan-version: [2.9, 2.8]
       fail-fast: false
 
     name: CKAN ${{ matrix.ckan-version }}
@@ -51,21 +51,21 @@ jobs:
     - uses: actions/checkout@v2
     - name: Install requirements
       run: |
-        pip install -r pip-requirements.txt
+        pip install -r requirements.txt
         pip install -r dev-requirements.txt
         pip install -e .
-        # Replace default path to CKAN core config file with the one on the container
-        sed -i -e 's/use = config:.*/use = config:\/srv\/app\/src\/ckan\/test-core.ini/' test.ini
     - name: Setup extension (CKAN >= 2.9)
       if: ${{ matrix.ckan-version != '2.7' && matrix.ckan-version != '2.8' }}
       run: |
         ckan -c test.ini db init
         ckan -c test.ini harvester initdb
+        ckan -c test.ini spatial initdb
     - name: Setup extension (CKAN < 2.9)
-      if: ${{ matrix.ckan-version == '2.7' || matrix.ckan-version == '2.8' }}
+      if: ${{ matrix.ckan-version == '2.8' }}
       run: |
         paster --plugin=ckan db init -c test.ini
         paster --plugin=ckanext-harvest harvester initdb -c test.ini
+        paster --plugin=ckanext-harvest spatial initdb -c test.ini
     - name: Run tests
-      run: pytest --ckan-ini=test.ini --cov=ckanext.datagovtheme --cov-fail-under=${CODE_COVERAGE_THRESHOLD_REQUIRED} --disable-warnings ckanext/datagovtheme/tests
+      run: pytest --ckan-ini=test.ini --cov=ckanext.datagovtheme --cov-fail-under=${CODE_COVERAGE_THRESHOLD_REQUIRED} --disable-warnings ckanext/geodatagov/tests
 
