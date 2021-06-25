@@ -5,7 +5,6 @@ import logging
 from ckan.tests.helpers import reset_db
 from ckan.tests import factories
 from ckan.common import config
-from ckan import model
 
 from ckanext.geodatagov.commands import GeoGovCommand
 

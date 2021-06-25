@@ -3,7 +3,6 @@ import logging
 import ckanext.harvest.model as harvest_model
 from nose.tools import assert_equal, assert_not_in
 
-from ckan import model
 from ckan.tests import helpers, factories
 
 log = logging.getLogger(__name__)

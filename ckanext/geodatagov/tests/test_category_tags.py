@@ -5,7 +5,6 @@ import json
 import os
 from nose.tools import assert_in  # , assert_equal
 from ckan import plugins as p
-from ckan import model
 from ckan.tests.helpers import reset_db
 from ckan.tests import factories
 

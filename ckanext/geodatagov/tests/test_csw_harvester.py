@@ -26,6 +26,7 @@ class TestCSWHarvester(object):
     @classmethod
     def setup(cls):
         reset_db()
+        harvest_model.setup()
         cls.organization = Organization()
 
     def run_gather(self, url):
@@ -47,6 +48,11 @@ class TestCSWHarvester(object):
             return
 
         self.harvest_objects = []
+
+        if len(obj_ids) == 0:
+            # nothing to see
+            return
+
         for obj_id in obj_ids:
             harvest_object = harvest_model.HarvestObject.get(obj_id)
             log.info('ho guid=%s', harvest_object.guid)
