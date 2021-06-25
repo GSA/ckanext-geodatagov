@@ -32,7 +32,7 @@ jobs:
       solr:
         image: ckan/ckan-solr-dev:${{ matrix.ckan-version }}
       postgres:
-        image: ckan/ckan-postgres-dev:${{ matrix.ckan-version }}
+        image: datagov/catalog.data.gov.db:latest
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -68,5 +68,5 @@ jobs:
         paster --plugin=ckanext-harvest harvester initdb -c test.ini
         paster --plugin=ckanext-harvest spatial initdb -c test.ini
     - name: Run tests
-      run: pytest --ckan-ini=test.ini --cov=ckanext.datagovtheme --cov-fail-under=${CODE_COVERAGE_THRESHOLD_REQUIRED} --disable-warnings ckanext/geodatagov/tests
+      run: pytest --ckan-ini=test.ini --cov=ckanext.geodatagov --cov-fail-under=${CODE_COVERAGE_THRESHOLD_REQUIRED} --disable-warnings ckanext/geodatagov/tests
 
