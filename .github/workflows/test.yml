@@ -31,7 +31,7 @@ jobs:
     services:
       solr:
         image: datagov/catalog.data.gov.solr:latest
-      postgres:
+      db:
         image: datagov/catalog.data.gov.db:latest
         env:
           POSTGRES_USER: ckan
