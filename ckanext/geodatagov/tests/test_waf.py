@@ -8,7 +8,6 @@ from ckan import model
 from ckan.logic import get_action
 from ckanext.geodatagov.harvesters.base import GeoDataGovWAFHarvester
 from factories import HarvestJobObj, WafHarvestSourceObj
-from nose.tools import assert_equal, assert_in
 
 from ckan.tests.helpers import reset_db
 from ckan.tests.factories import Organization, Sysadmin
@@ -121,14 +120,14 @@ class TestWafHarvester(object):
             and test we have one dataset with the expected name """
 
         datasets = self.get_datasets_from_waf1_sample()
-        assert_equal(len(datasets), 2)
+        assert len(datasets) == 2
 
     def test_waf1_datasets_privacy(self):
         """ Harvest waf1/ folder as waf source and check the datasets are public"""
 
         datasets = self.get_datasets_from_waf1_sample()
         for dataset in datasets:
-            assert_equal(dataset.private, False)
+            assert dataset.private == False
 
     def test_waf1_names(self):
         """ Harvest waf1/ folder as waf source and test we have the names we expect """
@@ -139,7 +138,7 @@ class TestWafHarvester(object):
         ]
         datasets = self.get_datasets_from_waf1_sample()
         for dataset in datasets:
-            assert_in(dataset.name, expected_names)
+            assert dataset.name in expected_names
 
     def test_waf1_source_config(self):
         """ we expect the same config after the harvest process finishes """
@@ -148,7 +147,7 @@ class TestWafHarvester(object):
         # config with boolean values, fails (probable a CKAN bug)
         # we expect private_datasets as false, without quotes
         cfg = self.config1.replace('"false"', 'false')
-        assert_equal(self.job.source.config, cfg)
+        assert self.job.source.config == cfg
 
     def test_waf1_limit_tags(self):
         """ Expect tags to be compliant with the DB (under 100 characters) """
