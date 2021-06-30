@@ -23,6 +23,14 @@ from ckan.lib.navl.validators import not_empty, ignore_empty
 from ckan.logic.validators import boolean_validator
 from html.parser import HTMLParser
 
+try:
+    requires_ckan_version("2.9")
+except CkanVersionException:
+    from ckanext.geodatagov.plugins.pylons_plugin import MixinPlugin
+else:
+    from ckanext.geodatagov.plugins.flask_plugin import MixinPlugin
+
+
 TYPES = ['Web Map', 'KML', 'Mobile Application',
          'Web Mapping Application', 'WMS', 'Map Service']
 
@@ -65,7 +73,7 @@ def strip_tags(html):
     return s.get_data()
 
 
-class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
+class ArcGISHarvester(SpatialHarvester, MixinPlugin, SingletonPlugin):
 
     implements(IHarvester)
 

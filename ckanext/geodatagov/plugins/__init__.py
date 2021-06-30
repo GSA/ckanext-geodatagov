@@ -6,7 +6,7 @@ import urllib.parse
 import logging
 import mimetypes
 
-from ckan.plugins.toolkit import request
+from ckan.plugins.toolkit import request, requires_ckan_version, CkanVersionException
 try:
     from paste.auth.auth_tkt import maybe_encode, encode_ip_timestamp
     import paste.auth.auth_tkt
@@ -19,11 +19,11 @@ import ckanext.geodatagov.model as geodatagovmodel
 from ckan import __version__ as ckan_version
 
 try:
-    p.toolkit.requires_ckan_version("2.9")
-except p.toolkit.CkanVersionException:
-    from ckanext.geodatagov.plugin.pylons_plugin import MixinPlugin
+    requires_ckan_version("2.9")
+except CkanVersionException:
+    from ckanext.geodatagov.plugins.pylons_plugin import MixinPlugin
 else:
-    from ckanext.geodatagov.plugin.flask_plugin import MixinPlugin
+    from ckanext.geodatagov.plugins.flask_plugin import MixinPlugin
 
 mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
 

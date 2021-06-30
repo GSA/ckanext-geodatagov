@@ -15,8 +15,15 @@ from ckanext.geodatagov.harvesters import GeoDataGovHarvester
 from ckan.lib.navl.validators import not_empty, convert_int, ignore_empty
 from ckan.logic.validators import boolean_validator
 
+try:
+    requires_ckan_version("2.9")
+except CkanVersionException:
+    from ckanext.geodatagov.plugins.pylons_plugin import MixinPlugin
+else:
+    from ckanext.geodatagov.plugins.flask_plugin import MixinPlugin
 
-class Z3950Harvester(GeoDataGovHarvester, SingletonPlugin):
+
+class Z3950Harvester(GeoDataGovHarvester, MixinPlugin, SingletonPlugin):
     '''
     A Harvester for z3950.
     '''
