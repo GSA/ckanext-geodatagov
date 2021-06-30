@@ -69,7 +69,7 @@ jobs:
         source $ENV_FILE
         paster --plugin=ckan db init -c test.ini
         paster --plugin=ckanext-harvest harvester initdb -c test.ini
-        paster --plugin=ckanext-harvest spatial initdb -c test.ini
+        paster --plugin=ckanext-spatial spatial initdb -c test.ini
     - name: Run tests
       run: pytest --ckan-ini=test.ini --cov=ckanext.geodatagov --cov-fail-under=${CODE_COVERAGE_THRESHOLD_REQUIRED} --disable-warnings ckanext/geodatagov/tests
 
