@@ -23,6 +23,7 @@ from ckan.lib.navl.validators import not_empty, ignore_empty
 from ckan.logic.validators import boolean_validator
 from html.parser import HTMLParser
 
+from ckan.plugins.toolkit import requires_ckan_version, CkanVersionException
 try:
     requires_ckan_version("2.9")
 except CkanVersionException:
