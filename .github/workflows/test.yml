@@ -34,12 +34,12 @@ jobs:
       postgres:
         image: datagov/catalog.data.gov.db:latest
         env:
-          - ENV_FILE: .env
+          ENV_FILE: .env
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 10
       redis:
           image: redis:alpine
     env:
-      - ENV_FILE: .env
+      ENV_FILE: .env
 
     steps:
     - uses: actions/checkout@v2
