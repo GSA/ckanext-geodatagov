@@ -2,7 +2,6 @@ from builtins import object
 import logging
 import xml.etree.ElementTree as ET
 
-from nose.tools import assert_equal  # , assert_in
 
 from ckan.tests.helpers import reset_db
 from ckan.tests import factories
@@ -57,7 +56,7 @@ class TestSitemapExport(object):
             tree = ET.parse(site_file['path'])
             root = tree.getroot()
             log.info('XML Root {}'.format(root))
-            assert_equal(root.tag, '{http://www.sitemaps.org/schemas/sitemap/0.9}urlset')
+            assert root.tag == '{http://www.sitemaps.org/schemas/sitemap/0.9}urlset'
 
             prev_last_mod = ''
 
@@ -88,7 +87,7 @@ class TestSitemapExport(object):
                     else:
                         raise Exception('Unexpected tag')
 
-        assert_equal(files, 1)
+        assert files == 1
         assert datasets >= 4  # at least this four
         assert dataset1_found
         assert dataset2_found
