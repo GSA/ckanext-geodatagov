@@ -1,0 +1,14 @@
+{% ckan_extends %}
+
+{% block primary_content %}
+    {% if request.params.collection_package_id %}
+        <div class="module">
+            {% snippet "snippets/related_collection.html", collection_package_id=request.params.collection_package_id %}
+        </div>
+    {% endif %}
+
+    {{ super() }}
+
+{% endblock %}
+
+{{ super() }}
