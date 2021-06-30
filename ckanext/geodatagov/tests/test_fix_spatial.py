@@ -1,5 +1,4 @@
 from builtins import object
-from nose.tools import assert_true, assert_equal  # , assert_in
 
 import ckan.plugins as p
 
@@ -35,16 +34,16 @@ class TestSpatialField(object):
         for extra in dataset['extras']:
             if extra['key'] == 'spatial':
                 spatial_extra_exists = True
-                assert_equal(extra['value'], expected_spatial)
+                assert extra['value'] == expected_spatial
 
-        assert_true(spatial_extra_exists)
+        assert spatial_extra_exists is True
 
         result = helpers.call_action(
             'package_search',
             extras={'ext_bbox': '9,-1,16,4'})
 
-        assert_equal(result['count'], 1)
-        assert_equal(result['results'][0]['id'], dataset['id'])
+        assert result['count'] == 1
+        assert result['results'][0]['id'] == dataset['id']
 
     def test_string_spatial_transformation(self):
 
@@ -68,13 +67,13 @@ class TestSpatialField(object):
         for extra in dataset['extras']:
             if extra['key'] == 'spatial':
                 spatial_extra_exists = True
-                assert_equal(extra['value'], expected_spatial)
+                assert extra['value'] == expected_spatial
 
-        assert_true(spatial_extra_exists)
+        assert spatial_extra_exists is True
 
         result = helpers.call_action(
             'package_search',
             extras={'ext_bbox': '-125,31,-113,43'})
 
-        assert_equal(result['count'], 1)
-        assert_equal(result['results'][0]['id'], dataset['id'])
+        assert result['count'] == 1
+        assert result['results'][0]['id'] == dataset['id']
