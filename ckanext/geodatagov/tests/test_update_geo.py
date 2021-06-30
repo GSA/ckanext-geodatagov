@@ -1,7 +1,6 @@
 from builtins import object
 import json
 import logging
-from nose.tools import assert_equal, assert_in, assert_not_in
 
 from ckan.tests.helpers import reset_db
 from ckan.tests import factories
@@ -25,18 +24,18 @@ class TestUpdateGeo(object):
         # Test place in locations table
         us = ('{"type":"Polygon","coordinates":[[[-124.733253,24.544245],[-124.733253,49.388611],'
               '[-66.954811,49.388611],[-66.954811,24.544245],[-124.733253,24.544245]]]}')
-        assert_equal(translate_spatial('United States'), us)
+        assert translate_spatial('United States') == us
         california = ('{"type":"Polygon","coordinates":[[[-124.3926,32.5358],[-124.3926,42.0022],'
                       '[-114.1252,42.0022],[-114.1252,32.5358],[-124.3926,32.5358]]]}')
-        assert_equal(translate_spatial('California'), california)
+        assert translate_spatial('California') == california
 
         # test numeric versions
-        assert_equal(translate_spatial('1.0,2.0,3.5,5.5'),
-                     '{"type": "Polygon", "coordinates": [[[1.0, 2.0], [1.0, 5.5], [3.5, 5.5], [3.5, 2.0], [1.0, 2.0]]]}')
-
+        assert translate_spatial('1.0,2.0,3.5,5.5') == ('{"type": "Polygon", "coordinates": '
+                                                        '[[[1.0, 2.0], [1.0, 5.5], [3.5, 5.5], '
+                                                        '[3.5, 2.0], [1.0, 2.0]]]}')
         # Test not existent places
-        assert_equal(translate_spatial('not exists'), None)
-        assert_equal(translate_spatial('1.0,3.0'), None)
+        assert translate_spatial('not exists') is None
+        assert translate_spatial('1.0,3.0') is None
 
     def create_datasets(self):
 
@@ -82,38 +81,38 @@ class TestUpdateGeo(object):
         cmd.user_name = 'sysadmin'
         results = cmd.update_dataset_geo_fields()
 
-        assert_equal(results['total'], 4)
-        assert_equal(results['failed'], 0)
-        assert_equal(results['skipped'], 4)
+        assert results['total'] == 4
+        assert results['failed'] == 0
+        assert results['skipped'] == 4
 
         # this dataset transformed its spatial data
         d1 = results['datasets'][self.dataset1['id']]
-        assert_equal(d1['skip'], 'No rolled up spatial extra found')
+        assert d1['skip'] == 'No rolled up spatial extra found'
         extras = {x['key']: x['value'] for x in self.dataset1['extras']}
-        assert_equal(extras['old-spatial'], 'United States')
+        assert extras['old-spatial'] == 'United States'
         keys = list(json.loads(extras['spatial']).keys())
-        assert_in('coordinates', keys)
+        assert 'coordinates' in keys
 
         # this dataset transformed its spatial data
         d2 = results['datasets'][self.dataset2['id']]
-        assert_equal(d2['skip'], 'No rolled up spatial extra found')
+        assert d2['skip'] == 'No rolled up spatial extra found'
         extras = {x['key']: x['value'] for x in self.dataset2['extras']}
-        assert_equal(extras['old-spatial'], '34.1,25.2,26.2,27.9')
+        assert extras['old-spatial'] == '34.1,25.2,26.2,27.9'
         keys = list(json.loads(extras['spatial']).keys())
-        assert_in('coordinates', keys)
+        assert 'coordinates' in keys
 
         # this dataset don't have any spatial data
         d3 = results['datasets'][self.dataset3['id']]
-        assert_equal(d3['skip'], 'No rolled up extras')
+        assert d3['skip'] == 'No rolled up extras'
         extras = {x['key']: x['value'] for x in self.dataset3['extras']}
-        assert_not_in('old-spatial', list(extras.keys()))
-        assert_not_in('spatial', list(extras.keys()))
+        assert 'old-spatial' not in list(extras.keys())
+        assert 'spatial' not in list(extras.keys())
 
         # This dataset already include good spatial data
         d4 = results['datasets'][self.dataset4['id']]
-        assert_equal(d4['skip'], 'No rolled up spatial extra found')
+        assert d4['skip'] == 'No rolled up spatial extra found'
         extras = {x['key']: x['value'] for x in self.dataset4['extras']}
-        assert_in('old-spatial', list(extras.keys()))
+        assert 'old-spatial' in list(extras.keys())
         keys = list(json.loads(extras['spatial']).keys())
-        assert_in('coordinates', keys)
-        assert_equal(extras['old-spatial'], extras['spatial'])
+        assert 'coordinates' in keys
+        assert extras['old-spatial'] == extras['spatial']

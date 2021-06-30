@@ -127,7 +127,7 @@ class TestWafHarvester(object):
 
         datasets = self.get_datasets_from_waf1_sample()
         for dataset in datasets:
-            assert dataset.private == False
+            assert dataset.private is False
 
     def test_waf1_names(self):
         """ Harvest waf1/ folder as waf source and test we have the names we expect """

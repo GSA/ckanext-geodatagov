@@ -468,7 +468,6 @@ class Demo(MixinPlugin, p.SingletonPlugin):
                                        'value': json.dumps(extras_rollup)})
             data_dict['extras'] = new_extras
 
-
     def configure(self, config):
         log.info('plugin initialized: %s', self.__class__.__name__)
         self.__class__.edit_url = config.get('saml2.user_edit')
