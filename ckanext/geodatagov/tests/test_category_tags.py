@@ -3,7 +3,6 @@ from builtins import object
 import logging
 import json
 import os
-from nose.tools import assert_in  # , assert_equal
 from ckan import plugins as p
 from ckan.tests.helpers import reset_db
 from ckan.tests import factories
@@ -48,12 +47,12 @@ class TestCategoryTags(object):
         expected_extra = {"key": "__category_tag_{}".format(self.group1["id"]),
                           "value": json.dumps(self.dataset1['categories'])}
         pkg_dict = p.toolkit.get_action('package_show')(context, {'id': self.dataset1["id"]})
-        assert_in(expected_extra, pkg_dict["extras"])
+        assert expected_extra in pkg_dict["extras"]
 
         # test if we preserve category tag extras while we update the dataset
         pkg_dict['Title'] = 'Change title 02'
         pkg_dict = p.toolkit.get_action('package_update')(context, pkg_dict)
-        assert_in(expected_extra, pkg_dict["extras"])
+        assert expected_extra in pkg_dict["extras"]
 
         self.dataset2['categories'] = '["cat2"]'
         self.dataset2['group_id'] = self.group2["id"]
@@ -61,9 +60,9 @@ class TestCategoryTags(object):
         expected_extra = {"key": "__category_tag_{}".format(self.group2["id"]),
                           "value": json.dumps(self.dataset2['categories'])}
         pkg_dict = p.toolkit.get_action('package_show')(context, {'id': self.dataset2["id"]})
-        assert_in(expected_extra, pkg_dict["extras"])
+        assert expected_extra in pkg_dict["extras"]
 
         # test if we preserve category tag extras while we update the dataset
         pkg_dict['Title'] = 'Change title 03'
         pkg_dict = p.toolkit.get_action('package_update')(context, pkg_dict)
-        assert_in(expected_extra, pkg_dict["extras"])
+        assert expected_extra in pkg_dict["extras"]

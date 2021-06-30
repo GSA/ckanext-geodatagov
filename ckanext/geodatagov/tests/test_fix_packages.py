@@ -1,7 +1,6 @@
 
 from builtins import object
 import logging
-from nose.tools import assert_equal, assert_in
 from ckan.tests.helpers import reset_db
 from ckan.tests import factories
 
@@ -26,8 +25,8 @@ class TestFixPkg(object):
             owner_org=self.organization['id'],
             extras=dataset_extras)
 
-        assert_in("tag01", [t['name'] for t in dataset['tags']])
-        assert_in("tag02", [t['name'] for t in dataset['tags']])
+        assert "tag01" in [t['name'] for t in dataset['tags']]
+        assert "tag02" in [t['name'] for t in dataset['tags']]
 
     def test_avoid_duplicated_tags(self):
         dataset_extras = [
@@ -41,6 +40,6 @@ class TestFixPkg(object):
             extras=dataset_extras,
             tags=[{'name': 'tag01'}])
 
-        assert_equal(len(dataset['tags']), 2)
-        assert_in("tag01", [t['name'] for t in dataset['tags']])
-        assert_in("tag02", [t['name'] for t in dataset['tags']])
+        assert len(dataset['tags']) == 2
+        assert "tag01" in [t['name'] for t in dataset['tags']]
+        assert "tag02" in [t['name'] for t in dataset['tags']]

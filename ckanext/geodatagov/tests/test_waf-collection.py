@@ -2,6 +2,7 @@ from builtins import str
 from builtins import object
 import json
 import logging
+import pytest
 
 import ckanext.harvest.model as harvest_model
 import mock_static_file_server
@@ -9,7 +10,6 @@ from ckan import model
 from ckanext.geodatagov.harvesters.waf_collection import WAFCollectionHarvester
 from ckanext.spatial.validation import all_validators
 from factories import HarvestJobObj, WafCollectionHarvestSourceObj
-from nose.tools import assert_equal, assert_in, assert_not_in, assert_raises
 
 from ckan.tests.helpers import reset_db, call_action
 from ckan.tests.factories import Organization
@@ -113,9 +113,9 @@ class TestWafCollectionHarvester(object):
             and test we have one dataset with the expected name """
 
         datasets = self.get_datasets_from_waf_collection1_sample()
-        assert_equal(len(datasets), 1)
+        assert len(datasets) == 1
         dataset = datasets[0]
-        assert_equal(dataset.name, 'tiger-line-shapefile-2013-nation-u-s-current-county-and-equivalent-national-shapefile')
+        assert dataset.name == 'tiger-line-shapefile-2013-nation-u-s-current-county-and-equivalent-national-shapefile'
 
     def test_waf_collection1_datasets_as_child(self):
         """ Harvest waf-collection1/ folder as waf-collection source
@@ -127,8 +127,8 @@ class TestWafCollectionHarvester(object):
 
         extras = json.loads(dataset.extras['extras_rollup'])
         keys = [key for key in list(extras.keys())]
-        assert_in('collection_package_id', keys)
-        assert_not_in('collection_metadata', keys)
+        assert 'collection_package_id' in keys
+        assert 'collection_metadata' not in keys
 
     def test_waf_collection1_parent_exists(self):
         """ Harvest waf-collection1/ folder as waf-collection source
@@ -140,8 +140,8 @@ class TestWafCollectionHarvester(object):
 
         parent = call_action('package_show', context={'user': 'dummy'}, id=extras['collection_package_id'])
         parent_keys = [extra['key'] for extra in parent['extras']]
-        assert_in('collection_metadata', parent_keys)
-        assert_equal('true', [extra['value'] for extra in parent['extras'] if extra['key'] == 'collection_metadata'][0])
+        assert 'collection_metadata' in parent_keys
+        assert 'true' == [extra['value'] for extra in parent['extras'] if extra['key'] == 'collection_metadata'][0]
 
     def test_waf_collection1_parent_title(self):
         """ Harvest waf-collection1/ folder as waf-collection source
@@ -153,12 +153,10 @@ class TestWafCollectionHarvester(object):
 
         parent = call_action('package_show', context={'user': 'dummy'}, id=extras['collection_package_id'])
 
-        assert_equal(parent['title'],
-                     ('TIGER/Line Shapefile, 2013, '
-                      'Series Information File for the Current county and Equivalent National Shapefile'))
-        assert_equal(parent['name'],
-                     ('tiger-line-shapefile-2013-'
-                      'series-information-file-for-the-current-county-and-equivalent-nationa'))
+        assert parent['title'] == ('TIGER/Line Shapefile, 2013, '
+                                   'Series Information File for the Current county and Equivalent National Shapefile')
+        assert parent['name'] == ('tiger-line-shapefile-2013-'
+                                  'series-information-file-for-the-current-county-and-equivalent-nationa')
 
     def test_waf_collection_transformation_failed(self):
         url = 'http://127.0.0.1:%s/waf-collection2/index.html' % mock_static_file_server.PORT
@@ -172,6 +170,6 @@ class TestWafCollectionHarvester(object):
         self.run_fetch()
 
         # we don't manage IS0 19110
-        with assert_raises(Exception) as e:
+        with pytest.raises(Exception) as e:
             self.run_import()
-        assert 'Transformation to ISO failed' in str(e.exception)
+        assert 'Transformation to ISO failed' in str(e.value)
