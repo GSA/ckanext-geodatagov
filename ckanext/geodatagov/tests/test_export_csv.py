@@ -2,7 +2,6 @@ from datetime import datetime
 import json
 import logging
 import pkg_resources
-from nose.tools import assert_equal, assert_in
 
 from ckan.tests.helpers import FunctionalTestBase  # , reset_db
 from ckan.tests import factories
@@ -24,55 +23,55 @@ class TestExportCSV(FunctionalTestBase):
         results, entry = cmd.export_csv()
 
         # total results = groups in packages
-        assert_equal(len(results), 8)
+        assert len(results) == 8
 
         r = results[0]
-        assert_equal(r['title'], "Dataset 1")
-        assert_equal(r['topic'], self.group1['title'])
-        assert_equal(r['topicCategories'], "g1c1")
+        assert r['title'] == "Dataset 1"
+        assert r['topic'] == self.group1['title']
+        assert r['topicCategories'] == "g1c1"
 
         r = results[1]
-        assert_equal(r['title'], "Dataset 1")
-        assert_equal(r['topic'], self.group2['title'])
-        assert_equal(r['topicCategories'], "")
+        assert r['title'] == "Dataset 1"
+        assert r['topic'] == self.group2['title']
+        assert r['topicCategories'] == ""
 
         r = results[2]
-        assert_equal(r['title'], "Dataset 2")
-        assert_equal(r['topic'], self.group2['title'])
-        assert_equal(r['topicCategories'], "g2c1;g2c2")
+        assert r['title'] == "Dataset 2"
+        assert r['topic'] == self.group2['title']
+        assert r['topicCategories'] == "g2c1;g2c2"
 
         r = results[3]
-        assert_equal(r['title'], "Dataset 2")
-        assert_equal(r['topic'], self.group3['title'])
-        assert_equal(r['topicCategories'], "")
+        assert r['title'] == "Dataset 2"
+        assert r['topic'] == self.group3['title']
+        assert r['topicCategories'] == ""
 
         r = results[4]
-        assert_equal(r['title'], "Dataset 3")
-        assert_equal(r['topic'], self.group3['title'])
-        assert_equal(r['topicCategories'], "g3c1;g3c2")
+        assert r['title'] == "Dataset 3"
+        assert r['topic'] == self.group3['title']
+        assert r['topicCategories'] == "g3c1;g3c2"
 
         r = results[5]
-        assert_equal(r['title'], "Dataset 3")
-        assert_equal(r['topic'], self.group4['title'])
-        assert_equal(r['topicCategories'], "")
+        assert r['title'] == "Dataset 3"
+        assert r['topic'] == self.group4['title']
+        assert r['topicCategories'] == ""
 
         r = results[6]
-        assert_equal(r['title'], "Dataset 4")
-        assert_equal(r['topic'], self.group1['title'])
-        assert_equal(r['topicCategories'], "")
+        assert r['title'] == "Dataset 4"
+        assert r['topic'] == self.group1['title']
+        assert r['topicCategories'] == ""
 
         r = results[7]
-        assert_equal(r['title'], "Dataset 4")
-        assert_equal(r['topic'], self.group4['title'])
-        assert_equal(r['topicCategories'], "g4c1")
+        assert r['title'] == "Dataset 4"
+        assert r['topic'] == self.group4['title']
+        assert r['topicCategories'] == "g4c1"
 
-        assert_equal(entry.date, datetime.strftime(datetime.now(), '%Y%m%d'))
+        assert entry.date, datetime.strftime(datetime.now() == '%Y%m%d')
 
         # look for all topics in the CSV
         topics_found = []
         for cat in self.category_tags:
             topic = ';'.join(cat['value'].strip('"[],').split('","'))
-            assert_in(topic, entry.csv)
+            assert topic in entry.csv
             topics_found.append(cat['value'])
 
     def test_topics_csv_url(self):
@@ -85,7 +84,7 @@ class TestExportCSV(FunctionalTestBase):
         res = self.app.get('/topics-csv')
         for cat in self.category_tags:
             topic = ';'.join(cat['value'].strip('"[],').split('","'))
-            assert_in(topic, res)
+            assert topic in res
 
     def create_datasets(self):
 
@@ -148,35 +147,35 @@ class TestExportCSV(FunctionalTestBase):
         cmd = GeoGovCommand('test')
         results = cmd.export_group_and_tags(packages)
 
-        assert_equal(len(results), 12)
+        assert len(results) == 12
 
         for result in results:
-            assert_equal(result['organization'], 'Department of Housing and Urban Development, Federal Government')
-            assert_equal(result['organizationUrl'], 'https://catalog.data.gov/organization/hud-gov')
-            assert_equal(result['harvestSourceUrl'], 'https://catalog.data.gov/harvest/991bcaf7-498f-4657-bed2-f6594e1bfbe7')
+            assert result['organization'], 'Department of Housing and Urban Development == Federal Government'
+            assert result['organizationUrl'] == 'https://catalog.data.gov/organization/hud-gov'
+            assert result['harvestSourceUrl'] == 'https://catalog.data.gov/harvest/991bcaf7-498f-4657-bed2-f6594e1bfbe7'
 
-        assert_equal(results[0]['topic'], 'BusinessUSA')
-        assert_equal(results[1]['topic'], 'Consumer')
-        assert_equal(results[2]['topic'], 'Energy')
-        assert_equal(results[3]['topic'], 'Finance')
-        assert_equal(results[4]['topic'], 'BusinessUSA')
-        assert_equal(results[5]['topic'], 'Consumer')
-        assert_equal(results[6]['topic'], 'Energy')
-        assert_equal(results[7]['topic'], 'Finance')
-        assert_equal(results[8]['topic'], 'BusinessUSA')
-        assert_equal(results[9]['topic'], 'Consumer')
-        assert_equal(results[10]['topic'], 'Energy')
-        assert_equal(results[11]['topic'], 'Finance')
+        assert results[0]['topic'] == 'BusinessUSA'
+        assert results[1]['topic'] == 'Consumer'
+        assert results[2]['topic'] == 'Energy'
+        assert results[3]['topic'] == 'Finance'
+        assert results[4]['topic'] == 'BusinessUSA'
+        assert results[5]['topic'] == 'Consumer'
+        assert results[6]['topic'] == 'Energy'
+        assert results[7]['topic'] == 'Finance'
+        assert results[8]['topic'] == 'BusinessUSA'
+        assert results[9]['topic'] == 'Consumer'
+        assert results[10]['topic'] == 'Energy'
+        assert results[11]['topic'] == 'Finance'
 
-        assert_equal(results[0]['topicCategories'], '')
-        assert_equal(results[1]['topicCategories'], 'Finance')
-        assert_equal(results[2]['topicCategories'], 'Total Energy')
-        assert_equal(results[3]['topicCategories'], '')
-        assert_equal(results[4]['topicCategories'], '')
-        assert_equal(results[5]['topicCategories'], 'Finance')
-        assert_equal(results[6]['topicCategories'], 'Total Energy')
-        assert_equal(results[7]['topicCategories'], '')
-        assert_equal(results[8]['topicCategories'], '')
-        assert_equal(results[9]['topicCategories'], 'Finance')
-        assert_equal(results[10]['topicCategories'], 'Total Energy')
-        assert_equal(results[11]['topicCategories'], '')
+        assert results[0]['topicCategories'] == ''
+        assert results[1]['topicCategories'] == 'Finance'
+        assert results[2]['topicCategories'] == 'Total Energy'
+        assert results[3]['topicCategories'] == ''
+        assert results[4]['topicCategories'] == ''
+        assert results[5]['topicCategories'] == 'Finance'
+        assert results[6]['topicCategories'] == 'Total Energy'
+        assert results[7]['topicCategories'] == ''
+        assert results[8]['topicCategories'] == ''
+        assert results[9]['topicCategories'] == 'Finance'
+        assert results[10]['topicCategories'] == 'Total Energy'
+        assert results[11]['topicCategories'] == ''
