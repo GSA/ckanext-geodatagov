@@ -468,10 +468,6 @@ class Demo(MixinPlugin, p.SingletonPlugin):
                                        'value': json.dumps(extras_rollup)})
             data_dict['extras'] = new_extras
 
-    # IConfigurer
-    def update_config(self, config):
-        # add template directory
-        p.toolkit.add_template_directory(config, '../templates')
 
     def configure(self, config):
         log.info('plugin initialized: %s', self.__class__.__name__)
