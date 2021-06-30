@@ -12,7 +12,7 @@ try:
     import paste.auth.auth_tkt
 except ImportError:
     from ckan.plugins.toolkit.auth.auth_tkt import maybe_encode, encode_ip_timestamp
-    import ckan.plugins.toolkit.auth.auth_tkt
+    # import ckan.plugins.toolkit.auth.auth_tkt
 
 from ckan.lib.munge import munge_tag
 import ckanext.geodatagov.model as geodatagovmodel
