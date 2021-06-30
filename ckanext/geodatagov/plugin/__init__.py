@@ -18,6 +18,13 @@ from ckan.lib.munge import munge_tag
 import ckanext.geodatagov.model as geodatagovmodel
 from ckan import __version__ as ckan_version
 
+try:
+    p.toolkit.requires_ckan_version("2.9")
+except p.toolkit.CkanVersionException:
+    from ckanext.geodatagov.plugin.pylons_plugin import MixinPlugin
+else:
+    from ckanext.geodatagov.plugin.flask_plugin import MixinPlugin
+
 mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
 
 # the patch below caused s3 upload fail. need to keep a copy of md5
@@ -403,7 +410,7 @@ def related_update_auth_fn(context, data_dict=None):
     return {'success': False}
 
 
-class Demo(p.SingletonPlugin):
+class Demo(MixinPlugin, p.SingletonPlugin):
 
     p.implements(p.IConfigurer)
     p.implements(p.IConfigurable)
@@ -464,7 +471,7 @@ class Demo(p.SingletonPlugin):
     # IConfigurer
     def update_config(self, config):
         # add template directory
-        p.toolkit.add_template_directory(config, 'templates')
+        p.toolkit.add_template_directory(config, '../templates')
 
     def configure(self, config):
         log.info('plugin initialized: %s', self.__class__.__name__)
@@ -687,7 +694,7 @@ class Demo(p.SingletonPlugin):
             return facets_dict
 
 
-class Miscs(p.SingletonPlugin):
+class Miscs(MixinPlugin, p.SingletonPlugin):
     ''' Places for something that has nowhere to go otherwise.
     '''
     p.implements(p.IConfigurable)
