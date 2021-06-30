@@ -4,10 +4,16 @@ from builtins import str
 import hashlib
 import urllib.parse
 import logging
-import paste.auth.auth_tkt
 import mimetypes
-from paste.auth.auth_tkt import maybe_encode, encode_ip_timestamp
-from pylons import request
+
+from ckan.plugins.toolkit import request
+try:
+    from paste.auth.auth_tkt import maybe_encode, encode_ip_timestamp
+    import paste.auth.auth_tkt
+except ImportError:
+    from ckan.plugins.toolkit.auth.auth_tkt import maybe_encode, encode_ip_timestamp
+    import ckan.plugins.toolkit.auth.auth_tkt
+
 from ckan.lib.munge import munge_tag
 import ckanext.geodatagov.model as geodatagovmodel
 from ckan import __version__ as ckan_version

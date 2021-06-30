@@ -8,10 +8,10 @@ log = logging.getLogger(__name__)
 import urllib.parse
 
 import requests
-from pylons import config
 from lxml import etree
 
 from ckan import plugins as p
+from ckan.plugins.toolkit import config
 
 from ckan.logic.validators import boolean_validator
 from ckan.lib.navl.validators import ignore_empty

@@ -38,7 +38,8 @@ import ckan.lib.cli as cli
 import requests
 from ckanext.harvest.model import HarvestSource, HarvestJob
 import ckan.lib.munge as munge
-from pylons import config
+
+from ckan.plugins.toolkit import config
 from ckan import plugins as p
 from ckanext.geodatagov.model import MiscsFeed, MiscsTopicCSV
 

@@ -1,4 +1,7 @@
-from pylons.i18n import _
+try:
+    from pylons.i18n import _
+except ImportError:
+    from ckan.plugins.toolkit.il8n import _
 
 from ckan.lib.base import BaseController, response, abort  # , c
 import ckan.model as model
