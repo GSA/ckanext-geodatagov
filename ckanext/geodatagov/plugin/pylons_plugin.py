@@ -1,6 +1,7 @@
 """
 Mixin for Pylons-specific functionality. This aides the migration between Pylons and Flask.
 """
+import ckan.plugins as p
 
 
 class MixinPlugin(object):
