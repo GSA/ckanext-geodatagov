@@ -1,7 +1,6 @@
 import logging
 
 import ckanext.harvest.model as harvest_model
-from nose.tools import assert_equal, assert_not_in
 
 from ckan.tests import helpers, factories
 
@@ -39,18 +38,18 @@ class TestHarvestSourceForm(helpers.FunctionalTestBase):
 
         # Save
         res = fv.submit('save', extra_environ=self.extra_environ)
-        assert_not_in('Error', res)
-        assert_not_in('Missing value', res)
+        assert 'Error' not in res
+        assert 'Missing value' not in res
 
         # Go to the edit form
         res_redirect = self.app.get('/harvest/edit/{}'.format(harvest_source_name), extra_environ=self.extra_environ)
 
         # ensure we have the expected values
         fv = res_redirect.forms['source-new']
-        assert_equal(fv['collection_metadata_url'].value, COLLECTION_METADATA_URL)
-        assert_equal(fv['url'].value, WAF_HARVEST_SOURCE_URL)
-        assert_equal(fv['source_type'].value, 'waf-collection')
-        assert_equal(fv['validator_profiles'].value, 'iso19139ngdc')
+        assert fv['collection_metadata_url'].value == COLLECTION_METADATA_URL
+        assert fv['url'].value == WAF_HARVEST_SOURCE_URL
+        assert fv['source_type'].value == 'waf-collection'
+        assert fv['validator_profiles'].value == 'iso19139ngdc'
 
     def test_create_z3950_harvest_source_form(self):
 
@@ -70,15 +69,15 @@ class TestHarvestSourceForm(helpers.FunctionalTestBase):
 
         # Save
         res = fv.submit('save', extra_environ=self.extra_environ)
-        assert_not_in('Error', res)
-        assert_not_in('Missing value', res)
+        assert 'Error' not in res
+        assert 'Missing value' not in res
 
         # Go to the edit form
         res_redirect = self.app.get('/harvest/edit/{}'.format(harvest_source_name), extra_environ=self.extra_environ)
 
         # ensure we have the expected values
         fv = res_redirect.forms['source-new']
-        assert_equal(fv['url'].value, 'https://test.z3950.com/')
-        assert_equal(fv['source_type'].value, 'z3950')
-        assert_equal(fv['database'].value, 'test-database')
-        assert_equal(fv['port'].value, '9999')
+        assert fv['url'].value == 'https://test.z3950.com/'
+        assert fv['source_type'].value == 'z3950'
+        assert fv['database'].value == 'test-database'
+        assert fv['port'].value == '9999'
