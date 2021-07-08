@@ -7,12 +7,6 @@ import logging
 import mimetypes
 
 from ckan.plugins.toolkit import request, requires_ckan_version, CkanVersionException
-try:
-    from paste.auth.auth_tkt import maybe_encode, encode_ip_timestamp
-    import paste.auth.auth_tkt
-except ImportError:
-    from ckan.plugins.toolkit.auth.auth_tkt import maybe_encode, encode_ip_timestamp
-    # import ckan.plugins.toolkit.auth.auth_tkt
 
 from ckan.lib.munge import munge_tag
 import ckanext.geodatagov.model as geodatagovmodel
@@ -32,20 +26,6 @@ hashlib.md5_orig = hashlib.md5
 
 #  Monkey Patch libraris to make fips work # ## #
 hashlib.md5 = hashlib.sha1
-
-
-def calculate_digest(ip, timestamp, secret, userid, tokens, user_data):
-    secret = maybe_encode(secret)
-    userid = maybe_encode(userid)
-    tokens = maybe_encode(tokens)
-    user_data = maybe_encode(user_data)
-    digest0 = hashlib.md5(
-        encode_ip_timestamp(ip, timestamp) + secret + userid + '\0' + tokens + '\0' + user_data).hexdigest()[:32]
-    digest = hashlib.md5(digest0 + secret).hexdigest()[:32]
-    return digest
-
-
-paste.auth.auth_tkt.calculate_digest = calculate_digest
 
 # ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
 
