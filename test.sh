@@ -17,11 +17,11 @@ set -o pipefail
 # test.ini because the argument ordering matters to paster and
 # ckan, and again, we want to keep the parsing simple.
 function ckan_wrapper () {
-  if command -v paster > /dev/null; then
-    paster "$@" -c test.ini
-  else
+  if command -v ckan > /dev/null; then
     shift  # drop the --plugin= argument
     ckan -c test.ini "$@"
+  else
+    paster "$@" -c test.ini
   fi
 }
 
@@ -30,6 +30,7 @@ while ! ckan_wrapper --plugin=ckan db init; do
   echo Retrying in 5 seconds...
   sleep 5
 done
+
 
 HOST=db
 DB_NAME=ckan
@@ -46,7 +47,7 @@ PASS=ckan
 
 #ckan_wrapper --plugin=ckan db clean
 
-ckan_wrapper --plugin=ckanext-harvest harvester initdb  -c test.ini
-ckan_wrapper --plugin=ckanext-spatial spatial initdb -c test.ini
+ckan_wrapper --plugin=ckanext-harvest harvester initdb
+ckan_wrapper --plugin=ckanext-spatial spatial initdb
 
 pytest --ckan-ini=test.ini --cov=ckanext.geodatagov --disable-warnings ckanext/geodatagov/tests/
