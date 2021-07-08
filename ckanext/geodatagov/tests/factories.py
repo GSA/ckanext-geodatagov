@@ -1,6 +1,9 @@
 import factory
 import ckanext.harvest.model as harvest_model
-from ckan.tests.factories import _get_action_user_name
+try:
+    from ckan.new_tests.factories import _get_action_user_name
+except ImportError:
+    from ckan.tests.factories import _get_action_user_name
 from ckan.plugins import toolkit
 import logging
 log = logging.getLogger(__name__)
@@ -9,6 +12,9 @@ log = logging.getLogger(__name__)
 class HarvestSource(factory.Factory):
     FACTORY_FOR = harvest_model.HarvestSource
     _return_type = 'dict'
+
+    class Meta:
+        model = harvest_model.HarvestSource
 
     name = factory.Sequence(lambda n: 'test_source_{n}'.format(n=n))
     title = factory.Sequence(lambda n: 'test title {n}'.format(n=n))
@@ -62,6 +68,9 @@ class HarvestJob(factory.Factory):
     FACTORY_FOR = harvest_model.HarvestJob
     _return_type = 'dict'
 
+    class Meta:
+        model = harvest_model.HarvestJob
+
     source = factory.SubFactory(HarvestSourceObj)
 
     @classmethod
@@ -88,6 +97,9 @@ class HarvestJobObj(HarvestJob):
 class HarvestObject(factory.Factory):
     FACTORY_FOR = harvest_model.HarvestObject
     _return_type = 'dict'
+
+    class Meta:
+        model = harvest_model.HarvestObject
 
     # source = factory.SubFactory(HarvestSourceObj)
     job = factory.SubFactory(HarvestJobObj)
