@@ -34,7 +34,6 @@ import ckan
 import ckan.model as model
 import ckan.logic as logic
 import ckan.lib.search as search
-import ckan.lib.cli as cli
 import requests
 from ckanext.harvest.model import HarvestSource, HarvestJob
 import ckan.lib.munge as munge
@@ -51,7 +50,7 @@ log = logging.getLogger('ckanext.geodatagov')
 ckan_tmp_path = '/var/tmp/ckan'
 
 
-class GeoGovCommand(cli.CkanCommand):
+class GeoGovCommand(p.SingletonPlugin):
     '''
     Commands:
 
@@ -66,6 +65,7 @@ class GeoGovCommand(cli.CkanCommand):
         paster geodatagov export-csv -c <config>
         paster geodatagov update-dataset-geo-fields -c <config>
     '''
+    p.implements(p.IClick)
     summary = __doc__.split('\n')[0]
     usage = __doc__
 
