@@ -1,7 +1,3 @@
-try:
-    from pylons.i18n import _
-except ImportError:
-    from ckan.plugins.toolkit.il8n import _
 
 from ckan.lib.base import BaseController, response, abort  # , c
 import ckan.model as model
@@ -15,7 +11,7 @@ class GeodatagovMiscsController(BaseController):
     def feed(self):
         entry = model.Session.query(MiscsFeed).first()
         if not entry or not entry.feed:
-            abort(404, _('The feed is not ready yet.'))
+            abort(404, 'The feed is not ready yet.')
         response.content_type = 'application/atom+xml; charset=utf-8'
         return entry.feed
 
@@ -29,7 +25,7 @@ class GeodatagovMiscsController(BaseController):
                 .order_by(MiscsTopicCSV.date.desc()) \
                 .first()
         if not entry or not entry.csv:
-            abort(404, _('There is no csv entry yet.'))
+            abort(404, 'There is no csv entry yet.')
         response.content_type = 'text/csv'
         response.content_disposition = 'attachment; filename="topics-%s.csv"' % entry.date
         return entry.csv
