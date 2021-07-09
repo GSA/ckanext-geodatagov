@@ -16,8 +16,8 @@ paste
 pika
 ply==3.4
 pyOpenSSL
+pyparsing==2.4.0
 pyproj==1.9.6
 pyyaml==5.4
-pylons
 shapely==1.7.1
 six==1.16.0
