@@ -1,6 +1,7 @@
 from builtins import str
 from builtins import object
 from nose.tools import assert_raises
+import six
 
 from ckan.tests.helpers import reset_db
 from ckan.tests.factories import Organization
@@ -134,10 +135,16 @@ class TestCSWHarvester(object):
         url = 'http://127.0.0.1:%s/404' % mock_csw_source.PORT
         with assert_raises(Exception) as e:
             self.run_gather(url=url)
-        assert 'HTTP Error 404' in str(e.exception)
+        if six.PY2:
+            assert 'HTTP Error 404' in str(e.exception)
+        else:
+            assert '404 Client Error' in str(e.exception)
 
     def test_500(self):
         url = 'http://127.0.0.1:%s/500' % mock_csw_source.PORT
         with assert_raises(Exception) as e:
             self.run_gather(url=url)
-        assert 'HTTP Error 500' in str(e.exception)
+        if six.PY2:
+            assert 'HTTP Error 500' in str(e.exception)
+        else:
+            assert '500 Server Error' in str(e.exception)
