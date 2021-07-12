@@ -1,6 +1,7 @@
 from builtins import object
 import json
 import logging
+import six
 
 import ckanext.harvest.model as harvest_model
 import mock_static_file_server
@@ -197,7 +198,10 @@ class TestWafHarvester(object):
 
         log.info("extras_rollup package info: %s", package)
         sysadmin = Sysadmin(name='testUpdate')
-        user_name = sysadmin['name'].encode('ascii')
+        if six.PY2:
+            user_name = sysadmin['name'].encode('ascii')
+        else:
+            user_name = sysadmin['name']
         context = {'user': user_name}
         new_extras = [{'key': key, 'value': value} for key, value in list(extras.items())]
 
