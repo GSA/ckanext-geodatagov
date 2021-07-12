@@ -56,6 +56,7 @@ else:
     import ckan.lib.cli as cli
     inherit = cli.CkanCommand
 
+
 class GeoGovCommand(inherit):
     '''
     Commands:
