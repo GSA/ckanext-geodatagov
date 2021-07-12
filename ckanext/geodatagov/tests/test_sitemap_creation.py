@@ -1,5 +1,6 @@
 from builtins import object
 import logging
+import six
 import xml.etree.ElementTree as ET
 
 
@@ -31,7 +32,10 @@ class TestSitemapExport(object):
 
         self.create_datasets()
 
-        cmd = GeoGovCommand('test')
+        if six.PY2:
+            cmd = GeoGovCommand('test')
+        else:
+            cmd = GeoGovCommand()
         file_list = cmd.sitemap_to_s3(upload_to_s3=False, page_size=100, max_per_page=100)
 
         files = 0

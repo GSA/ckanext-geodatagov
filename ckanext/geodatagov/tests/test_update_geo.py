@@ -1,6 +1,7 @@
 from builtins import object
 import json
 import logging
+import six
 
 from ckan.tests.helpers import reset_db
 from ckan.tests import factories
@@ -77,7 +78,10 @@ class TestUpdateGeo(object):
 
         self.create_datasets()
 
-        cmd = GeoGovCommand('test')
+        if six.PY2:
+            cmd = GeoGovCommand('test')
+        else:
+            cmd = GeoGovCommand()
         cmd.user_name = 'sysadmin'
         results = cmd.update_dataset_geo_fields()
 

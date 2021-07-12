@@ -1,6 +1,7 @@
 from builtins import object
 import json
 import logging
+import six
 
 from ckan.tests.helpers import reset_db
 from ckan.tests import factories
@@ -33,7 +34,10 @@ class TestJSONExport(object):
         # skip AWS bucket if exists
         config['ckanext.geodatagov.aws_bucket_name'] = None
 
-        cmd = GeoGovCommand('test')
+        if six.PY2:
+            cmd = GeoGovCommand('test')
+        else:
+            cmd = GeoGovCommand()
         path, _ = cmd.jsonl_export()
 
         parsed_lines = 0
