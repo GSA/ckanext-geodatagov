@@ -1,4 +1,5 @@
 import logging
+import six
 
 import ckanext.harvest.model as harvest_model
 
@@ -10,13 +11,18 @@ log = logging.getLogger(__name__)
 class TestHarvestSourceForm(helpers.FunctionalTestBase):
 
     @classmethod
-    def setup_class(cls):
+    def setup(cls):
         helpers.reset_db()
 
+    @classmethod
+    def setup_class(cls):
         super(TestHarvestSourceForm, cls).setup_class()
         harvest_model.setup()
         sysadmin = factories.Sysadmin()
-        cls.extra_environ = {'REMOTE_USER': sysadmin['name'].encode('ascii')}
+        if six.PY2:
+            cls.extra_environ = {'REMOTE_USER': sysadmin['name'].encode('ascii')}
+        else:
+            cls.extra_environ = {'REMOTE_USER': sysadmin['name']}
 
     def test_create_waf_collection_harvest_source_form(self):
         WAF_HARVEST_SOURCE_URL = 'https://meta.geo.census.gov/data/existing/decennial/GEO/GPMB/TIGERline/TIGER2018/concity/'
