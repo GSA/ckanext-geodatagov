@@ -19,6 +19,8 @@ except CkanVersionException:
 else:
     from ckanext.geodatagov.plugins.flask_plugin import MixinPlugin
 
+from .. import blueprint
+
 mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
 
 # the patch below caused s3 upload fail. need to keep a copy of md5
@@ -674,16 +676,12 @@ class Miscs(MixinPlugin, p.SingletonPlugin):
     '''
     p.implements(p.IConfigurable)
     p.implements(p.IRoutes, inherit=True)
-
-    # IRoutes
-    def before_map(self, map):
-        ctrl = 'ckanext.geodatagov.controllers:GeodatagovMiscsController'
-        map.connect('usasearch_custom_feed', '/usasearch-custom-feed.xml', controller=ctrl, action='feed')
-        map.connect('topics_csv', '/topics-csv/{date}', controller=ctrl, action='csv')
-        map.connect('topics_csv', '/topics-csv', controller=ctrl, action='csv')
-        return map
+    p.implements(p.IBlueprint)
 
     # IConfigurable
     def configure(self, config):
         log.info('plugin initialized: %s', self.__class__.__name__)
         geodatagovmodel.setup()
+
+    def get_blueprint(self):
+        return blueprint.datapusher
