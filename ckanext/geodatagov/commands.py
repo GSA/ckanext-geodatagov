@@ -943,8 +943,8 @@ class GeoGovCommand(inherit):
                            prefix="sitemap-%s-" % filename_number,
                            dir=DIR_S3SITEMAP)
         # write header
-        os.write(fd, '<?xml version="1.0" encoding="UTF-8"?>\n')
-        os.write(fd, '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
+        os.write(fd, '<?xml version="1.0" encoding="UTF-8"?>\n'.encode('utf-8'))
+        os.write(fd, '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'.encode('utf-8'))
         file_list.append({
             'path': path,
             'filename_s3': "sitemap-%s.xml" % filename_number
@@ -956,14 +956,14 @@ class GeoGovCommand(inherit):
             )
 
             for pkg in pkgs:
-                os.write(fd, '    <url>\n')
-                os.write(fd, '        <loc>%s</loc>\n' % (
+                os.write(fd, '    <url>\n'.encode('utf-8'))
+                os.write(fd, ('        <loc>%s</loc>\n' % (
                     '%s/dataset/%s' % (config.get('ckan.site_url'), pkg.get('name')),
-                ))
-                os.write(fd, '        <lastmod>%s</lastmod>\n' % (
+                )).encode('utf-8'))
+                os.write(fd, ('        <lastmod>%s</lastmod>\n' % (
                     pkg.get('metadata_modified').strftime('%Y-%m-%d'),
-                ))
-                os.write(fd, '    </url>\n')
+                )).encode('utf-8'))
+                os.write(fd, '    </url>\n'.encode('utf-8'))
             log.info('%i to %i of %i records done.', start + 1, min(start + page_size, count), count)
             start = start + page_size
 
@@ -971,7 +971,7 @@ class GeoGovCommand(inherit):
                     x != int(math.ceil(old_div(count, page_size))):
 
                 # write footer
-                os.write(fd, '</urlset>\n')
+                os.write(fd, '</urlset>\n'.encode('utf-8'))
                 os.close(fd)
 
                 log.info('done with %s.', path)
@@ -981,8 +981,8 @@ class GeoGovCommand(inherit):
                                    prefix="sitemap-%s-" % filename_number,
                                    dir=DIR_S3SITEMAP)
                 # write header
-                os.write(fd, '<?xml version="1.0" encoding="UTF-8"?>\n')
-                os.write(fd, '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
+                os.write(fd, '<?xml version="1.0" encoding="UTF-8"?>\n'.encode('utf-8'))
+                os.write(fd, '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'.encode('utf-8'))
 
                 file_list.append({
                     'path': path,
@@ -990,7 +990,7 @@ class GeoGovCommand(inherit):
                 })
 
         # write footer
-        os.write(fd, '</urlset>\n')
+        os.write(fd, '</urlset>\n'.encode('utf-8'))
         os.close(fd)
 
         log.info('done with %s.', path)
@@ -1009,8 +1009,8 @@ class GeoGovCommand(inherit):
                            dir=DIR_S3SITEMAP)
 
         # write header
-        os.write(fd, '<?xml version="1.0" encoding="UTF-8"?>\n')
-        os.write(fd, '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
+        os.write(fd, '<?xml version="1.0" encoding="UTF-8"?>\n'.encode('utf-8'))
+        os.write(fd, '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'.encode('utf-8'))
 
         current_time = datetime.datetime.now().strftime('%Y-%m-%d')
         for item in file_list:
@@ -1019,16 +1019,16 @@ class GeoGovCommand(inherit):
             os.remove(item['path'])
 
             # add to sitemap index file
-            os.write(fd, '    <sitemap>\n')
-            os.write(fd, '        <loc>%s</loc>\n' % (
+            os.write(fd, '    <sitemap>\n'.encode('utf-8'))
+            os.write(fd, ('        <loc>%s</loc>\n' % (
                 config.get('ckanext.geodatagov.s3sitemap.aws_s3_url') + config.get(
                     'ckanext.geodatagov.s3sitemap.aws_storage_path') + item['filename_s3'],
-            ))
-            os.write(fd, '        <lastmod>%s</lastmod>\n' % (
+            )).encode('utf-8'))
+            os.write(fd, ('        <lastmod>%s</lastmod>\n' % (
                 current_time,
-            ))
-            os.write(fd, '    </sitemap>\n')
-        os.write(fd, '</sitemapindex>\n')
+            )).encode('utf-8'))
+            os.write(fd, '    </sitemap>\n'.encode('utf-8'))
+        os.write(fd, '</sitemapindex>\n'.encode('utf-8'))
         os.close(fd)
 
         upload_to_key(bucket, path, bucket_path + 'sitemap.xml')
@@ -1099,7 +1099,7 @@ class GeoGovCommand(inherit):
                 attempts += 1
 
             for n, dataset in enumerate(datasets):
-                os.write(fd, '%s\n' % json.dumps(dataset))
+                os.write(fd, ('%s\n' % json.dumps(dataset)).encode('utf-8'))
 
         os.close(fd)
         os.close(fd_gz)
