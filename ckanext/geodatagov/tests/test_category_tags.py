@@ -3,6 +3,7 @@ from builtins import object
 import logging
 import json
 import os
+import six
 from ckan import plugins as p
 from ckan.tests.helpers import reset_db
 from ckan.tests import factories
@@ -18,8 +19,13 @@ class TestCategoryTags(object):
         os.system("PGPASSWORD=ckan psql -h db -U ckan -d ckan -c 'drop extension IF EXISTS postgis cascade;'")
         reset_db()
         os.system("PGPASSWORD=ckan psql -h db -U ckan -d ckan -c 'create extension postgis;'")
-        os.system("paster --plugin=ckanext-harvest harvester initdb  -c test.ini")
-        os.system("paster --plugin=ckanext-spatial spatial initdb -c test.ini")
+        # PY2
+        if six.PY2:
+            os.system("paster --plugin=ckanext-harvest harvester initdb  -c test.ini")
+            os.system("paster --plugin=ckanext-spatial spatial initdb -c test.ini")
+        else:
+            os.system("ckan -c test.ini harvester initdb")
+            os.system("ckan -c test.ini spatial initdb")
         # echo "Downloading locations table"
         os.system("wget https://github.com/GSA/datagov-deploy/raw/71936f004be1882a506362670b82c710c64ef796/"
                   "ansible/roles/software/ec2/ansible/files/locations.sql.gz -O /tmp/locations.sql.gz")
@@ -35,7 +41,10 @@ class TestCategoryTags(object):
         self.dataset1 = factories.Dataset(owner_org=organization['id'], groups=[{"name": self.group1["name"]}])
         self.dataset2 = factories.Dataset(owner_org=organization['id'], groups=[{"name": self.group2["name"]}])
         sysadmin = factories.Sysadmin(name='testUpdate')
-        self.user_name = sysadmin['name'].encode('ascii')
+        if six.PY2:
+            self.user_name = sysadmin['name'].encode('ascii')
+        else:
+            self.user_name = sysadmin['name']
 
     def test_group_catagory_tag_update(self):
         self.create_datasets()
