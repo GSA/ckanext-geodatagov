@@ -2,8 +2,9 @@ from datetime import datetime
 import json
 import logging
 import pkg_resources
+import six
 
-from ckan.tests.helpers import FunctionalTestBase  # , reset_db
+from ckan.tests.helpers import FunctionalTestBase, reset_db
 from ckan.tests import factories
 
 from ckanext.geodatagov.commands import GeoGovCommand
@@ -13,6 +14,11 @@ log = logging.getLogger(__name__)
 
 
 class TestExportCSV(FunctionalTestBase):
+
+    if six.PY3:
+        @classmethod
+        def setup(cls):
+            reset_db()
 
     def test_export_csv(self):
         """ run json_export and analyze results """
