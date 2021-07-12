@@ -21,6 +21,7 @@ import hashlib
 import base64
 
 import time
+import six
 
 import math
 
@@ -785,7 +786,10 @@ class GeoGovCommand(inherit):
                 continue
 
             extras = dict([(x['key'], x['value']) for x in pkg['extras']])
-            package['title'] = pkg.get('title').encode('ascii', 'xmlcharrefreplace')
+            if six.PY2:
+                package['title'] = pkg.get('title').encode('ascii', 'xmlcharrefreplace')
+            else:
+                package['title'] = pkg.get('title')
             package['url'] = domain + '/dataset/' + pkg.get('name')
             package['organization'] = pkg.get('organization').get('title')
             package['organizationUrl'] = domain + '/organization/' + pkg.get('organization').get('name')
@@ -867,12 +871,17 @@ class GeoGovCommand(inherit):
         print('writing into db...')
 
         date_suffix = datetime.datetime.strftime(datetime.datetime.now(), '%Y%m%d')
-        csv_output = io.BytesIO()
+        if six.PY2:
+            csv_output = io.BytesIO()
+        else:
+            csv_output = io.StringIO()
 
         fieldnames = ['Dataset Title', 'Dataset URL', 'Organization Name', 'Organization Link',
                       'Harvest Source Name', 'Harvest Source Link', 'Topic Name', 'Topic Categories']
+
         writer = csv.writer(csv_output)
         writer.writerow(fieldnames)
+
         for pkg in result:
             try:
                 writer.writerow(
