@@ -49,8 +49,13 @@ log = logging.getLogger('ckanext.geodatagov')
 
 ckan_tmp_path = '/var/tmp/ckan'
 
+if p.toolkit.check_ckan_version(min_version='2.9'):
+    inherit = p.SingletonPlugin
+else:
+    import ckan.lib.cli as cli
+    inherit = cli.CkanCommand
 
-class GeoGovCommand(p.SingletonPlugin):
+class GeoGovCommand(inherit):
     '''
     Commands:
 
@@ -65,7 +70,8 @@ class GeoGovCommand(p.SingletonPlugin):
         paster geodatagov export-csv -c <config>
         paster geodatagov update-dataset-geo-fields -c <config>
     '''
-    p.implements(p.IClick)
+    if p.toolkit.check_ckan_version(min_version='2.9'):
+        p.implements(p.IClick)
     summary = __doc__.split('\n')[0]
     usage = __doc__
 
