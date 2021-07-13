@@ -14,7 +14,7 @@ Most Data.gov specific CKAN customizations are contained within this extension, 
 
 ### Customization
 
-The migration process from CKAN 2.3 (forked version) to CKAN 2.8 includes a significant reduction in custom code (and a large reduction in the time required to maintain this code).
+The migration process from CKAN 2.3 (forked version) to CKAN 2.8 and CKAN 2.9 includes a significant reduction in custom code (and a large reduction in the time required to maintain this code).
 This new version of the catalog (called _Catalog-Next_) begins to use the official versions of:
   - CKAN
   - ckanext-harvest
@@ -32,26 +32,28 @@ Before contributing to this extension we encourage you to read our [CONTRIBUTING
 
 ## Tests
 
-All the tests lives in the [/ckanext/geodatagov/tests](/ckanext/geodatagov/tests) folder. After each commit, via the [CircleCI config](https://github.com/GSA/ckanext-geodatagov/blob/master/.circleci/config.yml), this tests will [run in CircleCI](https://circleci.com/gh/GSA/ckanext-geodatagov) with CKAN 2.3 (custom GSA fork) and CKAN 2.8.
+There are two different test suites representing the extension running on depreciated versions, such as CKAN 2.3 and the current CKAN versions 2.8 and 2.9.  All the old tests live in the [/ckanext/geodatagov/tests/nose](/ckanext/geodatagov/tests/nose) folder. After each commit, via the [CircleCI config](https://github.com/GSA/ckanext-geodatagov/blob/master/.circleci/config.yml), this tests will [run in CircleCI](https://circleci.com/gh/GSA/ckanext-geodatagov) with CKAN 2.8.  The new tests lint in [/ckanext/geodatagov/tests](/ckanext/geodatagov/tests).  Upon push and pull request, these tests will [run in GitHub Actions](https://github.com/GSA/ckanext-geodatagov/actions) vis the [GitHub config](https://github.com/nickumia-reisys/ckanext-geodatagov/blob/feature/py3/.github/workflows/test.yml).
 
 ### Run Tests with Docker
-
-```docker-compose exec ckan /bin/bash -c "nosetests --ckan --with-pylons=src/ckan/test-catalog-next.ini src_extensions/geodatagov/"```
 
 ## Using the Docker Dev Environment
 
 ### Build Environment
 
 To start environment, run:
-```docker-compose build```
-```docker-compose up```
+```make build```
+```make up```
 
 CKAN will start at localhost:5000
 
-To shut down environment, run:
+To shut down environment, press CTRL+C on active terminal and/or run:
 
-```docker-compose down```
+```make clean```
 
 To docker exec into the CKAN image, run:
 
 ```docker-compose exec ckan /bin/bash```
+
+To run the tests, starting the environment is not necessary, all that is needed is,
+
+```make test```
