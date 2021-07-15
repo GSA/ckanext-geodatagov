@@ -6,6 +6,7 @@ import json
 import logging
 import http.server
 import socketserver
+import six
 import xml.etree.ElementTree as ET
 from threading import Thread
 from urllib.parse import parse_qs
@@ -109,7 +110,10 @@ class MockCSWHandler(http.server.SimpleHTTPRequestHandler):
         self.send_response(status)
         self.send_header('Content-Type', content_type)
         self.end_headers()
-        self.wfile.write(content)
+        if six.PY2:
+            self.wfile.write(content)
+        else:
+            self.wfile.write(content.encode('utf-8')
         self.wfile.close()
 
 
