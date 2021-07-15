@@ -113,7 +113,7 @@ class MockCSWHandler(http.server.SimpleHTTPRequestHandler):
         if six.PY2:
             self.wfile.write(content)
         else:
-            self.wfile.write(content.encode('utf-8')
+            self.wfile.write(content.encode('utf-8'))
         self.wfile.close()
 
 
