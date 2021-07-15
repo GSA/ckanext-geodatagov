@@ -35,7 +35,7 @@ class TestWafHarvester(object):
                                      config=source_config,
                                      **sc)
 
-        log.info('Created source {}'.format(source))
+        log.info('Created source {}'.format(repr(source)))
         self.job = HarvestJobObj(source=source)
         self.harvester = GeoDataGovWAFHarvester()
 

@@ -38,7 +38,7 @@ class TestWafHarvester(object):
                                      config=source_config,
                                      **sc)
 
-        log.info('Created source {}'.format(source))
+        log.info('Created source {}'.format(repr(source)))
         self.job = HarvestJobObj(source=source)
         self.harvester = GeoDataGovWAFHarvester()
 
@@ -146,9 +146,14 @@ class TestWafHarvester(object):
 
         self.get_datasets_from_waf1_sample()
         # config with boolean values, fails (probable a CKAN bug)
-        # we expect private_datasets as false, without quotes
-        cfg = self.config1.replace('"false"', 'false')
-        assert self.job.source.config == cfg
+        # we expect private_datasets as false, so cast the string to boolean
+        # after passing to CKAN stuff
+        expected = json.loads(self.config1)
+        for key in expected:
+            if expected[key] == 'false':
+                expected[key] = False
+        result = json.loads(self.job.source.config)
+        assert expected == result
 
     def test_waf1_limit_tags(self):
         """ Expect tags to be compliant with the DB (under 100 characters) """
