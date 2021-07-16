@@ -9,7 +9,7 @@ ckantoolkit==0.0.3
 future==0.18.2
 geoalchemy2==0.5.0
 jsonschema==2.4.0
-OWSLib==0.23.0
+OWSLib==0.18.0
 paste
 pika
 ply==3.4
