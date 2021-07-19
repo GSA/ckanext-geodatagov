@@ -14,7 +14,7 @@ Most Data.gov specific CKAN customizations are contained within this extension, 
 
 ### Customization
 
-The migration process from CKAN 2.3 (forked version) to CKAN 2.8 and CKAN 2.9 includes a significant reduction in custom code (and a large reduction in the time required to maintain this code).
+The migration process from CKAN 2.3 (forked version) to CKAN 2.8 includes a significant reduction in custom code (and a large reduction in the time required to maintain this code).
 This new version of the catalog (called _Catalog-Next_) begins to use the official versions of:
   - CKAN
   - ckanext-harvest
@@ -25,35 +25,96 @@ In this way of reducing custom code this extension should be reviewed. Some feat
   - [Move to the official search by geolocation](https://github.com/GSA/datagov-deploy/issues/2440) (probably sharing our version that has improvements)
   - Do a general analysis of this extension to detect other personalized functionalities that should be discontinued.
 
-## Ways to Contribute
-We're so glad you're thinking about contributing to Data.gov!
+### Requirements
 
-Before contributing to this extension we encourage you to read our [CONTRIBUTING](https://github.com/GSA/ckanext-geodatagov/blob/master/CONTRIBUTING.md) guide, our [LICENSE](https://github.com/GSA/ckanext-geodatagov/blob/master/LICENSE.md), and our README (you are here), all of which should be in this repository. If you have any questions, you can email the Data.gov team at [datagov@gsa.gov](mailto:datagov@gsa.gov).
+- [ckanext-harvest](https://github.com/ckan/ckanext-harvest/)
+-       Commit: [9d1f647](https://github.com/nickumia-reisys/ckanext-harvest.git@9d1f647d247c16b6c3acba26e321e9500cafb18c) on [nickumia-reisys fork](https://github.com/nickumia-reisys/ckanext-harvest) until merged upstream
+- [ckanext-datagovtheme](https://github.com/GSA/ckanext-datagovtheme)
+- [ckanext-datajson](https://github.com/GSA/ckanext-datajson)
+-       Commit: [a3dfe6b](https://github.com/GSA/ckanext-datajson.git@a3dfe6bc183022572092ee572e557270701950a4) on [GSA branch](https://github.com/GSA/ckanext-datajson) until merged to main
+- [ckanext-spatial](https://github.com/ckan/ckanext-spatial)
+-       Commit: [93c430f](https://github.com/GSA/ckanext-spatial.git@93c430ffc36ba7e306652fd511efd0d1e7081381) on [GSA fork](https://github.com/GSA/ckanext-spatial) until merged upstream
+- [PyZ3950](https://github.com/danizen/PyZ3950)
+- [werkzeug](https://github.com/nickumia-reisys/werkzeug)
+-       This only effects the tests.  For all intents and purposes, this should be tracking [upstream](https://github.com/pallets/werkzeug)
+
+This extension is compatible with these versions of CKAN.
+
+CKAN version | Compatibility
+------------ | -------------
+<=2.7        | no
+2.8          | yes
+2.9          | [complete](https://github.com/GSA/datagov-ckan-multi/issues/570)
 
 ## Tests
 
-There are two different test suites representing the extension running on depreciated versions, such as CKAN 2.3 and the current CKAN versions 2.8 and 2.9.  All the old tests live in the [/ckanext/geodatagov/tests/nose](/ckanext/geodatagov/tests/nose) folder. After each commit, via the [CircleCI config](https://github.com/GSA/ckanext-geodatagov/blob/master/.circleci/config.yml), this tests will [run in CircleCI](https://circleci.com/gh/GSA/ckanext-geodatagov) with CKAN 2.8.  The new tests lint in [/ckanext/geodatagov/tests](/ckanext/geodatagov/tests).  Upon push and pull request, these tests will [run in GitHub Actions](https://github.com/GSA/ckanext-geodatagov/actions) vis the [GitHub config](https://github.com/nickumia-reisys/ckanext-geodatagov/blob/feature/py3/.github/workflows/test.yml).
-
-### Run Tests with Docker
+All the tests live in the [/ckanext/geodatagov/tests](/ckanext/geodatagov/tests) folder. After each commit, via the [CircleCI config](https://github.com/GSA/ckanext-geodatagov/blob/master/.circleci/config.yml), this tests will [run in CircleCI](https://circleci.com/gh/GSA/ckanext-geodatagov) with CKAN 2.3 (custom GSA fork) and CKAN 2.8.  The CircleCI tests were not retained, but may be revisited in the future.
 
 ## Using the Docker Dev Environment
 
 ### Build Environment
 
 To start environment, run:
-```make build```
-```make up```
+```docker-compose build```
+```docker-compose up```
 
 CKAN will start at localhost:5000
 
-To shut down environment, press CTRL+C on active terminal and/or run:
+To shut down environment, run:
 
-```make clean```
+```docker-compose down```
 
 To docker exec into the CKAN image, run:
 
-```docker-compose exec ckan /bin/bash```
+```docker-compose exec app /bin/bash```
 
-To run the tests, starting the environment is not necessary, all that is needed is,
+### Testing
 
-```make test```
+They follow the guidelines for [testing CKAN
+extensions](https://docs.ckan.org/en/2.8/extensions/testing-extensions.html#testing-extensions).
+
+To run the extension tests, start the containers with `make up`, then:
+
+    $ make test
+
+Lint the code.
+
+    $ make lint
+    
+### Matrix builds
+
+The existing development environment assumes a full catalog.data.gov test setup. This makes
+it difficult to develop and test against new versions of CKAN (or really any
+dependency) because everything is tightly coupled and would require us to
+upgrade everything at once which doesn't really work. A new make target
+`test-new` is introduced with a new docker-compose file.
+
+The "new" development environment drops as many dependencies as possible. It is
+not meant to have feature parity with
+[GSA/catalog.data.gov](https://github.com/GSA/catalog.data.gov/). Tests should
+mock external dependencies where possible.
+
+In order to support multiple versions of CKAN, or even upgrade to new versions
+of CKAN, we support development and testing through the `CKAN_VERSION`
+environment variable.
+
+    $ make CKAN_VERSION=2.8 test
+    $ make CKAN_VERSION=2.9 test
+
+## Credit / Copying
+
+Original work written by the HealthData.gov team. It has been modified in support of Data.gov.
+
+As a work of the United States Government, this package is in the public
+domain within the United States. Additionally, we waive copyright and
+related rights in the work worldwide through the CC0 1.0 Universal
+public domain dedication (which can be found at http://creativecommons.org/publicdomain/zero/1.0/).
+
+## Ways to Contribute
+We're so glad you're thinking about contributing to ckanext-datajson!
+
+Before contributing to ckanext-datajson we encourage you to read our
+[CONTRIBUTING](CONTRIBUTING.md) guide, our [LICENSE](LICENSE.md), and our README
+(you are here), all of which should be in this repository. If you have any
+questions, you can email the Data.gov team at
+[datagov@gsa.gov](mailto:datagov@gsa.gov).
