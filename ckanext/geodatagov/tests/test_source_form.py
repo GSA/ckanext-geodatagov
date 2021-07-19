@@ -16,7 +16,9 @@ class SourceFormParser(HTMLParser):
         'title': None,
         'name': None,
         'collection_metadata_url': None,
-        'validator_profiles': None
+        'validator_profiles': None,
+        'database': None,
+        'port': None
     }
 
     def handle_starttag(self, tag, attrs):
@@ -33,6 +35,10 @@ class SourceFormParser(HTMLParser):
                 self.results['name'] = attr_dict['value']
             if attr_dict['name'] == 'collection_metadata_url':
                 self.results['collection_metadata_url'] = attr_dict['value']
+            if attr_dict['name'] == 'database':
+                self.results['database'] = attr_dict['value']
+            if attr_dict['name'] == 'port':
+                self.results['port'] = attr_dict['value']
             if 'checked' in attr_dict:
                 if attr_dict['name'] == 'source_type':
                     if attr_dict['value'] != '':
@@ -113,12 +119,11 @@ class TestHarvestSourceForm(helpers.FunctionalTestBase):
 
             res_redirect = self.app.get('/harvest/edit/{}'.format(harvest_source_name), extra_environ=self.extra_environ)
             parser.feed(res_redirect.body)
-            results = parser.results
 
-            assert results['collection_metadata_url'] == COLLECTION_METADATA_URL
-            assert results['url'] == WAF_HARVEST_SOURCE_URL
-            assert results['source_type'] == 'waf-collection'
-            assert results['validator_profiles'] == 'iso19139ngdc'
+            assert parser.results['collection_metadata_url'] == COLLECTION_METADATA_URL
+            assert parser.results['url'] == WAF_HARVEST_SOURCE_URL
+            assert parser.results['source_type'] == 'waf-collection'
+            assert parser.results['validator_profiles'] == 'iso19139ngdc'
             #print(res_redirect)
 
     def test_create_z3950_harvest_source_form(self):
@@ -126,28 +131,53 @@ class TestHarvestSourceForm(helpers.FunctionalTestBase):
         self.app = self._get_test_app()
 
         # Create
-        res = self.app.get('/harvest/new', extra_environ=self.extra_environ)
-
         harvest_source_name = u'test-harvest-source'
-        fv = res.forms['source-new']
-        fv['url'] = u'https://test.z3950.com/'
-        fv['source_type'] = u'z3950'
-        fv['title'] = u'Test Z3950 harvest source'
-        fv['name'] = harvest_source_name
-        fv['database'] = 'test-database'
-        fv['port'] = '9999'
 
-        # Save
-        res = fv.submit('save', extra_environ=self.extra_environ)
-        assert 'Error' not in res
-        assert 'Missing value' not in res
+        if six.PY2:
+            res = self.app.get('/harvest/new', extra_environ=self.extra_environ)
 
-        # Go to the edit form
-        res_redirect = self.app.get('/harvest/edit/{}'.format(harvest_source_name), extra_environ=self.extra_environ)
+            fv = res.forms['source-new']
+            fv['url'] = u'https://test.z3950.com/'
+            fv['source_type'] = u'z3950'
+            fv['title'] = u'Test Z3950 harvest source'
+            fv['name'] = harvest_source_name
+            fv['database'] = 'test-database'
+            fv['port'] = '9999'
 
-        # ensure we have the expected values
-        fv = res_redirect.forms['source-new']
-        assert fv['url'].value == 'https://test.z3950.com/'
-        assert fv['source_type'].value == 'z3950'
-        assert fv['database'].value == 'test-database'
-        assert fv['port'].value == '9999'
+            # Save
+            res = fv.submit('save', extra_environ=self.extra_environ)
+            assert 'Error' not in res
+            assert 'Missing value' not in res
+
+            # Go to the edit form
+            res_redirect = self.app.get('/harvest/edit/{}'.format(harvest_source_name), extra_environ=self.extra_environ)
+
+            # ensure we have the expected values
+            fv = res_redirect.forms['source-new']
+            assert fv['url'].value == 'https://test.z3950.com/'
+            assert fv['source_type'].value == 'z3950'
+            assert fv['database'].value == 'test-database'
+            assert fv['port'].value == '9999'
+        else:
+            
+            parser = SourceFormParser()
+            form_data = {
+                'url': 'https://test.z3950.com/',
+                'source_type': 'z3950',
+                'title': 'Test Z3950 harvest source',
+                'name': harvest_source_name,
+                'database': 'test-database',
+                'port': '9999'
+            }
+
+            res = self.app.post('/harvest/new', params=form_data, extra_environ=self.extra_environ)
+            assert 'Error' not in res.body
+            assert 'Missing value' not in res.body
+
+            res_redirect = self.app.get('/harvest/edit/{}'.format(harvest_source_name), extra_environ=self.extra_environ)
+            parser.feed(res_redirect.body)
+
+            assert parser.results['url'] == 'https://test.z3950.com/'
+            assert parser.results['source_type'] == 'z3950'
+            assert parser.results['database'] == 'test-database'
+            assert parser.results['port'] == '9999'
