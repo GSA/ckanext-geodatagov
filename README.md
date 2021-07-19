@@ -28,15 +28,22 @@ In this way of reducing custom code this extension should be reviewed. Some feat
 ### Requirements
 
 - [ckanext-harvest](https://github.com/ckan/ckanext-harvest/)
--       Commit: [9d1f647](https://github.com/nickumia-reisys/ckanext-harvest.git@9d1f647d247c16b6c3acba26e321e9500cafb18c) on [nickumia-reisys fork](https://github.com/nickumia-reisys/ckanext-harvest) until merged upstream
+
+  Commit: [9d1f647](https://github.com/nickumia-reisys/ckanext-harvest.git@9d1f647d247c16b6c3acba26e321e9500cafb18c) on [nickumia-reisys fork](https://github.com/nickumia-reisys/ckanext-harvest) until merged upstream
+  
 - [ckanext-datagovtheme](https://github.com/GSA/ckanext-datagovtheme)
 - [ckanext-datajson](https://github.com/GSA/ckanext-datajson)
--       Commit: [a3dfe6b](https://github.com/GSA/ckanext-datajson.git@a3dfe6bc183022572092ee572e557270701950a4) on [GSA branch](https://github.com/GSA/ckanext-datajson) until merged to main
+  
+  Commit: [a3dfe6b](https://github.com/GSA/ckanext-datajson.git@a3dfe6bc183022572092ee572e557270701950a4) on [GSA branch](https://github.com/GSA/ckanext-datajson) until merged to main
+  
 - [ckanext-spatial](https://github.com/ckan/ckanext-spatial)
--       Commit: [93c430f](https://github.com/GSA/ckanext-spatial.git@93c430ffc36ba7e306652fd511efd0d1e7081381) on [GSA fork](https://github.com/GSA/ckanext-spatial) until merged upstream
+  
+  Commit: [93c430f](https://github.com/GSA/ckanext-spatial.git@93c430ffc36ba7e306652fd511efd0d1e7081381) on [GSA fork](https://github.com/GSA/ckanext-spatial) until merged upstream
+  
 - [PyZ3950](https://github.com/danizen/PyZ3950)
 - [werkzeug](https://github.com/nickumia-reisys/werkzeug)
--       This only effects the tests.  For all intents and purposes, this should be tracking [upstream](https://github.com/pallets/werkzeug)
+  
+  This only effects the tests.  For all intents and purposes, this should be tracking [upstream](https://github.com/pallets/werkzeug)
 
 This extension is compatible with these versions of CKAN.
 
