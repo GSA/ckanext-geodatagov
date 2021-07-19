@@ -1,13 +1,13 @@
 from html.parser import HTMLParser
 import logging
 import six
-from webtest import TestApp
 
 import ckanext.harvest.model as harvest_model
 
 from ckan.tests import helpers, factories
 
 log = logging.getLogger(__name__)
+
 
 class SourceFormParser(HTMLParser):
     results = {
@@ -23,7 +23,6 @@ class SourceFormParser(HTMLParser):
 
     def handle_starttag(self, tag, attrs):
         if tag == 'input':
-            checked = False
             attr_dict = {}
             for attr in attrs:
                 attr_dict[attr[0]] = attr[1]
@@ -52,6 +51,7 @@ class SourceFormParser(HTMLParser):
 
     def handle_data(self, data):
         pass
+
 
 class TestHarvestSourceForm(helpers.FunctionalTestBase):
 
@@ -124,7 +124,6 @@ class TestHarvestSourceForm(helpers.FunctionalTestBase):
             assert parser.results['url'] == WAF_HARVEST_SOURCE_URL
             assert parser.results['source_type'] == 'waf-collection'
             assert parser.results['validator_profiles'] == 'iso19139ngdc'
-            #print(res_redirect)
 
     def test_create_z3950_harvest_source_form(self):
 
@@ -159,7 +158,7 @@ class TestHarvestSourceForm(helpers.FunctionalTestBase):
             assert fv['database'].value == 'test-database'
             assert fv['port'].value == '9999'
         else:
-            
+
             parser = SourceFormParser()
             form_data = {
                 'url': 'https://test.z3950.com/',
