@@ -1,10 +1,7 @@
-from __future__ import print_function
-from future import standard_library
-standard_library.install_aliases()
 import os
 
-import http.server
-import socketserver
+import SimpleHTTPServer
+import SocketServer
 from threading import Thread
 import logging
 log = logging.getLogger(__name__)
@@ -20,21 +17,21 @@ def serve(port=PORT):
     os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)),
                           'data-samples'))
 
-    Handler = http.server.SimpleHTTPRequestHandler
+    Handler = SimpleHTTPServer.SimpleHTTPRequestHandler
 
-    class TestServer(socketserver.TCPServer):
+    class TestServer(SocketServer.TCPServer):
         allow_reuse_address = True
 
     skip_connection = False
     try:
         httpd = TestServer(("", port), Handler)
-    except Exception as e:
+    except Exception, e:
         print('Serve error {}'.format(e))
         skip_connection = True
 
     if skip_connection is False:
         info = 'Serving test HTTP server at port', port
-        print(info)
+        print info
         log.info(info)
 
         httpd_thread = Thread(target=httpd.serve_forever)

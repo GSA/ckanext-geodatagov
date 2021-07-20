@@ -1,4 +1,3 @@
-from builtins import object
 import json
 import logging
 
@@ -7,9 +6,14 @@ import mock_static_file_server
 from ckan import model
 from ckanext.geodatagov.harvesters.base import GeoDataGovWAFHarvester
 from factories import HarvestJobObj, WafHarvestSourceObj
+from nose.tools import assert_equal, assert_in
 
-from ckan.tests.helpers import reset_db
-from ckan.tests.factories import Organization
+try:
+    from ckan.tests.helpers import reset_db
+    from ckan.tests.factories import Organization
+except ImportError:
+    from ckan.new_tests.helpers import reset_db
+    from ckan.new_tests.factories import Organization
 
 log = logging.getLogger(__name__)
 
@@ -35,7 +39,7 @@ class TestWafHarvester(object):
                                      config=source_config,
                                      **sc)
 
-        log.info('Created source {}'.format(repr(source)))
+        log.info('Created source {}'.format(source))
         self.job = HarvestJobObj(source=source)
         self.harvester = GeoDataGovWAFHarvester()
 
@@ -107,14 +111,14 @@ class TestWafHarvester(object):
             and test we have one dataset with the expected name """
 
         datasets = self.get_datasets_from_waf_gmi_sample()
-        assert len(datasets) == 1
+        assert_equal(len(datasets), 1)
 
     def test_waf_gmi_datasets_privacy(self):
         """ Harvest waf-gmi/ folder as waf source and check the datasets are public"""
 
         datasets = self.get_datasets_from_waf_gmi_sample()
         for dataset in datasets:
-            assert dataset.private is False
+            assert_equal(dataset.private, False)
 
     def test_waf_gmi_names(self):
         """ Harvest waf-gmi/ folder as waf source and test we have the names we expect """
@@ -124,4 +128,4 @@ class TestWafHarvester(object):
         ]
         datasets = self.get_datasets_from_waf_gmi_sample()
         for dataset in datasets:
-            assert dataset.name in expected_names
+            assert_in(dataset.name, expected_names)

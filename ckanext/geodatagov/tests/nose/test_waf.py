@@ -1,7 +1,5 @@
-from builtins import object
 import json
 import logging
-import six
 
 import ckanext.harvest.model as harvest_model
 import mock_static_file_server
@@ -9,10 +7,14 @@ from ckan import model
 from ckan.logic import get_action
 from ckanext.geodatagov.harvesters.base import GeoDataGovWAFHarvester
 from factories import HarvestJobObj, WafHarvestSourceObj
+from nose.tools import assert_equal, assert_in
 
-from ckan.tests.helpers import reset_db
-from ckan.tests.factories import Organization, Sysadmin
-
+try:
+    from ckan.tests.helpers import reset_db
+    from ckan.tests.factories import Organization, Sysadmin
+except ImportError:
+    from ckan.new_tests.helpers import reset_db
+    from ckan.new_tests.factories import Organization, Sysadmin
 
 log = logging.getLogger(__name__)
 
@@ -38,7 +40,7 @@ class TestWafHarvester(object):
                                      config=source_config,
                                      **sc)
 
-        log.info('Created source {}'.format(repr(source)))
+        log.info('Created source {}'.format(source))
         self.job = HarvestJobObj(source=source)
         self.harvester = GeoDataGovWAFHarvester()
 
@@ -121,14 +123,14 @@ class TestWafHarvester(object):
             and test we have one dataset with the expected name """
 
         datasets = self.get_datasets_from_waf1_sample()
-        assert len(datasets) == 2
+        assert_equal(len(datasets), 2)
 
     def test_waf1_datasets_privacy(self):
         """ Harvest waf1/ folder as waf source and check the datasets are public"""
 
         datasets = self.get_datasets_from_waf1_sample()
         for dataset in datasets:
-            assert dataset.private is False
+            assert_equal(dataset.private, False)
 
     def test_waf1_names(self):
         """ Harvest waf1/ folder as waf source and test we have the names we expect """
@@ -139,21 +141,16 @@ class TestWafHarvester(object):
         ]
         datasets = self.get_datasets_from_waf1_sample()
         for dataset in datasets:
-            assert dataset.name in expected_names
+            assert_in(dataset.name, expected_names)
 
     def test_waf1_source_config(self):
         """ we expect the same config after the harvest process finishes """
 
         self.get_datasets_from_waf1_sample()
         # config with boolean values, fails (probable a CKAN bug)
-        # we expect private_datasets as false, so cast the string to boolean
-        # after passing to CKAN stuff
-        expected = json.loads(self.config1)
-        for key in expected:
-            if expected[key] == 'false':
-                expected[key] = False
-        result = json.loads(self.job.source.config)
-        assert expected == result
+        # we expect private_datasets as false, without quotes
+        cfg = self.config1.replace('"false"', 'false')
+        assert_equal(self.job.source.config, cfg)
 
     def test_waf1_limit_tags(self):
         """ Expect tags to be compliant with the DB (under 100 characters) """
@@ -203,19 +200,16 @@ class TestWafHarvester(object):
 
         log.info("extras_rollup package info: %s", package)
         sysadmin = Sysadmin(name='testUpdate')
-        if six.PY2:
-            user_name = sysadmin['name'].encode('ascii')
-        else:
-            user_name = sysadmin['name']
+        user_name = sysadmin['name'].encode('ascii')
         context = {'user': user_name}
-        new_extras = [{'key': key, 'value': value} for key, value in list(extras.items())]
+        new_extras = [{'key': key, 'value': value} for key, value in extras.iteritems()]
 
         get_action('package_update')(context, {
             "id": package.id,
             "title": "Test change",
             "extras": new_extras
         })
-
+        
         updated_package = model.Package.get(package.id)
         extras_rollup = json.loads(updated_package.extras['extras_rollup'])
         assert 'extras_rollup' not in extras_rollup

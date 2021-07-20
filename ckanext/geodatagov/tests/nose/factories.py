@@ -13,9 +13,6 @@ class HarvestSource(factory.Factory):
     FACTORY_FOR = harvest_model.HarvestSource
     _return_type = 'dict'
 
-    class Meta:
-        model = harvest_model.HarvestSource
-
     name = factory.Sequence(lambda n: 'test_source_{n}'.format(n=n))
     title = factory.Sequence(lambda n: 'test title {n}'.format(n=n))
     url = factory.Sequence(lambda n: 'http://{n}.test.com'.format(n=n))
@@ -35,7 +32,7 @@ class HarvestSource(factory.Factory):
         try:
             source_dict = toolkit.get_action('harvest_source_show')(
                 context, dict(url=kwargs['url']))
-        except (KeyError, toolkit.ObjectNotFound):
+        except (KeyError, toolkit.ObjectNotFound), e:
             source_dict = toolkit.get_action('harvest_source_create')(
                 context, kwargs)
         if cls._return_type == 'dict':
@@ -55,21 +52,16 @@ class CSWHarvestSourceObj(HarvestSourceObj):
 class WafCollectionHarvestSourceObj(HarvestSourceObj):
     source_type = 'waf-collection'
 
-
 class WafHarvestSourceObj(HarvestSourceObj):
     source_type = 'waf'
 
-
 class DataJsonHarvestSourceObj(HarvestSourceObj):
     source_type = 'datajson'
-
+    
 
 class HarvestJob(factory.Factory):
     FACTORY_FOR = harvest_model.HarvestJob
     _return_type = 'dict'
-
-    class Meta:
-        model = harvest_model.HarvestJob
 
     source = factory.SubFactory(HarvestSourceObj)
 
@@ -97,9 +89,6 @@ class HarvestJobObj(HarvestJob):
 class HarvestObject(factory.Factory):
     FACTORY_FOR = harvest_model.HarvestObject
     _return_type = 'dict'
-
-    class Meta:
-        model = harvest_model.HarvestObject
 
     # source = factory.SubFactory(HarvestSourceObj)
     job = factory.SubFactory(HarvestJobObj)
