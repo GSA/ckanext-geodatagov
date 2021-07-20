@@ -18,8 +18,8 @@ jobs:
       - run:
           name: Build and test 
           command: |
-            docker-compose build
-            docker-compose up -d
+            docker-compose -f docker-compose.legacy.yml build
+            docker-compose -f docker-compose.legacy.yml up -d
       - run:
           name: install dockerize
           command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
@@ -31,9 +31,9 @@ jobs:
       - run:
           name: Test extension
           command: |
-            docker-compose logs db
-            docker-compose logs ckan
-            docker-compose exec ckan /bin/bash -c "nosetests --ckan --with-pylons=src/ckan/test-catalog-next.ini src_extensions/geodatagov/"
+            docker-compose -f docker-compose.legacy.yml logs db
+            docker-compose -f docker-compose.legacy.yml logs ckan
+            make test-legacy
 
   build_ckan_28:
     working_directory: ~/ckanext-geodatagov
