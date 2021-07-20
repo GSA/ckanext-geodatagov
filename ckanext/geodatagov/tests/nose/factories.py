@@ -13,6 +13,9 @@ class HarvestSource(factory.Factory):
     FACTORY_FOR = harvest_model.HarvestSource
     _return_type = 'dict'
 
+    class Meta:
+        model = harvest_model.HarvestSource
+
     name = factory.Sequence(lambda n: 'test_source_{n}'.format(n=n))
     title = factory.Sequence(lambda n: 'test title {n}'.format(n=n))
     url = factory.Sequence(lambda n: 'http://{n}.test.com'.format(n=n))
@@ -63,6 +66,9 @@ class HarvestJob(factory.Factory):
     FACTORY_FOR = harvest_model.HarvestJob
     _return_type = 'dict'
 
+    class Meta:
+        model = harvest_model.HarvestJob
+
     source = factory.SubFactory(HarvestSourceObj)
 
     @classmethod
@@ -89,6 +95,9 @@ class HarvestJobObj(HarvestJob):
 class HarvestObject(factory.Factory):
     FACTORY_FOR = harvest_model.HarvestObject
     _return_type = 'dict'
+
+    class Meta:
+        model = harvest_model.HarvestObject
 
     # source = factory.SubFactory(HarvestSourceObj)
     job = factory.SubFactory(HarvestJobObj)
