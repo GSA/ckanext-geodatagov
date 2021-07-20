@@ -1,8 +1,8 @@
-==============================================
+
 ADRs for CKANEXT_GEODATAGOV
 ==============================================
 
-#1. Fix encoding issue for waf harvester
+# 1. Fix encoding issue for waf harvester
 
 Date: 2021-07-16
 
@@ -25,7 +25,7 @@ We decided to fix the bug and submit a PR [upstream](https://github.com/ckan/cka
 
 
 
-#2. Fix JSON Serialization of dictionary
+# 2. Fix JSON Serialization of dictionary
 
 Date: 2021-07-19
 
@@ -48,7 +48,7 @@ which adds complexity.
 - All of the customization of the GSA fork of ckanext-spatial is disregarded.  The GSA fork was messy already.
 
 
-#3. Use catalog.data.gov Solr Image
+# 3. Use catalog.data.gov Solr Image
 
 Date: 2021-06-21
 
