@@ -1,3 +1,4 @@
+![Github Actions](https://github.com/GSA/ckanext-geodatagov/actions/workflows/test.yml/badge.svg)
 
 # Data.gov  
 
