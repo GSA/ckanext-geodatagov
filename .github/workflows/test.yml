@@ -1,0 +1,85 @@
+name: Tests
+on: [pull_request]
+env:
+  CODE_COVERAGE_THRESHOLD_REQUIRED: 33
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.6'
+      - name: Install requirements
+        run: pip install flake8 pycodestyle pytest pytest-ckan pytest-cov
+      - name: Check syntax
+        run: flake8 . --count --select=E901,E999,F821,F822,F823 --show-source --statistics --exclude ckan,nose
+      - name: Run flake8
+        run: flake8 . --count --max-line-length=127 --statistics --exclude ckan,nose
+
+  test:
+    needs: lint
+    strategy:
+      matrix:
+        ckan-version: [2.9, 2.8]
+      fail-fast: false
+
+    name: CKAN ${{ matrix.ckan-version }}
+    runs-on: ubuntu-latest
+    container:
+      image: openknowledge/ckan-dev:${{ matrix.ckan-version }}
+    services:
+      solr:
+        image: datagov/catalog.data.gov.solr:latest
+      db:
+        image: datagov/catalog.data.gov.db:latest
+        env:
+          POSTGRES_USER: ckan
+          POSTGRES_PASSWORD: ckan
+          POSTGRES_DB: ckan
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 10
+      redis:
+          image: redis:alpine
+    env:
+      ENV_FILE: .env
+      CKAN_SQLALCHEMY_URL: postgresql://ckan:ckan@db/ckan
+      CKAN_DATASTORE_WRITE_URL: postgresql://ckan:ckan@db/datastore
+      CKAN_DATASTORE_READ_URL: postgresql://datastore_ro:datastore@db/datastore
+      CKAN_SOLR_URL: http://solr:8983/solr/ckan
+      CKAN_REDIS_URL: redis://redis:6379/1
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install dependency (common)
+      run: |
+        apk add geos-dev
+    - name: Install requirements (py3)
+      if: ${{ matrix.ckan-version == '2.9' }}
+      run: |
+        apk add proj proj-util proj-dev
+        pip install -r requirements.txt
+        pip install -r dev-requirements.txt
+        pip install -e .
+    - name: Install requirements (py2)
+      if: ${{ matrix.ckan-version == '2.8' }}
+      run: |
+        pip install -r requirements-py2.txt
+        pip install -r dev-requirements-py2.txt
+        pip install -e .
+    - name: Setup extension (CKAN >= 2.9)
+      if: ${{ matrix.ckan-version != '2.7' && matrix.ckan-version != '2.8' }}
+      run: |
+        source $ENV_FILE
+        ckan -c test.ini db init
+        ckan -c test.ini harvester initdb
+        ckan -c test.ini spatial initdb
+    - name: Setup extension (CKAN < 2.9)
+      if: ${{ matrix.ckan-version == '2.8' }}
+      run: |
+        source $ENV_FILE
+        paster --plugin=ckan db init -c test.ini
+        paster --plugin=ckanext-harvest harvester initdb -c test.ini
+        paster --plugin=ckanext-spatial spatial initdb -c test.ini
+    - name: Run tests
+      run: pytest --ckan-ini=test.ini --cov=ckanext.geodatagov --cov-fail-under=${CODE_COVERAGE_THRESHOLD_REQUIRED} --disable-warnings ckanext/geodatagov/tests
+

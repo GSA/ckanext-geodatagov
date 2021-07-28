@@ -1,5 +1,9 @@
-import json, hashlib, datetime, uuid, time
+import datetime
+import hashlib
 import logging
+import json
+import time
+import uuid
 
 from ckan.logic import side_effect_free
 import ckan.logic.schema as schema
@@ -8,12 +12,9 @@ import ckan.model as model
 import ckan.plugins as p
 from ckanext.geodatagov.plugins import change_resource_details, split_tags
 from ckanext.geodatagov.harvesters.arcgis import _slugify
-from ckanext.harvest.model import HarvestJob, HarvestObject
+from ckanext.harvest.model import HarvestObject  # , HarvestJob
 
-try:
-    from ckan.common import config
-except ImportError:  # CKAN 2.3
-    from pylons import config
+from ckan.common import config
 
 log = logging.getLogger(__name__)
 
@@ -62,11 +63,13 @@ def location_search(context, data_dict):
                     'geom': json.loads(row['geom'])})
     return out
 
+
 def group_show(context, data_dict):
 
     context.update({'limits': {'packages': 2}})
 
     return core_get.group_show(context, data_dict)
+
 
 def package_show_rest(context, data_dict):
 
@@ -79,11 +82,13 @@ def package_show_rest(context, data_dict):
             extras[key] = value
     return data_dict
 
+
 def organization_show(context, data_dict):
 
     context.update({'limits': {'packages': 2}})
 
     return core_get.organization_show(context, data_dict)
+
 
 @side_effect_free
 def organization_list(context, data_dict):
@@ -104,7 +109,6 @@ def organization_list(context, data_dict):
         model.GroupExtra.group_id.in_([group['id'] for group in results])
     ).all()
 
-
     lookup = dict((row[0], row[1]) for row in query_results)
 
     for group in results:
@@ -114,10 +118,12 @@ def organization_list(context, data_dict):
 
     return results
 
+
 def resource_show(context, data_dict):
     resource = core_get.resource_show(context, data_dict)
     change_resource_details(resource)
     return resource
+
 
 MAPPING = {"title": "title",
            "theme": "extras__theme",
@@ -126,7 +132,7 @@ MAPPING = {"title": "title",
            "organizationId": "owner_org",
            "organizationName": "owner_name",
            "description": "notes",
-           "keyword" : "extras__tags",
+           "keyword": "extras__tags",
            "person": "extras__person",
            "accrualPeriodicity": "extras__frequency-of-update",
            "spatial": "extras__spatial-text",
@@ -140,18 +146,18 @@ MAPPING = {"title": "title",
            "license": "extras__licence",
            "dataQuality": "extras__data-quality"}
 
-ORG_MAPPING = { 'national-park-service':'nps-gov',
-                'u-s-fish-and-wildlife-service':'fws-gov',
-                'u-s-geological-survey':'usgs-gov',
-                'bureau-of-land-management':'blm-gov',
-                'bureau-of-ocean-energy-management':'boem-gov',
-                'office-of-surface-mining':'osmre-gov',
-                'bureau-of-reclamation':'usbr-gov'}
+ORG_MAPPING = {'natiional-park-service': 'nps-gov',
+               'u-s-fish-and-wildlife-service': 'fws-gov',
+               'u-s-geological-survey': 'usgs-gov',
+               'bureau-of-land-management': 'blm-gov',
+               'bureau-of-ocean-energy-management': 'boem-gov',
+               'office-of-surface-mining': 'osmre-gov',
+               'bureau-of-reclamation': 'usbr-gov'}
+
 
 def create_data_dict(record):
-    data_dict = {"extras":[{"key": "metadata-source", "value": "dms"},
-                           {"key": "resource-type", "value": "Dataset"},
-                          ],
+    data_dict = {"extras": [{"key": "metadata-source", "value": "dms"},
+                            {"key": "resource-type", "value": "Dataset"}, ],
                  "resources": []}
     extras = data_dict["extras"]
 
@@ -159,8 +165,8 @@ def create_data_dict(record):
 
     for distribution in distributions:
         data_dict['resources'].append({'url': distribution['accessURL'],
-                                      'format': distribution['format'],
-                                      'size_text': distribution.get('size') })
+                                       'format': distribution['format'],
+                                       'size_text': distribution.get('size')})
 
     for key, value in record.items():
         new_key = MAPPING.get(key)
@@ -176,16 +182,17 @@ def create_data_dict(record):
 
     return data_dict
 
+
 def group_catagory_tag_update(context, data_dict):
-    """ If data_dict include "categories" a new 
+    """ If data_dict include "categories" a new
         extra will be added:
             __category_tag_{group.id} = categories
-        """ 
+        """
     p.toolkit.check_access('group_catagory_tag_update', context)
     categories = data_dict.get('categories', None)
     if categories is None:
         return data_dict
-    
+
     package_id = data_dict.get('id')
     group_id = data_dict.get('group_id')
 
@@ -202,7 +209,7 @@ def group_catagory_tag_update(context, data_dict):
     for extra in extras:
         if extra.get('key') != key:
             new_extras.append(extra)
-    
+
     if categories:
         new_extras.append({'key': key, 'value': json.dumps(categories)})
 
@@ -211,6 +218,7 @@ def group_catagory_tag_update(context, data_dict):
     pkg_dict = p.toolkit.get_action('package_update')(context, pkg_dict)
 
     return data_dict
+
 
 def datajson_create(context, data_dict):
     model = context['model']
@@ -233,13 +241,14 @@ def datajson_create(context, data_dict):
     context['return_id_only'] = True
     return p.toolkit.get_action('package_create')(context, new_package)
 
+
 def datajson_update(context, data_dict):
     new_package = create_data_dict(data_dict)
     model = context['model']
     owner_org = model.Group.get(new_package['owner_org'])
     group_name = new_package.pop('owner_name', None)
     old_package = p.toolkit.get_action('package_show')(
-        {'model': model, 'ignore_auth': True}, {"id":new_package['id']})
+        {'model': model, 'ignore_auth': True}, {"id": new_package['id']})
     old_resources = old_package['resources']
 
     if not owner_org:
@@ -257,6 +266,7 @@ def datajson_update(context, data_dict):
     context['return_id_only'] = True
     p.toolkit.get_action('package_update')(context, new_package)
 
+
 def doi_create(context, data_dict):
     model = context['model']
     new_package = data_dict
@@ -266,10 +276,11 @@ def doi_create(context, data_dict):
     new_package["extras"].append({"key": "source_doi_import_identifier", "value": True})
     owner_org = model.Group.get(ORG_MAPPING.get(new_package['organization']['name']))
     if not owner_org:
-        print str(datetime.datetime.now()) + ' Fail to import doi id ' + new_package['id'] + '. Organization ' + new_package['organization']['name'] + ' does not exist.'
+        print(str((datetime.datetime.now()) + ' Fail to import doi id ' + new_package['id'] + ''
+                  '. Organization ' + new_package['organization']['name'] + ' does not exist.'))
         return
     new_package['owner_org'] = owner_org.name
-    group_name = new_package.pop('owner_name', None)
+    group_name = new_package.pop('owner_name', None)  # NOQA F841
     new_package['name'] = _slugify(new_package['title'])[:80]
     existing_package = model.Package.get(new_package['name'])
     if existing_package:
@@ -294,23 +305,24 @@ def doi_create(context, data_dict):
     context['schema']['id'] = [p.toolkit.get_validator('not_empty')]
     context['return_id_only'] = True
     p.toolkit.get_action('package_create')(context, new_package)
-    print str(datetime.datetime.now()) + ' Imported doi id ' + new_package['id']
+    print(str(datetime.datetime.now()) + ' Imported doi id ' + new_package['id'])
+
 
 def doi_update(context, data_dict):
     model = context['model']
     new_package = data_dict
     source_hash = hashlib.sha1(json.dumps(data_dict, sort_keys=True)).hexdigest()
     old_package = p.toolkit.get_action('package_show')(
-        {'model': model, 'ignore_auth': True}, {"id":new_package['id']})
+        {'model': model, 'ignore_auth': True}, {"id": new_package['id']})
     for extra in old_package['extras']:
         if extra['key'] == 'source_hash':
             old_source_hash = extra['value']
             break
     else:
-       old_source_hash = None
+        old_source_hash = None
 
-    if source_hash == old_source_hash and old_package.get('state') =='active':
-        print str(datetime.datetime.now()) + ' No change for doi id ' + new_package['id']
+    if source_hash == old_source_hash and old_package.get('state') == 'active':
+        print(str(datetime.datetime.now()) + ' No change for doi id ' + new_package['id'])
         return
 
     new_package["extras"].append({"key": "source_hash", "value": source_hash})
@@ -319,10 +331,11 @@ def doi_update(context, data_dict):
     new_package.pop("name", None)
     owner_org = model.Group.get(ORG_MAPPING.get(new_package['organization']['name']))
     if not owner_org:
-        print str(datetime.datetime.now()) + ' Fail to update doi id ' + new_package['id'] + '. Organization ' + new_package['organization']['name'] + ' does not exist.'
+        print(str(datetime.datetime.now()) + ' Fail to update doi id ' + new_package['id'] + ''
+              '. Organization ' + new_package['organization']['name'] + ' does not exist.')
         return
     new_package['owner_org'] = owner_org.name
-    group_name = new_package.pop('owner_name', None)
+    group_name = new_package.pop('owner_name', None)  # NOQA F841
 
     resources = []
     for resource in new_package['resources']:
@@ -341,7 +354,8 @@ def doi_update(context, data_dict):
 
     context['return_id_only'] = True
     p.toolkit.get_action('package_update')(context, new_package)
-    print str(datetime.datetime.now()) + ' Updated doi id ' + new_package['id']
+    print(str(datetime.datetime.now()) + ' Updated doi id ' + new_package['id'])
+
 
 def preserve_category_tags(context, data_dict):
     """ Look category tags in previous version before update dataset """
@@ -350,13 +364,13 @@ def preserve_category_tags(context, data_dict):
     pkg_dict = p.toolkit.get_action('package_show')(context, {'id': data_dict['id']})
     if 'groups' not in data_dict:
         data_dict['groups'] = pkg_dict.get('groups', [])
-    
+
     # search __category_tag_'s in previous dataset version
     cats = {}
     for extra in pkg_dict.get('extras', []):
         if extra['key'].startswith('__category_tag_'):
             cats[extra['key']] = extra['value']
-    
+
     # check extras in new datasets and append
     extras = data_dict.get('extras', [])
     for item in extras:
@@ -377,18 +391,17 @@ def rollup_save_action(context, data_dict):
     new_extras_rollup = {}
 
     for extra in data_dict.get('extras', []):
-        
         if extra['key'] in EXTRAS_ROLLUP_KEY_IGNORE:
             new_extras.append(extra)
         elif extra['key'] == "extras_rollup":
             new_extras_rollup = json.loads(extra['value'])
         else:
             extras_rollup[extra['key']] = extra['value']
-    
+
     # update new values
     new_extras_rollup.update(extras_rollup)
-    
-    ## If we use SOLR, try to index (with ckanext-spatial) a valid spatial data
+
+    # If we use SOLR, try to index (with ckanext-spatial) a valid spatial data
     if p.toolkit.check_ckan_version(min_version='2.8'):
         search_backend = config.get('ckanext.spatial.search_backend', 'postgis')
         log.debug('Search backend {}'.format(search_backend))
@@ -396,7 +409,7 @@ def rollup_save_action(context, data_dict):
             old_spatial = new_extras_rollup.get('spatial', None)
             if old_spatial is not None:
                 log.info('Old Spatial found {}'.format(old_spatial))
-                
+
                 # TODO look for more not-found location names
                 if old_spatial in ['National', 'US']:
                     old_spatial = 'United States'
@@ -408,27 +421,28 @@ def rollup_save_action(context, data_dict):
                     new_extras.append({'key': 'spatial', 'value': new_spatial})
                     # remove rolled spatial to skip run this process again
                     new_extras_rollup['old-spatial'] = new_extras_rollup.pop('spatial')
-    
+
     if new_extras_rollup:
         new_extras.append({'key': 'extras_rollup', 'value': json.dumps(new_extras_rollup)})
 
     data_dict['extras'] = new_extras
 
+
 def translate_spatial(old_spatial):
-    """ catalog-classic use a non-valid spatial extra. 
+    """ catalog-classic use a non-valid spatial extra.
         Sometimes uses words (like "California") or raw coordinates (like "-96.8518,43.4659,-96.5944,43.6345")
-        catalog-next use ckan/spatial and require spatial to be valid geojson 
-        When possible we need to transform this data so before_index at 
+        catalog-next use ckan/spatial and require spatial to be valid geojson
+        When possible we need to transform this data so before_index at
         ckanext-spatial could save in solr.
-        To save in solr we need a polygon like this: 
+        To save in solr we need a polygon like this:
         {
             "type":"Polygon",
             "coordinates":[
                 [
                     [2.05827, 49.8625],
-                    [2.05827, 55.7447], 
-                    [-6.41736, 55.7447], 
-                    [-6.41736, 49.8625], 
+                    [2.05827, 55.7447],
+                    [-6.41736, 55.7447],
+                    [-6.41736, 49.8625],
                     [2.05827, 49.8625]
                 ]
             ]
@@ -437,14 +451,16 @@ def translate_spatial(old_spatial):
     # Analyze with type of data is JSON valid
 
     try:
-        geometry = json.loads(old_spatial)
+        geometry = json.loads(old_spatial)  # NOQA F841
         # If we already have a good geometry, use it
         return old_spatial
-    except:
+    except BaseException:
         pass
 
-    geojson_tpl = '{{"type": "Polygon", "coordinates": [[[{minx}, {miny}], [{minx}, {maxy}], [{maxx}, {maxy}], [{maxx}, {miny}], [{minx}, {miny}]]]}}'
-    
+    geojson_tpl = ('{{"type": "Polygon", '
+                   '"coordinates": [[[{minx}, {miny}], [{minx}, {maxy}], '
+                   '[{maxx}, {maxy}], [{maxx}, {miny}], [{minx}, {miny}]]]}}')
+
     # If we have 4 numbers separated by commas, transforme them as GeoJSON
     parts = old_spatial.strip().split(',')
     if len(parts) == 4:
@@ -455,6 +471,7 @@ def translate_spatial(old_spatial):
 
     g = get_geo_from_string(old_spatial)
     return g
+
 
 def get_geo_from_string(location_name):
     """ get a geometry from the locations table using the location name (e.g. California, New York)
@@ -469,7 +486,8 @@ def get_geo_from_string(location_name):
         return None
 
     return None if row is None else row['geom']
-    
+
+
 def package_update(up_func, context, data_dict):
     """ before_package_update for CKAN 2.8 """
     preserve_category_tags(context, data_dict)
@@ -483,6 +501,7 @@ def package_create(up_func, context, data_dict):
     rollup_save_action(context, data_dict)
     data_dict = fix_dataset(data_dict)
     return up_func(context, data_dict)
+
 
 def fix_dataset(data_dict):
     """ final changes before create or update a dataset """

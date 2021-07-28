@@ -1,17 +1,11 @@
-import json
+from builtins import object
 import logging
+import six
 import xml.etree.ElementTree as ET
 
-from nose.tools import assert_equal, assert_in
 
-try:
-    from ckan.tests.helpers import reset_db
-    from ckan.tests import factories
-    from ckan.common import config
-except ImportError:  # CKAN 2.3
-    from ckan.new_tests.helpers import reset_db
-    from ckan.new_tests import factories
-    from pylons import config
+from ckan.tests.helpers import reset_db
+from ckan.tests import factories
 
 from ckanext.geodatagov.commands import GeoGovCommand
 
@@ -24,7 +18,7 @@ class TestSitemapExport(object):
     @classmethod
     def setup(cls):
         reset_db()
-        
+
     def create_datasets(self):
 
         organization = factories.Organization()
@@ -32,15 +26,18 @@ class TestSitemapExport(object):
         self.dataset2 = factories.Dataset(owner_org=organization['id'])
         self.dataset3 = factories.Dataset(owner_org=organization['id'])
         self.dataset4 = factories.Dataset(owner_org=organization['id'])
-        
+
     def test_create_sitemap(self):
         """ run sitemap-to-s3 and analyze results """
-        
+
         self.create_datasets()
 
-        cmd = GeoGovCommand('test')
+        if six.PY2:
+            cmd = GeoGovCommand('test')
+        else:
+            cmd = GeoGovCommand()
         file_list = cmd.sitemap_to_s3(upload_to_s3=False, page_size=100, max_per_page=100)
-        
+
         files = 0
         datasets = 0
         for site_file in file_list:
@@ -63,15 +60,15 @@ class TestSitemapExport(object):
             tree = ET.parse(site_file['path'])
             root = tree.getroot()
             log.info('XML Root {}'.format(root))
-            assert_equal(root.tag, '{http://www.sitemaps.org/schemas/sitemap/0.9}urlset')
-            
+            assert root.tag == '{http://www.sitemaps.org/schemas/sitemap/0.9}urlset'
+
             prev_last_mod = ''
 
             dataset1_found = False
             dataset2_found = False
             dataset3_found = False
             dataset4_found = False
-            
+
             for url in root:
                 for child in url:
                     if child.tag == '{http://www.sitemaps.org/schemas/sitemap/0.9}loc':
@@ -94,7 +91,7 @@ class TestSitemapExport(object):
                     else:
                         raise Exception('Unexpected tag')
 
-        assert_equal(files, 1)
+        assert files == 1
         assert datasets >= 4  # at least this four
         assert dataset1_found
         assert dataset2_found

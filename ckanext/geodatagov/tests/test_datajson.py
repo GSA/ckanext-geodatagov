@@ -1,20 +1,15 @@
+from builtins import object
 import json
 
-try:
-    from ckan.tests.helpers import reset_db
-    from ckan.tests.factories import Organization
-except ImportError:
-    from ckan.new_tests.helpers import reset_db
-    from ckan.new_tests.factories import Organization
+from ckan.tests.helpers import reset_db
+from ckan.tests.factories import Organization
 from ckan import model
 from factories import (DataJsonHarvestSourceObj,
                        HarvestJobObj)
 
-from ckan import plugins as p
 import ckanext.harvest.model as harvest_model
 from ckanext.datajson.harvester_datajson import DataJsonHarvester
 import mock_static_file_server
-from nose.tools import assert_equal
 import logging
 log = logging.getLogger(__name__)
 
@@ -106,12 +101,12 @@ class TestDataJsonHarvester(object):
             # we expect a data transformation here
             pkg = dataset.as_dict()
             extras = json.loads(pkg["extras"]['extras_rollup'])
-            
-            if p.toolkit.check_ckan_version(min_version='2.8'):
-                assert_equal(pkg["extras"]["spatial"], '{"type":"Polygon","coordinates":[[[-124.733253,24.544245],[-124.733253,49.388611],[-66.954811,49.388611],[-66.954811,24.544245],[-124.733253,24.544245]]]}')
-                assert_equal(extras['old-spatial'], 'United States')
-            else:
-                assert_equal(extras["spatial"], 'United States')
-            
-            assert_equal(extras['programCode'], ['000:000'])
-            
+
+            assert pkg["extras"]["spatial"] == ('{"type":"Polygon",'
+                                                '"coordinates":[[[-124.733253,24.544245],'
+                                                '[-124.733253,49.388611],'
+                                                '[-66.954811,49.388611],'
+                                                '[-66.954811,24.544245],'
+                                                '[-124.733253,24.544245]]]}')
+            assert extras['old-spatial'] == 'United States'
+            assert extras['programCode'] == ['000:000']

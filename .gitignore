@@ -4,9 +4,12 @@ syntax: glob
 *.egg-info
 *.swo
 *.swp
+*.bak
+.coverage
 conversiontool/run.sh
 conversiontool/errors.log
 conversiontool/debug.xml
 conversiontool/lib/saxon-license.lic
 conversiontool/lib/*.jar
 .vscode/
+PyZ3950_parsetab.py

@@ -1,6 +1,7 @@
 from nose.tools import assert_in
 from ckanext.geodatagov.logic import fix_dataset
 
+
 def test_fix_dataset():
     data_dict = {
         "title": "test dataset",

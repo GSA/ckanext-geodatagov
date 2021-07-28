@@ -1,0 +1,95 @@
+{% extends 'source/new_source_form.html' %}
+{% import 'macros/form.html' as form %}
+{% resource 'harvest-extra-field/main' %}
+
+{% block extra_config %}
+
+{% set source_config = h.get_harvest_source_config(data.id) %}
+<fieldset data-module="harvest-extra-form-change" data-module-form-items="{{ h.dump_json(h.harvest_source_extra_fields()) }}">
+        {% set database = source_config.get('database') or data.database %}
+        {% set port = source_config.get('port') or data.port %}
+        {% set collection_metadata_url = source_config.get('collection_metadata_url') or data.collection_metadata_url %}
+        {% set extra_search_criteria = source_config.get('extra_search_criteria') or data.extra_search_criteria %}
+
+        {{ form.input('database', id='field-database', label=_('Database'), placeholder=_('eg. My Database'), value=database, error=errors.database, classes=['control-full', 'control-group'] ) }}
+        {{ form.input('port', id='field-port', label=_('Port'), placeholder=_('eg. 3452'), value=port, error=errors.port, classes=['control-full', 'control-group']) }}
+
+        {{ form.input('collection_metadata_url', id='field-collection_metadata_url', label=_('Collection Metadata Url'), placeholder=_('eg. http://example.com/collection.xml'), value=collection_metadata_url, error=errors.port, classes=['control-full', 'control-group']) }}
+        {{ form.input('extra_search_criteria', id='field-extra_search_criteria', label=_('Extra Search Criteria'), placeholder=_('eg. accountid:0123456789ABCDEF'), value=extra_search_criteria, error=errors.extra_search_criteria, classes=['control-full', 'control-group']) }}
+
+{% set validator_profiles = source_config.get('validator_profiles') or data.validator_profiles %}
+{% set validator_schema = source_config.get('validator_schema') or data.validator_schema %}
+  <div data-module="reclinepreview" data-module-site_url="{{ h.dump_json(h.url('/', locale='default', qualified=true)) }}">
+         <div class="harvest-types form-group control-group">
+           <label class="control-label">Validation</label>
+           <div class="controls">
+             {% for key, value in h.get_validation_profiles() %}
+               {% set checked = key == (validator_profiles or '') %}
+               <label class="radio">
+                 <input type="radio" name="validator_profiles" value="{{ key }}" {{ "checked " if checked }}>
+                 {{ value }}
+               </label>
+             {% endfor %}
+           </div>
+         </div>
+
+         <div class="harvest-types form-group control-group">
+           <label class="control-label">Validation Schema</label>
+           <div class="controls">
+           {% if h.get_validation_schema() %}
+             {% for key, value in h.get_validation_schema() %}
+               {% set checked = key == (validator_schema or '')  %}
+               <label class="radio">
+                 <input type="radio" name="validator_schema" value="{{ key }}" {{ "checked " if checked }}>
+                 {{ value }}
+               </label>
+             {% endfor %}
+           {% endif %}
+           </div>
+         </div>
+
+</fieldset>
+
+{% set private_datasets = source_config.get('private_datasets') or data.private_datasets %}
+
+<div class="control-group form-group">
+  <label for="field-private_datasets" class="control-label">{{ _('Dataset visibility') }}</label>
+  <div class="controls">
+    <select id="field-private_datasets" name="private_datasets">
+      {% for option in [(true, _('Private')), (false, _('Public'))] %}
+      <option value="{{ option[0] }}" {% if option[0]|lower == private_datasets|lower %}selected="selected"{% endif %}>{{ option[1] }}</option>
+      {% endfor %}
+    </select>
+    <i class="icon-question-sign muted" title="{{ _('This will take effect the next time datasets are created or updated during a harvest job') }}" data-toggle="tooltip"></i>
+  </div>
+</div>
+
+{% set existing_group = source_config.default_groups or data.default_groups %}
+{% set groups_available = h.groups_available() %}
+{% if groups_available %}
+<div class="control-group form-group">
+  <label for="field-default_groups" class="control-label">{{ _('Default Group') }}</label>
+  <div class="controls">
+    <select id="field-default_groups" name="default_groups" data-module="autocomplete">
+      <option value="">{{ _('Select a group...') }}</option>
+      {% for group in groups_available %}
+        {# get out first org from users list only if there is not an existing org #}
+        {% set selected_group = (existing_group and (existing_group == group.name or group.name in existing_group)) %}
+        <option value="{{ group.name }}" {% if selected_group %} selected="selected" {% endif %}>{{ group.name }}</option>
+      {% endfor %}
+    </select>
+    <span class="select2-helper">
+      <i class="icon-question-sign muted" title="{{ _('Datasets harvested from this source will be assigned to this group') }}" data-toggle="tooltip"></i>
+    </span>
+  </div>
+</div>
+{% endif %}
+
+{% endblock extra_config %}
+
+
+{% block delete_button %}
+  {% set locale = h.dump_json({'content': _('Warning: Apart from deleting this source, this command will remove all its datasets, as well as all previous job reports. Are you sure you want to continue?')}) %}
+    <a class="btn btn-danger pull-left" href="{% url_for 'harvest_delete', id=data.name %}?clear=True" data-module="confirm-action" data-module-i18n="{{ locale }}">{% block delete_button_text %}{{ _('Delete') }}{% endblock %}</a>
+
+{% endblock %}
