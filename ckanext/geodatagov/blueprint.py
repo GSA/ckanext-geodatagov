@@ -41,7 +41,7 @@ def csv(date=None):
 
 datapusher.add_url_rule('/usasearch-custom-feed.xml',
                         view_func=feed)
-datapusher.add_url_rule('/topics-csv/{date}',
+datapusher.add_url_rule('/topics-csv/<date>',
                         view_func=csv)
 datapusher.add_url_rule('/topics-csv',
                         view_func=csv)
