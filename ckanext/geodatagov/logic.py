@@ -380,8 +380,15 @@ def preserve_category_tags(context, data_dict):
         extras.append({'key': cat, 'value': cats[cat]})
 
 
-# source ignored as queried diretly
-EXTRAS_ROLLUP_KEY_IGNORE = ["metadata-source", "tags"]
+EXTRAS_ROLLUP_KEY_IGNORE = [
+    # source ignored as queried diretly:
+    "metadata-source",
+    "tags",
+    # ignore keys from ckan harvest source:
+    "harvest_object_id",
+    "harvest_source_id",
+    "harvest_source_title",
+]
 
 
 def rollup_save_action(context, data_dict):
