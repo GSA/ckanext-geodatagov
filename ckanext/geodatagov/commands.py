@@ -534,11 +534,11 @@ class GeoGovCommand(inherit):
                     start + int(data.get('responseHeader').get('params').get('rows')) - 1) + ' of ' + str(rows))
 
                 for x in range(0, len(results)):
-                    sql = '''select count(id) as count from package where id = : pkg_id;'''
+                    sql = '''select count(id) as count from package where id = :pkg_id;'''
                     q = model.Session.execute(sql, {'pkg_id': results[x]['id']})
                     for row in q:
                         if (row['count'] == 0):
-                            sql = '''delete from miscs_solr_sync where pkg_id = : pkg_id;'''
+                            sql = '''delete from miscs_solr_sync where pkg_id = :pkg_id;'''
                             model.Session.execute(sql, {'pkg_id': results[x]['id']})
                             sql = '''insert into miscs_solr_sync (pkg_id, action) values (: pkg_id, : action);'''
                             model.Session.execute(sql, {'pkg_id': results[x]['id'], 'action': 'notfound'})
@@ -552,13 +552,13 @@ class GeoGovCommand(inherit):
                                     ' + results[x]['id'])
                                 print(' ' * 26 + ' Modified Date from Solr: ' + str(results[x]['metadata_modified']))
                                 print(' ' * 26 + ' Modified Date from Db: ' + pkg_dict['metadata_modified'])
-                                sql = '''delete from miscs_solr_sync where pkg_id = : pkg_id;'''
+                                sql = '''delete from miscs_solr_sync where pkg_id = :pkg_id;'''
                                 model.Session.execute(sql, {'pkg_id': results[x]['id']})
                                 sql = '''insert into miscs_solr_sync (pkg_id, action) values (: pkg_id, : action);'''
                                 model.Session.execute(sql, {'pkg_id': results[x]['id'], 'action': 'outsync'})
                                 model.Session.commit()
                             else:
-                                sql = '''delete from miscs_solr_sync where pkg_id = : pkg_id;'''
+                                sql = '''delete from miscs_solr_sync where pkg_id = :pkg_id;'''
                                 model.Session.execute(sql, {'pkg_id': results[x]['id']})
                                 sql = '''insert into miscs_solr_sync (pkg_id, action) values (: pkg_id, : action);'''
                                 model.Session.execute(sql, {'pkg_id': results[x]['id'], 'action': 'insync'})
@@ -720,7 +720,7 @@ class GeoGovCommand(inherit):
         if harvest_source_id:
             sql += '''
             AND
-                harvest_object.harvest_source_id = : harvest_source_id
+                harvest_object.harvest_source_id = :harvest_source_id
             '''
             results = model.Session.execute(sql,
                                             {'harvest_source_id': harvest_source_id})
@@ -737,7 +737,7 @@ class GeoGovCommand(inherit):
             UPDATE harvest_object
             SET current = 't'
             WHERE
-                package_id = : id
+                package_id = :id
             AND
                 state = 'COMPLETE'
             AND
@@ -749,7 +749,7 @@ class GeoGovCommand(inherit):
                     AND
                         report_status <> 'deleted'
                     AND
-                        package_id = : id
+                        package_id = :id
                 )
             RETURNING 1
         '''
@@ -1159,7 +1159,7 @@ class GeoGovCommand(inherit):
                 FROM tracking_summary ts
                 INNER JOIN package p ON p.id = ts.package_id
                 INNER JOIN public.group g ON g.id = p.owner_org
-                WHERE tracking_date >= : start_date AND tracking_date <= : end_date
+                WHERE tracking_date >= :start_date AND tracking_date <= :end_date
                 GROUP BY 1, 2, 3, 5, 6 HAVING sum(count) > 0
                 ORDER BY to_char(tracking_date, 'YYYY-MM') DESC, p.title;
                 '''
