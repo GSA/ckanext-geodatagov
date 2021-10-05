@@ -703,24 +703,18 @@ class GeoGovCommand(inherit):
         pkgs_problematic = set()
         # find packages that has no current harvest object
         sql = '''
-            WITH temp_ho AS (
-              SELECT DISTINCT package_id
-                      FROM harvest_object
-                      WHERE current
+            WITH package_with_current AS (
+                SELECT package_id FROM harvest_object WHERE current
             )
-            SELECT DISTINCT harvest_object.package_id
-            FROM harvest_object
-            LEFT JOIN temp_ho
-            ON harvest_object.package_id = temp_ho.package_id
-            WHERE
-                temp_ho.package_id IS NULL
-            AND
-                harvest_object.state = 'COMPLETE'
+            SELECT distinct(p.id) FROM package p
+            JOIN harvest_object h ON p.id = h.package_id
+            LEFT JOIN package_with_current c ON p.id = c.package_id
+            WHERE p.state='active' AND p.type='dataset' AND c.package_id IS NULL
         '''
         if harvest_source_id:
             sql += '''
             AND
-                harvest_object.harvest_source_id = :harvest_source_id
+                h.harvest_source_id = :harvest_source_id
             '''
             results = model.Session.execute(sql,
                                             {'harvest_source_id': harvest_source_id})
@@ -728,7 +722,7 @@ class GeoGovCommand(inherit):
             results = model.Session.execute(sql)
 
         for row in results:
-            pkgs_problematic.add(row['package_id'])
+            pkgs_problematic.add(row['id'])
         total = len(pkgs_problematic)
         print('%s packages to be fixed.' % total)
 
