@@ -180,7 +180,7 @@ class GeoDataGovHarvester(SpatialHarvester):
                                     "-xsl:" + transform_path,
                                     "-o:" + transformed_path
                                     ], capture_output=True)
-        
+
         if transform.returncode > 0:
             log.error('ISO Transform Failure: {}'.format(transform.stderr))
 
