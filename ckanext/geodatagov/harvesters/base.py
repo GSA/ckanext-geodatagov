@@ -12,7 +12,6 @@ import requests
 from lxml import etree
 
 from ckan import plugins as p
-from ckan.plugins.toolkit import config
 
 from ckan.logic.validators import boolean_validator
 from ckan.lib.navl.validators import ignore_empty
@@ -180,14 +179,17 @@ class GeoDataGovHarvester(SpatialHarvester):
                                     "-s:" + source_path,
                                     "-xsl:" + transform_path,
                                     "-o:" + transformed_path
-                                    ])
+                                    ], capture_output=True)
+        
+        if transform.returncode > 0:
+            log.error('ISO Transform Failure: {}'.format(transform.stderr))
 
         tf = open(transformed_path)
         iso_xml = tf.read()
         tf.close()
         os.remove(transformed_path)
         os.remove(source_path)
-        
+
         log.info('harvest_object {}'.format(iso_xml))
 
         return iso_xml
