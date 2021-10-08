@@ -1,365 +1,287 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE metadata SYSTEM "https://thor-f5.er.usgs.gov/ngtoc/metadata/fgdc-std-001-1998.dtd">
 <metadata>
    <idinfo>
       <citation>
          <citeinfo>
-            <origin>U.S. Department of Commerce, U.S. Census Bureau, Geography Division</origin>
-            <pubdate>2009</pubdate>
-            <title>TIGER/Line Shapefile, 2009, 2000 nation, U.S., Census 2000 Urban Area </title>
-            <edition>2009</edition>
-            <geoform>vector digital data</geoform>
-            <onlink>http://www2.census.gov/geo/tiger/TIGER2009/tl_2009_us_uac00.zip</onlink>
+            <origin>U.S. Geological Survey</origin>
+            <pubdate>2017</pubdate>
+            <title>USGS Watershed Boundary Dataset (WBD) Overlay Map Service from The National Map - 
+               National Geospatial Data Asset (NGDA) Watershed Boundary Dataset (WBD)</title>
+            <geoform>vector digital data, map service</geoform>
+            <pubinfo>
+               <pubplace>Rolla, MO and Denver, CO</pubplace>
+               <publish>USGS - National Geospatial Technical Operations Center (NGTOC)</publish>
+            </pubinfo>
+            <onlink>https://viewer.nationalmap.gov</onlink>
+            <onlink>https://nhd.usgs.gov/NHDv2.2_poster_052714.pdf</onlink>
          </citeinfo>
       </citation>
       <descript>
-         <abstract>The TIGER/Line Shapefiles are an extract of selected geographic and cartographic information from the Census MAF/TIGER database.  The Census MAF/TIGER database represents a seamless national file with no overlaps or gaps between parts.  However, each TIGER/Line Shapefile is designed to stand alone as an independent data set or the shapefiles can be combined to cover the whole nation.</abstract>
-         <purpose>In order for others to use the information in the Census MAF/TIGER database in a geographic information system (GIS) or for other geographic applications, the Census Bureau releases to the public extracts of the database in the form of TIGER/Line Shapefiles.</purpose>
+         <abstract>The Watershed Boundary Dataset (WBD) from The National Map (TNM) defines the
+            perimeter of drainage areas formed by the terrain and other landscape characteristics.
+            The drainage areas are nested within each other so that a large drainage area, such as
+            the Upper Mississippi River, will be composed of multiple smaller drainage areas, such
+            as the Wisconsin River. Each of these smaller areas can further be subdivided into
+            smaller and smaller drainage areas. The WBD uses six different levels in this hierarchy,
+            with the smallest averaging about 30,000 acres. The WBD is made up of polygons nested
+            into six levels of data respectively defined by Regions, Subregions, Basins, Subbasins,
+            Watersheds, and Subwatersheds. For additional information on the WBD, go to
+            https://nhd.usgs.gov/wbd.html. 
+            
+            The USGS National Hydrography Dataset (NHD) service is a
+            companion dataset to the WBD. The NHD is a comprehensive set of digital spatial data
+            that encodes information about naturally occurring and constructed bodies of surface
+            water (lakes, ponds, and reservoirs), paths through which water flows (canals, ditches,
+            streams, and rivers), and related entities such as point features (springs, wells,
+            stream gages, and dams). The information encoded about these features includes
+            classification and other characteristics, delineation, geographic name, position and
+            related measures, a "reach code" through which other information can be related to the
+            NHD, and the direction of water flow. The network of reach codes delineating water and
+            transported material flow allows users to trace movement in upstream and downstream
+            directions. In addition to this geographic information, the dataset contains metadata
+            that supports the exchange of future updates and improvements to the data. The NHD is
+            available nationwide in two seamless datasets, one based on 1:24,000-scale maps and
+            referred to as high resolution NHD, and the other based on 1:100,000-scale maps and
+            referred to as medium resolution NHD. Additional selected areas in the United States are
+            available based on larger scales, such as 1:5,000-scale or greater, and referred to as
+            local resolution NHD. For more information on the NHD, go to
+            https://nhd.usgs.gov/index.html. 
+            
+            Hydrography data from The National Map supports many
+            applications, such as making maps, geocoding observations, flow modeling, data
+            maintenance, and stewardship. Hydrography data is commonly combined with other data
+            themes, such as boundaries, elevation, structures, and transportation, to produce
+            general reference base maps. The National Map viewer allows free downloads of public
+            domain WBD and NHD data in either Esri File or Personal Geodatabase, or Shapefile
+            formats.</abstract>
+         <purpose>This dynamic overlay map service provides visualization of the free data that is
+            available for download from The National Map at https://viewer.nationalmap.gov. </purpose>
+         <supplinf>See https://viewer.nationalmap.gov/help for assistance with The National Map
+            viewer, services, or metadata.</supplinf>
       </descript>
       <timeperd>
          <timeinfo>
-            <rngdates>
-               <begdate>200901</begdate>
-               <enddate>200905</enddate>
-            </rngdates>
+            <sngdate>
+               <caldate>2016</caldate>
+            </sngdate>
          </timeinfo>
-         <current>Publication Date</current>
+         <current>publication date</current>
       </timeperd>
       <status>
          <progress>Complete</progress>
-         <update>TIGER/Line Shapefiles are extracted from the Census MAF/TIGER database.  No changes or updates will be made to this version of the TIGER/Line Shapefiles.  Future releases of TIGER/Line Shapefiles will reflect updates made to the Census MAF/TIGER database.</update>
+         <update>As needed</update>
       </status>
       <spdom>
          <bounding>
-            <westbc>-179.231086</westbc>
-            <eastbc>179.859681</eastbc>
-            <northbc>71.441059</northbc>
-            <southbc>-14.601813</southbc>
+            <westbc>-179.999</westbc>
+            <eastbc>-65</eastbc>
+            <northbc>71.5</northbc>
+            <southbc>17.625</southbc>
          </bounding>
       </spdom>
       <keywords>
          <theme>
-            <themekt>ISO 19115 Topic Categories</themekt>
-            <themekey>boundaries</themekey>
+            <themekt>NGDA Portfolio Themes</themekt>
+            <themekey>National Geospatial Data Asset</themekey>
+            <themekey>NGDA</themekey>
+            <themekey>Water Inland Theme</themekey>
          </theme>
          <theme>
-            <themekt>None</themekt>
-            <themekey>Nation</themekey>
-            <themekey>Polygon</themekey>
-            <themekey>Urban Area</themekey>
-            <themekey>UA</themekey>
-            <themekey>Urbanized Areas</themekey>
-            <themekey>Urban Cluster</themekey>
-            <themekey>UC</themekey>
+            <themekt>19115 Topic Category</themekt>
+            <themekey>inlandWaters</themekey>
+         </theme>
+         <theme>
+            <themekt>none</themekt>
+            <themekey>a-16</themekey>
+            <themekey>water - inland</themekey>
+            <themekey>hydrography</themekey>
+            <themekey>NHD</themekey>
+            <themekey>water</themekey>
+            <themekey>drainage</themekey>
+            <themekey>river</themekey>
+            <themekey>stream</themekey>
+            <themekey>canal</themekey>
+            <themekey>ditch</themekey>
+            <themekey>lake</themekey>
+            <themekey>pond</themekey>
+            <themekey>reservoir</themekey>
+            <themekey>swamp</themekey>
+            <themekey>marsh</themekey>
+            <themekey>spring</themekey>
+            <themekey>well</themekey>
+            <themekey>dam</themekey>
+            <themekey>gage</themekey>
+            <themekey>gaging station</themekey>
+            <themekey>WBD</themekey>
+            <themekey>HU</themekey>
+            <themekey>hydrologic unit</themekey>
+            <themekey>region</themekey>
+            <themekey>subregion</themekey>
+            <themekey>basin</themekey>
+            <themekey>subbasin</themekey>
+            <themekey>watershed</themekey>
+            <themekey>subwatershed</themekey>
+            <themekey>NGP-TNM</themekey>
+            <themekey>REST</themekey>
+            <themekey>WMS</themekey>
+            <themekey>HU10</themekey>
+            <themekey>HU12</themekey>           
+            <themekey>HU14</themekey>
+            <themekey>HU16</themekey>
+            <themekey>HU2</themekey>
+            <themekey>HU4</themekey>
+            <themekey>HU6</themekey>
+            <themekey>HU8</themekey>            
+         </theme>
+         <theme>
+            <themekt>The National Map Theme Thesaurus</themekt>
+            <themekey>Hydrography</themekey>
+         </theme>
+         <theme>
+            <themekt>The National Map Type Thesaurus</themekt>
+            <themekey>Overlay Map Service</themekey>
          </theme>
          <place>
-            <placekt>INCITS.38-200x (R2004),INCITS.31-200x (R2007),INCITS.454-200x,INCITS 455-200x,INCITS 446-2008</placekt>
+            <placekt>Geographic Names Information System</placekt>
+            <placekey>US</placekey>
             <placekey>United States</placekey>
-            <placekey>U.S.</placekey>
          </place>
       </keywords>
       <accconst>None</accconst>
-      <useconst>The TIGER/Line Shapefile products are not copyrighted however TIGER/Line and Census TIGER are registered trademarks of the U.S. Census Bureau.  These products are free to use in a product or publication, however acknowledgement must be given to the U.S. Census Bureau as the source.
-The boundary information in the TIGER/Line Shapefiles are for statistical data collection and tabulation purposes only; their depiction and designation for statistical purposes does not constitute a determination of jurisdictional authority or rights of ownership or entitlement and they are not legal land descriptions.Coordinates in the TIGER/Line shapefiles have six implied decimal places, but the positional accuracy of these coordinates is not as great as the six decimal places suggest.</useconst>
-      <ptcontac>
-         <cntinfo>
-            <cntorgp>
-               <cntorg>U.S. Department of Commerce, U.S. Census Bureau, Geography Division, Geographic Products Branch</cntorg>
-            </cntorgp>
-            <cntaddr>
-               <addrtype>mailing</addrtype>
-               <address>4600 Silver Hill Road, Stop 7400</address>
-               <city>Washington</city>
-               <state>DC</state>
-               <postal>20233-7400</postal>
-               <country>United States</country>
-            </cntaddr>
-            <cntvoice>301-763-1128</cntvoice>
-            <cntfax>301-763-4710</cntfax>
-            <cntemail>geo.tiger@census.gov</cntemail>
-         </cntinfo>
-      </ptcontac>
+      <useconst>None. Acknowledgement of the originating agencies would be appreciated in products
+         derived from these data. </useconst>
+      <browse>
+         <browsen>https://nhd.usgs.gov/images/WatershedBoundaryDataset.jpg</browsen>
+         <browsed>Browse graphic.</browsed>
+         <browset>JPG</browset>
+      </browse>
+      <datacred>USGS TNM â National Hydrography Dataset</datacred>
+      <native>ArcGIS 10.2</native>
    </idinfo>
-   <dataqual>
-      <attracc>
-         <attraccr>Accurate against Federal Information Processing Standards (FIPS), FIPS Publication 6-4, and FIPS-55 at the 100% level for the codes and base names.  The remaining attribute information has been examined but has not been fully tested for accuracy.</attraccr>
-      </attracc>
-      <logic>The Census Bureau performed automated tests to ensure logical consistency and limits of shapefiles.  Segments making up the outer and inner boundaries of a polygon tie end-to-end to completely enclose the area.  All polygons are tested for closure.
-The Census Bureau uses its internally developed geographic update system to enhance and modify spatial and attribute data in the Census MAF/TIGER database.  Standard geographic codes, such as FIPS codes for states, counties, municipalities, county subdivisions, places, American Indian/Alaska Native/Native Hawaiian areas, and congressional districts are used when encoding spatial entities.  The Census Bureau performed spatial data tests for logical consistency of the codes during the compilation of the original Census MAF/TIGER database files.  Most of the codes for geographic entities except states, counties, urban areas, Core Based Statistical Areas (CBSAs), American Indian Areas (AIAs), and congressional districts were provided to the Census Bureau by the USGS, the agency responsible for maintaining FIPS 55.  Feature attribute information has been examined but has not been fully tested for consistency.
-For the TIGER/Line Shapefiles, the Point and Vector Object Count for the G-polygon SDTS Point and Vector Object Type reflects the number of records in the shapefile attribute table.  For multi-polygon features, only one attribute record exists for each multi-polygon rather than one attribute record per individual G-polygon component of the multi-polygon feature.  TIGER/Line Shapefile multi-polygons are an exception to the G-polygon object type classification.  Therefore, when multi-polygons exist in a shapefile, the object count will be less than the actual number of G-polygons.</logic>
-      <complete>Data completeness of the TIGER/Line Shapefiles reflects the contents of the Census MAF/TIGER database at the time the TIGER/Line Shapefiles were created.</complete>
-      <lineage>
-         <srcinfo>
-            <srccite>
-               <citeinfo>
-                  <origin>U.S. Department of Commerce, U.S. Census Bureau, Geography Division</origin>
-                  <pubdate>Unpublished material</pubdate>
-                  <title>Census MAF/TIGER database</title>
-               </citeinfo>
-            </srccite>
-            <typesrc>online</typesrc>
-            <srctime>
-               <timeinfo>
-                  <rngdates>
-                     <begdate>200901</begdate>
-                     <enddate>200905</enddate>
-                  </rngdates>
-               </timeinfo>
-               <srccurr>Publication Date</srccurr>
-            </srctime>
-            <srccitea>MAF/TIGER</srccitea>
-            <srccontr>The selected geographic and cartographic information (line segments) are derived from the U.S. Census Bureau's Master Address File Topologically Integrated Geographic Encoding and Referencing (MAF/TIGER) database.</srccontr>
-         </srcinfo>
-         <procstep>
-            <procdesc>TIGER/Line Shapefiles are extracted from the Census MAF/TIGER database by nation, state, county, and entity.  Census MAF/TIGER data for the nation, state, county, and entity are then distributed among 58 shapefiles each containing attributes for line, polygon, or landmark geographic data. </procdesc>
-            <srcused>Census MAF/TIGER</srcused>
-            <procdate>2009</procdate>
-         </procstep>
-      </lineage>
-   </dataqual>
    <spdoinfo>
-      <indspref>Federal Information Processing Standards (FIPS), ANSI, and feature names.</indspref>
       <direct>Vector</direct>
-      <ptvctinf>
-         <sdtsterm>
-            <sdtstype>G-polygon</sdtstype>
-            <ptvctcnt>3638</ptvctcnt>
-         </sdtsterm>
-      </ptvctinf>
    </spdoinfo>
    <spref>
       <horizsys>
-         <geograph>
-            <latres>0.000458</latres>
-            <longres>0.000458</longres>
-            <geogunit>Decimal degrees</geogunit>
-         </geograph>
-         <geodetic>
-            <horizdn>North American Datum of 1983 in the 48 contiguous states, the District of Columbia, Alaska, Hawaii, Puerto Rico, the Virgin Islands of the United States, and the Pacific Island Areas.</horizdn>
-            <ellips>Geodetic Reference System 80</ellips>
-            <semiaxis>6378137</semiaxis>
-            <denflat>298257</denflat>
-         </geodetic>
+         <planar>
+            <mapproj>
+               <mapprojn>WGS84 Web Mercator (Auxiliary Sphere)</mapprojn>
+               <mercator>
+                  <stdparll>0</stdparll>
+                  <longcm>0</longcm>
+                  <feast>0</feast>
+                  <fnorth>0</fnorth>
+               </mercator>
+            </mapproj>
+            <planci>
+               <plance>coordinate pair</plance>
+               <coordrep>
+                  <absres>1.000000</absres>
+                  <ordres>1.000000</ordres>
+               </coordrep>
+               <plandu>meters</plandu>
+            </planci>
+         </planar>
       </horizsys>
    </spref>
-   <eainfo>
-      <detailed>
-         <enttyp>
-            <enttypl>UAC00.shp</enttypl>
-            <enttypd>Census 2000 Urban Area</enttypd>
-            <enttypds>U.S. Census Bureau</enttypds>
-         </enttyp>
-         <attr>
-            <attrlabl>UACE00</attrlabl>
-            <attrdef>Census 2000 urban area code</attrdef>
-            <attrdefs>U.S. Census Bureau</attrdefs>
-            <attrdomv>
-               <edom>
-                  <edomv>00001 to 98999</edomv>
-                  <edomvd>Urban Area Code</edomvd>
-                  <edomvds>U.S. Census Bureau</edomvds>
-               </edom>
-            </attrdomv>
-         </attr>
-         <attr>
-            <attrlabl>NAME00</attrlabl>
-            <attrdef>Census 2000 urban area name</attrdef>
-            <attrdefs>U.S. Census Bureau</attrdefs>
-            <attrdomv>
-               <codesetd>
-                  <codesetn>Refer to the online Census 2000 Urbanized Area and Urban Cluster information at URL: http://www.census.gov/geo/www/ua/ua_2k.html</codesetn>
-                  <codesets>U.S. Census Bureau</codesets>
-               </codesetd>
-            </attrdomv>
-         </attr>
-         <attr>
-            <attrlabl>NAMELSAD00</attrlabl>
-            <attrdef>Census 2000 name and the translated legal/statistical area description for urban area</attrdef>
-            <attrdefs>U.S. Census Bureau</attrdefs>
-            <attrdomv>
-               <codesetd>
-                  <codesetn>Refer to the online Census 2000 Urbanized Area and Urban Cluster information at URL http://www.census.gov/geo/www/ua/ua_2k.html and the translated legal/statistical area description code for urban area that appears in LSAD00</codesetn>
-                  <codesets>U.S. Census Bureau</codesets>
-               </codesetd>
-            </attrdomv>
-         </attr>
-         <attr>
-            <attrlabl>LSAD00</attrlabl>
-            <attrdef>Census 2000 legal/statistical area description code for urban area</attrdef>
-            <attrdefs>U.S. Census Bureau</attrdefs>
-            <attrdomv>
-               <edom>
-                  <edomv>75</edomv>
-                  <edomvd>Urbanized Area</edomvd>
-                  <edomvds>U.S. Census Bureau</edomvds>
-               </edom>
-            </attrdomv>
-            <attrdomv>
-               <edom>
-                  <edomv>76</edomv>
-                  <edomvd>Urban Cluster</edomvd>
-                  <edomvds>U.S. Census Bureau</edomvds>
-               </edom>
-            </attrdomv>
-         </attr>
-         <attr>
-            <attrlabl>MTFCC00</attrlabl>
-            <attrdef>MAF/TIGER feature class code</attrdef>
-            <attrdefs>U.S. Census Bureau</attrdefs>
-            <attrdomv>
-               <edom>
-                  <edomv>G3500</edomv>
-                  <edomvd>Urban Area</edomvd>
-                  <edomvds>U.S. Census Bureau</edomvds>
-               </edom>
-            </attrdomv>
-         </attr>
-         <attr>
-            <attrlabl>FUNCSTAT00</attrlabl>
-            <attrdef>Census 2000 functional status</attrdef>
-            <attrdefs>U.S. Census Bureau</attrdefs>
-            <attrdomv>
-               <edom>
-                  <edomv>S</edomv>
-                  <edomvd>Statistical entity</edomvd>
-                  <edomvds>U.S. Census Bureau</edomvds>
-               </edom>
-            </attrdomv>
-         </attr>
-         <attr>
-            <attrlabl>UATYP00</attrlabl>
-            <attrdef>Census 2000 urban area type</attrdef>
-            <attrdefs>U.S. Census Bureau</attrdefs>
-            <attrdomv>
-               <edom>
-                  <edomv>75</edomv>
-                  <edomvd>Urbanized Area (suffix)</edomvd>
-                  <edomvds>U.S. Census Bureau</edomvds>
-               </edom>
-            </attrdomv>
-            <attrdomv>
-               <edom>
-                  <edomv>76</edomv>
-                  <edomvd>Urbanized Cluster (suffix)</edomvd>
-                  <edomvds>U.S. Census Bureau</edomvds>
-               </edom>
-            </attrdomv>
-         </attr>
-         <attr>
-            <attrlabl>ALAND00</attrlabl>
-            <attrdef>Census 2000 land area</attrdef>
-            <attrdefs>U.S. Census Bureau</attrdefs>
-            <attrdomv>
-               <edom>
-                  <edomv>0 to 9,999,999,999,999</edomv>
-                  <edomvd>Blank</edomvd>
-                  <edomvds>U.S. Census Bureau</edomvds>
-               </edom>
-            </attrdomv>
-         </attr>
-         <attr>
-            <attrlabl>AWATER00</attrlabl>
-            <attrdef>Census 2000 water area</attrdef>
-            <attrdefs>U.S. Census Bureau</attrdefs>
-            <attrdomv>
-               <edom>
-                  <edomv>0 to 9,999,999,999,999</edomv>
-                  <edomvd>Blank</edomvd>
-                  <edomvds>U.S. Census Bureau</edomvds>
-               </edom>
-            </attrdomv>
-         </attr>
-         <attr>
-            <attrlabl>INTPTLAT00</attrlabl>
-            <attrdef>Census 2000 latitude of the internal point</attrdef>
-            <attrdefs>U.S. Census Bureau</attrdefs>
-            <attrdomv>
-               <edom>
-                  <edomv>00</edomv>
-                  <edomvd>Blank</edomvd>
-                  <edomvds>U.S. Census Bureau</edomvds>
-               </edom>
-            </attrdomv>
-         </attr>
-         <attr>
-            <attrlabl>INTPTLON00</attrlabl>
-            <attrdef>Census 2000 longitude of the internal point</attrdef>
-            <attrdefs>U.S. Census Bureau</attrdefs>
-            <attrdomv>
-               <edom>
-                  <edomv>00</edomv>
-                  <edomvd>Blank</edomvd>
-                  <edomvds>U.S. Census Bureau</edomvds>
-               </edom>
-            </attrdomv>
-         </attr>
-      </detailed>
-   </eainfo>
    <distinfo>
       <distrib>
          <cntinfo>
             <cntorgp>
-               <cntorg>U.S. Department of Commerce, U.S. Census Bureau, Geography Division, Geographic Products Branch</cntorg>
+               <cntorg>U.S. Geological Survey</cntorg>
+               <cntper>Not Provided</cntper>
             </cntorgp>
             <cntaddr>
-               <addrtype>mailing</addrtype>
-               <address>4600 Silver Hill Road, Stop 7400</address>
-               <city>Washington</city>
-               <state>DC</state>
-               <postal>20233-7400</postal>
-               <country>United States</country>
+               <addrtype>mailing and physical</addrtype>
+               <address>PO Box 25046 Denver Federal Center</address>
+               <city>Lakewood</city>
+               <state>CO</state>
+               <postal>80225</postal>
             </cntaddr>
-            <cntvoice>301-763-1128</cntvoice>
-            <cntfax>301-763-4710</cntfax>
-            <cntemail>geo.tiger@census.gov</cntemail>
+            <cntvoice>1-888-ASK-USGS (1-888-275-8747)</cntvoice>
+            <cntemail>tnm_help@usgs.gov</cntemail>
          </cntinfo>
       </distrib>
-      <distliab>No warranty, expressed or implied is made with regard to the accuracy of these data, and no liability is assumed by the U.S. Government in general or the U.S. Census Bureau in specific as to the spatial or attribute accuracy of the data.  The act of distribution shall not constitute any such warranty and no responsibility is assumed by the U.S. government in the use of these files.  The boundary information in the TIGER/Line Shapefiles is for statistical data collection and tabulation purposes only; their depiction and designation for statistical purposes do not constitute a determination of jurisdictional authority or rights of ownership or entitlement and they are not legal land descriptions.</distliab>
+      <resdesc>USGS TNM Hydrography (NHD) Map Service</resdesc>
+      <distliab>Although these data have been processed successfully on a computer system at the
+         U.S. Geological Survey, no warranty expressed or implied is made regarding the accuracy or
+         utility of the data on any other system or for general or scientific purposes, nor shall
+         the act of distribution constitute any such warranty. This disclaimer applies both to
+         individual use of the data and aggregate use with other data. It is strongly recommended
+         that these data are directly acquired from a U.S. Geological Survey server, and not
+         indirectly through other sources which may have changed the data in some way. It is also
+         strongly recommended that careful attention be paid to the contents of the metadata file
+         associated with these data. The U.S. Geological Survey shall not be held liable for
+         improper or incorrect use of the data described and/or contained herein.</distliab>
       <stdorder>
          <digform>
             <digtinfo>
-               <formname>TGRSHP (compressed)</formname>
-               <filedec>PK-ZIP, version 1.93 A or higher</filedec>
+               <formname>NHD Map Service (ArcGIS)</formname>
+               <formvern>10.21</formvern>
+               <formspec>https://developers.arcgis.com/rest/</formspec>               
             </digtinfo>
             <digtopt>
                <onlinopt>
                   <computer>
                      <networka>
-                       <networkr>http://www2.census.gov/geo/tiger/TIGER2009/tl_2009_us_uac00.zip</networkr>
+                        <networkr>https://hydro.nationalmap.gov/arcgis/rest/services/wbd/MapServer</networkr>
                      </networka>
                   </computer>
                </onlinopt>
-               <offoptn>
-                  <offmedia>DVD-ROM (Only if offered offline)</offmedia>
-                  <recfmt>ISO 9660</recfmt>
-               </offoptn>
             </digtopt>
          </digform>
-         <fees>The online copy of the TIGER/Line files may be accessed without charge.</fees>
-         <ordering>To obtain more information about ordering TIGER/Line shapefiles visit http://www.census.gov/geo/www/tiger </ordering>
+         <digform>
+            <digtinfo>
+               <formname>NHD Map Service (WMS)</formname>
+               <formvern>1.3.0</formvern>
+               <formspec>http://www.opengeospatial.org/standards/wms</formspec>              
+            </digtinfo>
+            <digtopt>
+               <onlinopt>
+                  <computer>
+                     <networka>
+                        <networkr>https://hydro.nationalmap.gov/arcgis/services/wbd/MapServer/WMSServer?request=GetCapabilities&#38;service=WMS</networkr>
+                     </networka>
+                  </computer>
+               </onlinopt>
+            </digtopt>
+         </digform>
+         <fees>None</fees>
       </stdorder>
-      <techpreq>The TIGER/Line shapefiles contain geographic data only and do not include display mapping software or statistical data.  For information on how to use the TIGER/Line shapefile data with specific software package users shall contact the company that produced the software.</techpreq>
    </distinfo>
    <metainfo>
-      <metd>2009100</metd>
+      <metd>20180906</metd>
       <metc>
          <cntinfo>
             <cntorgp>
-               <cntorg>U.S. Department of Commerce, U.S. Census Bureau, Geography Division, Geographic Products Branch</cntorg>
+               <cntorg>U.S. Geological Survey, National Geospatial Technical Operations
+                  Center</cntorg>
+               <cntper>Not Provided</cntper>
             </cntorgp>
             <cntaddr>
-               <addrtype>mailing</addrtype>
-               <address>4600 Silver Hill Road, Stop 7400</address>
-               <city>Washington</city>
-               <state>DC</state>
-               <postal>20233-7400</postal>
-               <country>United States</country>
+               <addrtype>mailing and physical</addrtype>
+               <address>1400 Independence Road</address>
+               <city>Rolla</city>
+               <state>MO</state>
+               <postal>65401</postal>
             </cntaddr>
-            <cntvoice>301-763-1128</cntvoice>
-            <cntfax>301-763-4710</cntfax>
-            <cntemail>geo.tiger@census.gov</cntemail>
+            <cntaddr>
+               <addrtype>mailing and physical</addrtype>
+               <address>PO Box 25046 Denver Federal Center</address>
+               <city>Lakewood</city>
+               <state>CO</state>
+               <postal>80225</postal>
+            </cntaddr>
+            <cntvoice>1-888-ASK-USGS (1-888-275-8747)</cntvoice>
+            <cntemail>tnm_help@usgs.gov</cntemail>
+            <hours>Monday through Friday, 8:00 AM to 4:30 PM CT</hours>
+            <cntinst>Metadata information can also be obtained through online services using The
+               National Map viewer at https://nationalmap.usgs.gov, or EarthExplorer at
+               https://earthexplorer.usgs.gov, or Ask USGS at https://www.usgs.gov/ask.</cntinst>
          </cntinfo>
       </metc>
-      <metstdn>FGDC Content Standards for Digital Geospatial Metadata</metstdn>
+      <metstdn>FGDC Content Standard for Digital Geospatial Metadata</metstdn>
       <metstdv>FGDC-STD-001-1998</metstdv>
    </metainfo>
 </metadata>

@@ -2,7 +2,8 @@ from future import standard_library
 standard_library.install_aliases()
 from builtins import str
 import re
-# import json
+import os
+import subprocess
 import logging
 log = logging.getLogger(__name__)
 import urllib.parse
@@ -114,10 +115,10 @@ class GeoDataGovHarvester(SpatialHarvester):
         if original_format != 'fgdc':
             return None
 
-        transform_service = config.get('ckanext.geodatagov.fgdc2iso_service')
-        if not transform_service:
-            self._save_object_error('No FGDC to ISO transformation service', harvest_object, 'Import')
-            return None
+        # transform_service = config.get('ckanext.geodatagov.fgdc2iso_service')
+        # if not transform_service:
+        #     self._save_object_error('No FGDC to ISO transformation service', harvest_object, 'Import')
+        #     return None
 
         # Validate against FGDC schema
 
@@ -164,21 +165,48 @@ class GeoDataGovHarvester(SpatialHarvester):
 
         original_document = etree.tostring(tree)
 
-        response = requests.post(transform_service,
-                                 data=original_document.encode('utf8'),
-                                 headers={'content-type': 'text/xml; charset=utf-8'})
+        source_path = "/tmp/" + harvest_object.id + "_source.xml"
+        transformed_path = "/tmp/" + harvest_object.id + "_transformed.xml"
+        harvesters_path = os.path.dirname(os.path.abspath(__file__))
+        transform_path = os.path.join(harvesters_path, "fgdcrse2iso19115-2.xslt")
+        tmp_source_file = open(source_path, "w")
+        tmp_source_file.write(original_document.decode('utf-8'))
+        tmp_source_file.close()
 
-        if response.status_code == 200:
-            # XML coming from the conversion tool is already declared and encoded as utf-8
-            return response.content
-        else:
-            msg = 'The transformation service returned an error for object {0}'
-            if response.status_code and response.content:
-                msg += ': [{0}] {1}'.format(response.status_code, response.content)
-            elif response.error:
-                msg += ': {0}'.format(response.error)
-            self._save_object_error(msg, harvest_object, 'Import')
-            return None
+        transform = subprocess.run(["java",
+                                    "-cp",
+                                    "/usr/lib/jvm/java-11-openjdk/saxon/saxon.jar",
+                                    "net.sf.saxon.Transform",
+                                    "-s:" + source_path,
+                                    "-xsl:" + transform_path,
+                                    "-o:" + transformed_path
+                                    ])
+
+        tf = open(transformed_path)
+        iso_xml = tf.read()
+        tf.close()
+        os.remove(transformed_path)
+        os.remove(source_path)
+        
+        log.info('harvest_object {}'.format(iso_xml))
+
+        return iso_xml
+
+        # response = requests.post(transform_service,
+        #                          data=original_document.encode('utf8'),
+        #                          headers={'content-type': 'text/xml; charset=utf-8'})
+
+        # if response.status_code == 200:
+        #     # XML coming from the conversion tool is already declared and encoded as utf-8
+        #     return response.content
+        # else:
+        #     msg = 'The transformation service returned an error for object {0}'
+        #     if response.status_code and response.content:
+        #         msg += ': [{0}] {1}'.format(response.status_code, response.content)
+        #     elif response.error:
+        #         msg += ': {0}'.format(response.error)
+        #     self._save_object_error(msg, harvest_object, 'Import')
+        #     return None
 
 
 class GeoDataGovCSWHarvester(CSWHarvester, GeoDataGovHarvester):
