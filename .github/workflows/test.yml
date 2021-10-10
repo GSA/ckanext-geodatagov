@@ -52,7 +52,10 @@ jobs:
     - uses: actions/checkout@v2
     - name: Install dependency (common)
       run: |
-        apk add geos-dev
+        apk add geos-dev openjdk11
+        SAXON_VER=9.9.1-7
+        https://repo1.maven.org/maven2/net/sf/saxon/Saxon-HE/${SAXON_VER}/Saxon-HE-${SAXON_VER}.jar \
+          /usr/lib/jvm/java-11-openjdk/saxon/saxon.jar
     - name: Install requirements (py3)
       if: ${{ matrix.ckan-version == '2.9' }}
       run: |
