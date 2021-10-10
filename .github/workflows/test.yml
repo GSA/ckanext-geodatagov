@@ -53,6 +53,7 @@ jobs:
     - name: Install dependency (common)
       run: |
         apk add geos-dev openjdk11
+        mkdir -p /usr/lib/jvm/java-11-openjdk/saxon/
         SAXON_VER=9.9.1-7
         wget https://repo1.maven.org/maven2/net/sf/saxon/Saxon-HE/${SAXON_VER}/Saxon-HE-${SAXON_VER}.jar \
         -O /usr/lib/jvm/java-11-openjdk/saxon/saxon.jar
