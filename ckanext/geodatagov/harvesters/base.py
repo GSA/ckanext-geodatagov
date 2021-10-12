@@ -115,13 +115,6 @@ class GeoDataGovHarvester(SpatialHarvester):
         if original_format != 'fgdc':
             return None
 
-        # transform_service = config.get('ckanext.geodatagov.fgdc2iso_service')
-        # if not transform_service:
-        #     self._save_object_error('No FGDC to ISO transformation service', harvest_object, 'Import')
-        #     return None
-
-        # Validate against FGDC schema
-
         if self.source_config.get('validator_profiles'):
             profiles = self.source_config.get('validator_profiles')
         else:
@@ -188,6 +181,9 @@ class GeoDataGovHarvester(SpatialHarvester):
 
         if return_code > 0:
             log.error('ISO Transform Failure: {}'.format(std_err))
+            # Error may have caused transformed file to not be written;
+            #  exit here just in case
+            return ''
 
         tf = open(transformed_path)
         iso_xml = tf.read()
@@ -199,22 +195,6 @@ class GeoDataGovHarvester(SpatialHarvester):
         log.debug('harvest_object {}'.format(iso_xml))
 
         return iso_xml
-
-        # response = requests.post(transform_service,
-        #                          data=original_document.encode('utf8'),
-        #                          headers={'content-type': 'text/xml; charset=utf-8'})
-
-        # if response.status_code == 200:
-        #     # XML coming from the conversion tool is already declared and encoded as utf-8
-        #     return response.content
-        # else:
-        #     msg = 'The transformation service returned an error for object {0}'
-        #     if response.status_code and response.content:
-        #         msg += ': [{0}] {1}'.format(response.status_code, response.content)
-        #     elif response.error:
-        #         msg += ': {0}'.format(response.error)
-        #     self._save_object_error(msg, harvest_object, 'Import')
-        #     return None
 
 
 class GeoDataGovCSWHarvester(CSWHarvester, GeoDataGovHarvester):
