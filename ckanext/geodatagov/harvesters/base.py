@@ -191,11 +191,12 @@ class GeoDataGovHarvester(SpatialHarvester):
 
         tf = open(transformed_path)
         iso_xml = tf.read()
+        iso_xml = iso_xml.replace('encoding="UTF-8"', '')
         tf.close()
         os.remove(transformed_path)
         os.remove(source_path)
 
-        log.info('harvest_object {}'.format(iso_xml))
+        log.debug('harvest_object {}'.format(iso_xml))
 
         return iso_xml
 

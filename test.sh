@@ -56,7 +56,7 @@ PASS=ckan
 ckan_wrapper --plugin=ckanext-harvest harvester initdb
 ckan_wrapper --plugin=ckanext-spatial spatial initdb
 
-# pytest --ckan-ini=test.ini --cov=ckanext.geodatagov --disable-warnings ckanext/geodatagov/tests/
+pytest --ckan-ini=test.ini --cov=ckanext.geodatagov --disable-warnings ckanext/geodatagov/tests/
 
 # Run this this pytest command if only testing a single test
-pytest --ckan-ini=test.ini --cov=ckanext.geodatagov --disable-warnings ckanext/geodatagov/tests/test_category_tags.py ckanext/geodatagov/tests/test_waf.py
+# pytest --ckan-ini=test.ini --cov=ckanext.geodatagov --disable-warnings ckanext/geodatagov/tests/test_category_tags.py ckanext/geodatagov/tests/test_waf.py
