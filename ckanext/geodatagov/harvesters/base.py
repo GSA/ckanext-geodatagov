@@ -2,7 +2,9 @@ from future import standard_library
 standard_library.install_aliases()
 from builtins import str
 import re
-# import json
+import os
+import six
+import subprocess
 import logging
 log = logging.getLogger(__name__)
 import urllib.parse
@@ -11,7 +13,6 @@ import requests
 from lxml import etree
 
 from ckan import plugins as p
-from ckan.plugins.toolkit import config
 
 from ckan.logic.validators import boolean_validator
 from ckan.lib.navl.validators import ignore_empty
@@ -114,13 +115,6 @@ class GeoDataGovHarvester(SpatialHarvester):
         if original_format != 'fgdc':
             return None
 
-        transform_service = config.get('ckanext.geodatagov.fgdc2iso_service')
-        if not transform_service:
-            self._save_object_error('No FGDC to ISO transformation service', harvest_object, 'Import')
-            return None
-
-        # Validate against FGDC schema
-
         if self.source_config.get('validator_profiles'):
             profiles = self.source_config.get('validator_profiles')
         else:
@@ -164,21 +158,43 @@ class GeoDataGovHarvester(SpatialHarvester):
 
         original_document = etree.tostring(tree)
 
-        response = requests.post(transform_service,
-                                 data=original_document.encode('utf8'),
-                                 headers={'content-type': 'text/xml; charset=utf-8'})
+        source_path = "/tmp/" + harvest_object.id + "_source.xml"
+        transformed_path = "/tmp/" + harvest_object.id + "_transformed.xml"
+        harvesters_path = os.path.dirname(os.path.abspath(__file__))
+        transform_path = os.path.join(harvesters_path, "fgdcrse2iso19115-2.xslt")
+        tmp_source_file = open(source_path, "w")
+        tmp_source_file.write(original_document.decode('utf-8'))
+        tmp_source_file.close()
 
-        if response.status_code == 200:
-            # XML coming from the conversion tool is already declared and encoded as utf-8
-            return response.content
-        else:
-            msg = 'The transformation service returned an error for object {0}'
-            if response.status_code and response.content:
-                msg += ': [{0}] {1}'.format(response.status_code, response.content)
-            elif response.error:
-                msg += ': {0}'.format(response.error)
-            self._save_object_error(msg, harvest_object, 'Import')
-            return None
+        subprocess_command = py2_subprocess_run if six.PY2 else subprocess.run
+        transform = subprocess_command(["java",
+                                        "-cp",
+                                        "/usr/lib/jvm/java-11-openjdk/saxon/saxon.jar",
+                                        "net.sf.saxon.Transform",
+                                        "-s:" + source_path,
+                                        "-xsl:" + transform_path,
+                                        "-o:" + transformed_path
+                                        ], capture_output=True)
+
+        return_code = transform[0] if six.PY2 else transform.returncode
+        std_err = transform[2] if six.PY2 else transform.stderr
+
+        if return_code > 0:
+            log.error('ISO Transform Failure: {}'.format(std_err))
+            # Error may have caused transformed file to not be written;
+            #  exit here just in case
+            return ''
+
+        tf = open(transformed_path)
+        iso_xml = tf.read()
+        iso_xml = iso_xml.replace('encoding="UTF-8"', '')
+        tf.close()
+        os.remove(transformed_path)
+        os.remove(source_path)
+
+        log.debug('harvest_object {}'.format(iso_xml))
+
+        return iso_xml
 
 
 class GeoDataGovCSWHarvester(CSWHarvester, GeoDataGovHarvester):
@@ -276,3 +292,30 @@ class GeoDataGovGeoportalHarvester(CSWHarvester, GeoDataGovHarvester):
 
         log.debug('XML content saved (len %s)', len(content))
         return True
+
+
+def py2_subprocess_run(*popenargs, **kwargs):
+    ''' Backport of subprocess.run courtesy of https://stackoverflow.com/a/40590445 '''
+    input = kwargs.pop("input", None)
+    check = kwargs.pop("handle", False)
+
+    # Keywork arguments not supported
+    kwargs = {}
+
+    if input is not None:
+        if 'stdin' in kwargs:
+            raise ValueError('stdin and input arguments may not both be used.')
+        kwargs['stdin'] = subprocess.PIPE
+
+    process = subprocess.Popen(*popenargs, **kwargs)
+    try:
+        stdout, stderr = process.communicate(input)
+    except BaseException:
+        process.kill()
+        process.wait()
+        raise
+    retcode = process.poll()
+    if check and retcode:
+        raise subprocess.CalledProcessError(
+            retcode, process.args, output=stdout, stderr=stderr)
+    return retcode, stdout, stderr

@@ -47,7 +47,16 @@ PASS=ckan
 
 #ckan_wrapper --plugin=ckan db clean
 
+# Uncomment if you would like to rapid-prototype with the spatial extension
+# Note: make sure the correct brance is referenced in either requirements.py file
+# cd /srv/app/src/ckanext-spatial/
+# git pull
+# cd -
+
 ckan_wrapper --plugin=ckanext-harvest harvester initdb
 ckan_wrapper --plugin=ckanext-spatial spatial initdb
 
 pytest --ckan-ini=test.ini --cov=ckanext.geodatagov --disable-warnings ckanext/geodatagov/tests/
+
+# Run this this pytest command if only testing a single test
+# pytest --ckan-ini=test.ini --cov=ckanext.geodatagov --disable-warnings ckanext/geodatagov/tests/test_category_tags.py ckanext/geodatagov/tests/test_waf.py

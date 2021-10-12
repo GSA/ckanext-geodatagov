@@ -123,6 +123,17 @@ class TestWafHarvester(object):
         datasets = self.get_datasets_from_waf1_sample()
         assert len(datasets) == 2
 
+    def test_datasets_from_waf_fgdc_sample(self):
+        """ harvest waf-fgdc/ folder as waf source """
+        url = 'http://127.0.0.1:%s/waf-fgdc/index.html' % mock_static_file_server.PORT
+
+        self.config1 = '{"private_datasets": "false"}'
+        self.run_gather(url=url, source_config=self.config1)
+        self.run_fetch()
+        datasets = self.run_import()
+
+        assert len(datasets) == 1
+
     def test_waf1_datasets_privacy(self):
         """ Harvest waf1/ folder as waf source and check the datasets are public"""
 
