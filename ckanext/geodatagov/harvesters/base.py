@@ -168,8 +168,6 @@ class GeoDataGovHarvester(SpatialHarvester):
 
         subprocess_command = py2_subprocess_run if six.PY2 else subprocess.run
         transform = subprocess_command(["java",
-                                        "-cp",
-                                        "/usr/lib/jvm/java-11-openjdk/saxon/saxon.jar",
                                         "net.sf.saxon.Transform",
                                         "-s:" + source_path,
                                         "-xsl:" + transform_path,
