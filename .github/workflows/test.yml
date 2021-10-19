@@ -57,7 +57,9 @@ jobs:
         SAXON_VER=9.9.1-7
         wget https://repo1.maven.org/maven2/net/sf/saxon/Saxon-HE/${SAXON_VER}/Saxon-HE-${SAXON_VER}.jar \
         -O /usr/lib/jvm/java-11-openjdk/saxon/saxon.jar
-        CLASSPATH=$CLASSPATH:/usr/lib/jvm/java-11-openjdk/saxon/saxon.jar
+        echo "CLASSPATH=$(echo $CLASSPATH:/usr/lib/jvm/java-11-openjdk/saxon/saxon.jar)" >> $GITHUB_ENV
+    - name: echo classpath
+      run: echo $CLASSPATH
     - name: Install requirements (py3)
       if: ${{ matrix.ckan-version == '2.9' }}
       run: |
