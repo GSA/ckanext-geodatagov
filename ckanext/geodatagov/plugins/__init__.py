@@ -630,16 +630,7 @@ class Demo(MixinPlugin, p.SingletonPlugin):
     # IFacets
     def dataset_facets(self, facets_dict, package_type):
 
-        if package_type != 'dataset':
-            return facets_dict
-
-        return OrderedDict([
-            ('organization', 'Organizations'),
-            ('groups', 'Groups'),
-            ('tags', 'Tags'),
-            ('res_format', 'Formats'),
-            ('license_id', 'Licence'),
-        ])
+        return facets_dict
 
     def organization_facets(self, facets_dict, organization_type, package_type):
 
