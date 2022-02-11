@@ -626,6 +626,7 @@ class Demo(MixinPlugin, p.SingletonPlugin):
             'group_catagory_tag_update': geodatagov_auth.group_catagory_tag_update,
         }
 
+
 class Miscs(MixinPlugin, p.SingletonPlugin):
     ''' Places for something that has nowhere to go otherwise.
     '''
