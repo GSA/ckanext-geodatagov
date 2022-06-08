@@ -1,9 +1,9 @@
 {% ckan_extends %}
 
 {% block primary_content %}
-    {% if request.args.get('collection_package_id') %}
+    {% if request.params.collection_package_id %}
         <div class="module">
-            {% snippet "snippets/related_collection.html", collection_package_id=request.args.get('collection_package_id') %}
+            {% snippet "snippets/related_collection.html", collection_package_id=request.params.collection_package_id %}
         </div>
     {% endif %}
 
