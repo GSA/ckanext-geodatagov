@@ -37,6 +37,7 @@ class TestUpdateGeo(object):
         # Test not existent places
         assert translate_spatial('not exists') is None
         assert translate_spatial('1.0,3.0') is None
+        assert translate_spatial('US, Virginia, Fairfax, Reston') == None
 
     def create_datasets(self):
 

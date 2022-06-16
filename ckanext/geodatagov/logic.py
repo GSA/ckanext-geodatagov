@@ -470,7 +470,7 @@ def translate_spatial(old_spatial):
 
     # If we have 4 numbers separated by commas, transforme them as GeoJSON
     parts = old_spatial.strip().split(',')
-    if len(parts) == 4:
+    if len(parts) == 4 and all(x.replace('.','',1).isdigit() for x in parts):
         minx, miny, maxx, maxy = parts
         params = {"minx": minx, "miny": miny, "maxx": maxx, "maxy": maxy}
         new_spatial = geojson_tpl.format(**params)
