@@ -455,20 +455,26 @@ def translate_spatial(old_spatial):
             ]
         } """
 
-    # Analyze with type of data is JSON valid
-
-    try:
-        geometry = json.loads(old_spatial)  # NOQA F841
-        # If we already have a good geometry, use it
-        return old_spatial
-    except BaseException:
-        pass
-
     geojson_tpl = ('{{"type": "Polygon", '
                    '"coordinates": [[[{minx}, {miny}], [{minx}, {maxy}], '
                    '[{maxx}, {maxy}], [{maxx}, {miny}], [{minx}, {miny}]]]}}')
 
-    # If we have 4 numbers separated by commas, transforme them as GeoJSON
+    # Analyze with type of data is JSON valid
+    try:
+        geometry = json.loads(old_spatial)  # NOQA F841
+        # If we have 2 lists of 2 numbers, transform them as GeoJSON
+        if (isinstance(geometry, list) and len(geometry) == 2):
+            min, max = geometry
+            params = {"minx": min[0], "miny": min[1], "maxx": max[0], "maxy": max[1]}
+            new_spatial = geojson_tpl.format(**params)
+            return new_spatial
+        else:
+            # If we already have a good geometry, use it
+            return old_spatial
+    except BaseException:
+        pass
+
+    # If we have 4 numbers separated by commas, transform them as GeoJSON
     parts = old_spatial.strip().split(',')
     if len(parts) == 4 and all(is_number(x) for x in parts):
         minx, miny, maxx, maxy = parts
