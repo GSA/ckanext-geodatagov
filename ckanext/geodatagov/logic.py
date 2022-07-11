@@ -436,6 +436,7 @@ def rollup_save_action(context, data_dict):
 
 
 def translate_spatial(old_spatial):
+    log.info('>>>>>> INSIDE OLD SPATIAL {}'.format(old_spatial))
     """ catalog-classic use a non-valid spatial extra.
         Sometimes uses words (like "California") or raw coordinates (like "-96.8518,43.4659,-96.5944,43.6345")
         catalog-next use ckan/spatial and require spatial to be valid geojson
@@ -455,28 +456,48 @@ def translate_spatial(old_spatial):
             ]
         } """
 
-    # Analyze with type of data is JSON valid
-
-    try:
-        geometry = json.loads(old_spatial)  # NOQA F841
-        # If we already have a good geometry, use it
-        return old_spatial
-    except BaseException:
-        pass
-
     geojson_tpl = ('{{"type": "Polygon", '
                    '"coordinates": [[[{minx}, {miny}], [{minx}, {maxy}], '
                    '[{maxx}, {maxy}], [{maxx}, {miny}], [{minx}, {miny}]]]}}')
 
-    # If we have 4 numbers separated by commas, transforme them as GeoJSON
+    # Analyze with type of data is JSON valid
+    try:
+        geometry = json.loads(old_spatial)  # NOQA F841
+        # If we have 2 lists of 2 numbers, transform them as GeoJSON
+        if (isinstance(geometry, list) and len(geometry) == 2):
+            min, max = geometry
+            params = {"minx": min[0], "miny": min[1],
+                    "maxx": max[0], "maxy": max[1]}
+            new_spatial = geojson_tpl.format(**params)
+            log.info('>>>>>> If we have 2 lists of 2 numbers, transform them as GeoJSON {}'.format(new_spatial))
+            return new_spatial
+        else:
+            # If we already have a good geometry, use it
+            log.info('>>>>>>  we already have a good geometry {}'.format(old_spatial))
+            return old_spatial
+    except BaseException:
+        pass
+
+    # If we have 2 lists of 2 numbers, transform them as GeoJSON
+    if (isinstance(old_spatial, list) and len(old_spatial) == 2):
+        min, max = old_spatial
+        params = {"minx": min[0], "miny": min[1],
+                  "maxx": max[0], "maxy": max[1]}
+        new_spatial = geojson_tpl.format(**params)
+        log.info('>>>>>> NEW SPATIAL WITH LISTS {}'.format(new_spatial))
+        return new_spatial
+
+    # If we have 4 numbers separated by commas, transform them as GeoJSON
     parts = old_spatial.strip().split(',')
     if len(parts) == 4 and all(is_number(x) for x in parts):
         minx, miny, maxx, maxy = parts
         params = {"minx": minx, "miny": miny, "maxx": maxx, "maxy": maxy}
         new_spatial = geojson_tpl.format(**params)
+        log.info('>>>>>> NEW SPATIAL WITH STRINGS {}'.format(new_spatial))
         return new_spatial
 
     g = get_geo_from_string(old_spatial)
+    log.info('491 >> GEO FROM STRING {}'.format(g))
     return g
 
 
