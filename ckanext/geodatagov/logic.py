@@ -436,7 +436,6 @@ def rollup_save_action(context, data_dict):
 
 
 def translate_spatial(old_spatial):
-    log.info('>>>>>> INSIDE OLD SPATIAL {}'.format(old_spatial))
     """ catalog-classic use a non-valid spatial extra.
         Sometimes uses words (like "California") or raw coordinates (like "-96.8518,43.4659,-96.5944,43.6345")
         catalog-next use ckan/spatial and require spatial to be valid geojson
