@@ -468,11 +468,9 @@ def translate_spatial(old_spatial):
             min, max = geometry
             params = {"minx": min[0], "miny": min[1], "maxx": max[0], "maxy": max[1]}
             new_spatial = geojson_tpl.format(**params)
-            log.info('>>>>>> If we have 2 lists of 2 numbers, transform them as GeoJSON {}'.format(new_spatial))
             return new_spatial
         else:
             # If we already have a good geometry, use it
-            log.info('>>>>>>  we already have a good geometry {}'.format(old_spatial))
             return old_spatial
     except BaseException:
         pass
@@ -483,11 +481,9 @@ def translate_spatial(old_spatial):
         minx, miny, maxx, maxy = parts
         params = {"minx": minx, "miny": miny, "maxx": maxx, "maxy": maxy}
         new_spatial = geojson_tpl.format(**params)
-        log.info('>>>>>> NEW SPATIAL WITH STRINGS {}'.format(new_spatial))
         return new_spatial
 
     g = get_geo_from_string(old_spatial)
-    log.info('491 >> GEO FROM STRING {}'.format(g))
     return g
 
 
