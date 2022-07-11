@@ -1,6 +1,6 @@
 -e git+https://github.com/GSA/ckanext-datagovtheme.git#egg=ckanext-datagovtheme
 -e git+https://github.com/GSA/ckanext-datajson.git@a3dfe6bc183022572092ee572e557270701950a4#egg=ckanext-datajson
--e git+https://github.com/ckan/ckanext-harvest.git#egg=ckanext-harvest
+-e git+https://github.com/ckan/ckanext-harvest.git@89b1a322acfcdabdf3274d3c47dd95291c9c5427#egg=ckanext_harvest
 -e git+https://github.com/ckan/ckanext-spatial.git@4ac25f19aa4eb9c798451f5eeb3084f907ccc003#egg=ckanext-spatial
 -e git+https://github.com/asl2/PyZ3950.git#egg=PyZ3950
 boto

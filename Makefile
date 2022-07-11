@@ -1,4 +1,4 @@
-CKAN_VERSION ?= 2.8
+CKAN_VERSION ?= 2.9
 COMPOSE_FILE ?= docker-compose.yml
 COMPOSE_LEGACY_FILE ?= docker-compose.legacy.yml
 
