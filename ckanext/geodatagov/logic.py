@@ -466,8 +466,7 @@ def translate_spatial(old_spatial):
         # If we have 2 lists of 2 numbers, transform them as GeoJSON
         if (isinstance(geometry, list) and len(geometry) == 2):
             min, max = geometry
-            params = {"minx": min[0], "miny": min[1],
-                    "maxx": max[0], "maxy": max[1]}
+            params = {"minx": min[0], "miny": min[1], "maxx": max[0], "maxy": max[1]}
             new_spatial = geojson_tpl.format(**params)
             log.info('>>>>>> If we have 2 lists of 2 numbers, transform them as GeoJSON {}'.format(new_spatial))
             return new_spatial
@@ -477,15 +476,6 @@ def translate_spatial(old_spatial):
             return old_spatial
     except BaseException:
         pass
-
-    # If we have 2 lists of 2 numbers, transform them as GeoJSON
-    if (isinstance(old_spatial, list) and len(old_spatial) == 2):
-        min, max = old_spatial
-        params = {"minx": min[0], "miny": min[1],
-                  "maxx": max[0], "maxy": max[1]}
-        new_spatial = geojson_tpl.format(**params)
-        log.info('>>>>>> NEW SPATIAL WITH LISTS {}'.format(new_spatial))
-        return new_spatial
 
     # If we have 4 numbers separated by commas, transform them as GeoJSON
     parts = old_spatial.strip().split(',')
