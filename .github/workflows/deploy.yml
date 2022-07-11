@@ -1,0 +1,32 @@
+name: Publish to PyPI
+on:
+  pull_request:
+    branches: [main]
+    types: [closed]
+  workflow_dispatch:
+    inputs:
+      version_no:
+        description: 'Release Version:'
+        required: true
+
+jobs:
+  deploy:
+    name: Publish to PyPI
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch'
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: Update setup.py if manual release
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          sed -i "s/version='[0-9]\{1,2\}.[0-9]\{1,4\}.[0-9]\{1,4\}',/version='${{github.event.inputs.version_no}}',/g" setup.py
+      - name: Create packages
+        run: |
+          python setup.py sdist
+          python setup.py bdist_wheel
+      - name: pypi-publish
+        uses: pypa/gh-action-pypi-publish@v1.4.2
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}
