@@ -1,4 +1,5 @@
 [![Github Actions](https://github.com/GSA/ckanext-geodatagov/actions/workflows/test.yml/badge.svg)](https://github.com/GSA/ckanext-geodatagov/actions)
+[![PyPI version](https://badge.fury.io/py/ckanext-geodatagov.svg)](https://badge.fury.io/py/ckanext-geodatagov)
 
 # Data.gov  
 
