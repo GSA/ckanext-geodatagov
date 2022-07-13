@@ -10,7 +10,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='ckanext-geodatagov',
-    version='0.1.0',
+    version='0.1.1',
     description="",
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -30,7 +30,8 @@ setup(
         # -*- Extra requirements: -*-
         'ckanext-datagovtheme',
         'ckanext-datajson',
-        'boto'
+        'boto',
+        'ply>=3.4',
     ],
     setup_requires=['wheel'],
     entry_points="""
