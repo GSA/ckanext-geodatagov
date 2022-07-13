@@ -31,8 +31,7 @@ setup(
         'ckanext-datagovtheme',
         'ckanext-datajson',
         'boto',
-        # 'ply==3.4',
-        'ply',
+        'ply>=3.4',
     ],
     setup_requires=['wheel'],
     entry_points="""
