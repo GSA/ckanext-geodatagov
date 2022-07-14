@@ -30,7 +30,8 @@ setup(
         # -*- Extra requirements: -*-
         'ckanext-datagovtheme',
         'ckanext-datajson',
-        'boto'
+        'boto',
+        'ply>=3.4',
     ],
     setup_requires=['wheel'],
     entry_points="""
