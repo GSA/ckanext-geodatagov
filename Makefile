@@ -12,7 +12,7 @@ lint: ## Lint the code
 
 clean: ## Clean workspace and containers
 	find . -name *.pyc -delete
-	CKAN_VERSION=$(CKAN_VERSION) docker-compose -f $(COMPOSE_FILE) down -v --remove-orphan
+	CKAN_VERSION=$(CKAN_VERSION) docker-compose -f $(COMPOSE_FILE) down -v --remove-orphans
 
 test: ## Run tests in a new container
 	CKAN_VERSION=$(CKAN_VERSION) docker-compose -f $(COMPOSE_FILE) run --rm app ./test.sh

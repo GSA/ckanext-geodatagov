@@ -13,3 +13,4 @@ conversiontool/lib/saxon-license.lic
 conversiontool/lib/*.jar
 .vscode/
 PyZ3950_parsetab.py
+src
