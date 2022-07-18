@@ -27,4 +27,5 @@ boto
 future==0.18.2
 jsonschema==2.4.0
 ply==3.4
+# paste
 pyyaml==5.4
