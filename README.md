@@ -30,24 +30,21 @@ In this way of reducing custom code this extension should be reviewed. Some feat
 
 Package                                                                | Notes
 ---------------------------------------------------------------------- | -------------
-[ckanext-harvest](https://github.com/ckan/ckanext-harvest/)            | Commit: [9d1f647](https://github.com/nickumia-reisys/ckanext-harvest.git@9d1f647d247c16b6c3acba26e321e9500cafb18c) on [nickumia-reisys fork](https://github.com/nickumia-reisys/ckanext-harvest) until merged upstream
-[ckanext-datagovtheme](https://github.com/GSA/ckanext-datagovtheme)    | --
-[ckanext-datajson](https://github.com/GSA/ckanext-datajson)            | Commit: [a3dfe6b](https://github.com/GSA/ckanext-datajson.git@a3dfe6bc183022572092ee572e557270701950a4) on [GSA branch](https://github.com/GSA/ckanext-datajson) until merged to main
-[ckanext-spatial](https://github.com/ckan/ckanext-spatial)             | Commit: [93c430f](https://github.com/GSA/ckanext-spatial.git@93c430ffc36ba7e306652fd511efd0d1e7081381) on [GSA fork](https://github.com/GSA/ckanext-spatial) until merged upstream
-[PyZ3950](https://github.com/danizen/PyZ3950)                          | --
+[ckanext-harvest](https://github.com/ckan/ckanext-harvest/)            | --
+[ckanext-spatial](https://github.com/ckan/ckanext-spatial)             | --
+[PyZ3950](https://github.com/asl2/PyZ3950)                             | --
 [werkzeug](https://github.com/nickumia-reisys/werkzeug)                | This only effects the tests.  For all intents and purposes, this should be tracking [upstream](https://github.com/pallets/werkzeug)
 
 This extension is compatible with these versions of CKAN.
 
 CKAN version | Compatibility
 ------------ | -------------
-<=2.7        | no
-2.8          | yes
+<=2.8        | no
 2.9          | [complete](https://github.com/GSA/datagov-ckan-multi/issues/570)
 
 ## Tests
 
-All the tests live in the [/ckanext/geodatagov/tests](/ckanext/geodatagov/tests) folder. After each commit, via the [CircleCI config](https://github.com/GSA/ckanext-geodatagov/blob/master/.circleci/config.yml), this tests will [run in CircleCI](https://circleci.com/gh/GSA/ckanext-geodatagov) with CKAN 2.3 (custom GSA fork) and CKAN 2.8.  The CircleCI tests were not retained, but may be revisited in the future.
+All the tests live in the [/ckanext/geodatagov/tests](/ckanext/geodatagov/tests) folder. [Github actions](https://github.com/GSA/ckanext-geodatagov/blob/main/.github/workflows/test.yml) is configured to run the tests against CKAN 2.9 when you open a pull request.
 
 ## Using the Docker Dev Environment
 
@@ -97,7 +94,6 @@ In order to support multiple versions of CKAN, or even upgrade to new versions
 of CKAN, we support development and testing through the `CKAN_VERSION`
 environment variable.
 
-    $ make CKAN_VERSION=2.8 test
     $ make CKAN_VERSION=2.9 test
 
 ## Credit / Copying

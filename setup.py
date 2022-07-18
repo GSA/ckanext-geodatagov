@@ -32,6 +32,7 @@ setup(
         'ckanext-datajson',
         'boto',
         'ply>=3.4',
+        'future>=0.18.2'
     ],
     setup_requires=['wheel'],
     entry_points="""

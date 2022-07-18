@@ -21,7 +21,7 @@ jobs:
     needs: lint
     strategy:
       matrix:
-        ckan-version: [2.9, 2.8]
+        ckan-version: [2.9]
       fail-fast: false
 
     name: CKAN ${{ matrix.ckan-version }}
@@ -65,12 +65,6 @@ jobs:
         pip install -r requirements.txt
         pip install -r dev-requirements.txt
         pip install -e .
-    - name: Install requirements (py2)
-      if: ${{ matrix.ckan-version == '2.8' }}
-      run: |
-        pip install -r requirements-py2.txt
-        pip install -r dev-requirements-py2.txt
-        pip install -e .
     - name: Setup extension (CKAN >= 2.9)
       if: ${{ matrix.ckan-version != '2.7' && matrix.ckan-version != '2.8' }}
       run: |
@@ -78,13 +72,6 @@ jobs:
         ckan -c test.ini db init
         ckan -c test.ini harvester initdb
         ckan -c test.ini spatial initdb
-    - name: Setup extension (CKAN < 2.9)
-      if: ${{ matrix.ckan-version == '2.8' }}
-      run: |
-        source $ENV_FILE
-        paster --plugin=ckan db init -c test.ini
-        paster --plugin=ckanext-harvest harvester initdb -c test.ini
-        paster --plugin=ckanext-spatial spatial initdb -c test.ini
     - name: Run tests
       run: pytest --ckan-ini=test.ini --cov=ckanext.geodatagov --cov-fail-under=${CODE_COVERAGE_THRESHOLD_REQUIRED} --disable-warnings ckanext/geodatagov/tests
 
