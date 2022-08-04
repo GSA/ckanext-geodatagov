@@ -10,7 +10,7 @@ debug:
 lint: ## Lint the code
 	@# our linting only runs with python3
 	@# TODO use CKAN_VERSION make variable once 2.8 is deprecated
-	CKAN_VERSION=2.9 docker-compose -f docker-compose.yml run --rm app flake8 . --count --show-source --statistics --exclude ckan,nose
+	CKAN_VERSION=2.9 docker-compose -f docker-compose.yml run --rm app flake8 . --count --max-line-length=127 --show-source --statistics --exclude ckan,nose
 
 clean: ## Clean workspace and containers
 	find . -name *.pyc -delete
