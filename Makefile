@@ -4,6 +4,8 @@ COMPOSE_LEGACY_FILE ?= docker-compose.legacy.yml
 
 build: ## Build the docker containers
 	CKAN_VERSION=$(CKAN_VERSION) docker-compose -f $(COMPOSE_FILE) build
+debug:
+	CKAN_VERSION=$(CKAN_VERSION) docker-compose run --service-ports app
 
 lint: ## Lint the code
 	@# our linting only runs with python3
