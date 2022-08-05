@@ -178,7 +178,7 @@ class TestWafHarvester(object):
             if len(tag) > 100:
                 tag_limit_errors.append(tag)
         log.info("Tags that are greater than 100 character limit: %s", tag_limit_errors)
-        assert(len(tag_limit_errors) == 0)
+        assert (len(tag_limit_errors) == 0)
 
     def test_waf_trim_tags(self):
         """
@@ -199,7 +199,7 @@ class TestWafHarvester(object):
         bad_list = list(set(tag_list) - set(expected_list))
         log.info("Tags that are not trimmed: %s", bad_list)
 
-        assert(tag_list == expected_list)
+        assert (tag_list == expected_list)
 
     def test_extras_rollup(self):
         """ Test https://github.com/GSA/datagov-deploy/issues/2166 """

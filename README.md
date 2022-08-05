@@ -76,6 +76,18 @@ To run the extension tests, start the containers with `make up`, then:
 Lint the code.
 
     $ make lint
+
+### Debugging
+
+We have not determined a good way for most IDE native debugging, however you can use the built in
+Python pdb debugger. Simply run `make debug`, which will run docker with an interactive shell.
+Add `import pdb; pdb.set_trace()` anywhere you want to start debugging, and if the code is triggered
+you should see a command prompt waiting in the shell. Use a pdb cheat sheet when starting to learn
+like [this](https://kapeli.com/cheat_sheets/Python_Debugger.docset/Contents/Resources/Documents/index).
+
+When you edit/add/remove code, the server is smart enough to restart. If you are editing logic that is
+not part of the webserver (ckan command, etc) then you should be able to run the command after edits
+and get the same debugger prompt.
     
 ### Matrix builds
 
