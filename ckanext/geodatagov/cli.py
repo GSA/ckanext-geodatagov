@@ -10,9 +10,9 @@ from email.policy import default
 from tempfile import mkstemp
 
 import boto3
-from botocore.exceptions import ClientError
 import ckan.plugins as p
 import click
+from botocore.exceptions import ClientError
 from ckan import model
 from ckan.plugins.toolkit import config
 from past.utils import old_div
@@ -120,8 +120,7 @@ def upload_to_key(bucket, upload_filename, filename_on_s3, content_calc=False):
 @click.option("--page_size", default=PAGE_SIZE)
 @click.option("--max_per_page", default=MAX_PER_PAGE)
 def sitemap_to_s3(upload_to_s3, page_size, max_per_page):
-    """Generates sitemap and uploads to s3
-    """
+    """Generates sitemap and uploads to s3"""
     log.info("Sitemap is being generated...")
 
     # cron job
@@ -268,6 +267,5 @@ def sitemap_to_s3(upload_to_s3, page_size, max_per_page):
 
     log.info("Sitemap upload complete.")
 
-
-    if __name__ == '__main__':
+    if __name__ == "__main__":
         geodatagov()

@@ -1,9 +1,9 @@
-from ConfigParser import SafeConfigParser
 import logging
 import os
 import sys
 
 import psycopg2
+from ConfigParser import SafeConfigParser
 
 logging.basicConfig(format='%(message)s', level=logging.INFO)
 

@@ -14,6 +14,7 @@ log = logging.getLogger(__name__)
 
 # TODO - test for output, test checking complete s3 cycle
 
+
 class TestSitemapExport(object):
     @classmethod
     def setup(cls):
@@ -37,7 +38,9 @@ class TestSitemapExport(object):
             cli.sitemap_to_s3, "--upload_to_s3 False --page_size 100 --max_per_page 100"
         )
 
-        import ipdb; ipdb.set_trace()
+        import ipdb
+
+        ipdb.set_trace()
         files = 0
         datasets = 0
         for site_file in file_list:

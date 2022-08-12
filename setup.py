@@ -1,40 +1,41 @@
-from setuptools import setup, find_packages
 from codecs import open  # To use a consistent encoding
 from os import path
+
+from setuptools import find_packages, setup
 
 here = path.abspath(path.dirname(__file__))
 
 # Get the long description from the relevant file
-with open(path.join(here, 'README.md'), encoding='utf-8') as f:
+with open(path.join(here, "README.md"), encoding="utf-8") as f:
     long_description = f.read()
 
 setup(
-    name='ckanext-geodatagov',
-    version='0.1.2',
+    name="ckanext-geodatagov",
+    version="0.1.2",
     description="",
     long_description=long_description,
-    long_description_content_type='text/markdown',
+    long_description_content_type="text/markdown",
     classifiers=[
-        'Programming Language :: Python :: 3'
+        "Programming Language :: Python :: 3"
     ],  # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
-    keywords='',
-    author='Data.gov',
-    author_email='datagovhelp@gsa.gov',
-    url='https://github.com/GSA/ckanext-geodatagov',
-    license='',
-    packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
-    namespace_packages=['ckanext', 'ckanext.geodatagov'],
+    keywords="",
+    author="Data.gov",
+    author_email="datagovhelp@gsa.gov",
+    url="https://github.com/GSA/ckanext-geodatagov",
+    license="",
+    packages=find_packages(exclude=["ez_setup", "examples", "tests"]),
+    namespace_packages=["ckanext", "ckanext.geodatagov"],
     include_package_data=True,
     zip_safe=False,
     install_requires=[
         # -*- Extra requirements: -*-
-        'ckanext-datagovtheme',
-        'ckanext-datajson',
-        'boto',
-        'ply>=3.4',
-        'future>=0.18.2'
+        "ckanext-datagovtheme",
+        "ckanext-datajson",
+        "boto",
+        "ply>=3.4",
+        "future>=0.18.2",
     ],
-    setup_requires=['wheel'],
+    setup_requires=["wheel"],
     entry_points="""
         [ckan.plugins]
     # Add plugins here, eg
