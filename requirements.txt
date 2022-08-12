@@ -28,3 +28,7 @@ pyparsing>=2.1.10
 # PyZ3950
 pyasn1
 # ply #required in setup.py
+
+# other requirments
+boto3
+ipdb

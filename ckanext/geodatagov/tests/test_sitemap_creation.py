@@ -1,20 +1,20 @@
-from builtins import object
 import logging
-import six
 import xml.etree.ElementTree as ET
+from builtins import object
 
-
-from ckan.tests.helpers import reset_db
+import six
 from ckan.tests import factories
+from ckan.tests.helpers import reset_db
+from click.testing import CliRunner
 
+import ckanext.geodatagov.cli as cli
 from ckanext.geodatagov.commands import GeoGovCommand
-
 
 log = logging.getLogger(__name__)
 
+# TODO - test for output, test checking complete s3 cycle
 
 class TestSitemapExport(object):
-
     @classmethod
     def setup(cls):
         reset_db()
@@ -22,22 +22,22 @@ class TestSitemapExport(object):
     def create_datasets(self):
 
         organization = factories.Organization()
-        self.dataset1 = factories.Dataset(owner_org=organization['id'])
-        self.dataset2 = factories.Dataset(owner_org=organization['id'])
-        self.dataset3 = factories.Dataset(owner_org=organization['id'])
-        self.dataset4 = factories.Dataset(owner_org=organization['id'])
+        self.dataset1 = factories.Dataset(owner_org=organization["id"])
+        self.dataset2 = factories.Dataset(owner_org=organization["id"])
+        self.dataset3 = factories.Dataset(owner_org=organization["id"])
+        self.dataset4 = factories.Dataset(owner_org=organization["id"])
 
     def test_create_sitemap(self):
-        """ run sitemap-to-s3 and analyze results """
+        """run sitemap-to-s3 and analyze results"""
 
         self.create_datasets()
 
-        if six.PY2:
-            cmd = GeoGovCommand('test')
-        else:
-            cmd = GeoGovCommand()
-        file_list = cmd.sitemap_to_s3(upload_to_s3=False, page_size=100, max_per_page=100)
+        runner = CliRunner()
+        file_list = runner.invoke(
+            cli.sitemap_to_s3, "--upload_to_s3 False --page_size 100 --max_per_page 100"
+        )
 
+        import ipdb; ipdb.set_trace()
         files = 0
         datasets = 0
         for site_file in file_list:
@@ -56,13 +56,13 @@ class TestSitemapExport(object):
                     ...
                 </urlset>
             """
-            log.info('Opening file {}'.format(site_file['path']))
-            tree = ET.parse(site_file['path'])
+            log.info("Opening file {}".format(site_file["path"]))
+            tree = ET.parse(site_file["path"])
             root = tree.getroot()
-            log.info('XML Root {}'.format(root))
-            assert root.tag == '{http://www.sitemaps.org/schemas/sitemap/0.9}urlset'
+            log.info("XML Root {}".format(root))
+            assert root.tag == "{http://www.sitemaps.org/schemas/sitemap/0.9}urlset"
 
-            prev_last_mod = ''
+            prev_last_mod = ""
 
             dataset1_found = False
             dataset2_found = False
@@ -71,25 +71,28 @@ class TestSitemapExport(object):
 
             for url in root:
                 for child in url:
-                    if child.tag == '{http://www.sitemaps.org/schemas/sitemap/0.9}loc':
+                    if child.tag == "{http://www.sitemaps.org/schemas/sitemap/0.9}loc":
                         dataset_url = child.text
-                        dataset_name = dataset_url.split('/')[-1]
-                        if dataset_name == self.dataset1['name']:
+                        dataset_name = dataset_url.split("/")[-1]
+                        if dataset_name == self.dataset1["name"]:
                             dataset1_found = True
-                        elif dataset_name == self.dataset2['name']:
+                        elif dataset_name == self.dataset2["name"]:
                             dataset2_found = True
-                        elif dataset_name == self.dataset3['name']:
+                        elif dataset_name == self.dataset3["name"]:
                             dataset3_found = True
-                        elif dataset_name == self.dataset4['name']:
+                        elif dataset_name == self.dataset4["name"]:
                             dataset4_found = True
                         datasets += 1
-                    elif child.tag == '{http://www.sitemaps.org/schemas/sitemap/0.9}lastmod':
+                    elif (
+                        child.tag
+                        == "{http://www.sitemaps.org/schemas/sitemap/0.9}lastmod"
+                    ):
                         last_mod = child.text
-                        log.info('{} >= {} '.format(prev_last_mod, last_mod))
+                        log.info("{} >= {} ".format(prev_last_mod, last_mod))
                         assert last_mod >= prev_last_mod
                         prev_last_mod = last_mod
                     else:
-                        raise Exception('Unexpected tag')
+                        raise Exception("Unexpected tag")
 
         assert files == 1
         assert datasets >= 4  # at least this four

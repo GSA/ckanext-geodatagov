@@ -9,7 +9,8 @@ import os
 from email.policy import default
 from tempfile import mkstemp
 
-import boto
+import boto3
+from botocore.exceptions import ClientError
 import ckan.plugins as p
 import click
 from ckan import model
@@ -32,47 +33,55 @@ def get_commands():
     return [sitemap_to_s3]
 
 
-@click.group("geodatagov")
+@click.group()
 def geodatagov():
     pass
 
 
-def generate_md5_for_s3(filename):
+def generate_md5_for_s3(filename: str) -> tuple:
     # hashlib.md5 was set as sha1 in plugin.py
     hash_md5 = hashlib.md5_orig()
     with open(filename, "rb") as f:
         # read chunks of 4096 bytes sequentially to be mem efficient
         for chunk in iter(lambda: f.read(4096), b""):
             hash_md5.update(chunk)
-    md5_1 = hash_md5.hexdigest()
-    md5_2 = base64.b64encode(hash_md5.digest())
-    return (md5_1, md5_2)
+    md5_hexstr = hash_md5.hexdigest()
+    md5_bytes = base64.b64encode(hash_md5.digest())
+    return (md5_hexstr, md5_bytes)
 
 
-def get_s3_bucket(bucket_name):
+def get_s3_bucket(bucket_name: str):
+    """Return s3 bucket object of bucket_name parameter."""
+
     if not config.get("ckanext.s3sitemap.aws_use_ami_role"):
-        p_key = config.get("ckanext.s3sitemap.aws_access_key_id")
-        s_key = config.get("ckanext.s3sitemap.aws_secret_access_key")
+        aws_access_key_id = config.get("ckanext.s3sitemap.aws_access_key_id")
+        aws_secret_access_key = config.get("ckanext.s3sitemap.aws_secret_access_key")
     else:
-        p_key, s_key = (None, None)
+        aws_access_key_id, aws_secret_access_key = (None, None)
 
     # make s3 connection
-    S3_conn = boto.connect_s3(p_key, s_key)
+    s3 = boto3.resource(
+        "s3",
+        aws_access_key_id=aws_access_key_id,
+        aws_secret_access_key=aws_secret_access_key,
+    )
 
     # make sure bucket exists and that we can access
     try:
-        bucket = S3_conn.get_bucket(bucket_name)
-    except boto.exception.S3ResponseError as e:
-        if e.status == 404:
-            raise Exception(
-                "Could not find bucket {0}: {1}".format(bucket_name, str(e))
-            )
-        elif e.status == 403:
-            raise Exception("Access to bucket {0} denied".format(bucket_name))
-        else:
-            raise
+        bucket = s3.Bucket(bucket_name)
+        # this feels funky, but from official docs
+        # https://docs.aws.amazon.com/AmazonS3/latest/userguide/example_s3_HeadBucket_section.html
+        bucket.meta.client.head_bucket(Bucket=bucket_name)
 
-    return bucket
+        log.info(f"hi im the bucket type: {type(bucket)}")
+        return bucket
+
+    except ClientError as err:
+        log.error(
+            f"s3 Bucket {bucket_name} doesn't exist or you don't have access to it"
+        )
+        log.debug(f"s3 bucket ClientError: {err}")
+        raise err
 
 
 def upload_to_key(bucket, upload_filename, filename_on_s3, content_calc=False):
@@ -92,6 +101,7 @@ def upload_to_key(bucket, upload_filename, filename_on_s3, content_calc=False):
         if content_encoding:
             headers.update({"Content-Encoding": content_encoding})
 
+    """ TODO
     k = boto.s3.key.Key(bucket)
     try:
         k.key = filename_on_s3
@@ -102,14 +112,17 @@ def upload_to_key(bucket, upload_filename, filename_on_s3, content_calc=False):
         raise e
     finally:
         k.close()
+    """
 
 
-@geodatagov.command("sitemap_to_s3")
+@geodatagov.command()
 @click.option("--upload_to_s3", default=UPLOAD_TO_S3)
 @click.option("--page_size", default=PAGE_SIZE)
 @click.option("--max_per_page", default=MAX_PER_PAGE)
 def sitemap_to_s3(upload_to_s3, page_size, max_per_page):
-    log.info("sitemap is being generated...")
+    """Generates sitemap and uploads to s3
+    """
+    log.info("Sitemap is being generated...")
 
     # cron job
     # paster --plugin=ckanext-geodatagov geodatagov sitemap-to-s3 --config=/etc/ckan/production.ini
@@ -132,7 +145,7 @@ def sitemap_to_s3(upload_to_s3, page_size, max_per_page):
         os.makedirs(DIR_S3SITEMAP)
 
     fd, path = mkstemp(
-        suffix=".xml", prefix="sitemap-%s-" % filename_number, dir=DIR_S3SITEMAP
+        suffix=".xml", prefix=f"sitemap-{filename_number}-", dir=DIR_S3SITEMAP
     )
     # write header
     os.write(fd, '<?xml version="1.0" encoding="UTF-8"?>\n'.encode("utf-8"))
@@ -142,7 +155,7 @@ def sitemap_to_s3(upload_to_s3, page_size, max_per_page):
             "utf-8"
         ),
     )
-    file_list.append({"path": path, "filename_s3": "sitemap-%s.xml" % filename_number})
+    file_list.append({"path": path, "filename_s3": f"sitemap-{filename_number}.xml"})
 
     for x in range(0, int(math.ceil(old_div(count, page_size))) + 1):
         pkgs = package_query.get_paginated_entity_name_modtime(
@@ -170,10 +183,7 @@ def sitemap_to_s3(upload_to_s3, page_size, max_per_page):
             )
             os.write(fd, "    </url>\n".encode("utf-8"))
         log.info(
-            "%i to %i of %i records done.",
-            start + 1,
-            min(start + page_size, count),
-            count,
+            f"{start+1} to {min(start + page_size, count)} of {count} records done."
         )
         start = start + page_size
 
@@ -183,7 +193,7 @@ def sitemap_to_s3(upload_to_s3, page_size, max_per_page):
             os.write(fd, "</urlset>\n".encode("utf-8"))
             os.close(fd)
 
-            log.info("done with %s.", path)
+            log.info(f"done with {path}.")
 
             filename_number = filename_number + 1
             fd, path = mkstemp(
@@ -206,7 +216,7 @@ def sitemap_to_s3(upload_to_s3, page_size, max_per_page):
     os.write(fd, "</urlset>\n".encode("utf-8"))
     os.close(fd)
 
-    log.info("done with %s.", path)
+    log.info(f"done with {path}.")
 
     if not upload_to_s3:
         log.info("Skip upload and finish.")
@@ -257,3 +267,7 @@ def sitemap_to_s3(upload_to_s3, page_size, max_per_page):
     os.remove(path)
 
     log.info("Sitemap upload complete.")
+
+
+    if __name__ == '__main__':
+        geodatagov()
