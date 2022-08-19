@@ -16,3 +16,4 @@ conversiontool/lib/*.jar
 PyZ3950_parsetab.py
 src
 venv/*
+tmp/localstack/*

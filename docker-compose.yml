@@ -48,6 +48,25 @@ services:
     ports:
       - "8983:8983"
 
+  localstack-container:
+    container_name: "localstack-container"
+    privileged: true
+    image: localstack/localstack:1.0.4
+    ports:
+      - "4572:4572"
+      - "8081:8081"
+    environment:
+      - SERVICES=s3
+      - DEBUG=1
+      - DATA_DIR=/tmp/localstack/data
+      - HOSTNAME=
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - DEFAULT_REGION=us-east-1
+      - START_WEB=1
+    volumes:
+      - "./tmp/localstack:/tmp/localstack"
+      - "./tmp/localstack/run/docker.sock:/var/run/docker.sock"
+
 volumes:
   ckan_storage:
   pg_data:
