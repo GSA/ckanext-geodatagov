@@ -1,3 +1,4 @@
+import click
 import base64
 import datetime
 import hashlib
@@ -6,14 +7,11 @@ import logging
 import math
 import mimetypes
 import os
-from email.policy import default
 from tempfile import mkstemp
 
 import boto3
-import ckan.plugins as p
 import click
 from botocore.exceptions import ClientError
-from ckan import model
 from ckan.plugins.toolkit import config
 from past.utils import old_div
 
@@ -27,10 +25,6 @@ PAGE_SIZE = 1000
 MAX_PER_PAGE = 50000
 
 log = logging.getLogger(DEFAULT_LOG)
-
-
-def get_commands():
-    return [sitemap_to_s3]
 
 
 @click.group()
@@ -116,9 +110,9 @@ def upload_to_key(bucket, upload_filename, filename_on_s3, content_calc=False):
 
 
 @geodatagov.command()
-@click.option("--upload_to_s3", default=UPLOAD_TO_S3)
-@click.option("--page_size", default=PAGE_SIZE)
-@click.option("--max_per_page", default=MAX_PER_PAGE)
+@click.option("--upload_to_s3", default=UPLOAD_TO_S3, type=click.BOOL)
+@click.option("--page_size", default=PAGE_SIZE, type=click.INT)
+@click.option("--max_per_page", default=MAX_PER_PAGE, type=click.INT)
 def sitemap_to_s3(upload_to_s3, page_size, max_per_page):
     """Generates sitemap and uploads to s3"""
     log.info("Sitemap is being generated...")
@@ -267,5 +261,9 @@ def sitemap_to_s3(upload_to_s3, page_size, max_per_page):
 
     log.info("Sitemap upload complete.")
 
-    if __name__ == "__main__":
-        geodatagov()
+
+# IClick
+def get_commands():
+    """Call me via: `ckan hello`"""
+
+    return [geodatagov]

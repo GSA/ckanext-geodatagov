@@ -5,7 +5,7 @@ from builtins import object
 import six
 from ckan.tests import factories
 from ckan.tests.helpers import reset_db
-from click.testing import CliRunner
+from click.testing import CliRunner, Result
 
 import ckanext.geodatagov.cli as cli
 from ckanext.geodatagov.commands import GeoGovCommand
@@ -28,19 +28,53 @@ class TestSitemapExport(object):
         self.dataset3 = factories.Dataset(owner_org=organization["id"])
         self.dataset4 = factories.Dataset(owner_org=organization["id"])
 
+    @staticmethod
+    def _handle_cli_output(cli_result: Result) -> list:
+        """Parses cli output Result to an interable file_list"""
+
+        # check successful cli run
+        assert cli_result.exit_code == 0
+
+        # the example output I have only has one element in it,
+        # this will need to be updated for examples with more elements
+        # checks only one list element
+        assert cli_result.output.count("[") == 1
+        assert cli_result.output.count("]") == 1
+
+        file_list = [
+            eval(
+                cli_result.output[
+                    cli_result.output.index("[") + 1 : cli_result.output.index("]") - 1
+                ].strip()
+            )
+        ]
+
+        return file_list
+
     def test_create_sitemap(self):
         """run sitemap-to-s3 and analyze results"""
+
+        # TODO REMOVE
+        import ipdb
+
+        ipdb.set_trace()
 
         self.create_datasets()
 
         runner = CliRunner()
-        file_list = runner.invoke(
-            cli.sitemap_to_s3, "--upload_to_s3 False --page_size 100 --max_per_page 100"
+        raw_cli_output = runner.invoke(
+            cli.sitemap_to_s3,
+            args=[
+                "--upload_to_s3",
+                "False",
+                "--page_size",
+                "100",
+                "--max_per_page",
+                "100",
+            ],
         )
+        file_list = self._handle_cli_output(raw_cli_output)
 
-        import ipdb
-
-        ipdb.set_trace()
         files = 0
         datasets = 0
         for site_file in file_list:
