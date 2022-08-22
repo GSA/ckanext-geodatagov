@@ -8,8 +8,9 @@ from ckan import model
 from ckan.lib.navl.validators import not_empty  # , ignore_empty
 
 import ckanext.harvest.queue as queue
-from ckanext.geodatagov.harvesters.base import \
-    GeoDataGovWAFHarvester  # , validate_profiles
+from ckanext.geodatagov.harvesters.base import (
+    GeoDataGovWAFHarvester,
+)  # , validate_profiles
 from ckanext.harvest.model import HarvestObject
 from ckanext.harvest.model import HarvestObjectExtra as HOExtra
 
@@ -19,7 +20,8 @@ class WAFCollectionHarvester(GeoDataGovWAFHarvester):
         return {
             "name": "waf-collection",
             "title": "Web Accessible Folder (WAF) Homogeneous Collection",
-            "description": "A Web Accessible Folder (WAF) displaying a list of spatial metadata documents with a collection record",
+            "description": "A Web Accessible Folder (WAF) displaying a list" \
+                    "of spatial metadata documents with a collection record",
         }
 
     def extra_schema(self):

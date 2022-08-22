@@ -1,14 +1,13 @@
 import logging
+import pytest
 import xml.etree.ElementTree as ET
 from builtins import object
 
-import six
 from ckan.tests import factories
 from ckan.tests.helpers import reset_db
 from click.testing import CliRunner, Result
 
 import ckanext.geodatagov.cli as cli
-from ckanext.geodatagov.commands import GeoGovCommand
 
 log = logging.getLogger(__name__)
 
@@ -17,10 +16,10 @@ log = logging.getLogger(__name__)
 
 class TestSitemapExport(object):
     @classmethod
-    def setup(cls):
+    def setup(cls) -> None:
         reset_db()
 
-    def create_datasets(self):
+    def create_datasets(self) -> None:
 
         organization = factories.Organization()
         self.dataset1 = factories.Dataset(owner_org=organization["id"])
@@ -28,37 +27,8 @@ class TestSitemapExport(object):
         self.dataset3 = factories.Dataset(owner_org=organization["id"])
         self.dataset4 = factories.Dataset(owner_org=organization["id"])
 
-    @staticmethod
-    def _handle_cli_output(cli_result: Result) -> list:
-        """Parses cli output Result to an interable file_list"""
-
-        # check successful cli run
-        assert cli_result.exit_code == 0
-
-        # the example output I have only has one element in it,
-        # this will need to be updated for examples with more elements
-        # checks only one list element
-        assert cli_result.output.count("[") == 1
-        assert cli_result.output.count("]") == 1
-
-        file_list = [
-            eval(
-                cli_result.output[
-                    cli_result.output.index("[") + 1 : cli_result.output.index("]") - 1
-                ].strip()
-            )
-        ]
-
-        return file_list
-
-    def test_create_sitemap(self):
-        """run sitemap-to-s3 and analyze results"""
-
-        # TODO REMOVE
-        import ipdb
-
-        ipdb.set_trace()
-
+    @pytest.fixture
+    def cli_result(self) -> Result:
         self.create_datasets()
 
         runner = CliRunner()
@@ -73,7 +43,38 @@ class TestSitemapExport(object):
                 "100",
             ],
         )
-        file_list = self._handle_cli_output(raw_cli_output)
+
+        return raw_cli_output
+
+    @staticmethod
+    def test_cli_output(cli_result: Result) -> None:
+        # check successful cli run
+        assert cli_result.exit_code == 0
+
+        # the example output I have only has one element in it,
+        # this and _handle_cli_output will need to be updated for examples with more elements
+        # checks only one list element in output string
+        assert cli_result.output.count("[") == 1
+        assert cli_result.output.count("]") == 1
+
+    @staticmethod
+    def _handle_cli_output(cli_result: Result) -> list:
+        """Parses cli output Result to an interable file_list"""
+
+        file_list = [
+            eval(
+                cli_result.output[
+                    cli_result.output.index("[") + 1 : cli_result.output.index("]") - 1
+                ].strip()
+            )
+        ]
+
+        return file_list
+
+    def test_create_sitemap(self, cli_result):
+        """run sitemap-to-s3 and analyze results"""
+
+        file_list = self._handle_cli_output(cli_result)
 
         files = 0
         datasets = 0
