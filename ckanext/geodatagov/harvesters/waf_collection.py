@@ -16,12 +16,14 @@ from ckanext.harvest.model import HarvestObjectExtra as HOExtra
 
 
 class WAFCollectionHarvester(GeoDataGovWAFHarvester):
-    def info(self):
+    def info(self) -> dict:
         return {
             "name": "waf-collection",
             "title": "Web Accessible Folder (WAF) Homogeneous Collection",
-            "description": "A Web Accessible Folder (WAF) displaying a list" \
-                    "of spatial metadata documents with a collection record",
+            "description": (
+                "A Web Accessible Folder (WAF) displaying a list of spatial"
+                "metadata documents with a collection record"
+            ),
         }
 
     def extra_schema(self):
