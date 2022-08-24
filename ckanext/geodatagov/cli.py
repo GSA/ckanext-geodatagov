@@ -1,19 +1,13 @@
-import click
 import base64
 import datetime
 import hashlib
 import json
 import logging
-import math
-import mimetypes
-import os
-from tempfile import mkstemp
 
 import boto3
 import click
 from botocore.exceptions import ClientError
 from ckan.plugins.toolkit import config
-from past.utils import old_div
 
 from ckanext.geodatagov.search import GeoPackageSearchQuery
 
@@ -25,6 +19,51 @@ PAGE_SIZE = 1000
 MAX_PER_PAGE = 50000
 
 log = logging.getLogger(DEFAULT_LOG)
+
+
+class Sitemap:
+    """Sitemap object
+
+    Accepts filename_number, start, page_size
+    """
+    def __init__(self, filename_number: int, start: int, page_size: int) -> None:
+        self.filename_number = filename_number
+        self.filename_s3 = f"sitemap-{filename_number}.xml"
+        self.start = start
+        self.page_size = page_size
+        self.xml = ""
+
+    def write_sitemap_header(self) -> None:
+        self.xml += '<?xml version="1.0" encoding="UTF-8"?>\n'
+        self.xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+
+    def write_pkgs(self, package_query: GeoPackageSearchQuery) -> None:
+
+        pkgs = package_query.get_paginated_entity_name_modtime(
+            max_results=self.page_size, start=self.start
+        )
+        for pkg in pkgs:
+            self.xml += "    <url>\n"
+            self.xml += f"        <loc>{config.get('ckan.site_url')}/dataset/{pkg.get('name')}</loc>\n"
+            self.xml += f"        <lastmod>{pkg.get('metadata_modified').strftime('%Y-%m-%d')}</lastmod>\n"
+            self.xml += "    </url>\n"
+
+    def write_sitemap_footer(self) -> None:
+        self.xml += "</urlset>\n"
+
+    def to_json(self) -> str:
+        return json.dumps(self, default=lambda o: o.__dict__)
+
+
+class Sitemaps:
+    def __init__(self) -> None:
+        self.sitemaps = []
+
+    def __iter__(self):
+        return iter(self.sitemaps)
+
+    def append(self, sitemap: Sitemap) -> None:
+        self.sitemaps.append(sitemap)
 
 
 @click.group()
@@ -44,8 +83,8 @@ def generate_md5_for_s3(filename: str) -> tuple:
     return (md5_hexstr, md5_bytes)
 
 
-def get_s3_bucket(bucket_name: str):
-    """Return s3 bucket object of bucket_name parameter."""
+def get_s3(bucket_name: str):
+    """Return s3 object, checks access to bucket_name parameter."""
 
     if not config.get("ckanext.s3sitemap.aws_use_ami_role"):
         aws_access_key_id = config.get("ckanext.s3sitemap.aws_access_key_id")
@@ -60,6 +99,10 @@ def get_s3_bucket(bucket_name: str):
         aws_secret_access_key=aws_secret_access_key,
     )
 
+    import ipdb
+
+    ipdb.set_trace()
+
     # make sure bucket exists and that we can access
     try:
         bucket = s3.Bucket(bucket_name)
@@ -67,8 +110,7 @@ def get_s3_bucket(bucket_name: str):
         # https://docs.aws.amazon.com/AmazonS3/latest/userguide/example_s3_HeadBucket_section.html
         bucket.meta.client.head_bucket(Bucket=bucket_name)
 
-        log.info(f"hi im the bucket type: {type(bucket)}")
-        return bucket
+        return s3
 
     except ClientError as err:
         log.error(
@@ -78,48 +120,62 @@ def get_s3_bucket(bucket_name: str):
         raise err
 
 
-def upload_to_key(bucket, upload_filename, filename_on_s3, content_calc=False):
-    headers = {}
+def upload_to_key(s3, bucket_name, upload_str: str, filename_on_s3: str) -> None:
 
-    # force .gz file to be downoaded
-    _, file_extension = os.path.splitext(upload_filename)
-    if file_extension == ".gz":
-        headers.update({"Content-Type": "application/gzip"})
-        headers.update({"Content-Encoding": ""})
+    # TODO REMOVE
+    import ipdb
 
-    # if needed, help s3 to figure out the content type and encoding
-    if content_calc:
-        content_type, content_encoding = mimetypes.guess_type(upload_filename)
-        if content_type:
-            headers.update({"Content-Type": content_type})
-        if content_encoding:
-            headers.update({"Content-Encoding": content_encoding})
+    ipdb.set_trace()
 
-    """ TODO
-    k = boto.s3.key.Key(bucket)
     try:
-        k.key = filename_on_s3
-        k.set_contents_from_filename(
-            upload_filename, headers=headers, md5=generate_md5_for_s3(upload_filename)
-        )
+        upload_object = s3.Object(bucket_name, filename_on_s3)
+        upload_object.put(Body=upload_str)
     except Exception as e:
         raise e
-    finally:
-        k.close()
-    """
+
+
+def upload(sitemaps: list) -> None:
+    """Handle uploading sitemap files to s3"""
+    bucket_name = config.get("ckanext.s3sitemap.aws_bucket_name")
+    bucket_path = config.get("ckanext.s3sitemap.aws_storage_path", "")
+    s3_url = config.get("ckanext.s3sitemap.aws_s3_url")
+    storage_path = config.get("ckanext.s3sitemap.aws_storage_path")
+    s3 = get_s3(bucket_name)
+
+    current_time = datetime.datetime.now().strftime("%Y-%m-%d")
+    sitemap_index = ""
+
+    # write header
+    sitemap_index += '<?xml version="1.0" encoding="UTF-8"?>\n'
+    sitemap_index += (
+        '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    )
+
+    for sitemap in sitemaps:
+        filename_on_s3 = bucket_path + sitemap.filename_s3
+        upload_to_key(s3, bucket_name, sitemap.xml, filename_on_s3)
+        log.info(f"Sitemap file {sitemap.filename_s3} upload complete.")
+
+        # add to sitemap index file
+        sitemap_index += "    <sitemap>\n"
+        loc = s3_url + storage_path + sitemap.filename_s3
+        sitemap_index += f"        <loc>{loc}</loc>\n"
+        sitemap_index += f"        <lastmod>{current_time}</lastmod>\n"
+        sitemap_index += "    </sitemap>\n"
+
+    sitemap_index += "</sitemapindex>\n"
+
+    upload_to_key(s3, bucket_name, sitemap_index, bucket_path + "sitemap.xml")
+    log.info("Sitemap index upload complete.")
 
 
 @geodatagov.command()
 @click.option("--upload_to_s3", default=UPLOAD_TO_S3, type=click.BOOL)
 @click.option("--page_size", default=PAGE_SIZE, type=click.INT)
 @click.option("--max_per_page", default=MAX_PER_PAGE, type=click.INT)
-def sitemap_to_s3(upload_to_s3, page_size, max_per_page):
+def sitemap_to_s3(upload_to_s3, page_size: int, max_per_page: int):
     """Generates sitemap and uploads to s3"""
     log.info("Sitemap is being generated...")
-
-    # cron job
-    # paster --plugin=ckanext-geodatagov geodatagov sitemap-to-s3 --config=/etc/ckan/production.ini
-    # sql = '''Select id from package where id not in (select pkg_id from miscs_solr_sync); '''
 
     package_query = GeoPackageSearchQuery()
     count = package_query.get_count()
@@ -130,140 +186,39 @@ def sitemap_to_s3(upload_to_s3, page_size, max_per_page):
 
     start = 0
     filename_number = 1
-    file_list = []
+    sitemaps = []
 
-    # write to a temp file
-    DIR_S3SITEMAP = "/tmp/s3sitemap/"
-    if not os.path.exists(DIR_S3SITEMAP):
-        os.makedirs(DIR_S3SITEMAP)
+    paginations = (count // page_size) + 1
+    for _ in range(paginations):
+        sitemap = Sitemap(filename_number, start, page_size)
+        sitemap.write_sitemap_header()
+        sitemap.write_pkgs(package_query)
+        sitemap.write_sitemap_footer()
 
-    fd, path = mkstemp(
-        suffix=".xml", prefix=f"sitemap-{filename_number}-", dir=DIR_S3SITEMAP
-    )
-    # write header
-    os.write(fd, '<?xml version="1.0" encoding="UTF-8"?>\n'.encode("utf-8"))
-    os.write(
-        fd,
-        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'.encode(
-            "utf-8"
-        ),
-    )
-    file_list.append({"path": path, "filename_s3": f"sitemap-{filename_number}.xml"})
-
-    for x in range(0, int(math.ceil(old_div(count, page_size))) + 1):
-        pkgs = package_query.get_paginated_entity_name_modtime(
-            max_results=page_size, start=start
-        )
-
-        for pkg in pkgs:
-            os.write(fd, "    <url>\n".encode("utf-8"))
-            os.write(
-                fd,
-                (
-                    "        <loc>%s</loc>\n"
-                    % (
-                        "%s/dataset/%s"
-                        % (config.get("ckan.site_url"), pkg.get("name")),
-                    )
-                ).encode("utf-8"),
-            )
-            os.write(
-                fd,
-                (
-                    "        <lastmod>%s</lastmod>\n"
-                    % (pkg.get("metadata_modified").strftime("%Y-%m-%d"),)
-                ).encode("utf-8"),
-            )
-            os.write(fd, "    </url>\n".encode("utf-8"))
         log.info(
             f"{start+1} to {min(start + page_size, count)} of {count} records done."
         )
-        start = start + page_size
 
-        if start % max_per_page == 0 and x != int(math.ceil(old_div(count, page_size))):
+        start += page_size
 
-            # write footer
-            os.write(fd, "</urlset>\n".encode("utf-8"))
-            os.close(fd)
+        # large block removed here, I'm not convinced that it was ever hit
+        # if issues arise around max_per_page, re-add here
+        # see https://github.com/GSA/ckanext-geodatagov/blob/597610699434bde9415a48ed0b1085bfa0e9720f/ckanext/geodatagov/cli.py#L183
 
-            log.info(f"done with {path}.")
+        log.info(f"done with {sitemap.filename_s3}.")
+        sitemaps.append(sitemap)
 
-            filename_number = filename_number + 1
-            fd, path = mkstemp(
-                suffix=".xml", prefix="sitemap-%s-" % filename_number, dir=DIR_S3SITEMAP
-            )
-            # write header
-            os.write(fd, '<?xml version="1.0" encoding="UTF-8"?>\n'.encode("utf-8"))
-            os.write(
-                fd,
-                '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'.encode(
-                    "utf-8"
-                ),
-            )
-
-            file_list.append(
-                {"path": path, "filename_s3": "sitemap-%s.xml" % filename_number}
-            )
-
-    # write footer
-    os.write(fd, "</urlset>\n".encode("utf-8"))
-    os.close(fd)
-
-    log.info(f"done with {path}.")
-
-    if not upload_to_s3:
+    if upload_to_s3:
+        upload(sitemaps)
+    else:
         log.info("Skip upload and finish.")
-        print("Done locally: File list\n{}".format(json.dumps(file_list, indent=4)))
-        return file_list
-
-    bucket_name = config.get("ckanext.geodatagov.aws_bucket_name")
-    bucket_path = config.get("ckanext.geodatagov.s3sitemap.aws_storage_path", "")
-    bucket = get_s3_bucket(bucket_name)
-
-    fd, path = mkstemp(suffix=".xml", prefix="sitemap-", dir=DIR_S3SITEMAP)
-
-    # write header
-    os.write(fd, '<?xml version="1.0" encoding="UTF-8"?>\n'.encode("utf-8"))
-    os.write(
-        fd,
-        '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'.encode(
-            "utf-8"
-        ),
-    )
-
-    current_time = datetime.datetime.now().strftime("%Y-%m-%d")
-    for item in file_list:
-        upload_to_key(bucket, item["path"], bucket_path + item["filename_s3"])
-        os.remove(item["path"])
-
-        # add to sitemap index file
-        os.write(fd, "    <sitemap>\n".encode("utf-8"))
-        os.write(
-            fd,
-            (
-                "        <loc>%s</loc>\n"
-                % (
-                    config.get("ckanext.geodatagov.s3sitemap.aws_s3_url")
-                    + config.get("ckanext.geodatagov.s3sitemap.aws_storage_path")
-                    + item["filename_s3"],
-                )
-            ).encode("utf-8"),
-        )
-        os.write(
-            fd, ("        <lastmod>%s</lastmod>\n" % (current_time,)).encode("utf-8")
-        )
-        os.write(fd, "    </sitemap>\n".encode("utf-8"))
-    os.write(fd, "</sitemapindex>\n".encode("utf-8"))
-    os.close(fd)
-
-    upload_to_key(bucket, path, bucket_path + "sitemap.xml")
-    os.remove(path)
-
-    log.info("Sitemap upload complete.")
+        # TODO does the json.dumps(sitemaps) work?
+        dump = [sitemap.to_json for sitemap in sitemaps]
+        print(f"Done locally: Sitemap list\n{json.dumps(dump, indent=4)}")
 
 
 # IClick
-def get_commands():
-    """Call me via: `ckan hello`"""
+def get_commands() -> list:
+    """List of commands to pass to ckan"""
 
     return [geodatagov]
