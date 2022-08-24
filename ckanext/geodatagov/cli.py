@@ -5,8 +5,10 @@ import json
 import logging
 
 import boto3
+import ckan.plugins as p
 import click
 from botocore.exceptions import ClientError
+from ckan import model
 from ckan.plugins.toolkit import config
 
 from ckanext.geodatagov.search import GeoPackageSearchQuery

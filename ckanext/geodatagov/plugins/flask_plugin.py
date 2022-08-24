@@ -3,16 +3,8 @@ Mixin for Flask-specific functionality. This aides the migration between Pylons 
 """
 import ckan.plugins as p
 
-import ckanext.geodatagov.cli as cli
 
-
-class MixinPlugin(p.SingletonPlugin):
-
-    # IClick
-    p.implements(p.IClick)
-
-    def get_commands(self) -> list:
-        return cli.get_commands()
+class MixinPlugin(object):
 
     # IConfigurer
     def update_config(self, config):
@@ -22,5 +14,5 @@ class MixinPlugin(p.SingletonPlugin):
         # Using a separate dir for templates avoids having to maintain
         # backwards compatibility using a sprinkling of conditionals. We don't
         # anticipate adding new features to the existing 2.8 templates.
-        p.toolkit.add_template_directory(config, "../templates/templates_new")
-        p.toolkit.add_resource("../fanstatic_library", "geodatagov")
+        p.toolkit.add_template_directory(config, '../templates/templates_new')
+        p.toolkit.add_resource('../fanstatic_library', 'geodatagov')

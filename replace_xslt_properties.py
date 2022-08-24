@@ -1,4 +1,4 @@
-"""
+'''
 Quick script for tansfering the properties defined in ESRI Geoportal's
 properties file to the iso-details.xslt XSLT file.
 
@@ -10,36 +10,36 @@ Oringinal files:
 Esri Geoportal Server is an open source project released under the Apache
 License, version 2.0.
 
-"""
+'''
 
 import ConfigParser
 
-ORIGINAL_FILE = "gpt.properties"
-XSLT_FILE = "iso-details.xslt"
+ORIGINAL_FILE = 'gpt.properties'
+XSLT_FILE = 'iso-details.xslt'
 
 
-with open(ORIGINAL_FILE, "r") as f:
+with open(ORIGINAL_FILE, 'r') as f:
     content = f.read()
 
-content = "[main]" + content
-content = content.replace("%", "\\%").replace("\\\n", "")
+content = '[main]' + content
+content = content.replace('%', '\\%').replace('\\\n', '')
 
-new_file_name = "{0}_mod".format(ORIGINAL_FILE)
+new_file_name = '{0}_mod'.format(ORIGINAL_FILE)
 
-with open(new_file_name, "w") as f2:
+with open(new_file_name, 'w') as f2:
     f2.write(content)
 
 config = ConfigParser.SafeConfigParser()
-config.optionxform = str  # Keep keys case
+config.optionxform = str    # Keep keys case
 config.read(new_file_name)
 
-with open(XSLT_FILE, "r") as f3:
+with open(XSLT_FILE, 'r') as f3:
     xslt = f3.read()
 
-for key, value in config.items("main"):
-    xslt = xslt.replace(">i18n.{0}<".format(key), ">{0}<".format(value))
+for key, value in config.items('main'):
+    xslt = xslt.replace('>i18n.{0}<'.format(key), '>{0}<'.format(value))
 
-with open("{0}_mod".format(XSLT_FILE), "w") as f4:
+with open('{0}_mod'.format(XSLT_FILE), 'w') as f4:
     f4.write(xslt)
 
-print("Done")
+print('Done')

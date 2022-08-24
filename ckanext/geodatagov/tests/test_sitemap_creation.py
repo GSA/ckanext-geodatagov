@@ -13,7 +13,6 @@ log = logging.getLogger(__name__)
 
 # TODO - test for output, test checking complete s3 cycle
 
-
 class TestSitemapExport(object):
     @classmethod
     def setup(cls) -> None:
@@ -44,38 +43,7 @@ class TestSitemapExport(object):
             ],
         )
 
-        return raw_cli_output
-
-    @staticmethod
-    def test_cli_output(cli_result: Result) -> None:
-        # check successful cli run
-        assert cli_result.exit_code == 0
-
-        # the example output I have only has one element in it,
-        # this and _handle_cli_output will need to be updated for examples with more elements
-        # checks only one list element in output string
-        assert cli_result.output.count("[") == 1
-        assert cli_result.output.count("]") == 1
-
-    @staticmethod
-    def _handle_cli_output(cli_result: Result) -> list:
-        """Parses cli output Result to an interable file_list"""
-
-        file_list = [
-            eval(
-                cli_result.output[
-                    cli_result.output.index("[") + 1 : cli_result.output.index("]") - 1
-                ].strip()
-            )
-        ]
-
-        return file_list
-
-    def test_create_sitemap(self, cli_result):
-        """run sitemap-to-s3 and analyze results"""
-
-        file_list = self._handle_cli_output(cli_result)
-
+        import ipdb; ipdb.set_trace()
         files = 0
         datasets = 0
         for site_file in file_list:

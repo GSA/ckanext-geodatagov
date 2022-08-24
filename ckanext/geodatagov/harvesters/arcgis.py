@@ -1,30 +1,29 @@
 from future import standard_library
-
 standard_library.install_aliases()
+from builtins import str
+import urllib.parse
+import requests
 import json
 import logging
-import re
 import unicodedata
-import urllib.parse
+import re
 import uuid
-from builtins import str
-from html.parser import HTMLParser
 from string import Template
 
-import requests
-from ckan import logic, model
-from ckan.lib.navl.validators import ignore_empty, not_empty
-from ckan.logic import ValidationError, get_action
-from ckan.logic.validators import boolean_validator
+from ckan import logic
+from ckan import model
 from ckan.model import Session
-from ckan.plugins.core import SingletonPlugin, implements
-from ckan.plugins.toolkit import CkanVersionException, requires_ckan_version
-
-from ckanext.harvest.interfaces import IHarvester
 from ckanext.harvest.model import HarvestObject
 from ckanext.harvest.model import HarvestObjectExtra as HOExtra
+from ckanext.harvest.interfaces import IHarvester
+from ckan.plugins.core import SingletonPlugin, implements
 from ckanext.spatial.harvesters.base import SpatialHarvester
+from ckan.logic import get_action, ValidationError
+from ckan.lib.navl.validators import not_empty, ignore_empty
+from ckan.logic.validators import boolean_validator
+from html.parser import HTMLParser
 
+from ckan.plugins.toolkit import requires_ckan_version, CkanVersionException
 try:
     requires_ckan_version("2.9")
 except CkanVersionException:
@@ -33,19 +32,13 @@ else:
     from ckanext.geodatagov.plugins.flask_plugin import MixinPlugin
 
 
-TYPES = [
-    "Web Map",
-    "KML",
-    "Mobile Application",
-    "Web Mapping Application",
-    "WMS",
-    "Map Service",
-]
+TYPES = ['Web Map', 'KML', 'Mobile Application',
+         'Web Mapping Application', 'WMS', 'Map Service']
 
 
 # from http://code.activestate.com/recipes/577257-slugify-make-a-string-usable-in-a-url-or-filename/
-_slugify_strip_re = re.compile(r"[^\w\s-]")
-_slugify_hyphenate_re = re.compile(r"[-\s]+")
+_slugify_strip_re = re.compile(r'[^\w\s-]')
+_slugify_hyphenate_re = re.compile(r'[-\s]+')
 
 
 def _slugify(value):
@@ -57,9 +50,9 @@ def _slugify(value):
     """
     if not isinstance(value, str):
         value = str(value)
-    value = unicodedata.normalize("NFKD", value).encode("ascii", "ignore")
-    value = str(_slugify_strip_re.sub("", value).strip().lower())
-    return _slugify_hyphenate_re.sub("-", value)
+    value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')
+    value = str(_slugify_strip_re.sub('', value).strip().lower())
+    return _slugify_hyphenate_re.sub('-', value)
 
 
 # from http://stackoverflow.com/questions/753052/strip-html-from-strings-in-python
@@ -72,7 +65,7 @@ class MLStripper(HTMLParser):
         self.fed.append(d)
 
     def get_data(self):
-        return "".join(self.fed)
+        return ''.join(self.fed)
 
 
 def strip_tags(html):
@@ -85,17 +78,13 @@ class ArcGISHarvester(SpatialHarvester, MixinPlugin, SingletonPlugin):
 
     implements(IHarvester)
 
-    extent_template = Template(
-        (
-            '{"type": "Polygon", '
-            '"coordinates": [[[$minx, $miny], '
-            "[$minx, $maxy], [$maxx, $maxy], "
-            "[$maxx, $miny], [$minx, $miny]]]}"
-        )
-    )
+    extent_template = Template(('{"type": "Polygon", '
+                                '"coordinates": [[[$minx, $miny], '
+                                '[$minx, $maxy], [$maxx, $maxy], '
+                                '[$maxx, $miny], [$minx, $miny]]]}'))
 
     def info(self):
-        """
+        '''
         Harvesting implementations must provide this method, which will return a
         dictionary containing different descriptors of the harvester. The
         returned dictionary should contain:
@@ -118,41 +107,41 @@ class ArcGISHarvester(SpatialHarvester, MixinPlugin, SingletonPlugin):
             }
 
         returns: A dictionary with the harvester descriptors
-        """
+        '''
         return {
-            "name": "arcgis",
-            "title": "ArcGIS REST API",
-            "description": "An ArcGIS REST API endpoint",
+            'name': 'arcgis',
+            'title': 'ArcGIS REST API',
+            'description': 'An ArcGIS REST API endpoint'
         }
 
     def extra_schema(self):
         return {
-            "private_datasets": [ignore_empty, boolean_validator],
-            "extra_search_criteria": [ignore_empty, str],
+            'private_datasets': [ignore_empty, boolean_validator],
+            'extra_search_criteria': [ignore_empty, str],
         }
 
     def gather_stage(self, harvest_job):
 
         self.harvest_job = harvest_job
         source_url = harvest_job.source.url
-        source_config = json.loads(harvest_job.source.config or "{}")
-        extra_search_criteria = source_config.get("extra_search_criteria")
+        source_config = json.loads(harvest_job.source.config or '{}')
+        extra_search_criteria = source_config.get('extra_search_criteria')
 
         num = 100
 
         modified_from = 0
         modified_to = 999999999999999999
 
-        query_template = "modified:[{modified_from}+TO+{modified_to}]"
+        query_template = 'modified:[{modified_from}+TO+{modified_to}]'
 
         if extra_search_criteria:
-            query_template = query_template + " AND (%s)" % extra_search_criteria
+            query_template = query_template + ' AND (%s)' % extra_search_criteria
 
         # accountid:0123456789ABCDEF
 
         query = query_template.format(
-            modified_from=str(modified_from).rjust(18, "0"),
-            modified_to=str(modified_to).rjust(18, "0"),
+            modified_from=str(modified_from).rjust(18, '0'),
+            modified_to=str(modified_to).rjust(18, '0'),
         )
 
         start = 0
@@ -160,12 +149,10 @@ class ArcGISHarvester(SpatialHarvester, MixinPlugin, SingletonPlugin):
         new_metadata = {}
 
         while start != -1:
-            search_path = (
-                "sharing/search?f=pjson&q={query}&num={num}&start={start}".format(
-                    query=query,
-                    num=num,
-                    start=start,
-                )
+            search_path = 'sharing/search?f=pjson&q={query}&num={num}&start={start}'.format(
+                query=query,
+                num=num,
+                start=start,
             )
             url = urllib.parse.urljoin(source_url, search_path)
 
@@ -173,27 +160,24 @@ class ArcGISHarvester(SpatialHarvester, MixinPlugin, SingletonPlugin):
                 r = requests.get(url)
                 r.raise_for_status()
             except requests.exceptions.RequestException as e:
-                self._save_gather_error(
-                    "Unable to get content for URL: %s: %r" % (url, e), harvest_job
-                )
+                self._save_gather_error('Unable to get content for URL: %s: %r' %
+                                        (url, e), harvest_job)
                 return None
 
             results = r.json()
 
-            for result in results["results"]:
-                if result["type"] not in TYPES:
+            for result in results['results']:
+                if result['type'] not in TYPES:
                     continue
-                new_metadata[result["id"]] = result
-            start = results["nextStart"]
+                new_metadata[result['id']] = result
+            start = results['nextStart']
 
         existing_guids = dict()
-        query = (
-            model.Session.query(HarvestObject.guid, HOExtra.value)
-            .filter(True if HarvestObject.current else False)
-            .join(HOExtra, HarvestObject.extras)
-            .filter(True if HOExtra.key == "arcgis_modified_date" else False)
-            .filter(HarvestObject.harvest_source_id == harvest_job.source.id)
-        )
+        query = model.Session.query(HarvestObject.guid, HOExtra.value).\
+            filter(True if HarvestObject.current else False).\
+            join(HOExtra, HarvestObject.extras).\
+            filter(True if HOExtra.key == 'arcgis_modified_date' else False).\
+            filter(HarvestObject.harvest_source_id == harvest_job.source.id)
 
         for (guid, value) in query:
             existing_guids[guid] = value
@@ -203,47 +187,40 @@ class ArcGISHarvester(SpatialHarvester, MixinPlugin, SingletonPlugin):
         harvest_objects = []
 
         for guid in new:
-            date = str(new_metadata[guid]["modified"])
-            obj = HarvestObject(
-                job=harvest_job,
-                content=json.dumps(new_metadata[guid]),
-                extras=[
-                    HOExtra(key="arcgis_modified_date", value=date),
-                    HOExtra(key="format", value="arcgis_json"),
-                    HOExtra(key="status", value="new"),
-                ],
-                guid=guid,
-            )
+            date = str(new_metadata[guid]['modified'])
+            obj = HarvestObject(job=harvest_job,
+                                content=json.dumps(new_metadata[guid]),
+                                extras=[HOExtra(key='arcgis_modified_date', value=date),
+                                        HOExtra(key='format', value='arcgis_json'),
+                                        HOExtra(key='status', value='new')],
+                                guid=guid
+                                )
             obj.save()
             harvest_objects.append(obj.id)
 
         deleted = set(existing_guids) - set(new_metadata)
 
         for guid in deleted:
-            obj = HarvestObject(
-                job=harvest_job,
-                extras=[HOExtra(key="status", value="delete")],
-                guid=guid,
-            )
+            obj = HarvestObject(job=harvest_job,
+                                extras=[HOExtra(key='status', value='delete')],
+                                guid=guid
+                                )
             obj.save()
             harvest_objects.append(obj.id)
 
         changed = set(existing_guids) & set(new_metadata)
 
         for guid in changed:
-            date = str(new_metadata[guid]["modified"])
+            date = str(new_metadata[guid]['modified'])
             if date == existing_guids[guid]:
                 continue
-            obj = HarvestObject(
-                job=harvest_job,
-                content=json.dumps(new_metadata[guid]),
-                extras=[
-                    HOExtra(key="arcgis_modified_date", value=date),
-                    HOExtra(key="format", value="arcgis_json"),
-                    HOExtra(key="status", value="changed"),
-                ],
-                guid=guid,
-            )
+            obj = HarvestObject(job=harvest_job,
+                                content=json.dumps(new_metadata[guid]),
+                                extras=[HOExtra(key='arcgis_modified_date', value=date),
+                                        HOExtra(key='format', value='arcgis_json'),
+                                        HOExtra(key='status', value='changed')],
+                                guid=guid
+                                )
             obj.save()
             harvest_objects.append(obj.id)
 
@@ -254,53 +231,43 @@ class ArcGISHarvester(SpatialHarvester, MixinPlugin, SingletonPlugin):
 
     def import_stage(self, harvest_object):
 
-        log = logging.getLogger(__name__ + ".import")
-        log.debug("Import stage for harvest object: %s", harvest_object.id)
+        log = logging.getLogger(__name__ + '.import')
+        log.debug('Import stage for harvest object: %s', harvest_object.id)
 
         if not harvest_object:
-            log.error("No harvest object received")
+            log.error('No harvest object received')
             return False
 
-        source_config = json.loads(harvest_object.source.config or "{}")  # NOQA F841
+        source_config = json.loads(harvest_object.source.config or '{}')  # NOQA F841
 
-        status = self._get_object_extra(harvest_object, "status")
+        status = self._get_object_extra(harvest_object, 'status')
 
         # Get the last harvested object (if any)
-        previous_object = (
-            Session.query(HarvestObject)
-            .filter(HarvestObject.guid == harvest_object.guid)
-            .filter(True if HarvestObject.current else False)
+        previous_object = Session.query(HarvestObject) \
+            .filter(HarvestObject.guid == harvest_object.guid) \
+            .filter(True if HarvestObject.current else False) \
             .first()
-        )
 
         if previous_object:
             previous_object.current = False
             harvest_object.package_id = previous_object.package_id
             previous_object.add()
 
-        context = {"model": model, "session": Session, "ignore_auth": True}
-        context["user"] = get_action("get_site_user")(context, {})["name"]
-        context["api_version"] = 3
-        context["extras_as_string"] = True
-        context["ignore_auth"] = False
+        context = {'model': model, 'session': Session, 'ignore_auth': True}
+        context['user'] = get_action('get_site_user')(context, {})['name']
+        context['api_version'] = 3
+        context['extras_as_string'] = True
+        context['ignore_auth'] = False
 
-        if status == "delete":
+        if status == 'delete':
             # Delete package
-            get_action("package_delete")(context, {"id": harvest_object.package_id})
-            log.info(
-                "Deleted package {0} with guid {1}".format(
-                    harvest_object.package_id, harvest_object.guid
-                )
-            )
+            get_action('package_delete')(context, {'id': harvest_object.package_id})
+            log.info('Deleted package {0} with guid {1}'.format(harvest_object.package_id, harvest_object.guid))
             previous_object.save()
             return True
 
         if harvest_object.content is None:
-            self._save_object_error(
-                "Empty content for object {0}".format(harvest_object.id),
-                harvest_object,
-                "Import",
-            )
+            self._save_object_error('Empty content for object {0}'.format(harvest_object.id), harvest_object, 'Import')
             return False
 
         content = json.loads(harvest_object.content)
@@ -309,69 +276,53 @@ class ArcGISHarvester(SpatialHarvester, MixinPlugin, SingletonPlugin):
         if not package_dict:
             return False
 
-        if status == "new":
+        if status == 'new':
             package_schema = logic.schema.default_create_package_schema()
         else:
             package_schema = logic.schema.default_update_package_schema()
 
         tag_schema = logic.schema.default_tags_schema()
-        tag_schema["name"] = [not_empty, str]
-        package_schema["tags"] = tag_schema
-        context["schema"] = package_schema  # TODO: user
+        tag_schema['name'] = [not_empty, str]
+        package_schema['tags'] = tag_schema
+        context['schema'] = package_schema  # TODO: user
 
         harvest_object.current = True
         harvest_object.add()
 
-        if status == "new":
+        if status == 'new':
             # We need to explicitly provide a package ID, otherwise ckanext-spatial
             # won't be be able to link the extent to the package.
-            package_dict["id"] = str(uuid.uuid4())
-            package_schema["id"] = [str]
+            package_dict['id'] = str(uuid.uuid4())
+            package_schema['id'] = [str]
 
             # Save reference to the package on the object
-            harvest_object.package_id = package_dict["id"]
+            harvest_object.package_id = package_dict['id']
             harvest_object.add()
             # Defer constraints and flush so the dataset can be indexed with
             # the harvest object id (on the after_show hook from the harvester
             # plugin)
-            model.Session.execute(
-                "SET CONSTRAINTS harvest_object_package_id_fkey DEFERRED"
-            )
+            model.Session.execute('SET CONSTRAINTS harvest_object_package_id_fkey DEFERRED')
             model.Session.flush()
 
-            package_dict["private"] = self.source_config.get("private_datasets", False)
+            package_dict['private'] = self.source_config.get('private_datasets', False)
 
             try:
-                package_id = get_action("package_create")(context, package_dict)
-                log.info(
-                    "Created new package %s with guid %s",
-                    package_id,
-                    harvest_object.guid,
-                )
+                package_id = get_action('package_create')(context, package_dict)
+                log.info('Created new package %s with guid %s', package_id, harvest_object.guid)
             except ValidationError as e:
-                self._save_object_error(
-                    "Validation Error: %s" % str(e.error_summary),
-                    harvest_object,
-                    "Import",
-                )
+                self._save_object_error('Validation Error: %s' % str(e.error_summary), harvest_object, 'Import')
                 return False
-        elif status == "changed":
+        elif status == 'changed':
             if previous_object:
                 previous_object.current = False
                 previous_object.add()
             package_schema = logic.schema.default_update_package_schema()
-            package_dict["id"] = harvest_object.package_id
+            package_dict['id'] = harvest_object.package_id
             try:
-                package_id = get_action("package_update")(context, package_dict)
-                log.info(
-                    "Updated package %s with guid %s", package_id, harvest_object.guid
-                )
+                package_id = get_action('package_update')(context, package_dict)
+                log.info('Updated package %s with guid %s', package_id, harvest_object.guid)
             except ValidationError as e:
-                self._save_object_error(
-                    "Validation Error: %s" % str(e.error_summary),
-                    harvest_object,
-                    "Import",
-                )
+                self._save_object_error('Validation Error: %s' % str(e.error_summary), harvest_object, 'Import')
                 return False
 
         model.Session.commit()
@@ -380,31 +331,29 @@ class ArcGISHarvester(SpatialHarvester, MixinPlugin, SingletonPlugin):
     def make_package_dict(self, harvest_object, content):
 
         # try hard to get unique name
-        name = _slugify(content.get("title") or content.get("item", ""))
+        name = _slugify(content.get('title') or content.get('item', ''))
 
         if not name or len(name) < 5:
-            name = content["id"]
+            name = content['id']
 
         name = name[:60]
         existing_pkg = model.Package.get(name)
         if existing_pkg and existing_pkg.id != harvest_object.package_id:
-            name = name + "_" + content["id"]
-        title = content.get("title")
-        tag_list = [tag.strip('"').strip() for tag in content.get("tags", [])]
-        tags = ",".join(tag_list)
+            name = name + '_' + content['id']
+        title = content.get('title')
+        tag_list = [tag.strip('"').strip() for tag in content.get('tags', [])]
+        tags = ','.join(tag_list)
 
-        notes = strip_tags(content.get("description") or "")
+        notes = strip_tags(content.get('description') or '')
         if not notes:
-            notes = strip_tags(content.get("snippet") or "")
+            notes = strip_tags(content.get('snippet') or '')
 
-        extras = [
-            dict(key="guid", value=harvest_object.guid),
-            dict(key="metadata_source", value="arcgis"),
-            dict(key="metadata_type", value="geospatial"),
-            dict(key="tags", value=tags),
-        ]
+        extras = [dict(key='guid', value=harvest_object.guid),
+                  dict(key='metadata_source', value='arcgis'),
+                  dict(key='metadata_type', value='geospatial'),
+                  dict(key='tags', value=tags)]
 
-        extent = content.get("extent")
+        extent = content.get('extent')
         if extent:
             extent_string = self.extent_template.substitute(
                 minx=extent[0][0],
@@ -412,62 +361,64 @@ class ArcGISHarvester(SpatialHarvester, MixinPlugin, SingletonPlugin):
                 maxx=extent[1][0],
                 maxy=extent[1][1],
             )
-            extras.append(dict(key="spatial", value=extent_string.strip()))
+            extras.append(dict(key='spatial', value=extent_string.strip()))
 
-        source_url = harvest_object.source.url.rstrip("/") + "/"
+        source_url = harvest_object.source.url.rstrip('/') + '/'
 
         resources = []
 
         # map service has 2 resources
-        resource_url = content.get("url")
-        if content["type"] in ["Map Service"]:
+        resource_url = content.get('url')
+        if content['type'] in ['Map Service']:
             resources.append(
-                {"url": resource_url, "name": name, "format": "ArcGIS Map Service"}
-            )
+                {'url': resource_url, 'name': name,
+                 'format': 'ArcGIS Map Service'})
 
-        format = content["type"].upper()
+        format = content['type'].upper()
 
-        if content["type"] in ["Web Map"]:
+        if content['type'] in ['Web Map']:
             resource_url = urllib.parse.urljoin(
-                source_url, "home/webmap/viewer.html?webmap=" + content["id"]
+                source_url,
+                'home/webmap/viewer.html?webmap=' + content['id']
             )
 
-        if content["type"] in ["Map Service"]:
+        if content['type'] in ['Map Service']:
             resource_url = urllib.parse.urljoin(
-                source_url, "home/webmap/viewer.html?services=" + content["id"]
+                source_url,
+                'home/webmap/viewer.html?services=' + content['id']
             )
-            format = "ArcGIS MAP Preview"
+            format = 'ArcGIS MAP Preview'
 
         if not resource_url:
-            self._save_object_error(
-                "Validation Error: url not in record", harvest_object, "Import"
-            )
+            self._save_object_error('Validation Error: url not in record', harvest_object, 'Import')
             return False
 
-        if not resource_url.startswith("http"):
-            resource_url = urllib.parse.urljoin(source_url, resource_url)
+        if not resource_url.startswith('http'):
+            resource_url = urllib.parse.urljoin(
+                source_url, resource_url)
 
-        if content["type"] in ["Web Map", "Web Mapping Application"]:
-            format = "Web Map Application"
+        if content['type'] in ['Web Map', 'Web Mapping Application']:
+            format = 'Web Map Application'
 
-        resource = {"url": resource_url, "name": name, "format": format}
+        resource = {'url': resource_url, 'name': name,
+                    'format': format}
 
         resources.append(resource)
 
         pkg = model.Package.get(harvest_object.package_id)
         if pkg:
-            resource["id"] = pkg.resources[0].id
+            resource['id'] = pkg.resources[0].id
 
         package_dict = dict(
             name=name.lower(),
             title=title,
             notes=notes,
             extras=extras,
-            resources=resources,
+            resources=resources
         )
 
         source_dataset = model.Package.get(harvest_object.source.id)
         if source_dataset.owner_org:
-            package_dict["owner_org"] = source_dataset.owner_org
+            package_dict['owner_org'] = source_dataset.owner_org
 
         return package_dict
