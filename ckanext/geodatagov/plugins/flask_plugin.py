@@ -4,7 +4,16 @@ Mixin for Flask-specific functionality. This aides the migration between Pylons 
 import ckan.plugins as p
 
 
-class MixinPlugin(object):
+import ckanext.geodatagov.cli as cli
+
+
+class MixinPlugin(p.SingletonPlugin):
+
+    # IClick
+    p.implements(p.IClick)
+
+    def get_commands(self) -> list:
+        return cli.get_commands()
 
     # IConfigurer
     def update_config(self, config):

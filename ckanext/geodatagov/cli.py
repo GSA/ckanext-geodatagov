@@ -5,10 +5,8 @@ import json
 import logging
 
 import boto3
-import ckan.plugins as p
 import click
 from botocore.exceptions import ClientError
-from ckan import model
 from ckan.plugins.toolkit import config
 
 from ckanext.geodatagov.search import GeoPackageSearchQuery
@@ -23,11 +21,17 @@ MAX_PER_PAGE = 50000
 log = logging.getLogger(DEFAULT_LOG)
 
 
+@click.group()
+def geodatagov():
+    pass
+
+
 class Sitemap:
     """Sitemap object
 
     Accepts filename_number, start, page_size
     """
+
     def __init__(self, filename_number: int, start: int, page_size: int) -> None:
         self.filename_number = filename_number
         self.filename_s3 = f"sitemap-{filename_number}.xml"
@@ -57,22 +61,6 @@ class Sitemap:
         return json.dumps(self, default=lambda o: o.__dict__)
 
 
-class Sitemaps:
-    def __init__(self) -> None:
-        self.sitemaps = []
-
-    def __iter__(self):
-        return iter(self.sitemaps)
-
-    def append(self, sitemap: Sitemap) -> None:
-        self.sitemaps.append(sitemap)
-
-
-@click.group()
-def geodatagov():
-    pass
-
-
 def generate_md5_for_s3(filename: str) -> tuple:
     # hashlib.md5 was set as sha1 in plugin.py
     hash_md5 = hashlib.md5_orig()
@@ -94,12 +82,22 @@ def get_s3(bucket_name: str):
     else:
         aws_access_key_id, aws_secret_access_key = (None, None)
 
-    # make s3 connection
-    s3 = boto3.resource(
-        "s3",
-        aws_access_key_id=aws_access_key_id,
-        aws_secret_access_key=aws_secret_access_key,
-    )
+    localstack_endpoint = config.get("ckanext.s3sitemap.localstack_endpoint")
+    if localstack_endpoint:
+        # make locastack connection
+        s3 = boto3.resource(
+            "s3",
+            aws_access_key_id=aws_access_key_id,
+            aws_secret_access_key=aws_secret_access_key,
+            endpoint_url=localstack_endpoint
+        )
+    else:
+        # make s3 connection
+        s3 = boto3.resource(
+            "s3",
+            aws_access_key_id=aws_access_key_id,
+            aws_secret_access_key=aws_secret_access_key
+        )
 
     import ipdb
 
@@ -205,7 +203,8 @@ def sitemap_to_s3(upload_to_s3, page_size: int, max_per_page: int):
 
         # large block removed here, I'm not convinced that it was ever hit
         # if issues arise around max_per_page, re-add here
-        # see https://github.com/GSA/ckanext-geodatagov/blob/597610699434bde9415a48ed0b1085bfa0e9720f/ckanext/geodatagov/cli.py#L183
+        # see https://github.com/GSA/ckanext-geodatagov/blob/
+        # 597610699434bde9415a48ed0b1085bfa0e9720f/ckanext/geodatagov/cli.py#L183
 
         log.info(f"done with {sitemap.filename_s3}.")
         sitemaps.append(sitemap)
@@ -215,7 +214,7 @@ def sitemap_to_s3(upload_to_s3, page_size: int, max_per_page: int):
     else:
         log.info("Skip upload and finish.")
         # TODO does the json.dumps(sitemaps) work?
-        dump = [sitemap.to_json for sitemap in sitemaps]
+        dump = [sitemap.to_json() for sitemap in sitemaps]
         print(f"Done locally: Sitemap list\n{json.dumps(dump, indent=4)}")
 
 
