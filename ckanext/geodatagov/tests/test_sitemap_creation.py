@@ -1,8 +1,8 @@
 import logging
-import pytest
 import xml.etree.ElementTree as ET
 from builtins import object
 
+import pytest
 from ckan.tests import factories
 from ckan.tests.helpers import reset_db
 from click.testing import CliRunner, Result
@@ -64,7 +64,7 @@ class TestSitemapExport(object):
         file_list = [
             eval(
                 cli_result.output[
-                    cli_result.output.index("[") + 1: cli_result.output.index("]") - 1
+                    cli_result.output.index("[") + 1 : cli_result.output.index("]") - 1
                 ].strip()
             )
         ]
@@ -81,6 +81,7 @@ class TestSitemapExport(object):
         for site_file in file_list:
             # site_file is dumped as string
             site_file = eval(site_file)
+
             files += 1
             """ expected something like
                 <?xml version="1.0" encoding="UTF-8"?>
@@ -123,7 +124,8 @@ class TestSitemapExport(object):
                             dataset4_found = True
                         datasets += 1
                     elif (
-                        child.tag == "{http://www.sitemaps.org/schemas/sitemap/0.9}lastmod"
+                        child.tag
+                        == "{http://www.sitemaps.org/schemas/sitemap/0.9}lastmod"
                     ):
                         last_mod = child.text
                         log.info("{} >= {} ".format(prev_last_mod, last_mod))

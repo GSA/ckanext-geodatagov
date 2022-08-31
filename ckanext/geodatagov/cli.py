@@ -89,14 +89,14 @@ def get_s3(bucket_name: str):
             "s3",
             aws_access_key_id=aws_access_key_id,
             aws_secret_access_key=aws_secret_access_key,
-            endpoint_url=localstack_endpoint
+            endpoint_url=localstack_endpoint,
         )
     else:
         # make s3 connection
         s3 = boto3.resource(
             "s3",
             aws_access_key_id=aws_access_key_id,
-            aws_secret_access_key=aws_secret_access_key
+            aws_secret_access_key=aws_secret_access_key,
         )
 
     import ipdb
