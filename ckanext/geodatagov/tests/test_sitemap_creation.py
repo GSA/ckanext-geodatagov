@@ -64,7 +64,7 @@ class TestSitemapExport(object):
         file_list = [
             eval(
                 cli_result.output[
-                    cli_result.output.index("[") + 1 : cli_result.output.index("]") - 1
+                    cli_result.output.index("[") + 1: cli_result.output.index("]") - 1
                 ].strip()
             )
         ]
@@ -124,8 +124,7 @@ class TestSitemapExport(object):
                             dataset4_found = True
                         datasets += 1
                     elif (
-                        child.tag
-                        == "{http://www.sitemaps.org/schemas/sitemap/0.9}lastmod"
+                        child.tag == "{http://www.sitemaps.org/schemas/sitemap/0.9}lastmod"
                     ):
                         last_mod = child.text
                         log.info("{} >= {} ".format(prev_last_mod, last_mod))
