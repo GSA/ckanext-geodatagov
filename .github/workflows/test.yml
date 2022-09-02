@@ -1,30 +1,21 @@
 name: Tests
-on:
-  pull_request:
-  workflow_dispatch:
+on: [pull_request]
 env:
   CODE_COVERAGE_THRESHOLD_REQUIRED: 33
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
         with:
           python-version: '3.6'
       - name: Install requirements
         run: pip install flake8 pycodestyle pytest pytest-ckan pytest-cov
       - name: Check syntax
-        run: >
-          flake8 .
-            --count --show-source --statistics
-            --select=E901,E999,F821,F822,F823
-            --extend-exclude ckan,nose
+        run: flake8 . --count --select=E901,E999,F821,F822,F823 --show-source --statistics --exclude ckan,nose
       - name: Run flake8
-        run: >
-          flake8 .
-            --count --max-line-length=127 --statistics
-            --extend-exclude ckan,nose
+        run: flake8 . --count --max-line-length=127 --statistics --exclude ckan,nose
 
   test:
     needs: lint
@@ -65,7 +56,7 @@ jobs:
         mkdir -p /usr/lib/jvm/java-11-openjdk/saxon/
         SAXON_VER=9.9.1-7
         wget https://repo1.maven.org/maven2/net/sf/saxon/Saxon-HE/${SAXON_VER}/Saxon-HE-${SAXON_VER}.jar \
-          -O /usr/lib/jvm/java-11-openjdk/saxon/saxon.jar
+        -O /usr/lib/jvm/java-11-openjdk/saxon/saxon.jar
         echo "CLASSPATH=$(echo $CLASSPATH:/usr/lib/jvm/java-11-openjdk/saxon/saxon.jar)" >> $GITHUB_ENV
     - name: Install requirements (py3)
       if: ${{ matrix.ckan-version == '2.9' }}
@@ -81,11 +72,5 @@ jobs:
         ckan -c test.ini harvester initdb
         ckan -c test.ini spatial initdb
     - name: Run tests
-      run: >
-        pytest
-          --ckan-ini=test.ini
-          --cov=ckanext.geodatagov
-          --cov-fail-under=${CODE_COVERAGE_THRESHOLD_REQUIRED}
-          --disable-warnings
-          ckanext/geodatagov/tests
+      run: pytest --ckan-ini=test.ini --cov=ckanext.geodatagov --cov-fail-under=${CODE_COVERAGE_THRESHOLD_REQUIRED} --disable-warnings ckanext/geodatagov/tests
 
