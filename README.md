@@ -28,6 +28,11 @@ In this way of reducing custom code this extension should be reviewed. Some feat
 
 ### Requirements
 
+Some requirements are in the `setup.py` and some are in the `requirements.txt`.
+We tried to put all normal dependencies in the `setup.py`, the
+`requirements.txt` is needed for packages installed with the editable `-e` flag
+and their sub-dependencies.
+
 Package                                                                | Notes
 ---------------------------------------------------------------------- | -------------
 [ckanext-harvest](https://github.com/ckan/ckanext-harvest/)            | --
