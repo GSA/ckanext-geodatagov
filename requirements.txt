@@ -31,4 +31,3 @@ pyasn1
 
 # other requirments
 boto3
-ipdb

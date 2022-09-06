@@ -99,10 +99,6 @@ def get_s3(bucket_name: str):
             aws_secret_access_key=aws_secret_access_key,
         )
 
-    import ipdb
-
-    ipdb.set_trace()
-
     # make sure bucket exists and that we can access
     try:
         bucket = s3.Bucket(bucket_name)
@@ -121,12 +117,6 @@ def get_s3(bucket_name: str):
 
 
 def upload_to_key(s3, bucket_name, upload_str: str, filename_on_s3: str) -> None:
-
-    # TODO REMOVE
-    import ipdb
-
-    ipdb.set_trace()
-
     try:
         upload_object = s3.Object(bucket_name, filename_on_s3)
         upload_object.put(Body=upload_str)
