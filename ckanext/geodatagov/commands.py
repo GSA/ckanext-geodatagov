@@ -8,14 +8,11 @@ from builtins import str
 from builtins import range
 from past.utils import old_div
 import csv
-import sys
 import datetime
 import json
 import xml.etree.ElementTree as ET
 from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
-from tempfile import mkstemp
-import mimetypes
 import hashlib
 import base64
 
@@ -25,10 +22,7 @@ import six
 import math
 
 import logging
-import gzip
-from shutil import copyfileobj  # , copyfile
 
-import os
 import re
 import ckan
 import ckan.model as model
@@ -41,8 +35,6 @@ import ckan.lib.munge as munge
 from ckan.plugins.toolkit import config
 from ckan import plugins as p
 from ckanext.geodatagov.model import MiscsFeed, MiscsTopicCSV
-
-from ckanext.geodatagov.search import GeoPackageSearchQuery
 
 # https://github.com/GSA/ckanext-geodatagov/issues/117
 log = logging.getLogger('ckanext.geodatagov')
@@ -908,7 +900,6 @@ class GeoGovCommand(inherit):
 
         print('csv file topics-%s.csv is ready.' % date_suffix)
         return result, entry
-
 
     # this code is defunct and will need to be refactored into cli.py
     """
