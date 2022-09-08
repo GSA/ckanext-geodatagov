@@ -30,7 +30,7 @@ setup(
         # -*- Extra requirements: -*-
         'ckanext-datagovtheme',
         'ckanext-datajson',
-        'boto3',
+        'boto',
         'ply>=3.4',
         'future>=0.18.2'
     ],
