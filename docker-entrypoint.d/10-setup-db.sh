@@ -1,7 +1,8 @@
 #!/bin/bash
 
 echo "Installing updated cryptography.."
-pip install cryptopgraphy==37.04
+pip install cryptography==37.0.4
+pip list
 
 echo "Init Harvest database tables"
 ckan harvester initdb
