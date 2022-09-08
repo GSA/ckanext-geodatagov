@@ -26,51 +26,8 @@ jobs:
 
     name: CKAN ${{ matrix.ckan-version }}
     runs-on: ubuntu-latest
-    container:
-      image: openknowledge/ckan-dev:${{ matrix.ckan-version }}
-    services:
-      solr:
-        image: datagov/catalog.data.gov.solr:latest
-      db:
-        image: datagov/catalog.data.gov.db:latest
-        env:
-          POSTGRES_USER: ckan
-          POSTGRES_PASSWORD: ckan
-          POSTGRES_DB: ckan
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 10
-      redis:
-          image: redis:alpine
-    env:
-      ENV_FILE: .env
-      CKAN_SQLALCHEMY_URL: postgresql://ckan:ckan@db/ckan
-      CKAN_DATASTORE_WRITE_URL: postgresql://ckan:ckan@db/datastore
-      CKAN_DATASTORE_READ_URL: postgresql://ckan:ckan@db/datastore
-      CKAN_SOLR_URL: http://solr:8983/solr/ckan
-      CKAN_REDIS_URL: redis://redis:6379/1
 
     steps:
     - uses: actions/checkout@v2
-    - name: Install dependency (common)
-      run: |
-        apk add geos-dev openjdk11-jre
-        mkdir -p /usr/lib/jvm/java-11-openjdk/saxon/
-        SAXON_VER=9.9.1-7
-        wget https://repo1.maven.org/maven2/net/sf/saxon/Saxon-HE/${SAXON_VER}/Saxon-HE-${SAXON_VER}.jar \
-        -O /usr/lib/jvm/java-11-openjdk/saxon/saxon.jar
-        echo "CLASSPATH=$(echo $CLASSPATH:/usr/lib/jvm/java-11-openjdk/saxon/saxon.jar)" >> $GITHUB_ENV
-    - name: Install requirements (py3)
-      if: ${{ matrix.ckan-version == '2.9' }}
-      run: |
-        apk add proj proj-util proj-dev
-        pip install -r requirements.txt
-        pip install -r dev-requirements.txt
-        pip install -e .
-    - name: Setup extension (CKAN >= 2.9)
-      if: ${{ matrix.ckan-version != '2.7' && matrix.ckan-version != '2.8' }}
-      run: |
-        ckan -c test.ini db init
-        ckan -c test.ini harvester initdb
-        ckan -c test.ini spatial initdb
-    - name: Run tests
-      run: pytest --ckan-ini=test.ini --cov=ckanext.geodatagov --cov-fail-under=${CODE_COVERAGE_THRESHOLD_REQUIRED} --disable-warnings ckanext/geodatagov/tests
-
+    - name: Run everything
+      run: source .env && CKAN_VERSION=${{ matrix.ckan-version }} make clean build test
