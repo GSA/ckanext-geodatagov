@@ -26,6 +26,8 @@ class TestJSONExport(object):
         dataset1 = factories.Dataset(owner_org=organization['id'])  # NOQA
         dataset2 = factories.Dataset(owner_org=organization['id'])  # NOQA
 
+    # TODO: Fix this test when `jsonl_export` is no longer defunct
+    '''
     def test_json_output(self):
         """ run json_export and analyze results """
 
@@ -50,3 +52,4 @@ class TestJSONExport(object):
 
         log.info('Data is JSON valid: {} parsed lines'.format(parsed_lines))
         assert parsed_lines > 0
+    '''
