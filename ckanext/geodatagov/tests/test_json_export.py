@@ -1,6 +1,5 @@
 from builtins import object
 import logging
-import six
 
 from ckan.tests.helpers import reset_db
 from ckan.tests import factories
@@ -10,6 +9,7 @@ from ckanext.geodatagov.commands import GeoGovCommand
 
 
 # import json
+# import six
 
 log = logging.getLogger(__name__)
 
