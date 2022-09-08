@@ -27,7 +27,7 @@ services:
     volumes:
       - .:/app
       - ckan_storage:/var/lib/ckan
-      - docker-entrypoint.d/* /docker-entrypoint.d/
+      - "./docker-entrypoint.d:/docker-entrypoint.d"
   db:
     image: datagov/catalog.data.gov.db:latest
     env_file:
