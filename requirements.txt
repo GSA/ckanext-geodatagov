@@ -30,4 +30,4 @@ pyasn1
 # ply #required in setup.py
 
 # other requirments
-# boto3 #required in setup.py
+boto3
