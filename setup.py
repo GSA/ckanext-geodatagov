@@ -28,7 +28,7 @@ setup(
     zip_safe=False,
     install_requires=[
         # -*- Extra requirements: -*-
-        'ckanext-datagovtheme>=0.1.6',
+        # 'ckanext-datagovtheme>=0.1.6',
         'ckanext-datajson',
         'boto3',
         'ply>=3.4',
