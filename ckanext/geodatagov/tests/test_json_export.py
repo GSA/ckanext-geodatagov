@@ -1,14 +1,14 @@
 from builtins import object
-import json
 import logging
-import six
 
 from ckan.tests.helpers import reset_db
 from ckan.tests import factories
-from ckan.common import config
 
-from ckanext.geodatagov.commands import GeoGovCommand
 
+# import json
+# import six
+# from ckan.common import config
+# from ckanext.geodatagov.commands import GeoGovCommand
 
 log = logging.getLogger(__name__)
 
@@ -26,6 +26,8 @@ class TestJSONExport(object):
         dataset1 = factories.Dataset(owner_org=organization['id'])  # NOQA
         dataset2 = factories.Dataset(owner_org=organization['id'])  # NOQA
 
+    # TODO: Fix this test when `jsonl_export` is no longer defunct
+    '''
     def test_json_output(self):
         """ run json_export and analyze results """
 
@@ -50,3 +52,4 @@ class TestJSONExport(object):
 
         log.info('Data is JSON valid: {} parsed lines'.format(parsed_lines))
         assert parsed_lines > 0
+    '''
