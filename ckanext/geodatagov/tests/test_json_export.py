@@ -1,5 +1,4 @@
 from builtins import object
-import json
 import logging
 import six
 
@@ -9,6 +8,8 @@ from ckan.common import config
 
 from ckanext.geodatagov.commands import GeoGovCommand
 
+
+# import json
 
 log = logging.getLogger(__name__)
 
