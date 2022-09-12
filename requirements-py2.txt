@@ -24,7 +24,7 @@ Shapely>=1.2.13
 # six # included above in ckanext-harvest
 
 # other requirements
-boto
+#boto
 future==0.18.2
 jsonschema==2.4.0
 lxml==4.9.1

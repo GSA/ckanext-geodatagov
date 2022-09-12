@@ -1,4 +1,4 @@
-ARG CKAN_VERSION=2.8
+ARG CKAN_VERSION=2.9
 FROM openknowledge/ckan-dev:${CKAN_VERSION}
 ARG CKAN_VERSION
 
@@ -14,10 +14,6 @@ ENV CLASSPATH=${CLASSPATH}:/usr/lib/jvm/java-11-openjdk/saxon/saxon.jar
 
 RUN pip install --upgrade pip
 
-COPY . /app
-WORKDIR /app
+COPY . $APP_DIR/
 
-# python cryptography takes a while to build
-RUN if [[ "${CKAN_VERSION}" = "2.8" ]] ; then \
-        pip install -r requirements-py2.txt -r dev-requirements-py2.txt -e . ; else \
-        pip install -r requirements.txt -r dev-requirements.txt -e . ; fi
+RUN pip install -r $APP_DIR/requirements.txt -r $APP_DIR/dev-requirements.txt -e $APP_DIR/.

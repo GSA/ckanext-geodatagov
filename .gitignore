@@ -2,6 +2,7 @@
 syntax: glob
 *.pyc
 *.egg-info
+.eggs/*
 *.swo
 *.swp
 *.bak
@@ -14,3 +15,6 @@ conversiontool/lib/*.jar
 .vscode/
 PyZ3950_parsetab.py
 src
+venv/*
+tmp/localstack/*
+.vim/*
