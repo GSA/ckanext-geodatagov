@@ -1,7 +1,9 @@
 name: Tests
-on: [pull_request]
+
+on: [push]
 env:
   CODE_COVERAGE_THRESHOLD_REQUIRED: 33
+
 jobs:
   lint:
     runs-on: ubuntu-latest
