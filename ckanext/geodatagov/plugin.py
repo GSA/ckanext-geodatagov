@@ -3,7 +3,7 @@ import urllib.parse
 import logging
 import mimetypes
 
-from ckan.plugins.toolkit import request, requires_ckan_version, CkanVersionException
+from ckan.plugins.toolkit import request, requires_ckan_version
 
 from ckan.lib.munge import munge_tag
 import ckanext.geodatagov.model as geodatagovmodel
