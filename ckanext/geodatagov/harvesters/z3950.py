@@ -15,7 +15,7 @@ from ckanext.geodatagov.harvesters import GeoDataGovHarvester
 from ckan.lib.navl.validators import not_empty, convert_int, ignore_empty
 from ckan.logic.validators import boolean_validator
 
-from ckan.plugins.toolkit import requires_ckan_version
+from ckan.plugins.toolkit import add_template_directory, add_resource, requires_ckan_version
 
 requires_ckan_version("2.9")
 
@@ -26,6 +26,12 @@ class Z3950Harvester(GeoDataGovHarvester, SingletonPlugin):
     '''
 
     implements(IHarvester)
+
+    # IConfigurer
+    def update_config(self, config):
+        add_template_directory(config, 'temmplates')
+        add_resource('fanstatic_library', 'geodatagov')
+
 
     def info(self):
         return {

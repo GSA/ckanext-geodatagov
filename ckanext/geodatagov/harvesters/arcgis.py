@@ -20,7 +20,7 @@ from ckan.lib.navl.validators import not_empty, ignore_empty
 from ckan.logic.validators import boolean_validator
 from html.parser import HTMLParser
 
-from ckan.plugins.toolkit import requires_ckan_version
+from ckan.plugins.toolkit import add_template_directory, add_resource, requires_ckan_version
 
 requires_ckan_version("2.9")
 
@@ -70,6 +70,12 @@ def strip_tags(html):
 class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
 
     implements(IHarvester)
+
+    # IConfigurer
+    def update_config(self, config):
+        add_template_directory(config, 'temmplates')
+        add_resource('fanstatic_library', 'geodatagov')
+
 
     extent_template = Template(('{"type": "Polygon", '
                                 '"coordinates": [[[$minx, $miny], '
