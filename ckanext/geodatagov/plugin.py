@@ -1,6 +1,3 @@
-from future import standard_library
-standard_library.install_aliases()
-from builtins import str
 import hashlib
 import urllib.parse
 import logging
@@ -12,14 +9,10 @@ from ckan.lib.munge import munge_tag
 import ckanext.geodatagov.model as geodatagovmodel
 from ckan import __version__ as ckan_version
 
-try:
-    requires_ckan_version("2.9")
-except CkanVersionException:
-    from ckanext.geodatagov.plugins.pylons_plugin import MixinPlugin
-else:
-    from ckanext.geodatagov.plugins.flask_plugin import MixinPlugin
+requires_ckan_version("2.9")
 
-from .. import blueprint
+from . import blueprint
+import ckanext.geodatagov.cli as cli
 
 mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
 
@@ -392,7 +385,7 @@ def related_update_auth_fn(context, data_dict=None):
     return {'success': False}
 
 
-class Demo(MixinPlugin, p.SingletonPlugin):
+class Demo(p.SingletonPlugin):
 
     p.implements(p.IConfigurer)
     p.implements(p.IConfigurable)
@@ -400,6 +393,22 @@ class Demo(MixinPlugin, p.SingletonPlugin):
     p.implements(p.ITemplateHelpers)
     p.implements(p.IActions, inherit=True)
     p.implements(p.IAuthFunctions)
+    p.implements(p.IClick)
+
+    def get_commands(self) -> list:
+        return cli.get_commands()
+
+    # IConfigurer
+    def update_config(self, config):
+        # TODO remove template/templates_2_8 and move templates/templates_new
+        # to templates once we're off of CKAN 2.8.
+        #
+        # Using a separate dir for templates avoids having to maintain
+        # backwards compatibility using a sprinkling of conditionals. We don't
+        # anticipate adding new features to the existing 2.8 templates.
+        p.toolkit.add_template_directory(config, 'temmplates')
+        p.toolkit.add_resource('fanstatic_library', 'geodatagov')
+
     edit_url = None
 
     UPDATE_CATEGORY_ACTIONS = ['package_update', 'dataset_update']
@@ -627,7 +636,7 @@ class Demo(MixinPlugin, p.SingletonPlugin):
         }
 
 
-class Miscs(MixinPlugin, p.SingletonPlugin):
+class Miscs(p.SingletonPlugin):
     ''' Places for something that has nowhere to go otherwise.
     '''
     p.implements(p.IConfigurable)

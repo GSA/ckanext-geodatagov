@@ -9,7 +9,6 @@ pika>=1.1.0
 pyOpenSSL==22.0.0
 # redis==2.10.6 # included in ckan core
 # requests>=2.11.1 # included in ckan core
-six>=1.12.0
 
 # ckanext-spatial
 # GeoAlchemy>=0.6 # Unnecessary
@@ -23,7 +22,6 @@ lxml>=2.3
 argparse
 pyparsing>=2.1.10 
 # requests>=1.1.0 # included in ckan-core
-# six # included as dep of ckanext-harvest
 
 # PyZ3950
 pyasn1

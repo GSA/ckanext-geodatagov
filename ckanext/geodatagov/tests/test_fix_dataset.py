@@ -1,4 +1,3 @@
-from nose.tools import assert_in
 from ckanext.geodatagov.logic import fix_dataset
 
 
@@ -13,5 +12,5 @@ def test_fix_dataset():
 
     data_dict = fix_dataset(data_dict)
 
-    assert_in("tag01", [t['name'] for t in data_dict['tags']])
-    assert_in("tag-test-02", [t['name'] for t in data_dict['tags']])
+    assert "tag01" in [t['name'] for t in data_dict['tags']]
+    assert "tag-test-02" in [t['name'] for t in data_dict['tags']]

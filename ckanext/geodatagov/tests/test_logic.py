@@ -1,5 +1,4 @@
 import json
-import six
 
 from ckan.tests.helpers import FunctionalTestBase
 import ckan.lib.search as search
@@ -10,10 +9,9 @@ from ckanext.geodatagov.logic import rollup_save_action
 
 class TestLogic(FunctionalTestBase):
 
-    if six.PY3:
-        @classmethod
-        def setup(cls):
-            search.clear_all()
+    @classmethod
+    def setup(cls):
+        search.clear_all()
 
     def create_datasets(self):
         self.group1 = factories.Group()
@@ -28,10 +26,7 @@ class TestLogic(FunctionalTestBase):
             extras=[])
 
         sysadmin = factories.Sysadmin(name='testUpdate')
-        if six.PY2:
-            self.user_name = sysadmin['name'].encode('ascii')
-        else:
-            self.user_name = sysadmin['name']
+        self.user_name = sysadmin['name']
 
     def test_rollup_save_action(self):
         """ test rollup_save_action for expected results """

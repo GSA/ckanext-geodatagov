@@ -2,7 +2,6 @@ from datetime import datetime
 import json
 import logging
 import pkg_resources
-import six
 
 from ckan.tests.helpers import FunctionalTestBase
 import ckan.lib.search as search
@@ -16,20 +15,16 @@ log = logging.getLogger(__name__)
 
 class TestExportCSV(FunctionalTestBase):
 
-    if six.PY3:
-        @classmethod
-        def setup(cls):
-            search.clear_all()
+    @classmethod
+    def setup(cls):
+        search.clear_all()
 
     def test_export_csv(self):
         """ run json_export and analyze results """
 
         self.create_datasets()
 
-        if six.PY2:
-            cmd = GeoGovCommand('test')
-        else:
-            cmd = GeoGovCommand()
+        cmd = GeoGovCommand()
         results, entry = cmd.export_csv()
 
         # total results = groups in packages
@@ -87,10 +82,7 @@ class TestExportCSV(FunctionalTestBase):
     def test_topics_csv_url(self):
         """ test the /topics-csv url """
         self.create_datasets()
-        if six.PY2:
-            cmd = GeoGovCommand('test')
-        else:
-            cmd = GeoGovCommand()
+        cmd = GeoGovCommand()
         results, entry = cmd.export_csv()
 
         self.app = self._get_test_app()
@@ -157,10 +149,7 @@ class TestExportCSV(FunctionalTestBase):
         packages = json.load(f)
         f.close()
 
-        if six.PY2:
-            cmd = GeoGovCommand('test')
-        else:
-            cmd = GeoGovCommand()
+        cmd = GeoGovCommand()
         results = cmd.export_group_and_tags(packages)
 
         assert len(results) == 12

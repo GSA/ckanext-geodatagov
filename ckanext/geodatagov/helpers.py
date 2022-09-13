@@ -1,10 +1,8 @@
-from builtins import str
 import json
 import logging
 
 from ckan import plugins as p
 from ckanext.harvest.model import HarvestSource
-# from routes import url_for as _routes_default_url_for
 
 log = logging.getLogger(__name__)
 

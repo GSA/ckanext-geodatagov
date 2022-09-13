@@ -1,4 +1,3 @@
-from builtins import object
 
 import ckan.plugins as p
 
