@@ -25,8 +25,8 @@ PASS=ckan
 # git pull
 # cd -
 
-ckan_wrapper --plugin=ckanext-harvest harvester initdb
-ckan_wrapper --plugin=ckanext-spatial spatial initdb
+ckan -c test.ini --plugin=ckanext-harvest harvester initdb
+ckan -c test.ini --plugin=ckanext-spatial spatial initdb
 
 pytest --ckan-ini=test.ini --cov=ckanext.geodatagov --disable-warnings ckanext/geodatagov/tests/
 
