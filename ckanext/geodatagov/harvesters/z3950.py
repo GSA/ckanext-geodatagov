@@ -32,7 +32,6 @@ class Z3950Harvester(GeoDataGovHarvester, SingletonPlugin):
         add_template_directory(config, 'temmplates')
         add_resource('fanstatic_library', 'geodatagov')
 
-
     def info(self):
         return {
             'name': 'z3950',

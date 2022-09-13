@@ -76,7 +76,6 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
         add_template_directory(config, 'temmplates')
         add_resource('fanstatic_library', 'geodatagov')
 
-
     extent_template = Template(('{"type": "Polygon", '
                                 '"coordinates": [[[$minx, $miny], '
                                 '[$minx, $maxy], [$maxx, $maxy], '
