@@ -633,6 +633,7 @@ class Demo(p.SingletonPlugin):
 class Miscs(p.SingletonPlugin):
     ''' Places for something that has nowhere to go otherwise.
     '''
+    p.implements(p.IConfigurer)
     p.implements(p.IConfigurable)
     p.implements(p.IRoutes, inherit=True)
     p.implements(p.IBlueprint)

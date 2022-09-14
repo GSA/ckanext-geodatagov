@@ -4,7 +4,7 @@ from PyZ3950 import zoom
 
 from ckan import model
 
-from ckan.plugins.core import SingletonPlugin, implements
+from ckan.plugins.core import SingletonPlugin, implements, IConfigurer
 
 from ckanext.harvest.interfaces import IHarvester
 from ckanext.harvest.model import HarvestObject
@@ -25,6 +25,7 @@ class Z3950Harvester(GeoDataGovHarvester, SingletonPlugin):
     A Harvester for z3950.
     '''
 
+    implements(IConfigurer)
     implements(IHarvester)
 
     # IConfigurer
