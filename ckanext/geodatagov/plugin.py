@@ -400,7 +400,7 @@ class Demo(p.SingletonPlugin):
 
     # IConfigurer
     def update_config(self, config):
-        p.toolkit.add_template_directory(config, 'temmplates')
+        p.toolkit.add_template_directory(config, 'templates')
         p.toolkit.add_resource('fanstatic_library', 'geodatagov')
 
     edit_url = None
@@ -640,7 +640,7 @@ class Miscs(p.SingletonPlugin):
 
     # IConfigurer
     def update_config(self, config):
-        p.toolkit.add_template_directory(config, 'temmplates')
+        p.toolkit.add_template_directory(config, 'templates')
         p.toolkit.add_resource('fanstatic_library', 'geodatagov')
 
     # IConfigurable

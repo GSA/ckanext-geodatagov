@@ -75,7 +75,7 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
 
     # IConfigurer
     def update_config(self, config):
-        add_template_directory(config, 'temmplates')
+        add_template_directory(config, 'templates')
         add_resource('fanstatic_library', 'geodatagov')
 
     extent_template = Template(('{"type": "Polygon", '

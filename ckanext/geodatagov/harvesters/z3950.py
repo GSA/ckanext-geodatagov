@@ -31,7 +31,7 @@ class Z3950Harvester(GeoDataGovHarvester, SingletonPlugin):
 
     # IConfigurer
     def update_config(self, config):
-        add_template_directory(config, 'temmplates')
+        add_template_directory(config, 'templates')
         add_resource('fanstatic_library', 'geodatagov')
 
     def info(self):
