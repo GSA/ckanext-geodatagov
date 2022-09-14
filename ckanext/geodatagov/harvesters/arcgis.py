@@ -1,6 +1,3 @@
-from future import standard_library
-standard_library.install_aliases()
-from builtins import str
 import urllib.parse
 import requests
 import json
@@ -23,13 +20,10 @@ from ckan.lib.navl.validators import not_empty, ignore_empty
 from ckan.logic.validators import boolean_validator
 from html.parser import HTMLParser
 
-from ckan.plugins.toolkit import requires_ckan_version, CkanVersionException
-try:
-    requires_ckan_version("2.9")
-except CkanVersionException:
-    from ckanext.geodatagov.plugins.pylons_plugin import MixinPlugin
-else:
-    from ckanext.geodatagov.plugins.flask_plugin import MixinPlugin
+from ckan.plugins.toolkit import add_template_directory, add_resource, requires_ckan_version
+from ckan.plugins import IConfigurer
+
+requires_ckan_version("2.9")
 
 
 TYPES = ['Web Map', 'KML', 'Mobile Application',
@@ -74,9 +68,15 @@ def strip_tags(html):
     return s.get_data()
 
 
-class ArcGISHarvester(SpatialHarvester, MixinPlugin, SingletonPlugin):
+class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
 
+    implements(IConfigurer)
     implements(IHarvester)
+
+    # IConfigurer
+    def update_config(self, config):
+        add_template_directory(config, 'templates')
+        add_resource('fanstatic_library', 'geodatagov')
 
     extent_template = Template(('{"type": "Polygon", '
                                 '"coordinates": [[[$minx, $miny], '

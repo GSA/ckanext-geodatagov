@@ -1,6 +1,5 @@
 import logging
 import xml.etree.ElementTree as ET
-from builtins import object
 
 import pytest
 from ckan.tests import factories

@@ -1,15 +1,10 @@
 import ckan.model as model
+from ckan.plugins.toolkit import abort
+
 from flask import Blueprint
-import six
+from flask.wrappers import Response as response
 
 from ckanext.geodatagov.model import MiscsFeed, MiscsTopicCSV
-
-
-if six.PY3:
-    from flask.wrappers import Response as response
-    from ckan.plugins.toolkit import abort
-else:
-    from ckan.lib.base import response
 
 
 datapusher = Blueprint('geodatagov', __name__)

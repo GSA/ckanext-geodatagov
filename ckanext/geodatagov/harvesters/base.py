@@ -1,9 +1,5 @@
-from future import standard_library
-standard_library.install_aliases()
-from builtins import str
 import re
 import os
-import six
 import subprocess
 import logging
 log = logging.getLogger(__name__)
@@ -166,7 +162,7 @@ class GeoDataGovHarvester(SpatialHarvester):
         tmp_source_file.write(original_document.decode('utf-8'))
         tmp_source_file.close()
 
-        subprocess_command = py2_subprocess_run if six.PY2 else subprocess.run
+        subprocess_command = subprocess.run
         transform = subprocess_command(["java",
                                         "net.sf.saxon.Transform",
                                         "-s:" + source_path,
@@ -174,11 +170,8 @@ class GeoDataGovHarvester(SpatialHarvester):
                                         "-o:" + transformed_path
                                         ], capture_output=True)
 
-        return_code = transform[0] if six.PY2 else transform.returncode
-        std_err = transform[2] if six.PY2 else transform.stderr
-
-        if return_code > 0:
-            log.error('ISO Transform Failure: {}'.format(std_err))
+        if transform.returncode > 0:
+            log.error('ISO Transform Failure: {}'.format(transform.stderr))
             # Error may have caused transformed file to not be written;
             #  exit here just in case
             return ''
@@ -290,30 +283,3 @@ class GeoDataGovGeoportalHarvester(CSWHarvester, GeoDataGovHarvester):
 
         log.debug('XML content saved (len %s)', len(content))
         return True
-
-
-def py2_subprocess_run(*popenargs, **kwargs):
-    ''' Backport of subprocess.run courtesy of https://stackoverflow.com/a/40590445 '''
-    input = kwargs.pop("input", None)
-    check = kwargs.pop("handle", False)
-
-    # Keywork arguments not supported
-    kwargs = {}
-
-    if input is not None:
-        if 'stdin' in kwargs:
-            raise ValueError('stdin and input arguments may not both be used.')
-        kwargs['stdin'] = subprocess.PIPE
-
-    process = subprocess.Popen(*popenargs, **kwargs)
-    try:
-        stdout, stderr = process.communicate(input)
-    except BaseException:
-        process.kill()
-        process.wait()
-        raise
-    retcode = process.poll()
-    if check and retcode:
-        raise subprocess.CalledProcessError(
-            retcode, process.args, output=stdout, stderr=stderr)
-    return retcode, stdout, stderr

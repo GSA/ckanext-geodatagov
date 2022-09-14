@@ -1,54 +1,37 @@
-from __future__ import division
-from __future__ import print_function
-from future import standard_library
-standard_library.install_aliases()
-from builtins import chr
-from builtins import zip
-from builtins import str
-from builtins import range
 from past.utils import old_div
+import base64
 import csv
 import datetime
 import json
+import hashlib
+import logging
+import math
+import re
+import requests
+import time
 import xml.etree.ElementTree as ET
 from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
-import hashlib
-import base64
 
-import time
-import six
-
-import math
-
-import logging
-
-import re
 import ckan
 import ckan.model as model
 import ckan.logic as logic
-import ckan.lib.search as search
-import requests
-from ckanext.harvest.model import HarvestSource, HarvestJob
 import ckan.lib.munge as munge
-
-from ckan.plugins.toolkit import config
+import ckan.lib.search as search
 from ckan import plugins as p
+from ckan.plugins.toolkit import config
+
+from ckanext.harvest.model import HarvestSource, HarvestJob
 from ckanext.geodatagov.model import MiscsFeed, MiscsTopicCSV
+
 
 # https://github.com/GSA/ckanext-geodatagov/issues/117
 log = logging.getLogger('ckanext.geodatagov')
 
 ckan_tmp_path = '/var/tmp/ckan'
 
-if p.toolkit.check_ckan_version(min_version='2.9'):
-    inherit = p.SingletonPlugin
-else:
-    import ckan.lib.cli as cli
-    inherit = cli.CkanCommand
 
-
-class GeoGovCommand(inherit):
+class GeoGovCommand(p.SingletonPlugin):
     '''
     Commands:
 
@@ -63,8 +46,7 @@ class GeoGovCommand(inherit):
         paster geodatagov export-csv -c <config>
         paster geodatagov update-dataset-geo-fields -c <config>
     '''
-    if p.toolkit.check_ckan_version(min_version='2.9'):
-        p.implements(p.IClick)
+    p.implements(p.IClick)
     summary = __doc__.split('\n')[0]
     usage = __doc__
 
@@ -773,10 +755,7 @@ class GeoGovCommand(inherit):
                 continue
 
             extras = dict([(x['key'], x['value']) for x in pkg['extras']])
-            if six.PY2:
-                package['title'] = pkg.get('title').encode('ascii', 'xmlcharrefreplace')
-            else:
-                package['title'] = pkg.get('title')
+            package['title'] = pkg.get('title')
             package['url'] = domain + '/dataset/' + pkg.get('name')
             package['organization'] = pkg.get('organization').get('title')
             package['organizationUrl'] = domain + '/organization/' + pkg.get('organization').get('name')
@@ -858,10 +837,7 @@ class GeoGovCommand(inherit):
         print('writing into db...')
 
         date_suffix = datetime.datetime.strftime(datetime.datetime.now(), '%Y%m%d')
-        if six.PY2:
-            csv_output = io.BytesIO()
-        else:
-            csv_output = io.StringIO()
+        csv_output = io.StringIO()
 
         fieldnames = ['Dataset Title', 'Dataset URL', 'Organization Name', 'Organization Link',
                       'Harvest Source Name', 'Harvest Source Link', 'Topic Name', 'Topic Categories']

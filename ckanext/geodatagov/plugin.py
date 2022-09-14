@@ -1,25 +1,18 @@
-from future import standard_library
-standard_library.install_aliases()
-from builtins import str
 import hashlib
 import urllib.parse
 import logging
 import mimetypes
 
-from ckan.plugins.toolkit import request, requires_ckan_version, CkanVersionException
+from ckan.plugins.toolkit import request, requires_ckan_version
 
 from ckan.lib.munge import munge_tag
 import ckanext.geodatagov.model as geodatagovmodel
 from ckan import __version__ as ckan_version
 
-try:
-    requires_ckan_version("2.9")
-except CkanVersionException:
-    from ckanext.geodatagov.plugins.pylons_plugin import MixinPlugin
-else:
-    from ckanext.geodatagov.plugins.flask_plugin import MixinPlugin
+requires_ckan_version("2.9")
 
-from .. import blueprint
+from . import blueprint
+import ckanext.geodatagov.cli as cli
 
 mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
 
@@ -392,7 +385,7 @@ def related_update_auth_fn(context, data_dict=None):
     return {'success': False}
 
 
-class Demo(MixinPlugin, p.SingletonPlugin):
+class Demo(p.SingletonPlugin):
 
     p.implements(p.IConfigurer)
     p.implements(p.IConfigurable)
@@ -400,6 +393,16 @@ class Demo(MixinPlugin, p.SingletonPlugin):
     p.implements(p.ITemplateHelpers)
     p.implements(p.IActions, inherit=True)
     p.implements(p.IAuthFunctions)
+    p.implements(p.IClick)
+
+    def get_commands(self) -> list:
+        return cli.get_commands()
+
+    # IConfigurer
+    def update_config(self, config):
+        p.toolkit.add_template_directory(config, 'templates')
+        p.toolkit.add_resource('fanstatic_library', 'geodatagov')
+
     edit_url = None
 
     UPDATE_CATEGORY_ACTIONS = ['package_update', 'dataset_update']
@@ -627,12 +630,18 @@ class Demo(MixinPlugin, p.SingletonPlugin):
         }
 
 
-class Miscs(MixinPlugin, p.SingletonPlugin):
+class Miscs(p.SingletonPlugin):
     ''' Places for something that has nowhere to go otherwise.
     '''
+    p.implements(p.IConfigurer)
     p.implements(p.IConfigurable)
     p.implements(p.IRoutes, inherit=True)
     p.implements(p.IBlueprint)
+
+    # IConfigurer
+    def update_config(self, config):
+        p.toolkit.add_template_directory(config, 'templates')
+        p.toolkit.add_resource('fanstatic_library', 'geodatagov')
 
     # IConfigurable
     def configure(self, config):

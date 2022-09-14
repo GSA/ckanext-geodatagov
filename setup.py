@@ -10,7 +10,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='ckanext-geodatagov',
-    version='0.1.4',
+    version='0.1.5',
     description="",
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -31,14 +31,13 @@ setup(
         'ckanext-datajson',
         'boto3',
         'ply>=3.4',
-        'future>=0.18.2'
     ],
     setup_requires=['wheel'],
     entry_points="""
         [ckan.plugins]
     # Add plugins here, eg
-    geodatagov=ckanext.geodatagov.plugins:Demo
-    datagov_harvest=ckanext.geodatagov.plugins:DataGovHarvest
+    geodatagov=ckanext.geodatagov.plugin:Demo
+    datagov_harvest=ckanext.geodatagov.plugin:DataGovHarvest
 
     geodatagov_csw_harvester=ckanext.geodatagov.harvesters:GeoDataGovCSWHarvester
     geodatagov_waf_harvester=ckanext.geodatagov.harvesters:GeoDataGovWAFHarvester
@@ -47,7 +46,7 @@ setup(
     waf_harvester_collection=ckanext.geodatagov.harvesters:WAFCollectionHarvester
     arcgis_harvester=ckanext.geodatagov.harvesters:ArcGISHarvester
     z3950_harvester=ckanext.geodatagov.harvesters:Z3950Harvester
-    geodatagov_miscs=ckanext.geodatagov.plugins:Miscs
+    geodatagov_miscs=ckanext.geodatagov.plugin:Miscs
 
     [paste.paster_command]
     geodatagov=ckanext.geodatagov.commands:GeoGovCommand

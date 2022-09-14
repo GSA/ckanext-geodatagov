@@ -10,7 +10,7 @@ import ckan.logic.schema as schema
 from ckan.logic.action import get as core_get
 import ckan.model as model
 import ckan.plugins as p
-from ckanext.geodatagov.plugins import change_resource_details, split_tags
+from ckanext.geodatagov.plugin import change_resource_details, split_tags
 from ckanext.geodatagov.harvesters.arcgis import _slugify
 from ckanext.harvest.model import HarvestObject  # , HarvestJob
 

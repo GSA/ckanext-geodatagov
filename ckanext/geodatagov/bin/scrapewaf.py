@@ -1,8 +1,5 @@
-from __future__ import print_function
-from future import standard_library
-standard_library.install_aliases()
-from builtins import zip
-from builtins import str
+import zip
+import str
 import csv
 import requests.exceptions
 import pyparsing as parse

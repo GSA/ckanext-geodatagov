@@ -1,12 +1,9 @@
-from __future__ import print_function
-from future import standard_library
-standard_library.install_aliases()
-import os
 
 import http.server
+import logging
 import socketserver
 from threading import Thread
-import logging
+import os
 log = logging.getLogger(__name__)
 
 
