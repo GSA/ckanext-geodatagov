@@ -21,6 +21,7 @@ from ckan.logic.validators import boolean_validator
 from html.parser import HTMLParser
 
 from ckan.plugins.toolkit import add_template_directory, add_resource, requires_ckan_version
+from ckan.plugins import IConfigurer
 
 requires_ckan_version("2.9")
 

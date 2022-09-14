@@ -4,7 +4,8 @@ from PyZ3950 import zoom
 
 from ckan import model
 
-from ckan.plugins.core import SingletonPlugin, implements, IConfigurer
+from ckan.plugins.core import SingletonPlugin, implements
+from ckan.plugins import IConfigurer
 
 from ckanext.harvest.interfaces import IHarvester
 from ckanext.harvest.model import HarvestObject
