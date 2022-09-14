@@ -13,7 +13,7 @@ from ckan.model import Session
 from ckanext.harvest.model import HarvestObject
 from ckanext.harvest.model import HarvestObjectExtra as HOExtra
 from ckanext.harvest.interfaces import IHarvester
-from ckan.plugins.core import SingletonPlugin, implements, IConfigurer
+from ckan.plugins.core import SingletonPlugin, implements
 from ckanext.spatial.harvesters.base import SpatialHarvester
 from ckan.logic import get_action, ValidationError
 from ckan.lib.navl.validators import not_empty, ignore_empty
