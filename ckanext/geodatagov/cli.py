@@ -190,6 +190,7 @@ def sitemap_to_s3(upload_to_s3, page_size: int, max_per_page: int):
         )
 
         start += page_size
+        filename_number += 1
 
         # large block removed here, I'm not convinced that it was ever hit
         # if issues arise around max_per_page, re-add here
