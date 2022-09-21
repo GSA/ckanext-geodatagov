@@ -236,6 +236,7 @@ def sitemap_to_s3(upload_to_s3, page_size: int, max_per_page: int):
         dump = [sitemap.to_json() for sitemap in sitemaps]
         print(f"Done locally: Sitemap list\n{json.dumps(dump, indent=4)}")
 
+
 def get_response(url):
     http = urllib3.PoolManager()
     CKAN_SOLR_USER = os.environ.get("CKAN_SOLR_USER", "")
@@ -253,6 +254,7 @@ def get_response(url):
         return 'error'
     else:
         return response
+
 
 # work in progress
 @geodatagov.command()
@@ -397,15 +399,17 @@ def _normalize_type(_type):
         _type = _type.__name__
     return _type.strip().lower()
 
+
 def index_for(_type):
     """ Get a SearchIndex instance sub-class suitable for
         the specified type. """
     try:
         _type_n = _normalize_type(_type)
         return _INDICES[_type_n]()
-    except KeyError as ke:
+    except KeyError:
         log.warn("Unknown search type: %s" % _type)
         return NoopSearchIndex()
+
 
 def query_for(_type):
     """ Get a SearchQuery instance sub-class suitable for the specified
@@ -413,8 +417,9 @@ def query_for(_type):
     try:
         _type_n = _normalize_type(_type)
         return _QUERIES[_type_n]()
-    except KeyError as ke:
+    except KeyError:
         raise SearchError("Unknown search type: %s" % _type)
+
 
 @geodatagov.command()
 @click.option("--dryrun", default=DEFAULT_DRYRUN, type=click.BOOL, help='inspect what will be delected')
@@ -422,11 +427,11 @@ def remove_orphaned_solr(dryrun):
     ''' remove_orphaned_solr '''
     if dryrun:
         log.info('Starting dryrun to remove index.')
-    
+
     package_index = index_for(model.Package)
 
     package_ids = [r[0] for r in model.Session.query(model.Package.id).
-                    filter(model.Package.state != 'deleted').all()]
+                   filter(model.Package.state != 'deleted').all()]
     log.info('Removing orphaned solr entries...')
     package_query = query_for(model.Package)
     indexed_pkg_ids = set(package_query.get_all_entity_ids())
