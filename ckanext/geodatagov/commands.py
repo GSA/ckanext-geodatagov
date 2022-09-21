@@ -1,4 +1,3 @@
-from past.utils import old_div
 import base64
 import csv
 import datetime
@@ -466,7 +465,6 @@ class GeoGovCommand(p.SingletonPlugin):
     #  u'accrualPeriodicity': 6056, u'format': 6047, u'spatial': 6009, u'size': 5964, u'references': 5841,
     #  u'dataDictionary': 5841, u'temporal': 5830, u'modified': 5809, u'issued': 5793, u'mbox': 5547,
     #  u'granularity': 4434, u'license': 2048, u'dataQuality': 453}
-
 
     def combine_feeds(self):
         from xml.dom import minidom

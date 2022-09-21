@@ -465,3 +465,4 @@ def get_commands() -> list:
     """List of commands to pass to ckan"""
 
     return [geodatagov]
+    
