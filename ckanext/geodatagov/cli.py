@@ -9,13 +9,11 @@ import boto3
 import click
 import math
 import urllib3
-# .error import URLError, HTTPError
-# from urllib3.request import Request, urlopen
+
 from past.utils import old_div
 from botocore.exceptions import ClientError
 from ckan.plugins.toolkit import config
 
-import requests
 from requests.auth import HTTPBasicAuth
 
 import ckan
@@ -24,6 +22,23 @@ import ckan.lib.search as search
 import ckan.logic as logic
 from ckanext.geodatagov.search import GeoPackageSearchQuery
 
+import sys
+from ckan.lib.search.common import SearchError
+from ckan.lib.search.index import PackageSearchIndex, NoopSearchIndex
+from ckan.lib.search.query import (
+    TagSearchQuery, ResourceSearchQuery, PackageSearchQuery
+)
+
+_INDICES = {
+    'package': PackageSearchIndex
+}
+
+_QUERIES = {
+    'tag': TagSearchQuery,
+    'resource': ResourceSearchQuery,
+    'package': PackageSearchQuery
+}
+
 
 # default constants
 DEFAULT_LOG = "ckanext.geodatagov"
@@ -31,6 +46,7 @@ DEFAULT_LOG = "ckanext.geodatagov"
 UPLOAD_TO_S3 = True
 PAGE_SIZE = 1000
 MAX_PER_PAGE = 50000
+DEFAULT_DRYRUN = False
 
 log = logging.getLogger(DEFAULT_LOG)
 
@@ -220,7 +236,6 @@ def sitemap_to_s3(upload_to_s3, page_size: int, max_per_page: int):
         dump = [sitemap.to_json() for sitemap in sitemaps]
         print(f"Done locally: Sitemap list\n{json.dumps(dump, indent=4)}")
 
-
 def get_response(url):
     http = urllib3.PoolManager()
     CKAN_SOLR_USER = os.environ.get("CKAN_SOLR_USER", "")
@@ -239,10 +254,11 @@ def get_response(url):
     else:
         return response
 
+# work in progress
 @geodatagov.command()
 def db_solr_sync():
-    """db_solr_sync"""
-    log.info("db_solr_sync...")
+    """db_solr_sync - work in progress"""
+    log.info("db_solr_sync - work in progress...")
     print(str(datetime.datetime.now()) + ' Entering Database Solr Sync function.')
 
     url = config.get('solr_url') + "/select?q=*%3A*&sort=id+asc&fl=id%2Cmetadata_modified&wt=json&indent=true"
@@ -372,6 +388,74 @@ def db_solr_sync():
                 raise
 
         print(str(datetime.datetime.now()) + " All Sync Done.")
+
+
+def _normalize_type(_type):
+    if isinstance(_type, model.domain_object.DomainObject):
+        _type = _type.__class__
+    if isinstance(_type, type):
+        _type = _type.__name__
+    return _type.strip().lower()
+
+def index_for(_type):
+    """ Get a SearchIndex instance sub-class suitable for
+        the specified type. """
+    try:
+        _type_n = _normalize_type(_type)
+        return _INDICES[_type_n]()
+    except KeyError as ke:
+        log.warn("Unknown search type: %s" % _type)
+        return NoopSearchIndex()
+
+def query_for(_type):
+    """ Get a SearchQuery instance sub-class suitable for the specified
+        type. """
+    try:
+        _type_n = _normalize_type(_type)
+        return _QUERIES[_type_n]()
+    except KeyError as ke:
+        raise SearchError("Unknown search type: %s" % _type)
+
+@geodatagov.command()
+@click.option("--dryrun", default=DEFAULT_DRYRUN, type=click.BOOL, help='inspect what will be delected')
+def remove_orphaned_solr(dryrun):
+    ''' remove_orphaned_solr '''
+    if dryrun:
+        log.info('Starting dryrun to remove index.')
+    
+    package_index = index_for(model.Package)
+
+    package_ids = [r[0] for r in model.Session.query(model.Package.id).
+                    filter(model.Package.state != 'deleted').all()]
+    log.info('Removing orphaned solr entries...')
+    package_query = query_for(model.Package)
+    indexed_pkg_ids = set(package_query.get_all_entity_ids())
+
+    # Packages orphaned
+    package_ids = indexed_pkg_ids - set(package_ids)
+
+    if len(package_ids) == 0:
+        log.info('solr is good.')
+        return
+
+    total_packages = len(package_ids)
+
+    for counter, pkg_id in enumerate(package_ids):
+        sys.stdout.write(
+            "removing index {0}/{1} with id {2} \n".format(
+                counter +1, total_packages, pkg_id)
+        )
+        sys.stdout.flush()
+        try:
+            if not dryrun:
+                package_index.delete_package({'id': pkg_id})
+        except Exception as e:
+            log.error(u'Error while delete index %s: %s' %
+                        (pkg_id, repr(e)))
+
+    model.Session.commit()
+    log.info('Finished removing index.')
+
 
 # IClick
 def get_commands() -> list:
