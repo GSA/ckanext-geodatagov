@@ -4,12 +4,26 @@ import hashlib
 import json
 import logging
 
+import os
 import boto3
 import click
+import math
+import urllib3
+# .error import URLError, HTTPError
+# from urllib3.request import Request, urlopen
+from past.utils import old_div
 from botocore.exceptions import ClientError
 from ckan.plugins.toolkit import config
 
+import requests
+from requests.auth import HTTPBasicAuth
+
+import ckan
+import ckan.model as model
+import ckan.lib.search as search
+import ckan.logic as logic
 from ckanext.geodatagov.search import GeoPackageSearchQuery
+
 
 # default constants
 DEFAULT_LOG = "ckanext.geodatagov"
@@ -158,7 +172,6 @@ def upload(sitemaps: list) -> None:
     upload_to_key(s3, bucket_name, sitemap_index, bucket_path + "sitemap.xml")
     log.info("Sitemap index upload complete.")
 
-
 @geodatagov.command()
 @click.option("--upload_to_s3", default=UPLOAD_TO_S3, type=click.BOOL)
 @click.option("--page_size", default=PAGE_SIZE, type=click.INT)
@@ -207,6 +220,158 @@ def sitemap_to_s3(upload_to_s3, page_size: int, max_per_page: int):
         dump = [sitemap.to_json() for sitemap in sitemaps]
         print(f"Done locally: Sitemap list\n{json.dumps(dump, indent=4)}")
 
+
+def get_response(url):
+    http = urllib3.PoolManager()
+    CKAN_SOLR_USER = os.environ.get("CKAN_SOLR_USER", "")
+    CKAN_SOLR_PASSWORD = os.environ.get("CKAN_SOLR_PASSWORD", "")
+    headers = urllib3.make_headers(basic_auth="{}:{}".format(CKAN_SOLR_USER,CKAN_SOLR_PASSWORD))
+    try:
+        response = http.request('GET', url, headers=headers)
+    except urllib3.HTTPError as e:
+        print('The server couldn\'t fulfill the request.')
+        print(('Error code: ', e.code))
+        return 'error'
+    except urllib3.URLError as e:
+        print('We failed to reach a server.')
+        print(('Reason: ', e.reason))
+        return 'error'
+    else:
+        return response
+
+@geodatagov.command()
+def db_solr_sync():
+    """db_solr_sync"""
+    log.info("db_solr_sync...")
+    print(str(datetime.datetime.now()) + ' Entering Database Solr Sync function.')
+
+    url = config.get('solr_url') + "/select?q=*%3A*&sort=id+asc&fl=id%2Cmetadata_modified&wt=json&indent=true"
+    response = get_response(url)
+
+    if (response != 'error'):
+
+        print(str(datetime.datetime.now()) + ' Deleting records from miscs_solr_sync.')
+        sql = '''delete from miscs_solr_sync'''
+        model.Session.execute(sql)
+        model.Session.commit()
+
+        f = response.data
+        data = json.loads(f)
+        print(data)
+        rows = data.get('response').get('numFound')
+
+        start = 0
+        chunk_size = 1000
+
+        print(str(datetime.datetime.now()) + ' Starting insertion of records in miscs_solr_sync .')
+
+        for x in range(0, int(math.ceil(old_div(rows, chunk_size))) + 1):
+
+            if (x == 0):
+                start = 0
+
+            print(str(datetime.datetime.now()) + ' Fetching ' + url + "&rows=" + str(chunk_size) + "&start=" + str(start))
+
+            response = get_response(url + "&rows=" + str(chunk_size) + "&start=" + str(start))
+            f = response.data
+            data = json.loads(f)
+            results = data.get('response').get('docs')
+
+            print(str(datetime.datetime.now()) + ' Inserting ' + str(start) + ' - ' + str(
+                start + int(data.get('responseHeader').get('params').get('rows')) - 1) + ' of ' + str(rows))
+
+            for x in range(0, len(results)):
+                sql = '''select count(id) as count from package where id = :pkg_id;'''
+                q = model.Session.execute(sql, {'pkg_id': results[x]['id']})
+                for row in q:
+                    if (row['count'] == 0):
+                        sql = '''delete from miscs_solr_sync where pkg_id = :pkg_id;'''
+                        model.Session.execute(sql, {'pkg_id': results[x]['id']})
+                        sql = '''insert into miscs_solr_sync (pkg_id, action) values (:pkg_id, :action);'''
+                        model.Session.execute(sql, {'pkg_id': results[x]['id'], 'action': 'notfound'})
+                        model.Session.commit()
+                    else:
+                        pkg_dict = logic.get_action('package_show')(
+                            {'model': model, 'ignore_auth': True, 'validate': False},
+                            {'id': results[x]['id']})
+                        if (str(results[x]['metadata_modified'])[: 19] != pkg_dict['metadata_modified'][: 19]):
+                            print(str(datetime.datetime.now()) + ' Action Type : outsync for Package Id: \
+                                ' + results[x]['id'])
+                            print(' ' * 26 + ' Modified Date from Solr: ' + str(results[x]['metadata_modified']))
+                            print(' ' * 26 + ' Modified Date from Db: ' + pkg_dict['metadata_modified'])
+                            sql = '''delete from miscs_solr_sync where pkg_id = :pkg_id;'''
+                            model.Session.execute(sql, {'pkg_id': results[x]['id']})
+                            sql = '''insert into miscs_solr_sync (pkg_id, action) values (:pkg_id, :action);'''
+                            model.Session.execute(sql, {'pkg_id': results[x]['id'], 'action': 'outsync'})
+                            model.Session.commit()
+                        else:
+                            sql = '''delete from miscs_solr_sync where pkg_id = :pkg_id;'''
+                            model.Session.execute(sql, {'pkg_id': results[x]['id']})
+                            sql = '''insert into miscs_solr_sync (pkg_id, action) values (:pkg_id, :action);'''
+                            model.Session.execute(sql, {'pkg_id': results[x]['id'], 'action': 'insync'})
+                            model.Session.commit()
+
+            start = int(data.get('responseHeader').get('params').get('start')) + chunk_size
+
+        print(str(datetime.datetime.now()) + ' Starting Database to Solr Sync')
+
+        # sql = '''Select id from package where id not in (select pkg_id from miscs_solr_sync); '''
+        sql = '''Select p.id as pkg_id from package p
+                left join miscs_solr_sync sp on sp.pkg_id = p.id
+                where sp.pkg_id is null; '''
+
+        q = model.Session.execute(sql)
+        pkg_ids = set()
+        for row in q:
+            pkg_ids.add(row['pkg_id'])
+        for pkg_id in pkg_ids:
+            try:
+                print(str(datetime.datetime.now()) + ' Building Id: ' + pkg_id)
+                search.rebuild(pkg_id)
+            except ckan.logic.NotFound:
+                print("Error: Not Found.")
+            except KeyboardInterrupt:
+                print("Stopped.")
+                return
+            except BaseException:
+                raise
+
+        sql = '''Select pkg_id from miscs_solr_sync where action = 'outsync'; '''
+        q = model.Session.execute(sql)
+        pkg_ids = set()
+        for row in q:
+            pkg_ids.add(row['pkg_id'])
+        for pkg_id in pkg_ids:
+            try:
+                print(str(datetime.datetime.now()) + ' Rebuilding Id: ' + pkg_id)
+                search.rebuild(pkg_id)
+            except ckan.logic.NotFound:
+                print("Error: Not Found.")
+            except KeyboardInterrupt:
+                print("Stopped.")
+                return
+            except BaseException:
+                raise
+
+        print(str(datetime.datetime.now()) + ' Starting Solr to Database Sync')
+
+        sql = '''Select pkg_id from miscs_solr_sync where action = 'notfound'; '''
+        q = model.Session.execute(sql)
+        pkg_ids = set()
+        for row in q:
+            pkg_ids.add(row['pkg_id'])
+        for pkg_id in pkg_ids:
+            try:
+                search.clear(pkg_id)
+            except ckan.logic.NotFound:
+                print("Error: Not Found.")
+            except KeyboardInterrupt:
+                print("Stopped.")
+                return
+            except BaseException:
+                raise
+
+        print(str(datetime.datetime.now()) + " All Sync Done.")
 
 # IClick
 def get_commands() -> list:
