@@ -14,8 +14,6 @@ from past.utils import old_div
 from botocore.exceptions import ClientError
 from ckan.plugins.toolkit import config
 
-from requests.auth import HTTPBasicAuth
-
 import ckan
 import ckan.model as model
 import ckan.lib.search as search
@@ -188,6 +186,7 @@ def upload(sitemaps: list) -> None:
     upload_to_key(s3, bucket_name, sitemap_index, bucket_path + "sitemap.xml")
     log.info("Sitemap index upload complete.")
 
+
 @geodatagov.command()
 @click.option("--upload_to_s3", default=UPLOAD_TO_S3, type=click.BOOL)
 @click.option("--page_size", default=PAGE_SIZE, type=click.INT)
@@ -241,7 +240,7 @@ def get_response(url):
     http = urllib3.PoolManager()
     CKAN_SOLR_USER = os.environ.get("CKAN_SOLR_USER", "")
     CKAN_SOLR_PASSWORD = os.environ.get("CKAN_SOLR_PASSWORD", "")
-    headers = urllib3.make_headers(basic_auth="{}:{}".format(CKAN_SOLR_USER,CKAN_SOLR_PASSWORD))
+    headers = urllib3.make_headers(basic_auth="{}:{}".format(CKAN_SOLR_USER, CKAN_SOLR_PASSWORD))
     try:
         response = http.request('GET', url, headers=headers)
     except urllib3.HTTPError as e:
@@ -448,15 +447,14 @@ def remove_orphaned_solr(dryrun):
     for counter, pkg_id in enumerate(package_ids):
         sys.stdout.write(
             "removing index {0}/{1} with id {2} \n".format(
-                counter +1, total_packages, pkg_id)
+                counter + 1, total_packages, pkg_id)
         )
         sys.stdout.flush()
         try:
             if not dryrun:
                 package_index.delete_package({'id': pkg_id})
         except Exception as e:
-            log.error(u'Error while delete index %s: %s' %
-                        (pkg_id, repr(e)))
+            log.error(u'Error while delete index %s: %s' % (pkg_id, repr(e)))
 
     model.Session.commit()
     log.info('Finished removing index.')
