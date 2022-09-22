@@ -86,8 +86,14 @@ def generate_md5_for_s3(filename: str) -> tuple:
     return (md5_hexstr, md5_bytes)
 
 
-def get_s3(bucket_name: str):
-    """Return s3 object, checks access to bucket_name parameter."""
+def get_bucket(bucket_name: str):
+    """Return s3 Bucket object, check access to bucket_name, create if needed.
+
+        Refer to values in .env file in ckanext_geodatagov and
+        .profile file in catalog repo for s3 config.
+    """
+
+    import ipdb; ipdb.set_trace()
 
     if not config.get("ckanext.s3sitemap.aws_use_ami_role"):
         aws_access_key_id = config.get("ckanext.s3sitemap.aws_access_key_id")
@@ -95,22 +101,13 @@ def get_s3(bucket_name: str):
     else:
         aws_access_key_id, aws_secret_access_key = (None, None)
 
-    localstack_endpoint = config.get("ckanext.s3sitemap.localstack_endpoint")
-    if localstack_endpoint:
-        # make locastack connection
-        s3 = boto3.resource(
-            "s3",
-            aws_access_key_id=aws_access_key_id,
-            aws_secret_access_key=aws_secret_access_key,
-            endpoint_url=localstack_endpoint,
-        )
-    else:
-        # make s3 connection
-        s3 = boto3.resource(
-            "s3",
-            aws_access_key_id=aws_access_key_id,
-            aws_secret_access_key=aws_secret_access_key,
-        )
+    endpoint_url = config.get("ckanext.s3sitemap.endpoint_url")
+    s3 = boto3.resource(
+        "s3",
+        aws_access_key_id=aws_access_key_id,
+        aws_secret_access_key=aws_secret_access_key,
+        endpoint_url=endpoint_url,
+    )
 
     # make sure bucket exists and that we can access
     try:
@@ -119,7 +116,7 @@ def get_s3(bucket_name: str):
         # https://docs.aws.amazon.com/AmazonS3/latest/userguide/example_s3_HeadBucket_section.html
         bucket.meta.client.head_bucket(Bucket=bucket_name)
 
-        return s3
+        return bucket
 
     except ClientError as err:
         log.error(
@@ -129,7 +126,7 @@ def get_s3(bucket_name: str):
         raise err
 
 
-def upload_to_key(s3, bucket_name, upload_str: str, filename_on_s3: str) -> None:
+def upload_to_key(bucket, upload_str: str, filename_on_s3: str) -> None:
     try:
         upload_object = s3.Object(bucket_name, filename_on_s3)
         upload_object.put(Body=upload_str)
@@ -143,7 +140,7 @@ def upload(sitemaps: list) -> None:
     bucket_path = config.get("ckanext.s3sitemap.aws_storage_path", "")
     s3_url = config.get("ckanext.s3sitemap.aws_s3_url")
     storage_path = config.get("ckanext.s3sitemap.aws_storage_path")
-    s3 = get_s3(bucket_name)
+    bucket = get_bucket(bucket_name)
 
     current_time = datetime.datetime.now().strftime("%Y-%m-%d")
     sitemap_index = ""
@@ -156,7 +153,7 @@ def upload(sitemaps: list) -> None:
 
     for sitemap in sitemaps:
         filename_on_s3 = bucket_path + sitemap.filename_s3
-        upload_to_key(s3, bucket_name, sitemap.xml, filename_on_s3)
+        upload_to_key(bucket, sitemap.xml, filename_on_s3)
         log.info(f"Sitemap file {sitemap.filename_s3} upload complete.")
 
         # add to sitemap index file
@@ -168,7 +165,7 @@ def upload(sitemaps: list) -> None:
 
     sitemap_index += "</sitemapindex>\n"
 
-    upload_to_key(s3, bucket_name, sitemap_index, bucket_path + "sitemap.xml")
+    upload_to_key(bucket, sitemap_index, bucket_path + "sitemap.xml")
     log.info("Sitemap index upload complete.")
 
 
