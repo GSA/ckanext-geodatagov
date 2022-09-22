@@ -439,6 +439,12 @@ def remove_orphaned_solr(dryrun):
     package_query = query_for(model.Package)
     indexed_pkg_ids = set(package_query.get_all_entity_ids())
 
+    for id in deleted_package_ids:
+        if id in indexed_pkg_ids:
+            log.info(f"The deleted_id {id} is in solr")
+        else:
+            log.info(f"The deleted_id {id} NOT is in solr")
+
     log.info(f"total solr_indexed_ids: {len(indexed_pkg_ids)}; total DB_ids: {len(package_ids)}")
 
     # Packages orphaned
