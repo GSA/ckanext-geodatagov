@@ -431,9 +431,15 @@ def remove_orphaned_solr(dryrun):
 
     package_ids = [r[0] for r in model.Session.query(model.Package.id).
                    filter(model.Package.state != 'deleted').all()]
-    log.info('Removing orphaned solr entries...')
+
+    deleted_package_ids = [r[0] for r in model.Session.query(model.Package.id).
+                filter(model.Package.state == 'deleted').all()]
+    log.info(f"The DB_deleted_package_ids: {deleted_package_ids}")
+
     package_query = query_for(model.Package)
     indexed_pkg_ids = set(package_query.get_all_entity_ids())
+
+    log.info(f"total solr_indexed_ids: {len(indexed_pkg_ids)}; total DB_ids: {len(package_ids)}")
 
     # Packages orphaned
     package_ids = indexed_pkg_ids - set(package_ids)
@@ -444,12 +450,9 @@ def remove_orphaned_solr(dryrun):
 
     total_packages = len(package_ids)
 
+    log.info(f'Start to remove {total_packages} orphaned solr entries...')
     for counter, pkg_id in enumerate(package_ids):
-        sys.stdout.write(
-            "removing index {0}/{1} with id {2} \n".format(
-                counter + 1, total_packages, pkg_id)
-        )
-        sys.stdout.flush()
+        log.info(f"removing index {counter+1}/{total_packages} with id {pkg_id} \n")
         try:
             if not dryrun:
                 package_index.delete_package({'id': pkg_id})
@@ -457,7 +460,7 @@ def remove_orphaned_solr(dryrun):
             log.error(u'Error while delete index %s: %s' % (pkg_id, repr(e)))
 
     model.Session.commit()
-    log.info('Finished removing index.')
+    log.info('Finished removing solr entries.')
 
 
 # IClick
