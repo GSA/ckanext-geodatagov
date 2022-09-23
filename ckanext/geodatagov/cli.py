@@ -432,34 +432,24 @@ def remove_orphaned_solr(dryrun):
     active_package_ids = [r[0] for r in model.Session.query(model.Package.id).
                    filter(model.Package.state != 'deleted').all()]
 
-    deleted_package_ids = [r[0] for r in model.Session.query(model.Package.id).
-                filter(model.Package.state == 'deleted').all()]
+    all_package_ids = [r[0] for r in model.Session.query(model.Package.id).all()]
 
     package_query = query_for(model.Package)
-    indexed_pkg_ids = set(package_query.get_all_entity_ids(
-        max_results=len(active_package_ids) + len(deleted_package_ids)))
-
-    if len(deleted_package_ids) > 0:
-        log.info(f"The DB_deleted_package_ids: {deleted_package_ids}")
-        for id in deleted_package_ids:
-            if id in indexed_pkg_ids:
-                log.info(f"The deleted_id {id} in solr")
-            else:
-                log.info(f"The deleted_id {id} NOT in solr")
+    indexed_pkg_ids = package_query.get_all_entity_ids(max_results=len(all_package_ids))
 
     log.info(f"Total solr_indexed_ids:{len(indexed_pkg_ids)} DB_active_ids:{len(active_package_ids)}")
     
     # Packages orphaned
-    orpaned_package_ids = indexed_pkg_ids - set(active_package_ids)
-    total_orpaned_packages = len(orpaned_package_ids)
+    orphaned_package_ids = set(indexed_pkg_ids) - set(active_package_ids)
+    total_orphaned_packages = len(orphaned_package_ids)
 
-    if total_orpaned_packages == 0:
+    if total_orphaned_packages == 0:
         log.info('Solr is good.')
         return
 
-    log.info(f'Start to remove {total_orpaned_packages} orphaned solr entries...')
-    for counter, pkg_id in enumerate(orpaned_package_ids):
-        log.info(f"removing index {counter+1}/{total_orpaned_packages} with id {pkg_id} \n")
+    log.info(f'Start to remove {total_orphaned_packages} orphaned solr entries...')
+    for counter, pkg_id in enumerate(orphaned_package_ids):
+        log.info(f"removing index {counter+1}/{total_orphaned_packages} with id {pkg_id} \n")
         try:
             if not dryrun:
                 package_index.delete_package({'id': pkg_id})
@@ -468,6 +458,7 @@ def remove_orphaned_solr(dryrun):
 
     model.Session.commit()
     log.info('Finished removing solr entries.')
+
 
 
 # IClick
