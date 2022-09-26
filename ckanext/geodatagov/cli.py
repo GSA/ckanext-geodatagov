@@ -430,35 +430,30 @@ def remove_orphaned_solr(dryrun):
     package_index = index_for(model.Package)
 
     active_package_ids = [r[0] for r in model.Session.query(model.Package.id).
-                   filter(model.Package.state != 'deleted').all()]
-
-    all_package_ids = [r[0] for r in model.Session.query(model.Package.id).all()]
+                filter(model.Package.state != 'deleted').all()]
 
     package_query = query_for(model.Package)
-    indexed_pkg_ids = package_query.get_all_entity_ids(max_results=len(all_package_ids))
+    # get solr indexed package ids
+    indexed_pkg_ids = set(package_query.get_all_entity_ids(max_results=2000000))
+    log.info(f"total {len(indexed_pkg_ids)} solr indexed_pkg_ids and {len(active_package_ids)} DB active_package_ids")
 
-    log.info(f"Total solr_indexed_ids:{len(indexed_pkg_ids)} DB_active_ids:{len(active_package_ids)}")
-    
-    # Packages orphaned
-    orphaned_package_ids = set(indexed_pkg_ids) - set(active_package_ids)
-    total_orphaned_packages = len(orphaned_package_ids)
-
-    if total_orphaned_packages == 0:
+    total_orphaned_pkg_ids = indexed_pkg_ids - set(active_package_ids)
+    total_orphaned_packages = len(total_orphaned_pkg_ids)
+    if total_orphaned_packages > 0:
+        log.info(f"{total_orphaned_packages} orphaned package ids: {total_orphaned_pkg_ids}")
+        for counter, pkg_id in enumerate(total_orphaned_pkg_ids):
+            log.info(f"removing index {counter+1}/{total_orphaned_packages} with id {pkg_id} \n")
+            try:
+                if not dryrun:
+                    package_index.delete_package({'id': pkg_id})
+            except Exception as e:
+                log.error(u'Error while delete index %s: %s' % (pkg_id, repr(e)))
+    else:
         log.info('Solr is good.')
         return
 
-    log.info(f'Start to remove {total_orphaned_packages} orphaned solr entries...')
-    for counter, pkg_id in enumerate(orphaned_package_ids):
-        log.info(f"removing index {counter+1}/{total_orphaned_packages} with id {pkg_id} \n")
-        try:
-            if not dryrun:
-                package_index.delete_package({'id': pkg_id})
-        except Exception as e:
-            log.error(u'Error while delete index %s: %s' % (pkg_id, repr(e)))
-
     model.Session.commit()
     log.info('Finished removing solr entries.')
-
 
 
 # IClick
