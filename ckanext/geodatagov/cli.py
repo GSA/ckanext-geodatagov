@@ -12,7 +12,7 @@ import urllib3
 
 from past.utils import old_div
 from botocore.exceptions import ClientError
-from ckan.plugins.toolkit import config
+# from ckan.plugins.toolkit import config
 
 import ckan
 import ckan.model as model
@@ -21,11 +21,12 @@ import ckan.logic as logic
 from ckanext.geodatagov.search import GeoPackageSearchQuery
 
 import sys
-from ckan.lib.search.common import SearchError
+from ckan.lib.search.common import  make_connection, SearchError
 from ckan.lib.search.index import PackageSearchIndex, NoopSearchIndex
 from ckan.lib.search.query import (
     TagSearchQuery, ResourceSearchQuery, PackageSearchQuery
 )
+from ckan.common import config
 
 _INDICES = {
     'package': PackageSearchIndex
@@ -420,10 +421,82 @@ def query_for(_type):
         raise SearchError("Unknown search type: %s" % _type)
 
 
+
+def get_all_entity_ids_and_date(max_results: int = 1000):
+    """
+    Return a list of the IDs and metadata_modified of all indexed packages.
+    """
+    query = "*:*"
+    fq = "+site_id:\"%s\" " % config.get('ckan.site_id')
+    fq += "+state:active "
+
+    conn = make_connection()
+    data = conn.search(query, fq=fq, rows=max_results, fl='id, metadata_modified')
+
+    return [(r.get('id'), r.get('metadata_modified')) for r in data.docs]
+
+
+@geodatagov.command()
+@click.option("--dryrun", default=DEFAULT_DRYRUN, type=click.BOOL, help='inspect what will be updated')
+def update_old_solr(dryrun):
+    ''' update old solr (option: --dryrun=True) '''
+    if dryrun:
+        log.info('Starting dryrun to update index.')
+
+    package_index = index_for(model.Package)
+    context = {'model': model, 'ignore_auth': True, 'validate': False,
+        'use_cache': False}
+
+    # get active packages from DB
+    active_package = [(r[0], r[1].replace(microsecond=0)) for r in model.Session.query(model.Package.id, model.Package.metadata_modified).
+                filter(model.Package.state != 'deleted').all()]
+
+    # get indexed packages from solr
+    indexed_package = set(get_all_entity_ids_and_date(max_results=2000000))
+    log.info(f"total {len(indexed_package)} solr indexed_package and {len(active_package)} DB active_package")
+
+    solr_package = indexed_package - set(active_package)
+    db_package = set(active_package) - indexed_package 
+
+    work_list = {}
+    for id, date in (solr_package):
+       work_list[id] = {"solr": date}
+    for id, date in (db_package):
+        if id in work_list:
+           work_list[id].update({"db": date})
+        else:
+           work_list[id] = {"db": date}
+
+    if len(work_list) > 0:
+        log.info(f"{len(work_list)} packages need to be updated")
+        for id in work_list:
+            pkg_dict = logic.get_action('package_show')(context, {'id': id})
+            if list(work_list[id].keys()) == ["solr"]:
+                log.info(f"deleting index with {id} \n")
+                try:
+                    if not dryrun:
+                        package_index.remove_dict({'id': id})
+                except Exception as e:
+                    log.error(u'Error while delete index %s: %s' % (id, repr(e)))
+            else:
+                log.info(f"updating index with {id} \n")
+                try:
+                    if not dryrun:
+                        package_index.remove_dict(pkg_dict)
+                        package_index.insert_dict(pkg_dict)
+                except Exception as e:
+                    log.error(u'Error while rebuild index %s: %s' % (id, repr(e)))
+    else:
+        log.info('Solr is good.')
+        return
+
+    model.Session.commit()
+    log.info('Finished updating solr entries.')
+
 @geodatagov.command()
 @click.option("--dryrun", default=DEFAULT_DRYRUN, type=click.BOOL, help='inspect what will be delected')
 def remove_orphaned_solr(dryrun):
-    ''' remove_orphaned_solr '''
+    ''' remove orphaned solr (option: --dryrun=True)'''
     if dryrun:
         log.info('Starting dryrun to remove index.')
 
