@@ -9,7 +9,6 @@ log = logging.getLogger(__name__)
 
 miscs_feed_table = None
 miscs_topic_csv_table = None
-miscs_solr_sync_table = None
 
 
 class MiscsFeedException(Exception):
@@ -64,19 +63,6 @@ def setup():
     else:
         log.debug('Geodatagov Miscs Topic CSV table creation deferred')
 
-    if miscs_solr_sync_table is None:
-        define_miscs_solr_sync_table()
-        log.debug('Geodatagov Miscs Solr Sync table defined in memory')
-
-    if model.package_table.exists():
-        if not miscs_solr_sync_table.exists():
-            miscs_solr_sync_table.create()
-            log.debug('Geodatagov Miscs Solr Sync table created')
-        else:
-            log.debug('Geodatagov Miscs Solr Sync table already exists')
-    else:
-        log.debug('Geodatagov Miscs Solr Sync table creation deferred')
-
 
 def define_miscs_feed_table():
     global miscs_feed_table
@@ -98,12 +84,3 @@ def define_miscs_topic_csv_table():
 
     meta.mapper(MiscsTopicCSV, miscs_topic_csv_table)
 
-
-def define_miscs_solr_sync_table():
-    global miscs_solr_sync_table
-    miscs_solr_sync_table = Table('miscs_solr_sync', meta.metadata,
-                                  Column('pkg_id', types.UnicodeText, primary_key=True),
-                                  Column('action', types.UnicodeText, index=True, nullable=False, default=u''),
-                                  )
-
-    meta.mapper(MiscsSolrSync, miscs_solr_sync_table)
