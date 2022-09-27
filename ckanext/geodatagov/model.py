@@ -83,4 +83,3 @@ def define_miscs_topic_csv_table():
                                   )
 
     meta.mapper(MiscsTopicCSV, miscs_topic_csv_table)
-
