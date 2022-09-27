@@ -442,19 +442,18 @@ def update_old_solr(dryrun):
         log.info('Starting dryrun to update index.')
 
     package_index = index_for(model.Package)
-    context = {'model': model, 'ignore_auth': True, 'validate': False,
-        'use_cache': False}
+    context = {'model': model, 'ignore_auth': True, 'validate': False, 'use_cache': False}
 
     # get active packages from DB
     active_package = [(r[0], r[1].replace(microsecond=0)) for r in model.Session.query(model.Package.id,
-                     model.Package.metadata_modified).filter(model.Package.state != 'deleted').all()]
+                      model.Package.metadata_modified).filter(model.Package.state != 'deleted').all()]
 
     # get indexed packages from solr
     indexed_package = set(get_all_entity_ids_and_date(max_results=2000000))
     log.info(f"total {len(indexed_package)} solr indexed_package and {len(active_package)} DB active_package")
 
     solr_package = indexed_package - set(active_package)
-    db_package = set(active_package) - indexed_package 
+    db_package = set(active_package) - indexed_package
 
     work_list = {}
     for id, date in (solr_package):
@@ -463,7 +462,7 @@ def update_old_solr(dryrun):
         if id in work_list:
             work_list[id].update({"db": date})
         else:
-           work_list[id] = {"db": date}
+            work_list[id] = {"db": date}
 
     if len(work_list) > 0:
         log.info(f"{len(work_list)} packages need to be updated")
@@ -502,7 +501,7 @@ def remove_orphaned_solr(dryrun):
     package_index = index_for(model.Package)
 
     active_package_ids = [r[0] for r in model.Session.query(model.Package.id).
-                         filter(model.Package.state != 'deleted').all()]
+                          filter(model.Package.state != 'deleted').all()]
 
     package_query = query_for(model.Package)
     # get solr indexed package ids
