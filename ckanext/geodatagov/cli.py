@@ -28,6 +28,8 @@ UPLOAD_TO_S3 = True
 PAGE_SIZE = 1000
 MAX_PER_PAGE = 50000
 DEFAULT_DRYRUN = False
+DEFAULT_CLEANUP_SOLR = False
+DEFAULT_UPDATE_SOLR = False
 
 log = logging.getLogger(DEFAULT_LOG)
 
@@ -254,7 +256,10 @@ def get_all_entity_ids_and_date(max_results: int = 1000):
 
 @geodatagov.command()
 @click.option("--dryrun", default=DEFAULT_DRYRUN, type=click.BOOL, help='inspect what will be updated')
-def db_solr_sync(dryrun):
+@click.option("--cleanup-solr", default=DEFAULT_CLEANUP_SOLR, type=click.BOOL, help='Only remove orphaned entries in Solr')
+@click.option("--update-solr", default=DEFAULT_UPDATE_SOLR, type=click.BOOL, help=(
+    '(Update solr entries with new data from DB) OR (Add DB data to Solr that is missing)'))
+def db_solr_sync(dryrun, cleanup, update):
     ''' db solr sync (option: --dryrun=True) '''
     if dryrun:
         log.info('Starting dryrun to update index.')
@@ -282,11 +287,13 @@ def db_solr_sync(dryrun):
         else:
             work_list[id] = {"db": date}
 
+    both = cleanup == update
+
     if len(work_list) > 0:
         log.info(f"{len(work_list)} packages need to be updated")
         for id in work_list:
             pkg_dict = logic.get_action('package_show')(context, {'id': id})
-            if list(work_list[id].keys()) == ["solr"]:
+            if list(work_list[id].keys()) == ["solr"] and (cleanup or both):
                 log.info(f"deleting index with {id} \n")
                 try:
                     if not dryrun:
