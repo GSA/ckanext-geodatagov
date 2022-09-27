@@ -20,8 +20,7 @@ import ckan.lib.search as search
 import ckan.logic as logic
 from ckanext.geodatagov.search import GeoPackageSearchQuery
 
-import sys
-from ckan.lib.search.common import  make_connection, SearchError
+from ckan.lib.search.common import make_connection, SearchError
 from ckan.lib.search.index import PackageSearchIndex, NoopSearchIndex
 from ckan.lib.search.query import (
     TagSearchQuery, ResourceSearchQuery, PackageSearchQuery
@@ -421,7 +420,6 @@ def query_for(_type):
         raise SearchError("Unknown search type: %s" % _type)
 
 
-
 def get_all_entity_ids_and_date(max_results: int = 1000):
     """
     Return a list of the IDs and metadata_modified of all indexed packages.
@@ -448,8 +446,8 @@ def update_old_solr(dryrun):
         'use_cache': False}
 
     # get active packages from DB
-    active_package = [(r[0], r[1].replace(microsecond=0)) for r in model.Session.query(model.Package.id, model.Package.metadata_modified).
-                filter(model.Package.state != 'deleted').all()]
+    active_package = [(r[0], r[1].replace(microsecond=0)) for r in model.Session.query(model.Package.id,
+                     model.Package.metadata_modified).filter(model.Package.state != 'deleted').all()]
 
     # get indexed packages from solr
     indexed_package = set(get_all_entity_ids_and_date(max_results=2000000))
@@ -460,10 +458,10 @@ def update_old_solr(dryrun):
 
     work_list = {}
     for id, date in (solr_package):
-       work_list[id] = {"solr": date}
+        work_list[id] = {"solr": date}
     for id, date in (db_package):
         if id in work_list:
-           work_list[id].update({"db": date})
+            work_list[id].update({"db": date})
         else:
            work_list[id] = {"db": date}
 
@@ -493,6 +491,7 @@ def update_old_solr(dryrun):
     model.Session.commit()
     log.info('Finished updating solr entries.')
 
+
 @geodatagov.command()
 @click.option("--dryrun", default=DEFAULT_DRYRUN, type=click.BOOL, help='inspect what will be delected')
 def remove_orphaned_solr(dryrun):
@@ -503,7 +502,7 @@ def remove_orphaned_solr(dryrun):
     package_index = index_for(model.Package)
 
     active_package_ids = [r[0] for r in model.Session.query(model.Package.id).
-                filter(model.Package.state != 'deleted').all()]
+                         filter(model.Package.state != 'deleted').all()]
 
     package_query = query_for(model.Package)
     # get solr indexed package ids
