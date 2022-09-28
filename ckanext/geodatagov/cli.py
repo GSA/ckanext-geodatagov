@@ -1,6 +1,4 @@
-import base64
 import datetime
-import hashlib
 import io
 import json
 import logging
@@ -90,8 +88,6 @@ def get_bucket(bucket_name: str):
         Refer to values in .env file in ckanext_geodatagov and
         .profile file in catalog repo for s3 config.
     """
-
-    import ipdb; ipdb.set_trace()
 
     if not config.get("ckanext.s3sitemap.aws_use_ami_role"):
         aws_access_key_id = config.get("ckanext.s3sitemap.aws_access_key_id")
