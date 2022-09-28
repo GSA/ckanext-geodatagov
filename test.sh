@@ -30,7 +30,7 @@ PASS=ckan
 ckan -c $test_ini harvester initdb
 ckan -c $test_ini spatial initdb
 
-# pytest --ckan-ini=test.ini --cov=ckanext.geodatagov --disable-warnings ckanext/geodatagov/tests/
+pytest --ckan-ini=test.ini --cov=ckanext.geodatagov --disable-warnings ckanext/geodatagov/tests/
 
 # Run this this pytest command if only testing a single test
-pytest --ckan-ini=$test_ini --cov=ckanext.geodatagov --disable-warnings ckanext/geodatagov/tests/test_category_tags.py ckanext/geodatagov/tests/test_db_solr_sync.py
+# pytest --ckan-ini=$test_ini --cov=ckanext.geodatagov --disable-warnings ckanext/geodatagov/tests/test_category_tags.py ckanext/geodatagov/tests/test_db_solr_sync.py
