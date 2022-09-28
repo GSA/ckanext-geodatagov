@@ -33,7 +33,7 @@ services:
     env_file:
       - .env
     healthcheck:
-      test: ["CMD", "pg_isready -u postgres"]
+      test: ["CMD", "pg_isready --username=postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
