@@ -260,7 +260,7 @@ def get_all_entity_ids_and_date(max_results: int = 1000):
 @click.option("--update_solr", default=DEFAULT_UPDATE_SOLR, type=click.BOOL, help=(
     '(Update solr entries with new data from DB) OR (Add DB data to Solr that is missing)'))
 def db_solr_sync(dryrun, cleanup_solr, update_solr):
-    ''' db solr sync (option: --dryrun=True) '''
+    ''' db solr sync '''
     if dryrun:
         log.info('Starting dryrun to update index.')
 
@@ -295,7 +295,6 @@ def db_solr_sync(dryrun, cleanup_solr, update_solr):
         log.info(f"{count_to_cleanup} packages need to be removed from Solr")
         log.info(f"{count_to_update} packages need to be updated/added to Solr")
         for id in work_list:
-            pkg_dict = logic.get_action('package_show')(context, {'id': id})
             if list(work_list[id].keys()) == ["solr"] and (cleanup_solr or both):
                 log.info(f"deleting index with {id} \n")
                 try:
@@ -305,6 +304,7 @@ def db_solr_sync(dryrun, cleanup_solr, update_solr):
                     log.error(u'Error while delete index %s: %s' % (id, repr(e)))
             else:
                 log.info(f"updating index with {id} \n")
+                pkg_dict = logic.get_action('package_show')(context, {'id': id})
                 try:
                     if not dryrun:
                         package_index.remove_dict(pkg_dict)
@@ -317,6 +317,13 @@ def db_solr_sync(dryrun, cleanup_solr, update_solr):
 
     model.Session.commit()
     log.info('Finished updating solr entries.')
+
+
+@geodatagov.command()
+def test_command():
+    ''' Basic cli command with normal result '''
+    print("This is a good test!")
+    return True
 
 
 # IClick
