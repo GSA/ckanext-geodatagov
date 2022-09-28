@@ -7,7 +7,7 @@ debug:
 	CKAN_VERSION=$(CKAN_VERSION) docker-compose run --service-ports app
 
 lint: ## Lint the code
-	CKAN_VERSION=$(CKAN_VERSION) docker-compose -f docker-compose.yml run --rm app flake8 . --count --max-line-length=127 --show-source --statistics --exclude ckan
+	CKAN_VERSION=$(CKAN_VERSION) docker-compose -f docker-compose.yml run --rm app flake8 /srv/app/ckanext/ --count --max-line-length=127 --show-source --statistics --exclude ckan
 
 clean: ## Clean workspace and containers
 	find . -name *.pyc -delete

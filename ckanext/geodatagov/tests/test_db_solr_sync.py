@@ -4,7 +4,7 @@ import pytest
 import ckan.model as model
 from ckan.tests import factories
 from ckan.tests.helpers import reset_db
-from click.testing import CliRunner, Result
+from click.testing import CliRunner
 
 import ckanext.geodatagov.cli as cli
 
@@ -48,7 +48,7 @@ class TestSolrDBSync(object):
         runner = CliRunner()
         raw_cli_output = runner.invoke(
             cli.db_solr_sync,
-            args = [],
+            args=[],
         )
 
         return raw_cli_output
