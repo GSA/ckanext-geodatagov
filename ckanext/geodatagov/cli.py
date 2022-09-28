@@ -256,10 +256,10 @@ def get_all_entity_ids_and_date(max_results: int = 1000):
 
 @geodatagov.command()
 @click.option("--dryrun", default=DEFAULT_DRYRUN, type=click.BOOL, help='inspect what will be updated')
-@click.option("--cleanup-solr", default=DEFAULT_CLEANUP_SOLR, type=click.BOOL, help='Only remove orphaned entries in Solr')
-@click.option("--update-solr", default=DEFAULT_UPDATE_SOLR, type=click.BOOL, help=(
+@click.option("--cleanup_solr", default=DEFAULT_CLEANUP_SOLR, type=click.BOOL, help='Only remove orphaned entries in Solr')
+@click.option("--update_solr", default=DEFAULT_UPDATE_SOLR, type=click.BOOL, help=(
     '(Update solr entries with new data from DB) OR (Add DB data to Solr that is missing)'))
-def db_solr_sync(dryrun, cleanup, update):
+def db_solr_sync(dryrun, cleanup_solr, update_solr):
     ''' db solr sync (option: --dryrun=True) '''
     if dryrun:
         log.info('Starting dryrun to update index.')
@@ -287,7 +287,7 @@ def db_solr_sync(dryrun, cleanup, update):
         else:
             work_list[id] = {"db": date}
 
-    both = cleanup == update
+    both = cleanup_solr == update_solr
     count_to_cleanup = sum([1 if work_list[i].keys() == ["solr"] else 0 for i in work_list])
     count_to_update = len(work_list) - count_to_cleanup
 
@@ -296,7 +296,7 @@ def db_solr_sync(dryrun, cleanup, update):
         log.info(f"{count_to_update} packages need to be updated/added to Solr")
         for id in work_list:
             pkg_dict = logic.get_action('package_show')(context, {'id': id})
-            if list(work_list[id].keys()) == ["solr"] and (cleanup or both):
+            if list(work_list[id].keys()) == ["solr"] and (cleanup_solr or both):
                 log.info(f"deleting index with {id} \n")
                 try:
                     if not dryrun:
