@@ -21,7 +21,7 @@ jobs:
     needs: lint
     strategy:
       matrix:
-        ckan-version: [2.9.5]
+        ckan-version: ['2.9.5']
       fail-fast: false
 
     name: CKAN ${{ matrix.ckan-version }}
@@ -31,3 +31,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Run everything
       run: source .env && CKAN_VERSION=${{ matrix.ckan-version }} make clean build test
+    # TODO REMOVE
+    - name: Setup tmate session
+      if: ${{ failure() }}
+      uses: mxschmitt/action-tmate@v3

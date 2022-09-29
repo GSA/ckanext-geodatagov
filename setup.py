@@ -9,8 +9,8 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='ckanext-geodatagov',
-    version='0.1.6',
+    name="ckanext-geodatagov",
+    version="0.1.7",
     description="",
     long_description=long_description,
     long_description_content_type='text/markdown',
