@@ -9,6 +9,7 @@ import ckan.model as model
 import click
 from botocore.exceptions import ClientError
 from ckan.common import config
+from ckan.lib.search.common import make_connection
 from ckan.lib.search.index import NoopSearchIndex, PackageSearchIndex
 
 from ckanext.geodatagov.search import GeoPackageSearchQuery
