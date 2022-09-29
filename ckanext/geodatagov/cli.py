@@ -4,24 +4,12 @@ import json
 import logging
 
 import boto3
-import click
-
-from botocore.exceptions import ClientError
-
-import ckan
-import ckan.model as model
-import ckan.lib.search as search
 import ckan.logic as logic
 import ckan.model as model
 import click
-import urllib3
 from botocore.exceptions import ClientError
-from ckan.lib.search.common import SearchError
+from ckan.common import config
 from ckan.lib.search.index import NoopSearchIndex, PackageSearchIndex
-from ckan.lib.search.query import (PackageSearchQuery, ResourceSearchQuery,
-                                   TagSearchQuery)
-from ckan.plugins.toolkit import config
-from past.utils import old_div
 
 from ckanext.geodatagov.search import GeoPackageSearchQuery
 
