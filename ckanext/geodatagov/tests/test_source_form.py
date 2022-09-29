@@ -3,7 +3,11 @@ import logging
 
 import ckanext.harvest.model as harvest_model
 
-from ckan.tests import helpers, factories
+import ckan.config.middleware
+from ckan.common import config
+from ckan.tests import factories
+from ckan.tests.helpers import CKANTestApp, reset_db
+
 
 log = logging.getLogger(__name__)
 
@@ -52,15 +56,14 @@ class SourceFormParser(HTMLParser):
         pass
 
 
-class TestHarvestSourceForm(helpers.FunctionalTestBase):
+class TestHarvestSourceForm(object):
 
     @classmethod
     def setup(cls):
-        helpers.reset_db()
+        reset_db()
 
     @classmethod
     def setup_class(cls):
-        super(TestHarvestSourceForm, cls).setup_class()
         harvest_model.setup()
         sysadmin = factories.Sysadmin()
         cls.extra_environ = {'REMOTE_USER': sysadmin['name']}
@@ -69,7 +72,8 @@ class TestHarvestSourceForm(helpers.FunctionalTestBase):
         WAF_HARVEST_SOURCE_URL = 'https://meta.geo.census.gov/data/existing/decennial/GEO/GPMB/TIGERline/TIGER2018/concity/'
         COLLECTION_METADATA_URL = 'https://meta.geo.census.gov/data/existing/decennial/GEO/GPMB/TIGERline/TIGER2018/\
                                     SeriesInfo/SeriesCollection_tl_2018_concity.shp.iso.xml'
-        self.app = self._get_test_app()
+        app = ckan.config.middleware.make_app(config)
+        self.app = CKANTestApp(app)
 
         # Create
         harvest_source_name = 'test-waf-collection-harvest-source'
@@ -98,7 +102,8 @@ class TestHarvestSourceForm(helpers.FunctionalTestBase):
 
     def test_create_z3950_harvest_source_form(self):
 
-        self.app = self._get_test_app()
+        app = ckan.config.middleware.make_app(config)
+        self.app = CKANTestApp(app)
 
         # Create
         harvest_source_name = u'test-harvest-source'

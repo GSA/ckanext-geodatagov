@@ -1,4 +1,4 @@
-CKAN_VERSION ?= 2.9
+CKAN_VERSION ?= 2.9.5
 COMPOSE_FILE ?= docker-compose.yml
 
 build: ## Build the docker containers
@@ -7,14 +7,14 @@ debug:
 	CKAN_VERSION=$(CKAN_VERSION) docker-compose run --service-ports app
 
 lint: ## Lint the code
-	CKAN_VERSION=$(CKAN_VERSION) docker-compose -f docker-compose.yml run --rm app flake8 . --count --max-line-length=127 --show-source --statistics --exclude ckan
+	CKAN_VERSION=$(CKAN_VERSION) docker-compose -f docker-compose.yml run --rm app flake8 /srv/app/ckanext/ --count --max-line-length=127 --show-source --statistics --exclude ckan
 
 clean: ## Clean workspace and containers
 	find . -name *.pyc -delete
 	CKAN_VERSION=$(CKAN_VERSION) docker-compose -f $(COMPOSE_FILE) down -v --remove-orphans
 
 test: ## Run tests in a new container
-	CKAN_VERSION=$(CKAN_VERSION) docker-compose -f $(COMPOSE_FILE) run --rm app ./test.sh
+	CKAN_VERSION=$(CKAN_VERSION) docker-compose -f $(COMPOSE_FILE) run --rm app /srv/app/test.sh
 
 java-test: ## Test java transformation command (java + saxon installed)
 	CKAN_VERSION=$(CKAN_VERSION) docker-compose -f $(COMPOSE_FILE) run --rm app bash -c "java net.sf.saxon.Transform -s:/app/ckanext/geodatagov/tests/data-samples/waf-fgdc/fgdc-csdgm_sample.xml -xsl:/app/ckanext/geodatagov/harvesters/fgdcrse2iso19115-2.xslt"

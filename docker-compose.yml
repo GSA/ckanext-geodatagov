@@ -14,7 +14,6 @@ services:
       CKAN_REDIS_URL: redis://redis:6379/1
       CKAN_DATAPUSHER_URL: http://localhost:8080/  # datapusher is not really enabled
       PYTHONDONTWRITEBYTECODE: 1
-    working_dir: /app
     ports:
       - "5000:5000"
     depends_on:
@@ -22,7 +21,10 @@ services:
       - redis
       - solr
     volumes:
-      - .:/app
+      - ./ckanext:/srv/app/ckanext/
+      - ./test.sh:/srv/app/test.sh
+      - ./test.ini:/srv/app/test.ini
+      - ./setup.py:/srv/app/setup.py
       - ckan_storage:/var/lib/ckan
       - ./docker-entrypoint.d:/docker-entrypoint.d
 
