@@ -63,7 +63,7 @@ class TestHarvestSourceForm(helpers.FunctionalTestBase):
         super(TestHarvestSourceForm, cls).setup_class()
         harvest_model.setup()
         sysadmin = factories.Sysadmin()
-        cls.extra_environ = {'REMOTE_USER': sysadmin['name']}
+        cls.extra_environ = {'REMOTE_USER': sysadmin['id']}
 
     def test_create_waf_collection_harvest_source_form(self):
         WAF_HARVEST_SOURCE_URL = 'https://meta.geo.census.gov/data/existing/decennial/GEO/GPMB/TIGERline/TIGER2018/concity/'
