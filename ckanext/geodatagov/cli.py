@@ -175,7 +175,7 @@ def upload(sitemaps: list) -> None:
 @click.option("--upload_to_s3", default=UPLOAD_TO_S3, type=click.BOOL)
 @click.option("--page_size", default=PAGE_SIZE, type=click.INT)
 @click.option("--max_per_page", default=MAX_PER_PAGE, type=click.INT)
-def sitemap_to_s3(upload_to_s3, page_size: int, max_per_page: int):
+def sitemap_to_s3(upload_to_s3: bool, page_size: int, max_per_page: int):
     """Generates sitemap and uploads to s3"""
     log.info("Sitemap is being generated...")
 
