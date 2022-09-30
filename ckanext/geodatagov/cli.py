@@ -258,10 +258,11 @@ def db_solr_sync(dryrun, cleanup_solr, update_solr):
     # get active packages from DB
     active_package = [(r[0], r[1].replace(microsecond=0)) for r in model.Session.query(model.Package.id,
                       model.Package.metadata_modified).filter(model.Package.state != 'deleted').all()]
+    log.info(f"total {len(active_package)} DB active_package")
 
     # get indexed packages from solr
     indexed_package = set(get_all_entity_ids_and_date(max_results=2000000))
-    log.info(f"total {len(indexed_package)} solr indexed_package and {len(active_package)} DB active_package")
+    log.info(f"total {len(indexed_package)} solr indexed_package")
 
     solr_package = indexed_package - set(active_package)
     db_package = set(active_package) - indexed_package
@@ -276,7 +277,7 @@ def db_solr_sync(dryrun, cleanup_solr, update_solr):
             work_list[id] = {"db": date}
 
     both = cleanup_solr == update_solr
-    count_to_cleanup = sum([1 if work_list[i].keys() == ["solr"] else 0 for i in work_list])
+    count_to_cleanup = sum([1 if list(work_list[i].keys()) == ["solr"] else 0 for i in work_list])
     count_to_update = len(work_list) - count_to_cleanup
 
     if len(work_list) > 0:
@@ -290,7 +291,7 @@ def db_solr_sync(dryrun, cleanup_solr, update_solr):
                         package_index.remove_dict({'id': id})
                 except Exception as e:
                     log.error(u'Error while delete index %s: %s' % (id, repr(e)))
-            else:
+            elif list(work_list[id].keys()) in (["db", "solr"], ["db"]) and (update_solr or both):
                 log.info(f"updating index with {id} \n")
                 pkg_dict = logic.get_action('package_show')(context, {'id': id})
                 try:
