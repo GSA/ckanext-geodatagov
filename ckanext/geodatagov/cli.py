@@ -281,8 +281,11 @@ def db_solr_sync(dryrun, cleanup_solr, update_solr):
     count_to_update = len(work_list) - count_to_cleanup
 
     if len(work_list) > 0:
-        log.info(f"{count_to_cleanup} packages need to be removed from Solr")
-        log.info(f"{count_to_update} packages need to be updated/added to Solr")
+        if cleanup_solr or both:
+            log.info(f"{count_to_cleanup} packages need to be removed from Solr")
+        if update_solr or both:
+            log.info(f"{count_to_update} packages need to be updated/added to Solr")
+
         for id in work_list:
             if list(work_list[id].keys()) == ["solr"] and (cleanup_solr or both):
                 log.info(f"deleting index with {id} \n")
