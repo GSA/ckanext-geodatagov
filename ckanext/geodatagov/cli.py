@@ -294,7 +294,7 @@ def db_solr_sync(dryrun, cleanup_solr, update_solr):
                         package_index.remove_dict({'id': id})
                 except Exception as e:
                     log.error(u'Error while delete index %s: %s' % (id, repr(e)))
-            elif list(work_list[id].keys()) in (["db", "solr"], ["db"]) and (update_solr or both):
+            elif list(work_list[id].keys()) in [["solr", "db"], ["db"]] and (update_solr or both):
                 log.info(f"updating index with {id} \n")
                 pkg_dict = logic.get_action('package_show')(context, {'id': id})
                 try:
