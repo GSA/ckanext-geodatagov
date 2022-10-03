@@ -2,11 +2,15 @@ import datetime
 import io
 import json
 import logging
+import tempfile
+import time
 
 import boto3
+from botocore.client import Config as BotoConfig
 import ckan.logic as logic
 import ckan.model as model
 import click
+from botocore.client import Config
 from botocore.exceptions import ClientError
 from ckan.common import config
 from ckan.lib.search.common import make_connection
@@ -84,12 +88,15 @@ def get_bucket(bucket_name: str):
     else:
         aws_access_key_id, aws_secret_access_key = (None, None)
 
-    endpoint_url = config.get("ckanext.s3sitemap.endpoint_url")
+    # endpoint_url = config.get("ckanext.s3sitemap.endpoint_url")
+    region_name = config.get("ckanext.s3sitemap.region_name")
     s3 = boto3.client(
         "s3",
         aws_access_key_id=aws_access_key_id,
         aws_secret_access_key=aws_secret_access_key,
-        endpoint_url=endpoint_url,
+        region_name='fips-' + region_name,
+        # endpoint_url='https://s3-fips.us-gov-west-1.amazonaws.com',
+        # config=Config(signature_version='s3', s3={'addressing_style': 'virtual'})
     )
 
     # make sure bucket exists and that we can access, create if not
@@ -111,8 +118,47 @@ def get_bucket(bucket_name: str):
 def upload_to_key(upload_str: str, filename_on_s3: str) -> None:
     """Upload upload_str to s3 bucket"""
 
+    # boto3.set_stream_logger('')
+
     bucket_name = config.get("ckanext.s3sitemap.aws_bucket_name")
     s3 = get_bucket(bucket_name)
+
+    temp_file = tempfile.NamedTemporaryFile()
+    # try:
+    #     temp_file.write(upload_str)
+    #     temp_file.seek(0)
+    #     s3.upload_fileobj(temp_file, bucket_name, file_key)
+    tfile = open(filename_on_s3, 'w')
+    # with open(filename_on_s3, 'w') as tfile:
+    tfile.write(upload_str)
+    tfile.close()
+    
+    # import pdb; pdb.set_trace()
+    # time.sleep(10)
+    with open(filename_on_s3, 'rb') as tfile:
+        aws_access_key_id = config.get("ckanext.s3sitemap.aws_access_key_id")
+        aws_secret_access_key = config.get("ckanext.s3sitemap.aws_secret_access_key")
+        region_name = config.get("ckanext.s3sitemap.region_name")
+        session = boto3.session.Session(aws_access_key_id=aws_access_key_id,
+                                     aws_secret_access_key=aws_secret_access_key,
+                                     region_name=region_name)
+        s3 = session.resource('s3',
+                          endpoint_url="https://s3-us-gov-west-1.amazonaws.com",
+                          config=BotoConfig(
+                              signature_version='s3v4',
+                              s3={'addressing_style': 'auto'}))
+        s3.Object(bucket_name, filename_on_s3).put(
+            Body=tfile.read(),
+            ACL='public-read',
+            ContentType='text/xml'
+        )
+    # time.sleep(5)
+    # try:
+        
+    #     temp_file.seek(0)
+        
+    # finally:
+    #     temp_file.close()
 
     """
     md = hashlib.md5(upload_str.encode("utf-8")).digest()
@@ -123,8 +169,7 @@ def upload_to_key(upload_str: str, filename_on_s3: str) -> None:
     )
     """
 
-    bytes_obj = io.BytesIO(bytes(upload_str.encode('utf-8')))
-    s3.upload_fileobj(bytes_obj, bucket_name, filename_on_s3)
+    
 
 
 def upload(sitemaps: list) -> None:
