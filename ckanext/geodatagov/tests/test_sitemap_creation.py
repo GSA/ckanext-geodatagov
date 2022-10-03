@@ -27,7 +27,7 @@ class TestSitemapExport(object):
         self.dataset4 = factories.Dataset(owner_org=organization["id"])
 
     @pytest.fixture
-    def cli_result(self) -> Result:
+    def no_upload_cli_result(self) -> Result:
         self.create_datasets()
 
         runner = CliRunner()
@@ -45,35 +45,64 @@ class TestSitemapExport(object):
 
         return raw_cli_output
 
+    @pytest.fixture
+    def upload_cli_result(self) -> Result:
+        self.create_datasets()
+
+        runner = CliRunner()
+        raw_cli_output = runner.invoke(
+            cli.sitemap_to_s3,
+            args=[
+                "--upload_to_s3",
+                "True",
+                "--page_size",
+                "100",
+                "--max_per_page",
+                "100",
+            ],
+        )
+
+        return raw_cli_output
+
     @staticmethod
-    def test_cli_output(cli_result: Result) -> None:
+    def test_cli_output(no_upload_cli_result: Result) -> None:
+        """Tests cli output without s3 upload"""
+
         # check successful cli run
-        assert cli_result.exit_code == 0
+        assert no_upload_cli_result.exit_code == 0
 
         # the example output I have only has one element in it,
         # this and _handle_cli_output will need to be updated for examples with more elements
         # checks only one list element in output string
-        assert cli_result.output.count("[") == 1
-        assert cli_result.output.count("]") == 1
+        assert no_upload_cli_result.output.count("[") == 1
+        assert no_upload_cli_result.output.count("]") == 1
 
     @staticmethod
-    def _handle_cli_output(cli_result: Result) -> list:
+    def _handle_cli_output(no_upload_cli_result: Result) -> list:
         """Parses cli output Result to an interable file_list"""
 
         file_list = [
             eval(
-                cli_result.output[
-                    cli_result.output.index("[") + 1: cli_result.output.index("]") - 1
+                no_upload_cli_result.output[
+                    no_upload_cli_result.output.index("[") + 1: no_upload_cli_result.output.index("]") - 1
                 ].strip()
             )
         ]
 
         return file_list
 
-    def test_create_sitemap(self, cli_result):
+    def test_s3_upload(self, upload_cli_result: Result):
+        """Tests upload to s3"""
+
+        # check successful cli run
+        assert upload_cli_result.exit_code == 0
+
+
+
+    def test_create_sitemap(self, no_upload_cli_result):
         """run sitemap-to-s3 and analyze results"""
 
-        file_list = self._handle_cli_output(cli_result)
+        file_list = self._handle_cli_output(no_upload_cli_result)
 
         files = 0
         datasets = 0
