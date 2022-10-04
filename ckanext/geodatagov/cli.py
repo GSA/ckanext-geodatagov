@@ -299,8 +299,7 @@ def db_solr_sync(dryrun, cleanup_solr, update_solr):
                 pkg_dict = logic.get_action('package_show')(context, {'id': id})
                 try:
                     if not dryrun:
-                        package_index.remove_dict(pkg_dict)
-                        package_index.insert_dict(pkg_dict)
+                        package_index.update_dict(pkg_dict, True)
                 except Exception as e:
                     log.error(u'Error while rebuild index %s: %s' % (id, repr(e)))
     else:
