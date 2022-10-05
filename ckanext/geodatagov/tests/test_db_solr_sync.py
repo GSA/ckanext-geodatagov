@@ -92,10 +92,6 @@ class TestSolrDBSync(object):
         # check successful cli run
         assert cli_result.exit_code == 0
 
-        # For the tests, we need the commits to happen
-        # On production, deferring is okay
-        model.Session.commit()
-
         final_db = get_active_db_ids()
         final_solr = get_all_solr_ids()
 
