@@ -9,6 +9,7 @@ import ckan.model as model
 import click
 from botocore.exceptions import ClientError
 from ckan.common import config
+from ckan.lib.search import rebuild
 from ckan.lib.search.common import make_connection
 from ckan.lib.search.index import NoopSearchIndex, PackageSearchIndex
 
@@ -24,9 +25,6 @@ DEFAULT_LOG = "ckanext.geodatagov"
 UPLOAD_TO_S3 = True
 PAGE_SIZE = 1000
 MAX_PER_PAGE = 50000
-DEFAULT_DRYRUN = False
-DEFAULT_CLEANUP_SOLR = False
-DEFAULT_UPDATE_SOLR = False
 
 log = logging.getLogger(DEFAULT_LOG)
 
@@ -243,9 +241,9 @@ def get_all_entity_ids_and_date(max_results: int = 1000):
 
 
 @geodatagov.command()
-@click.option("--dryrun", default=DEFAULT_DRYRUN, type=click.BOOL, help='inspect what will be updated')
-@click.option("--cleanup_solr", default=DEFAULT_CLEANUP_SOLR, type=click.BOOL, help='Only remove orphaned entries in Solr')
-@click.option("--update_solr", default=DEFAULT_UPDATE_SOLR, type=click.BOOL, help=(
+@click.option("--dryrun", is_flag=True, help='inspect what will be updated')
+@click.option("--cleanup_solr", is_flag=True, help='Only remove orphaned entries in Solr')
+@click.option("--update_solr", is_flag=True, help=(
     '(Update solr entries with new data from DB) OR (Add DB data to Solr that is missing)'))
 def db_solr_sync(dryrun, cleanup_solr, update_solr):
     ''' db solr sync '''
@@ -268,46 +266,38 @@ def db_solr_sync(dryrun, cleanup_solr, update_solr):
     db_package = set(active_package) - indexed_package
 
     work_list = {}
-    for id, date in (solr_package):
-        work_list[id] = {"solr": date}
-    for id, date in (db_package):
+    for id, _ in (solr_package):
+        work_list[id] = "solr"
+    for id, _ in (db_package):
         if id in work_list:
-            work_list[id].update({"db": date})
+            work_list[id] = "solr-db"
         else:
-            work_list[id] = {"db": date}
+            work_list[id] = "db"
 
     both = cleanup_solr == update_solr
-    count_to_cleanup = sum([1 if list(work_list[i].keys()) == ["solr"] else 0 for i in work_list])
-    count_to_update = len(work_list) - count_to_cleanup
+    set_cleanup = {i if work_list[i] == "solr" else None for i in work_list } - {None}
+    set_update = work_list.keys() - set_cleanup
+    log.info(f"{len(set_cleanup)} packages need to be removed from Solr")
+    log.info(f"{len(set_update)} packages need to be updated/added to Solr")
 
-    if len(work_list) > 0:
-        if cleanup_solr or both:
-            log.info(f"{count_to_cleanup} packages need to be removed from Solr")
-        if update_solr or both:
-            log.info(f"{count_to_update} packages need to be updated/added to Solr")
+    if not dryrun and set_cleanup and (cleanup_solr or both):
+        for id in set_cleanup:
+            log.info(f"deleting index with {id} \n")
+            try:
+                package_index.remove_dict({'id': id})
+            except Exception as e:
+                log.error(u'Error while delete index %s: %s' % (id, repr(e)))
+        package_index.commit()
+        log.info('Finished cleaning solr entries.')
 
-        for id in work_list:
-            if list(work_list[id].keys()) == ["solr"] and (cleanup_solr or both):
-                log.info(f"deleting index with {id} \n")
-                try:
-                    if not dryrun:
-                        package_index.remove_dict({'id': id})
-                except Exception as e:
-                    log.error(u'Error while delete index %s: %s' % (id, repr(e)))
-            elif list(work_list[id].keys()) in [["solr", "db"], ["db"]] and (update_solr or both):
-                log.info(f"updating index with {id} \n")
-                pkg_dict = logic.get_action('package_show')(context, {'id': id})
-                try:
-                    if not dryrun:
-                        package_index.update_dict(pkg_dict, True)
-                except Exception as e:
-                    log.error(u'Error while rebuild index %s: %s' % (id, repr(e)))
-    else:
-        log.info('Solr is good.')
-        return
-
-    model.Session.commit()
-    log.info('Finished updating solr entries.')
+    if not dryrun and set_update and (update_solr or both):
+        log.info(f"rebuilding indexes\n")
+        try:
+            rebuild(package_ids=set_update, defer_commit=True)
+        except Exception as e:
+            log.error(u'Error while rebuild index %s: %s' % (id, repr(e)))
+        package_index.commit()
+        log.info('Finished updating solr entries.')
 
 
 @geodatagov.command()
