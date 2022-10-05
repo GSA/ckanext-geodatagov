@@ -4,7 +4,6 @@ import json
 import logging
 
 import boto3
-import ckan.logic as logic
 import ckan.model as model
 import click
 from botocore.exceptions import ClientError
@@ -251,7 +250,6 @@ def db_solr_sync(dryrun, cleanup_solr, update_solr):
         log.info('Starting dryrun to update index.')
 
     package_index = index_for(model.Package)
-    context = {'model': model, 'ignore_auth': True, 'validate': False, 'use_cache': False}
 
     # get active packages from DB
     active_package = [(r[0], r[1].replace(microsecond=0)) for r in model.Session.query(model.Package.id,
@@ -275,7 +273,7 @@ def db_solr_sync(dryrun, cleanup_solr, update_solr):
             work_list[id] = "db"
 
     both = cleanup_solr == update_solr
-    set_cleanup = {i if work_list[i] == "solr" else None for i in work_list } - {None}
+    set_cleanup = {i if work_list[i] == "solr" else None for i in work_list} - {None}
     set_update = work_list.keys() - set_cleanup
     log.info(f"{len(set_cleanup)} packages need to be removed from Solr")
     log.info(f"{len(set_update)} packages need to be updated/added to Solr")
@@ -291,7 +289,7 @@ def db_solr_sync(dryrun, cleanup_solr, update_solr):
         log.info('Finished cleaning solr entries.')
 
     if not dryrun and set_update and (update_solr or both):
-        log.info(f"rebuilding indexes\n")
+        log.info("rebuilding indexes\n")
         try:
             rebuild(package_ids=set_update, defer_commit=True)
         except Exception as e:
