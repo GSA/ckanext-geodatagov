@@ -67,8 +67,11 @@ class Sitemap:
     def to_json(self) -> str:
         return json.dumps(self, default=lambda o: o.__dict__)
 
-    def write_xml(self, some_xml) -> None:
-        self.xml += some_xml
+    def write_xml(self, some_xml, add_newline=True) -> None:
+        if add_newline:
+            self.xml += f'{some_xml}\n'
+        else:
+            self.xml += some_xml
 
 
 def get_bucket(bucket_name: str):
@@ -129,32 +132,29 @@ def upload_to_key(upload_str: str, filename_on_s3: str) -> None:
 
 def upload(sitemaps: list) -> None:
     """Handle uploading sitemap files to s3"""
-    bucket_path = config.get("ckanext.s3sitemap.aws_storage_path", "")
-    s3_url = config.get("ckanext.s3sitemap.aws_s3_url")
+    s3_url = config.get("ckanext.s3sitemap.endpoint_url")
     storage_path = config.get("ckanext.s3sitemap.aws_storage_path")
 
     current_time = datetime.datetime.now().strftime("%Y-%m-%d")
     sitemap_index = Sitemap('index', 0, 0)
 
-    # write header
-    sitemap_index.write_xml('<?xml version="1.0" encoding="UTF-8"?>\n')
-    sitemap_index.write_xml('<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
+    # write sitemap index
+    sitemap_index.write_xml('<?xml version="1.0" encoding="UTF-8"?>')
+    sitemap_index.write_xml('<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
+    for sitemap in sitemaps:
+        # add sitemaps to sitemap index file
+        sitemap_index.write_xml("<sitemap>")
+        loc = f"{s3_url}{storage_path}{sitemap.filename_s3}" # TODO this doesnt seem quite right
+        sitemap_index.write_xml(f"        <loc>{loc}</loc>")
+        sitemap_index.write_xml(f"        <lastmod>{current_time}</lastmod>")
+        sitemap_index.write_xml("    </sitemap>")
+    sitemap_index.write_xml("</sitemapindex>")
+
+    upload_to_key(sitemap_index.xml, f"{storage_path}/sitemap.xml")
+    log.info("Sitemap index ({storage_path}/sitemap.xml) upload complete.")
 
     for sitemap in sitemaps:
-        # add to sitemap index file
-        sitemap_index.write_xml("<sitemap>\n")
-        loc = s3_url + storage_path + sitemap.filename_s3
-        sitemap_index.write_xml(f"        <loc>{loc}</loc>\n")
-        sitemap_index.write_xml(f"        <lastmod>{current_time}</lastmod>\n")
-        sitemap_index.write_xml("    </sitemap>\n")
-
-    sitemap_index.write_xml("</sitemapindex>\n")
-
-    upload_to_key(sitemap_index.xml, bucket_path + "sitemap.xml")
-    log.info("Sitemap index upload complete.")
-
-    for sitemap in sitemaps:
-        filename_on_s3 = bucket_path + sitemap.filename_s3
+        filename_on_s3 = storage_path + sitemap.filename_s3
         upload_to_key(sitemap.xml, filename_on_s3)
         log.info(f"Sitemap file {sitemap.filename_s3} upload complete.")
 
@@ -189,8 +189,6 @@ def sitemap_to_s3(upload_to_s3: bool, page_size: int, max_per_page: int):
             f"{start+1} to {min(start + page_size, count)} of {count} records done."
         )
 
-        start += page_size
-
         # large block removed here, I'm not convinced that it was ever hit
         # if issues arise around max_per_page, re-add here
         # see https://github.com/GSA/ckanext-geodatagov/blob/
@@ -198,6 +196,10 @@ def sitemap_to_s3(upload_to_s3: bool, page_size: int, max_per_page: int):
 
         log.info(f"done with {sitemap.filename_s3}.")
         sitemaps.append(sitemap)
+
+        start += page_size
+        filename += 1
+
 
     if upload_to_s3:
         upload(sitemaps)
