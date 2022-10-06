@@ -17,9 +17,7 @@ from ckan.lib.search.index import NoopSearchIndex, PackageSearchIndex
 
 from ckanext.geodatagov.search import GeoPackageSearchQuery
 
-_INDICES = {
-    'package': PackageSearchIndex
-}
+_INDICES = {"package": PackageSearchIndex}
 
 # default constants
 DEFAULT_LOG = "ckanext.geodatagov"
@@ -77,7 +75,7 @@ class Sitemap:
 
     def write_xml(self, some_xml, add_newline=True) -> None:
         if add_newline:
-            self.xml += f'{some_xml}\n'
+            self.xml += f"{some_xml}\n"
         else:
             self.xml += some_xml
 
@@ -85,8 +83,8 @@ class Sitemap:
 def get_bucket(bucket_name: str):
     """Return s3 Bucket object, check access to bucket_name, create if needed.
 
-        Refer to values in .env file in ckanext_geodatagov and
-        .profile file in catalog repo for s3 config.
+    Refer to values in .env file in ckanext_geodatagov and
+    .profile file in catalog repo for s3 config.
     """
 
     if not config.get("ckanext.s3sitemap.aws_use_ami_role"):
@@ -134,7 +132,7 @@ def upload_to_key(upload_str: str, filename_on_s3: str) -> None:
     )
     """
 
-    bytes_obj = io.BytesIO(bytes(upload_str.encode('utf-8')))
+    bytes_obj = io.BytesIO(bytes(upload_str.encode("utf-8")))
     s3.upload_fileobj(bytes_obj, bucket_name, filename_on_s3)
 
 
@@ -144,15 +142,17 @@ def upload(sitemaps: list) -> None:
     storage_path = config.get("ckanext.s3sitemap.aws_storage_path")
 
     current_time = datetime.datetime.now().strftime("%Y-%m-%d")
-    sitemap_index = Sitemap('index', 0, 0)
+    sitemap_index = Sitemap("index", 0, 0)
 
     # write sitemap index
     sitemap_index.write_xml('<?xml version="1.0" encoding="UTF-8"?>')
-    sitemap_index.write_xml('<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
+    sitemap_index.write_xml(
+        '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+    )
     for sitemap in sitemaps:
         # add sitemaps to sitemap index file
         sitemap_index.write_xml("<sitemap>")
-        loc = f"{s3_url}{storage_path}{sitemap.filename_s3}" # TODO this doesnt seem quite right
+        loc = f"{s3_url}{storage_path}{sitemap.filename_s3}"  # TODO this doesnt seem quite right
         sitemap_index.write_xml(f"        <loc>{loc}</loc>")
         sitemap_index.write_xml(f"        <lastmod>{current_time}</lastmod>")
         sitemap_index.write_xml("    </sitemap>")
@@ -208,7 +208,6 @@ def sitemap_to_s3(upload_to_s3: bool, page_size: int, max_per_page: int):
         start += page_size
         filename += 1
 
-
     if upload_to_s3:
         upload(sitemaps)
     else:
@@ -227,8 +226,8 @@ def _normalize_type(_type):
 
 
 def index_for(_type):
-    """ Get a SearchIndex instance sub-class suitable for
-        the specified type. """
+    """Get a SearchIndex instance sub-class suitable for
+    the specified type."""
     try:
         _type_n = _normalize_type(_type)
         return _INDICES[_type_n]()
@@ -242,30 +241,41 @@ def get_all_entity_ids_and_date(max_results: int = 1000):
     Return a list of the IDs and metadata_modified of all indexed packages.
     """
     query = "*:*"
-    fq = "+site_id:\"%s\" " % config.get('ckan.site_id')
+    fq = '+site_id:"%s" ' % config.get("ckan.site_id")
     fq += "+state:active "
 
     conn = make_connection()
-    data = conn.search(query, fq=fq, rows=max_results, fl='id, metadata_modified')
+    data = conn.search(query, fq=fq, rows=max_results, fl="id, metadata_modified")
 
-    return [(r.get('id'), r.get('metadata_modified')) for r in data.docs]
+    return [(r.get("id"), r.get("metadata_modified")) for r in data.docs]
 
 
 @geodatagov.command()
-@click.option("--dryrun", is_flag=True, help='inspect what will be updated')
-@click.option("--cleanup_solr", is_flag=True, help='Only remove orphaned entries in Solr')
-@click.option("--update_solr", is_flag=True, help=(
-    '(Update solr entries with new data from DB) OR (Add DB data to Solr that is missing)'))
+@click.option("--dryrun", is_flag=True, help="inspect what will be updated")
+@click.option(
+    "--cleanup_solr", is_flag=True, help="Only remove orphaned entries in Solr"
+)
+@click.option(
+    "--update_solr",
+    is_flag=True,
+    help=(
+        "(Update solr entries with new data from DB) OR (Add DB data to Solr that is missing)"
+    ),
+)
 def db_solr_sync(dryrun, cleanup_solr, update_solr):
-    ''' db solr sync '''
+    """db solr sync"""
     if dryrun:
-        log.info('Starting dryrun to update index.')
+        log.info("Starting dryrun to update index.")
 
     package_index = index_for(model.Package)
 
     # get active packages from DB
-    active_package = [(r[0], r[1].replace(microsecond=0)) for r in model.Session.query(model.Package.id,
-                      model.Package.metadata_modified).filter(model.Package.state != 'deleted').all()]
+    active_package = [
+        (r[0], r[1].replace(microsecond=0))
+        for r in model.Session.query(model.Package.id, model.Package.metadata_modified)
+        .filter(model.Package.state != "deleted")
+        .all()
+    ]
     log.info(f"total {len(active_package)} DB active_package")
 
     # get indexed packages from solr
@@ -276,9 +286,9 @@ def db_solr_sync(dryrun, cleanup_solr, update_solr):
     db_package = set(active_package) - indexed_package
 
     work_list = {}
-    for id, _ in (solr_package):
+    for id, _ in solr_package:
         work_list[id] = "solr"
-    for id, _ in (db_package):
+    for id, _ in db_package:
         if id in work_list:
             work_list[id] = "solr-db"
         else:
@@ -294,25 +304,25 @@ def db_solr_sync(dryrun, cleanup_solr, update_solr):
         for id in set_cleanup:
             log.info(f"deleting index with {id} \n")
             try:
-                package_index.remove_dict({'id': id})
+                package_index.remove_dict({"id": id})
             except Exception as e:
-                log.error(u'Error while delete index %s: %s' % (id, repr(e)))
+                log.error("Error while delete index %s: %s" % (id, repr(e)))
         package_index.commit()
-        log.info('Finished cleaning solr entries.')
+        log.info("Finished cleaning solr entries.")
 
     if not dryrun and set_update and (update_solr or both):
         log.info("rebuilding indexes\n")
         try:
             rebuild(package_ids=set_update, defer_commit=True)
         except Exception as e:
-            log.error(u'Error while rebuild index %s: %s' % (id, repr(e)))
+            log.error("Error while rebuild index %s: %s" % (id, repr(e)))
         package_index.commit()
-        log.info('Finished updating solr entries.')
+        log.info("Finished updating solr entries.")
 
 
 @geodatagov.command()
 def test_command():
-    ''' Basic cli command with normal result '''
+    """Basic cli command with normal result"""
     print("This is a good test!")
     return True
 
