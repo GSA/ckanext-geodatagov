@@ -44,12 +44,12 @@ def datagovs3():
 class Sitemap:
     """Sitemap object
 
-    Accepts filename_number, start, page_size
+    Accepts filename, start, page_size
     """
 
-    def __init__(self, filename_number: int, start: int, page_size: int) -> None:
-        self.filename_number = filename_number
-        self.filename_s3 = f"sitemap-{filename_number}.xml"
+    def __init__(self, filename: str, start: int, page_size: int) -> None:
+        self.filename = filename
+        self.filename_s3 = f"sitemap-{filename}.xml"
         self.start = start
         self.page_size = page_size
         self.xml = ""
@@ -74,6 +74,9 @@ class Sitemap:
 
     def to_json(self) -> str:
         return json.dumps(self, default=lambda o: o.__dict__)
+
+    def write_xml(self, some_xml) -> None:
+        self.xml += some_xml
 
 
 def get_bucket(bucket_name: str):
@@ -139,30 +142,29 @@ def upload(sitemaps: list) -> None:
     storage_path = config.get("ckanext.s3sitemap.aws_storage_path")
 
     current_time = datetime.datetime.now().strftime("%Y-%m-%d")
-    sitemap_index = ""
+    sitemap_index = Sitemap('index', 0, 0)
 
     # write header
-    sitemap_index += '<?xml version="1.0" encoding="UTF-8"?>\n'
-    sitemap_index += (
-        '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-    )
+    sitemap_index.write_xml('<?xml version="1.0" encoding="UTF-8"?>\n')
+    sitemap_index.write_xml('<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
+
+    for sitemap in sitemaps:
+        # add to sitemap index file
+        sitemap_index.write_xml("<sitemap>\n")
+        loc = s3_url + storage_path + sitemap.filename_s3
+        sitemap_index.write_xml(f"        <loc>{loc}</loc>\n")
+        sitemap_index.write_xml(f"        <lastmod>{current_time}</lastmod>\n")
+        sitemap_index.write_xml("    </sitemap>\n")
+
+    sitemap_index.write_xml("</sitemapindex>\n")
+
+    upload_to_key(sitemap_index.xml, bucket_path + "sitemap.xml")
+    log.info("Sitemap index upload complete.")
 
     for sitemap in sitemaps:
         filename_on_s3 = bucket_path + sitemap.filename_s3
         upload_to_key(sitemap.xml, filename_on_s3)
         log.info(f"Sitemap file {sitemap.filename_s3} upload complete.")
-
-        # add to sitemap index file
-        sitemap_index += "    <sitemap>\n"
-        loc = s3_url + storage_path + sitemap.filename_s3
-        sitemap_index += f"        <loc>{loc}</loc>\n"
-        sitemap_index += f"        <lastmod>{current_time}</lastmod>\n"
-        sitemap_index += "    </sitemap>\n"
-
-    sitemap_index += "</sitemapindex>\n"
-
-    upload_to_key(sitemap_index, bucket_path + "sitemap.xml")
-    log.info("Sitemap index upload complete.")
 
 
 @geodatagov.command()
@@ -181,12 +183,12 @@ def sitemap_to_s3(upload_to_s3: bool, page_size: int, max_per_page: int):
         return
 
     start = 0
-    filename_number = 1
+    filename = 1
     sitemaps = []
 
     paginations = (count // page_size) + 1
     for _ in range(paginations):
-        sitemap = Sitemap(filename_number, start, page_size)
+        sitemap = Sitemap(str(filename), start, page_size)
         sitemap.write_sitemap_header()
         sitemap.write_pkgs(package_query)
         sitemap.write_sitemap_footer()
