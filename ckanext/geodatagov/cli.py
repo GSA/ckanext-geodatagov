@@ -348,6 +348,7 @@ def s3_test():
 
 
 def hashsum(path, hex=False, hash_type=hashlib.md5):
+    # Courtesy of https://stackoverflow.com/a/15020115
     hashinst = hash_type()
     with open(path, 'rb') as f:
         for chunk in iter(lambda: f.read(hashinst.block_size * 128), b''):
