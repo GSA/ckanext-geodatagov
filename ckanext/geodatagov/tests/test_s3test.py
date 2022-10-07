@@ -22,7 +22,6 @@ class TestS3TestCommand(object):
 
         return raw_cli_output
 
-
     def test_s3_upload(self, cli_result):
         """upload test.txt to s3 and make sure there's no errors"""
         # check successful cli run

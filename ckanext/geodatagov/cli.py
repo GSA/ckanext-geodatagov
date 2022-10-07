@@ -319,22 +319,19 @@ def s3_test():
 
     # Grab all of the necessary config and create S3 client
     bucket_name = config.get("ckanext.s3sitemap.aws_bucket_name")
-    aws_access_key_id = config.get("ckanext.s3sitemap.aws_access_key_id")
-    aws_secret_access_key = config.get("ckanext.s3sitemap.aws_secret_access_key")
-    region_name = config.get("ckanext.s3sitemap.region_name")
     s3 = boto3.client(
         's3',
-        aws_access_key_id=aws_access_key_id,
-        aws_secret_access_key=aws_secret_access_key,
-        region_name=region_name,
-        endpoint_url = config.get("ckanext.s3sitemap.endpoint_url"),
+        aws_access_key_id=config.get("ckanext.s3sitemap.aws_access_key_id"),
+        aws_secret_access_key=config.get("ckanext.s3sitemap.aws_secret_access_key"),
+        region_name=config.get("ckanext.s3sitemap.region_name"),
+        endpoint_url=config.get("ckanext.s3sitemap.endpoint_url"),
         config=Config(s3={'addressing_style': 'auto'})
     )
 
     # Only for local testing: create bucket if needed
     try:
         s3.create_bucket(Bucket=bucket_name)
-    except Exception as e:
+    except Exception:
         pass
 
     # Create test file to upload
