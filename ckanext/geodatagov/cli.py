@@ -328,12 +328,21 @@ def s3_test():
         aws_access_key_id=aws_access_key_id,
         aws_secret_access_key=aws_secret_access_key,
         region_name=region_name,
+        endpoint_url = config.get("ckanext.s3sitemap.endpoint_url"),
         config=Config(s3={'addressing_style': 'auto'})
     )
 
+    # Only for local testing: create bucket if needed
+    try:
+        s3.create_bucket(Bucket=bucket_name)
+    except Exception as e:
+        pass
+
     # Create test file to upload
     with open('test.txt', 'w') as f:
-        f.write('Yay!  I was created at %s' % str(datetime.datetime.now()))
+        content = 'Yay!  I was created at %s' % str(datetime.datetime.now())
+        f.write(content)
+        print(content)
 
     # Hash file and upload to S3
     md5 = base64.b64encode(hashsum('test.txt')).decode("utf-8")
