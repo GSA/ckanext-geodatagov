@@ -1,4 +1,5 @@
 import datetime
+import hashlib
 import io
 import json
 import logging
@@ -309,6 +310,7 @@ def test_command():
     print("This is a good test!")
     return True
 
+
 @datagovs3.command()
 def s3_test():
     ''' Basic cli command to talk to s3 '''
@@ -326,7 +328,7 @@ def s3_test():
         aws_access_key_id=aws_access_key_id,
         aws_secret_access_key=aws_secret_access_key,
         region_name=region_name,
-        config=Config(s3 = {'addressing_style': 'auto'})
+        config=Config(s3={'addressing_style': 'auto'})
     )
 
     import base64
@@ -342,7 +344,6 @@ def s3_test():
         s3.put_object(Body=f, Bucket=bucket_name, Key='test.txt', ContentMD5=md5)
 
 
-import hashlib
 def hashsum(path, hex=False, hash_type=hashlib.md5):
     hashinst = hash_type()
     with open(path, 'rb') as f:
@@ -356,6 +357,7 @@ def get_commands() -> list:
     """List of commands to pass to ckan"""
 
     return [geodatagov]
+
 
 # IClick
 def get_commands2() -> list:

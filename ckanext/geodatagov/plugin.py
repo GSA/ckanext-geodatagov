@@ -302,37 +302,37 @@ def harvest_source_convert_from_config(key, data, errors, context):
 
 
 # class DataGovHarvest(ckanext.harvest.plugin.Harvest):
-# 
+#
 #     def package_form(self):
 #         return 'source/geodatagov_source_form.html'
-# 
+#
 #     def show_package_schema(self):
 #         '''
 #         Returns the schema for mapping package data from the database into a
 #         format suitable for the form
 #         '''
-# 
+#
 #         schema = harvest_source_show_package_schema()
 #         schema['config'] = [convert_from_extras, harvest_source_convert_from_config, ignore_missing]
 #         return schema
-# 
+#
 #     def dataset_facets(self, facets_dict, package_type):
-# 
+#
 #         if package_type != 'harvest':
 #             return facets_dict
-# 
+#
 #         return OrderedDict([('organization_type', 'Organization Types'),
 #                             ('frequency', 'Frequency'),
 #                             ('source_type', 'Type'),
 #                             ('organization', 'Organizations'),
 #                             # ('publisher', 'Publisher'),
 #                             ])
-# 
+#
 #     def organization_facets(self, facets_dict, organization_type, package_type):
-# 
+#
 #         if package_type != 'harvest':
 #             return facets_dict
-# 
+#
 #         return OrderedDict([('frequency', 'Frequency'),
 #                             ('source_type', 'Type'),
 #                             # ('publisher', 'Publisher'),
