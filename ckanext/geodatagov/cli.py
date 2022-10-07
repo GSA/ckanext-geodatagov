@@ -8,6 +8,7 @@ import logging
 import boto3
 import ckan.model as model
 import click
+from botocore.config import Config
 from botocore.exceptions import ClientError
 from ckan.common import config
 from ckan.lib.search import rebuild
@@ -316,8 +317,6 @@ def test_command():
 def s3_test():
     ''' Basic cli command to talk to s3 '''
 
-    from botocore.config import Config
-
     # Grab all of the necessary config and create S3 client
     bucket_name = config.get("ckanext.s3sitemap.aws_bucket_name")
     aws_access_key_id = config.get("ckanext.s3sitemap.aws_access_key_id")
@@ -339,6 +338,7 @@ def s3_test():
         pass
 
     # Create test file to upload
+    # Print the contents out, so test can validate results
     with open('test.txt', 'w') as f:
         content = 'Yay!  I was created at %s' % str(datetime.datetime.now())
         f.write(content)
