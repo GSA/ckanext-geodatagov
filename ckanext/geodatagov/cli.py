@@ -1,3 +1,4 @@
+import base64
 import datetime
 import hashlib
 import io
@@ -315,10 +316,9 @@ def test_command():
 def s3_test():
     ''' Basic cli command to talk to s3 '''
 
-    import ssl
-    print(ssl.OPENSSL_VERSION)
-
     from botocore.config import Config
+
+    # Grab all of the necessary config and create S3 client
     bucket_name = config.get("ckanext.s3sitemap.aws_bucket_name")
     aws_access_key_id = config.get("ckanext.s3sitemap.aws_access_key_id")
     aws_secret_access_key = config.get("ckanext.s3sitemap.aws_secret_access_key")
@@ -331,14 +331,11 @@ def s3_test():
         config=Config(s3={'addressing_style': 'auto'})
     )
 
-    import base64
-    import datetime
+    # Create test file to upload
     with open('test.txt', 'w') as f:
         f.write('Yay!  I was created at %s' % str(datetime.datetime.now()))
-    print(bucket_name)
-    print(open('test.txt', 'r').read())
-    # s3.upload_file('test.txt', bucket_name, 'test.txt', ContentMD5=hashsum('test.txt'))
 
+    # Hash file and upload to S3
     md5 = base64.b64encode(hashsum('test.txt')).decode("utf-8")
     with open('test.txt', "rb") as f:
         s3.put_object(Body=f, Bucket=bucket_name, Key='test.txt', ContentMD5=md5)
