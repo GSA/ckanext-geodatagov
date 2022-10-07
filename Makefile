@@ -22,6 +22,8 @@ java-test: ## Test java transformation command (java + saxon installed)
 up: ## Start the containers
 	CKAN_VERSION=$(CKAN_VERSION) docker-compose -f $(COMPOSE_FILE) up
 
+ci: ## Start the containers in the background
+	CKAN_VERSION=$(CKAN_VERSION) docker-compose -f $(COMPOSE_FILE) up -d
 
 .DEFAULT_GOAL := help
 .PHONY: build clean help lint test up

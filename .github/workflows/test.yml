@@ -30,7 +30,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Run everything
-      run: source .env && CKAN_VERSION=${{ matrix.ckan-version }} make clean build up test
+      run: source .env && CKAN_VERSION=${{ matrix.ckan-version }} make clean build ci test
     # TODO REMOVE
     - name: Setup tmate session
       if: ${{ failure() }}
