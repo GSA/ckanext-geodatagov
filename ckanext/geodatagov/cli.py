@@ -33,6 +33,11 @@ def geodatagov():
     pass
 
 
+@click.group()
+def datagovs3():
+    pass
+
+
 class Sitemap:
     """Sitemap object
 
@@ -304,9 +309,56 @@ def test_command():
     print("This is a good test!")
     return True
 
+@datagovs3.command()
+def s3_test():
+    ''' Basic cli command to talk to s3 '''
+
+    import ssl
+    print(ssl.OPENSSL_VERSION)
+
+    from botocore.config import Config
+    bucket_name = config.get("ckanext.s3sitemap.aws_bucket_name")
+    aws_access_key_id = config.get("ckanext.s3sitemap.aws_access_key_id")
+    aws_secret_access_key = config.get("ckanext.s3sitemap.aws_secret_access_key")
+    region_name = config.get("ckanext.s3sitemap.region_name")
+    s3 = boto3.client(
+        's3',
+        aws_access_key_id=aws_access_key_id,
+        aws_secret_access_key=aws_secret_access_key,
+        region_name=region_name,
+        config=Config(s3 = {'addressing_style': 'auto'})
+    )
+
+    import base64
+    import datetime
+    with open('test.txt', 'w') as f:
+        f.write('Yay!  I was created at %s' % str(datetime.datetime.now()))
+    print(bucket_name)
+    print(open('test.txt', 'r').read())
+    # s3.upload_file('test.txt', bucket_name, 'test.txt', ContentMD5=hashsum('test.txt'))
+
+    md5 = base64.b64encode(hashsum('test.txt')).decode("utf-8")
+    with open('test.txt', "rb") as f:
+        s3.put_object(Body=f, Bucket=bucket_name, Key='test.txt', ContentMD5=md5)
+
+
+import hashlib
+def hashsum(path, hex=False, hash_type=hashlib.md5):
+    hashinst = hash_type()
+    with open(path, 'rb') as f:
+        for chunk in iter(lambda: f.read(hashinst.block_size * 128), b''):
+            hashinst.update(chunk)
+    return hashinst.hexdigest() if hex else hashinst.digest()
+
 
 # IClick
 def get_commands() -> list:
     """List of commands to pass to ckan"""
 
     return [geodatagov]
+
+# IClick
+def get_commands2() -> list:
+    """List of commands to pass to ckan"""
+
+    return [datagovs3]

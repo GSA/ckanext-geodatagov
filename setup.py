@@ -37,6 +37,7 @@ setup(
         [ckan.plugins]
     # Add plugins here, eg
     geodatagov=ckanext.geodatagov.plugin:Demo
+    s3test=ckanext.geodatagov.plugin:S3Test
     datagov_harvest=ckanext.geodatagov.plugin:DataGovHarvest
 
     geodatagov_csw_harvester=ckanext.geodatagov.harvesters:GeoDataGovCSWHarvester
