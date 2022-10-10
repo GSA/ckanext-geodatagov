@@ -1,4 +1,6 @@
+import base64
 import datetime
+import hashlib
 import io
 import json
 import logging
@@ -6,6 +8,7 @@ import logging
 import boto3
 import ckan.model as model
 import click
+from botocore.config import Config
 from botocore.exceptions import ClientError
 from ckan.common import config
 from ckan.lib.search import rebuild
@@ -30,6 +33,11 @@ log = logging.getLogger(DEFAULT_LOG)
 
 @click.group()
 def geodatagov():
+    pass
+
+
+@click.group()
+def datagovs3():
     pass
 
 
@@ -305,8 +313,58 @@ def test_command():
     return True
 
 
+@datagovs3.command()
+def s3_test():
+    ''' Basic cli command to talk to s3 '''
+
+    # Grab all of the necessary config and create S3 client
+    bucket_name = config.get("ckanext.s3sitemap.aws_bucket_name")
+    s3 = boto3.client(
+        's3',
+        aws_access_key_id=config.get("ckanext.s3sitemap.aws_access_key_id"),
+        aws_secret_access_key=config.get("ckanext.s3sitemap.aws_secret_access_key"),
+        region_name=config.get("ckanext.s3sitemap.region_name"),
+        endpoint_url=config.get("ckanext.s3sitemap.endpoint_url"),
+        config=Config(s3={'addressing_style': 'auto'})
+    )
+
+    # Only for local testing: create bucket if needed
+    try:
+        s3.create_bucket(Bucket=bucket_name)
+    except Exception:
+        pass
+
+    # Create test file to upload
+    # Print the contents out, so test can validate results
+    with open('test.txt', 'w') as f:
+        content = 'Yay!  I was created at %s' % str(datetime.datetime.now())
+        f.write(content)
+        print(content)
+
+    # Hash file and upload to S3
+    md5 = base64.b64encode(hashsum('test.txt')).decode("utf-8")
+    with open('test.txt', "rb") as f:
+        s3.put_object(Body=f, Bucket=bucket_name, Key='test.txt', ContentMD5=md5)
+
+
+def hashsum(path, hex=False, hash_type=hashlib.md5):
+    # Courtesy of https://stackoverflow.com/a/15020115
+    hashinst = hash_type()
+    with open(path, 'rb') as f:
+        for chunk in iter(lambda: f.read(hashinst.block_size * 128), b''):
+            hashinst.update(chunk)
+    return hashinst.hexdigest() if hex else hashinst.digest()
+
+
 # IClick
 def get_commands() -> list:
     """List of commands to pass to ckan"""
 
     return [geodatagov]
+
+
+# IClick
+def get_commands2() -> list:
+    """List of commands to pass to ckan"""
+
+    return [datagovs3]
