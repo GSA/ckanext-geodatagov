@@ -332,6 +332,9 @@ def test_command():
 def s3_test():
     """Basic cli command to talk to s3"""
 
+    # Set S3 globals
+    get_s3()
+
     # Create test file to upload
     # Print the contents out, so test can validate results
     with open("test.txt", "w") as f:
@@ -342,7 +345,7 @@ def s3_test():
     # Hash file and upload to S3
     md5 = base64.b64encode(hashsum("test.txt")).decode("utf-8")
     with open("test.txt", "rb") as f:
-        s3.put_object(Body=f, Bucket=bucket_name, Key="test.txt", ContentMD5=md5)
+        S3.put_object(Body=f, Bucket=BUCKET_NAME, Key="test.txt", ContentMD5=md5)
 
 
 def hashsum(path, hex=False, hash_type=hashlib.md5):
