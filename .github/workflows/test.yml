@@ -33,5 +33,5 @@ jobs:
       run: source .env && CKAN_VERSION=${{ matrix.ckan-version }} make clean build ci test
     # TODO REMOVE
     - name: Setup tmate session
-      if: ${{ failure() }}
+      # if: ${{ failure() }}
       uses: mxschmitt/action-tmate@v3
