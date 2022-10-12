@@ -151,7 +151,7 @@ def upload_sitemap_index(sitemaps: list) -> None:
     sitemap_index.write_xml("</sitemapindex>")
 
     upload_to_key(sitemap_index.xml, f"{S3_STORAGE_PATH}/sitemap.xml")
-    log.info("Sitemap index ({S3_STORAGE_PATH}/sitemap.xml) upload complete.")
+    log.info(f"Sitemap index ({S3_STORAGE_PATH}/sitemap.xml) upload complete.")
 
 
 def upload_sitemap_files(sitemaps: list) -> None:
@@ -340,7 +340,7 @@ def s3_test():
     with open("test.txt", "w") as f:
         content = "Yay!  I was created at %s" % str(datetime.datetime.now())
         f.write(content)
-        print(content)
+        log.info(content)
 
     # Hash file and upload to S3
     md5 = base64.b64encode(hashsum("test.txt")).decode("utf-8")
