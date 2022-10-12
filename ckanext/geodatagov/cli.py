@@ -348,13 +348,15 @@ def s3_test():
         S3.put_object(Body=f, Bucket=BUCKET_NAME, Key="test.txt", ContentMD5=md5)
 
 
-def hashsum(path, hex=False, hash_type=hashlib.md5):
+def hashsum(path: str, hash_type=hashlib.md5):
+    """Accepts file path str, returns hash byes-like object"""
     # Courtesy of https://stackoverflow.com/a/15020115
     hashinst = hash_type()
     with open(path, "rb") as f:
         for chunk in iter(lambda: f.read(hashinst.block_size * 128), b""):
             hashinst.update(chunk)
-    return hashinst.hexdigest() if hex else hashinst.digest()
+    # TODO hex?
+    return hashinst.digest()
 
 
 # IClick
