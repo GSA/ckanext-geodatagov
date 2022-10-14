@@ -152,8 +152,8 @@ def upload_sitemap_index(sitemaps: list) -> None:
 
     upload_to_key(sitemap_index.xml, f"{S3_STORAGE_PATH}/sitemap.xml")
     log.info(
-        f"Sitemap index ({S3_STORAGE_PATH}/sitemap.xml) upload complete to:\
-        \n{S3_ENDPOINT_URL}/{S3_STORAGE_PATH}/{sitemap_index.filename_s3}"
+        f"Sitemap index ({S3_STORAGE_PATH}/sitemap.xml) upload complete to: \
+        {S3_ENDPOINT_URL}/{S3_STORAGE_PATH}/{sitemap_index.filename_s3}"
     )
 
 
@@ -165,8 +165,8 @@ def upload_sitemap_files(sitemaps: list) -> None:
         filename_on_s3 = f"{S3_STORAGE_PATH}/{sitemap.filename_s3}"
         upload_to_key(sitemap.xml, filename_on_s3)
         log.info(
-            f"Sitemap file {sitemap.filename_s3} upload complete to:\
-            \n{S3_ENDPOINT_URL}/{S3_STORAGE_PATH}/{sitemap.filename_s3}"
+            f"Sitemap file {sitemap.filename_s3} upload complete to: \
+            {S3_ENDPOINT_URL}/{S3_STORAGE_PATH}/{sitemap.filename_s3}"
         )
 
 
@@ -336,22 +336,15 @@ def test_command():
 
 @datagovs3.command()
 def s3_test():
-    """Basic cli command to talk to s3"""
+    """Tests cli command talking to s3"""
 
     # Set S3 globals
     get_s3()
 
-    # Create test file to upload
-    # Print the contents out, so test can validate results
-    with open("test.txt", "w") as f:
-        content = "Yay!  I was created at %s" % str(datetime.datetime.now())
-        f.write(content)
-        log.info(content)
-
-    # Hash file and upload to S3
-    md5 = base64.b64encode(hashsum("test.txt")).decode("utf-8")
-    with open("test.txt", "rb") as f:
-        S3.put_object(Body=f, Bucket=BUCKET_NAME, Key="test.txt", ContentMD5=md5)
+    # Upload test file
+    content = f"Yay! I was created at {str(datetime.datetime.now())}"
+    print(content)   # output to be checked by test_s3test
+    upload_to_key(content, "test.txt")
 
 
 def hashsum(path: str, hash_type=hashlib.md5):
