@@ -17,7 +17,6 @@ from ckan.lib.search.index import NoopSearchIndex, PackageSearchIndex
 from ckanext.geodatagov.search import GeoPackageSearchQuery
 
 # default constants
-DEFAULT_LOG = "ckanext.geodatagov"
 #   for sitemap_to_s3
 UPLOAD_TO_S3 = True
 PAGE_SIZE = 1000
@@ -25,6 +24,7 @@ MAX_PER_PAGE = 50000
 #   for db_solr_sync
 _INDICES = {"package": PackageSearchIndex}
 #   for logging
+DEFAULT_LOG = "ckanext.geodatagov"
 log = logging.getLogger(DEFAULT_LOG)
 
 
