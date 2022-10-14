@@ -343,7 +343,7 @@ def s3_test():
 
     # Upload test file
     content = f"Yay! I was created at {str(datetime.datetime.now())}"
-    print(content)   # output to be checked by test_s3test
+    print(content)  # output to be checked by test_s3test
     upload_to_key(content, "test.txt")
 
 
