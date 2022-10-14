@@ -89,11 +89,11 @@ def get_s3() -> None:
     log.info("Setting S3 globals...")
     global S3
     global BUCKET_NAME
-    #global S3_STORAGE_PATH
+    # global S3_STORAGE_PATH
     global S3_ENDPOINT_URL
 
     BUCKET_NAME = config.get("ckanext.s3sitemap.aws_bucket_name")
-    #S3_STORAGE_PATH = config.get("ckanext.s3sitemap.aws_storage_path")
+    # S3_STORAGE_PATH = config.get("ckanext.s3sitemap.aws_storage_path")
     S3_ENDPOINT_URL = config.get("ckanext.s3sitemap.endpoint_url")
 
     # Grab all of the necessary config and create S3 client
@@ -125,16 +125,17 @@ def upload_to_key(upload_str: str, filename_on_s3: str) -> None:
     # Hash file and upload to S3
     md5 = base64.b64encode(hashsum(temp_file.name)).decode("utf-8")
     with open(temp_file.name, "rb") as f:
-        resp = S3.put_object(Body=f, Bucket=BUCKET_NAME, Key=filename_on_s3, ContentMD5=md5)
-        resp_metadata = resp.get('ResponseMetadata')
-        if resp_metadata.get('HTTPStatusCode') == 200:
+        resp = S3.put_object(
+            Body=f, Bucket=BUCKET_NAME, Key=filename_on_s3, ContentMD5=md5
+        )
+        resp_metadata = resp.get("ResponseMetadata")
+        if resp_metadata.get("HTTPStatusCode") == 200:
             log.info(
                 f"File {filename_on_s3} upload complete to: \
                 {S3_ENDPOINT_URL}/{filename_on_s3}"
             )
         else:
             log.error(f"File {filename_on_s3} upload failed. Error: {resp_metadata}")
-
 
 
 def upload_sitemap_index(sitemaps: list) -> None:
@@ -171,11 +172,11 @@ def upload_sitemap_files(sitemaps: list) -> None:
 
     log.info(f"Uploading {len(sitemaps)} sitemap files...")
     for sitemap in sitemaps:
-        filename_on_s3 = f"sitemap.filename_s3}"
+        filename_on_s3 = f"{sitemap.filename_s3}"
         upload_to_key(sitemap.xml, filename_on_s3)
         log.info(
             f"Sitemap file {sitemap.filename_s3} upload complete to: \
-            {S3_ENDPOINT_URL}/sitemap.filename_s3}"
+            {S3_ENDPOINT_URL}/{sitemap.filename_s3}"
         )
 
 
