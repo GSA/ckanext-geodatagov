@@ -151,7 +151,10 @@ def upload_sitemap_index(sitemaps: list) -> None:
     sitemap_index.write_xml("</sitemapindex>")
 
     upload_to_key(sitemap_index.xml, f"{S3_STORAGE_PATH}/sitemap.xml")
-    log.info(f"Sitemap index ({S3_STORAGE_PATH}/sitemap.xml) upload complete to:\n{S3_ENDPOINT_URL}/{S3_STORAGE_PATH}/{sitemap.filename_s3}")
+    log.info(
+        f"Sitemap index ({S3_STORAGE_PATH}/sitemap.xml) upload complete to:\
+        \n{S3_ENDPOINT_URL}/{S3_STORAGE_PATH}/{sitemap_index.filename_s3}"
+    )
 
 
 def upload_sitemap_files(sitemaps: list) -> None:
@@ -161,7 +164,10 @@ def upload_sitemap_files(sitemaps: list) -> None:
     for sitemap in sitemaps:
         filename_on_s3 = f"{S3_STORAGE_PATH}/{sitemap.filename_s3}"
         upload_to_key(sitemap.xml, filename_on_s3)
-        log.info(f"Sitemap file {sitemap.filename_s3} upload complete to:\n{S3_ENDPOINT_URL}/{S3_STORAGE_PATH}/{sitemap.filename_s3}")
+        log.info(
+            f"Sitemap file {sitemap.filename_s3} upload complete to:\
+            \n{S3_ENDPOINT_URL}/{S3_STORAGE_PATH}/{sitemap.filename_s3}"
+        )
 
 
 @geodatagov.command()
