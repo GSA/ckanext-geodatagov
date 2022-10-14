@@ -160,7 +160,7 @@ def upload_sitemap_index(sitemaps: list) -> None:
         sitemap_index.write_xml("</sitemap>")
     sitemap_index.write_xml("</sitemapindex>")
 
-    upload_to_key(sitemap_index.xml, f"sitemap.xml")
+    upload_to_key(sitemap_index.xml, f"{sitemap_index.filename_s3}")
     log.info(
         f"Sitemap index upload complete to: \
         {S3_ENDPOINT_URL}/{sitemap_index.filename_s3}"
