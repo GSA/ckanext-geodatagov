@@ -144,14 +144,14 @@ def upload_sitemap_index(sitemaps: list) -> None:
     for sitemap in sitemaps:
         # add sitemaps to sitemap index file
         sitemap_index.write_xml("<sitemap>")
-        loc = f"{S3_ENDPOINT_URL}{S3_STORAGE_PATH}{sitemap.filename_s3}"  # TODO this doesnt seem quite right
-        sitemap_index.write_xml(f"        <loc>{loc}</loc>")
-        sitemap_index.write_xml(f"        <lastmod>{current_time}</lastmod>")
-        sitemap_index.write_xml("    </sitemap>")
+        loc = f"{S3_ENDPOINT_URL}/{S3_STORAGE_PATH}/{sitemap.filename_s3}"  # TODO this doesnt seem quite right
+        sitemap_index.write_xml(f"<loc>{loc}</loc>")
+        sitemap_index.write_xml(f"<lastmod>{current_time}</lastmod>")
+        sitemap_index.write_xml("</sitemap>")
     sitemap_index.write_xml("</sitemapindex>")
 
     upload_to_key(sitemap_index.xml, f"{S3_STORAGE_PATH}/sitemap.xml")
-    log.info(f"Sitemap index ({S3_STORAGE_PATH}/sitemap.xml) upload complete.")
+    log.info(f"Sitemap index ({S3_STORAGE_PATH}/sitemap.xml) upload complete to:\n{S3_ENDPOINT_URL}/{S3_STORAGE_PATH}/{sitemap.filename_s3}")
 
 
 def upload_sitemap_files(sitemaps: list) -> None:
@@ -159,9 +159,9 @@ def upload_sitemap_files(sitemaps: list) -> None:
 
     log.info(f"Uploading {len(sitemaps)} sitemap files...")
     for sitemap in sitemaps:
-        filename_on_s3 = S3_STORAGE_PATH + sitemap.filename_s3
+        filename_on_s3 = f"{S3_STORAGE_PATH}/{sitemap.filename_s3}"
         upload_to_key(sitemap.xml, filename_on_s3)
-        log.info(f"Sitemap file {sitemap.filename_s3} upload complete.")
+        log.info(f"Sitemap file {sitemap.filename_s3} upload complete to:\n{S3_ENDPOINT_URL}/{S3_STORAGE_PATH}/{sitemap.filename_s3}")
 
 
 @geodatagov.command()
