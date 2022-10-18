@@ -10,7 +10,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name="ckanext-geodatagov",
-    version="0.1.9",
+    version="0.1.10",
     description="",
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -37,6 +37,7 @@ setup(
         [ckan.plugins]
     # Add plugins here, eg
     geodatagov=ckanext.geodatagov.plugin:Demo
+    s3test=ckanext.geodatagov.plugin:S3Test
     datagov_harvest=ckanext.geodatagov.plugin:DataGovHarvest
 
     geodatagov_csw_harvester=ckanext.geodatagov.harvesters:GeoDataGovCSWHarvester
