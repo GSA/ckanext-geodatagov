@@ -28,7 +28,7 @@ class TestS3TestCommand(object):
         assert cli_result.exit_code == 0
 
         endpoint_url = config.get("ckanext.s3sitemap.endpoint_url")
-        storage_path = config.get("ckanext.s3sitemap.aws_storage_path")
-        uploaded_file = requests.get(f"{endpoint_url}/{storage_path}/test.txt")
+        bucket = config.get("ckanext.s3sitemap.aws_bucket_name")
+        uploaded_file = requests.get(f"{endpoint_url}/{bucket}/test.txt")
 
         assert cli_result.output.strip("\n") == uploaded_file.content.decode("utf8")
