@@ -16,6 +16,8 @@ from ckan.lib.search.index import NoopSearchIndex, PackageSearchIndex
 
 from ckanext.geodatagov.search import GeoPackageSearchQuery
 
+_INDICES = {"package": PackageSearchIndex}
+
 # default constants
 #   for sitemap_to_s3
 UPLOAD_TO_S3 = True
@@ -72,7 +74,7 @@ class Sitemap:
     def to_json(self) -> str:
         return json.dumps(self, default=lambda o: o.__dict__)
 
-    def write_xml(self, some_xml: str, add_newline=True) -> None:
+    def write_xml(self, some_xml, add_newline=True) -> None:
         if add_newline:
             self.xml += f"{some_xml}\n"
         else:
@@ -151,6 +153,7 @@ def upload_sitemap_index(sitemaps: list) -> None:
     sitemap_index.write_xml(
         '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
     )
+
     for sitemap in sitemaps:
         # add sitemaps to sitemap index file
         sitemap_index.write_xml("<sitemap>")
