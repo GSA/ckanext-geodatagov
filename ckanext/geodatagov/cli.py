@@ -132,7 +132,7 @@ def upload_to_key(upload_str: str, filename_on_s3: str) -> None:
         if resp_metadata.get("HTTPStatusCode") == 200:
             log.info(
                 f"File {filename_on_s3} upload complete to: \
-                {S3_ENDPOINT_URL}/{filename_on_s3}"
+                {S3_ENDPOINT_URL}/{BUCKET_NAME}/{filename_on_s3}"
             )
         else:
             log.error(f"File {filename_on_s3} upload failed. Error: {resp_metadata}")
@@ -164,7 +164,7 @@ def upload_sitemap_index(sitemaps: list) -> None:
     upload_to_key(sitemap_index.xml, f"{sitemap_index.filename_s3}")
     log.info(
         f"Sitemap index upload complete to: \
-        {S3_ENDPOINT_URL}/{sitemap_index.filename_s3}"
+        {S3_ENDPOINT_URL}/{BUCKET_NAME}/{sitemap_index.filename_s3}"
     )
 
 
@@ -177,7 +177,7 @@ def upload_sitemap_files(sitemaps: list) -> None:
         upload_to_key(sitemap.xml, filename_on_s3)
         log.info(
             f"Sitemap file {sitemap.filename_s3} upload complete to: \
-            {S3_ENDPOINT_URL}/{sitemap.filename_s3}"
+            {S3_ENDPOINT_URL}/{BUCKET_NAME}/{sitemap.filename_s3}"
         )
 
 
