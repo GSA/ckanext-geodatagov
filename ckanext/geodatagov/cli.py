@@ -16,8 +16,6 @@ from ckan.lib.search.index import NoopSearchIndex, PackageSearchIndex
 
 from ckanext.geodatagov.search import GeoPackageSearchQuery
 
-_INDICES = {"package": PackageSearchIndex}
-
 # default constants
 #   for sitemap_to_s3
 UPLOAD_TO_S3 = True
