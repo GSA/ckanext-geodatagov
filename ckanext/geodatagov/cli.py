@@ -369,7 +369,8 @@ def update_tracking_solr(engine, start_date):
     )
 
     context = {'model': model, 'ignore_auth': True, 'validate': False,
-        'use_cache': False}
+               'use_cache': False}
+    package_index = index_for(model.Package)
     quiet = False
     force = True
     defer_commit = True
@@ -377,26 +378,26 @@ def update_tracking_solr(engine, start_date):
         if not quiet:
             sys.stdout.write(
                 "\rIndexing dataset {0}/{1}".format(
-                    counter +1, total)
+                    counter + 1, total)
             )
             sys.stdout.flush()
         try:
             package_index.update_dict(
-                logic.get_action('package_show')(context,
+                logic.get_action('package_show')(
+                    context,
                     {'id': pkg_id}
                 ),
                 defer_commit
             )
         except Exception as e:
             log.error(u'Error while indexing dataset %s: %s' %
-                        (pkg_id, repr(e)))
+                      (pkg_id, repr(e)))
             if force:
                 log.error(text_traceback())
                 continue
             else:
                 raise
 
-    package_index = index_for(model.Package)
     package_index.commit()
 
 
