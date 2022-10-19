@@ -268,6 +268,19 @@ def get_all_entity_ids_and_date(max_results: int = 1000):
     return [(r.get("id"), r.get("metadata_modified")) for r in data.docs]
 
 
+def delete_package_defer_commit(pkg_dict):
+    TYPE_FIELD = "entity_type"
+    PACKAGE_TYPE = "package"
+    commit = False
+    conn = make_connection()
+    query = "+%s:%s AND +(id:\"%s\" OR name:\"%s\") AND +site_id:\"%s\"" % \
+            (TYPE_FIELD, PACKAGE_TYPE, pkg_dict.get('id'), pkg_dict.get('id'), config.get('ckan.site_id'))
+    try:
+        conn.delete(q=query, commit=commit)
+    except Exception as e:
+        log.exception(e)
+
+
 @geodatagov.command()
 @click.option("--dryrun", is_flag=True, help="inspect what will be updated")
 @click.option(
@@ -322,7 +335,7 @@ def db_solr_sync(dryrun, cleanup_solr, update_solr):
         for id in set_cleanup:
             log.info(f"deleting index with {id} \n")
             try:
-                package_index.remove_dict({"id": id})
+                delete_package_defer_commit({"id": id})
             except Exception as e:
                 log.error("Error while delete index %s: %s" % (id, repr(e)))
         package_index.commit()
