@@ -650,3 +650,11 @@ class Miscs(p.SingletonPlugin):
 
     def get_blueprint(self):
         return blueprint.datapusher
+
+
+class S3Test(p.SingletonPlugin):
+
+    p.implements(p.IClick)
+
+    def get_commands(self) -> list:
+        return cli.get_commands2()

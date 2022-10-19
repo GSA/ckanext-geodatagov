@@ -16,7 +16,7 @@ jobs:
     if: github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch'
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Update setup.py if manual release
         if: github.event_name == 'workflow_dispatch'
         run: |

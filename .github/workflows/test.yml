@@ -8,8 +8,8 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.8'
       - name: Install requirements
@@ -21,13 +21,13 @@ jobs:
     needs: lint
     strategy:
       matrix:
-        ckan-version: [2.9.5, 2.9] # '2.9' is '2.9.6' until they make a tag
+        ckan-version: ['2.9.5', 2.9] # '2.9' is '2.9.6' until they make a tag
       fail-fast: false
 
     name: CKAN ${{ matrix.ckan-version }}
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Run everything
-      run: source .env && CKAN_VERSION=${{ matrix.ckan-version }} make clean build test
+      run: source .env && CKAN_VERSION=${{ matrix.ckan-version }} make clean build ci test
