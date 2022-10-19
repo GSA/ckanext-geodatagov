@@ -154,7 +154,11 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
                 num=num,
                 start=start,
             )
-            url = urllib.parse.urljoin(source_url, search_path)
+            try:
+                url = urllib.parse.urljoin(str(source_url), str(search_path))
+            except TypeError as e:
+                self._save_gather_error('Unable to build url (%s, %s): %s' %
+                                        (str(source_url), str(search_path), e), harvest_job)
 
             try:
                 r = requests.get(url)
