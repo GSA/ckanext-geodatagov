@@ -269,23 +269,21 @@ def get_all_entity_ids_and_date(max_results: int = 1000):
 
 
 def delete_packages(package_ids):
+    """
+    Please update this
+    """
     TYPE_FIELD = "entity_type"
     PACKAGE_TYPE = "package"
     commit = False
     conn = make_connection()
+    site_id = config.get("ckan.site_id")
     for id in package_ids:
-        query = '+%s:%s AND +(id:"%s" OR name:"%s") AND +site_id:"%s"' % (
-            TYPE_FIELD,
-            PACKAGE_TYPE,
-            id,
-            id,
-            config.get("ckan.site_id"),
-        )
+        query = f'+{TYPE_FIELD}:{PACKAGE_TYPE} AND +(id:"{id}" OR name:"{id}") AND +site_id:"{site_id}"'
         try:
-            log.info(f"deleting index with {id} \n")
+            log.info(f"deleting index with {id}")
             conn.delete(q=query, commit=commit)
         except Exception as e:
-            log.error("Error while delete index %s: %s" % (id, repr(e)))
+            log.error(f"Error while delete index {id}: {repr(e)}")
     conn.commit(waitSearcher=False)
 
 
@@ -340,13 +338,13 @@ def db_solr_sync(dryrun, cleanup_solr, update_solr):
     log.info(f"{len(set_update)} packages need to be updated/added to Solr")
 
     if not dryrun and set_cleanup and (cleanup_solr or both):
-        log.info("Deleting indexes\n")
+        log.info("Deleting indexes")
         delete_packages(set_cleanup)
         package_index.commit()
         log.info("Finished cleaning solr entries.")
 
     if not dryrun and set_update and (update_solr or both):
-        log.info("Rebuilding indexes\n")
+        log.info("Rebuilding indexes")
         try:
             rebuild(package_ids=set_update, defer_commit=True)
         except Exception as e:
