@@ -268,17 +268,20 @@ def get_all_entity_ids_and_date(max_results: int = 1000):
     return [(r.get("id"), r.get("metadata_modified")) for r in data.docs]
 
 
-def delete_package_defer_commit(pkg_dict):
+def delete_packages(package_ids):
     TYPE_FIELD = "entity_type"
     PACKAGE_TYPE = "package"
     commit = False
     conn = make_connection()
-    query = "+%s:%s AND +(id:\"%s\" OR name:\"%s\") AND +site_id:\"%s\"" % \
-            (TYPE_FIELD, PACKAGE_TYPE, pkg_dict.get('id'), pkg_dict.get('id'), config.get('ckan.site_id'))
-    try:
-        conn.delete(q=query, commit=commit)
-    except Exception as e:
-        log.exception(e)
+    for id in package_ids:
+        query = "+%s:%s AND +(id:\"%s\" OR name:\"%s\") AND +site_id:\"%s\"" % \
+                (TYPE_FIELD, PACKAGE_TYPE, id, id, config.get('ckan.site_id'))
+        try:
+            log.info(f"deleting index with {id} \n")
+            conn.delete(q=query, commit=commit)
+        except Exception as e:
+            log.error("Error while delete index %s: %s" % (id, repr(e)))
+    conn.commit(waitSearcher=False)
 
 
 @geodatagov.command()
@@ -332,17 +335,13 @@ def db_solr_sync(dryrun, cleanup_solr, update_solr):
     log.info(f"{len(set_update)} packages need to be updated/added to Solr")
 
     if not dryrun and set_cleanup and (cleanup_solr or both):
-        for id in set_cleanup:
-            log.info(f"deleting index with {id} \n")
-            try:
-                delete_package_defer_commit({"id": id})
-            except Exception as e:
-                log.error("Error while delete index %s: %s" % (id, repr(e)))
+        log.info("Deleting indexes\n")
+        delete_packages(set_cleanup)
         package_index.commit()
         log.info("Finished cleaning solr entries.")
 
     if not dryrun and set_update and (update_solr or both):
-        log.info("rebuilding indexes\n")
+        log.info("Rebuilding indexes\n")
         try:
             rebuild(package_ids=set_update, defer_commit=True)
         except Exception as e:
