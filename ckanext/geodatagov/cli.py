@@ -2,7 +2,6 @@ import base64
 import datetime
 import hashlib
 import sys
-import io
 import json
 import logging
 import warnings
