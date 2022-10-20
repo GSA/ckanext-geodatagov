@@ -274,8 +274,13 @@ def delete_packages(package_ids):
     commit = False
     conn = make_connection()
     for id in package_ids:
-        query = "+%s:%s AND +(id:\"%s\" OR name:\"%s\") AND +site_id:\"%s\"" % \
-                (TYPE_FIELD, PACKAGE_TYPE, id, id, config.get('ckan.site_id'))
+        query = '+%s:%s AND +(id:"%s" OR name:"%s") AND +site_id:"%s"' % (
+            TYPE_FIELD,
+            PACKAGE_TYPE,
+            id,
+            id,
+            config.get("ckan.site_id"),
+        )
         try:
             log.info(f"deleting index with {id} \n")
             conn.delete(q=query, commit=commit)
