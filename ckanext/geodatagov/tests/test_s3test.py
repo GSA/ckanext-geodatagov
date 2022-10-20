@@ -1,7 +1,8 @@
 import logging
-import requests
 
 import pytest
+import requests
+from ckan.common import config
 from click.testing import CliRunner, Result
 
 import ckanext.geodatagov.cli as cli
@@ -10,7 +11,6 @@ log = logging.getLogger(__name__)
 
 
 class TestS3TestCommand(object):
-
     @pytest.fixture
     def cli_result(self) -> Result:
 
@@ -27,6 +27,8 @@ class TestS3TestCommand(object):
         # check successful cli run
         assert cli_result.exit_code == 0
 
-        uploaded_file = requests.get('http://localstack-container:4566/catalog-sitemap/test.txt')
+        endpoint_url = config.get("ckanext.s3sitemap.endpoint_url")
+        bucket = config.get("ckanext.s3sitemap.aws_bucket_name")
+        uploaded_file = requests.get(f"{endpoint_url}/{bucket}/test.txt")
 
-        assert cli_result.output.strip('\n') == uploaded_file.content.decode('utf8')
+        assert cli_result.output.strip("\n") == uploaded_file.content.decode("utf8")
