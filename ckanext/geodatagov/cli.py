@@ -353,6 +353,7 @@ def test_command():
 @geodatagov.command()
 @click.argument(u'start_date', required=False)
 def tracking_update(start_date: Optional[str]):
+    """ckan tracking update with customized options and output"""
     engine = model.meta.engine
     assert engine
     update_all(engine, start_date)
