@@ -270,7 +270,7 @@ def get_all_entity_ids_and_date(max_results: int = 1000):
 
 def delete_packages(package_ids):
     """
-    Please update this
+    Delete solr indexes for a list of packages and defer the commit to the end.
     """
     TYPE_FIELD = "entity_type"
     PACKAGE_TYPE = "package"
