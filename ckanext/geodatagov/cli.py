@@ -1,14 +1,19 @@
 import base64
 import datetime
 import hashlib
+import sys
 import json
 import logging
+import warnings
+import cgitb
 import tempfile
-
 import boto3
-import ckan.model as model
 import click
 from botocore.config import Config
+from typing import Optional
+
+import ckan.model as model
+import ckan.logic as logic
 from ckan.common import config
 from ckan.lib.search import rebuild
 from ckan.lib.search.common import make_connection
@@ -358,6 +363,99 @@ def test_command():
     """Basic cli command with normal result"""
     print("This is a good test!")
     return True
+
+
+@geodatagov.command()
+@click.argument(u'start_date', required=False)
+def tracking_update(start_date: Optional[str]):
+    """ckan tracking update with customized options and output"""
+    engine = model.meta.engine
+    assert engine
+    update_all(engine, start_date)
+
+
+def update_all(engine, start_date=None):
+    from ckan.cli.tracking import update_tracking
+    if start_date:
+        start_date = datetime.datetime.strptime(start_date, u'%Y-%m-%d')
+    else:
+        # No date given. See when we last have data for and get data
+        # from 2 days before then in case new data is available.
+        # If no date here then use 2011-01-01 as the start date
+        sql = u'''SELECT tracking_date from tracking_summary
+                    ORDER BY tracking_date DESC LIMIT 1;'''
+        result = engine.execute(sql).fetchall()
+        if result:
+            start_date = result[0][u'tracking_date']
+            start_date += datetime.timedelta(-2)
+            # convert date to datetime
+            combine = datetime.datetime.combine
+            start_date = combine(start_date, datetime.time(0))
+        else:
+            start_date = datetime.datetime(2011, 1, 1)
+    start_date_solrsync = start_date
+    end_date = datetime.datetime.now()
+    while start_date < end_date:
+        stop_date = start_date + datetime.timedelta(1)
+        update_tracking(engine, start_date)
+        click.echo(u'tracking updated for {}'.format(start_date))
+        start_date = stop_date
+    update_tracking_solr(engine, start_date_solrsync)
+
+
+def update_tracking_solr(engine, start_date):
+    sql = u'''SELECT distinct(package_id) FROM tracking_summary
+            where package_id!='~~not~found~~'
+            and tracking_date >= %s;'''
+    results = engine.execute(sql, start_date)
+    package_ids = set()
+    for row in results:
+        package_ids.add(row[u'package_id'])
+    total = len(package_ids)
+    click.echo(u'{} package index{} to be rebuilt starting from {}'.format(
+        total, u'' if total < 2 else u'es', start_date)
+    )
+
+    context = {'model': model, 'ignore_auth': True, 'validate': False,
+               'use_cache': False}
+    package_index = index_for(model.Package)
+    quiet = False
+    force = True
+    defer_commit = True
+    for counter, pkg_id in enumerate(package_ids):
+        if not quiet:
+            sys.stdout.write(
+                "\rIndexing dataset {0}/{1}".format(
+                    counter + 1, total)
+            )
+            sys.stdout.flush()
+        try:
+            package_index.update_dict(
+                logic.get_action('package_show')(
+                    context,
+                    {'id': pkg_id}
+                ),
+                defer_commit
+            )
+        except Exception as e:
+            log.error(u'Error while indexing dataset %s: %s' %
+                      (pkg_id, repr(e)))
+            if force:
+                log.error(text_traceback())
+                continue
+            else:
+                raise
+
+    package_index.commit()
+
+
+def text_traceback():
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        res = 'the original traceback:'.join(
+            cgitb.text(sys.exc_info()).split('the original traceback:')[1:]
+        ).strip()
+    return res
 
 
 @datagovs3.command()
