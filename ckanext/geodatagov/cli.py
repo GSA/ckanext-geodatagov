@@ -160,7 +160,7 @@ def upload_sitemap_index(sitemaps: list) -> None:
     for sitemap in sitemaps:
         # add sitemaps to sitemap index file
         sitemap_index.write_xml("<sitemap>")
-        loc = f"{S3_ENDPOINT_URL}/{sitemap.filename_s3}"  # TODO this doesnt seem quite right
+        loc = f"{S3_ENDPOINT_URL}/{BUCKET_NAME}/{sitemap.filename_s3}"
         sitemap_index.write_xml(f"<loc>{loc}</loc>")
         sitemap_index.write_xml(f"<lastmod>{current_time}</lastmod>")
         sitemap_index.write_xml("</sitemap>")
