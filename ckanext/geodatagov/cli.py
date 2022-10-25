@@ -424,11 +424,9 @@ def update_tracking_solr(engine, start_date):
     defer_commit = True
     for counter, pkg_id in enumerate(package_ids):
         if not quiet:
-            sys.stdout.write(
-                "\rIndexing dataset {0}/{1}".format(
-                    counter + 1, total)
+            click.echo(u'Indexing dataset {}/{}: {}'.format(
+                counter + 1, total, pkg_id)
             )
-            sys.stdout.flush()
         try:
             package_index.update_dict(
                 logic.get_action('package_show')(
