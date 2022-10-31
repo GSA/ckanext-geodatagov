@@ -364,7 +364,7 @@ def db_solr_sync(dryrun, cleanup_solr, update_solr):
             if count > max:
                 break
             log.info(f"{count}: {id}")
-        
+
 
 @geodatagov.command()
 def test_command():
