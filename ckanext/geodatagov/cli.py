@@ -356,7 +356,15 @@ def db_solr_sync(dryrun, cleanup_solr, update_solr):
             log.error("Error while rebuild index %s: %s" % (id, repr(e)))
         package_index.commit()
         log.info("Finished updating solr entries.")
-
+        log.info("Here is the first a few dataset ids that are rebuilt:")
+        count = 0
+        max = 10
+        for id in set_update:
+            count = count + 1
+            if count > max:
+                break
+            log.info(f"{count}: {id}")
+        
 
 @geodatagov.command()
 def test_command():
