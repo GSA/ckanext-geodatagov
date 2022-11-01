@@ -67,7 +67,7 @@ class Sitemap:
         )
         for pkg in pkgs:
             self.xml += "    <url>\n"
-            self.xml += f"        <loc>{config.get('ckan.site_url')}/dataset/{pkg.get('name')}</loc>\n"
+            self.xml += f"        <loc>https://catalog.data.gov/dataset/{pkg.get('name')}</loc>\n"
             self.xml += f"        <lastmod>{pkg.get('metadata_modified').strftime('%Y-%m-%d')}</lastmod>\n"
             self.xml += "    </url>\n"
 
