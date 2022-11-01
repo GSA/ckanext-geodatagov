@@ -249,13 +249,14 @@ def _normalize_type(_type):
 
 
 def index_for(_type):
-    """Get a SearchIndex instance sub-class suitable for
-    the specified type."""
+    """
+    Get a SearchIndex instance sub-class suitable for the specified type.
+    """
     try:
         _type_n = _normalize_type(_type)
         return _INDICES[_type_n]()
     except KeyError:
-        log.warn("Unknown search type: %s" % _type)
+        log.warn(f"Unknown search type: {_type}")
         return NoopSearchIndex()
 
 
@@ -264,7 +265,7 @@ def get_all_entity_ids_and_date(max_results: int = 1000):
     Return a list of the IDs and metadata_modified of all indexed packages.
     """
     query = "*:*"
-    fq = '+site_id:"%s" ' % config.get("ckan.site_id")
+    fq = f'+site_id:"{config.get("ckan.site_id")}" '
     fq += "+state:active "
 
     conn = make_connection()
