@@ -406,7 +406,7 @@ def update_all(engine, start_date=None):
     while start_date < end_date:
         stop_date = start_date + datetime.timedelta(1)
         update_tracking(engine, start_date)
-        click.echo(u'tracking updated for {}'.format(start_date))
+        log.info(u'tracking updated for {}'.format(start_date))
         start_date = stop_date
     update_tracking_solr(engine, start_date_solrsync)
 
@@ -420,7 +420,7 @@ def update_tracking_solr(engine, start_date):
     for row in results:
         package_ids.add(row[u'package_id'])
     total = len(package_ids)
-    click.echo(u'{} package index{} to be rebuilt starting from {}'.format(
+    log.info(u'{} package index{} to be rebuilt starting from {}'.format(
         total, u'' if total < 2 else u'es', start_date)
     )
 
@@ -432,7 +432,7 @@ def update_tracking_solr(engine, start_date):
     defer_commit = True
     for counter, pkg_id in enumerate(package_ids):
         if not quiet:
-            click.echo(u'Indexing dataset {}/{}: {}'.format(
+            log.info(u'Indexing dataset {}/{}: {}'.format(
                 counter + 1, total, pkg_id)
             )
         try:
