@@ -132,7 +132,7 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
         modified_from = 0
         modified_to = 999999999999999999
 
-        query_template = 'modified:[{modified_from}+TO+{modified_to}]'
+        query_template = 'modified:%5B{modified_from}%20TO%20{modified_to}%5D'
 
         if extra_search_criteria:
             query_template = query_template + ' AND (%s)' % extra_search_criteria
