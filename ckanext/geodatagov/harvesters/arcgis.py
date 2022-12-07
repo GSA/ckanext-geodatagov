@@ -44,7 +44,7 @@ def _slugify(value):
     """
     if not isinstance(value, str):
         value = str(value)
-    value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')
+    value = unicodedata.normalize('NFKD', value)
     value = str(_slugify_strip_re.sub('', value).strip().lower())
     return _slugify_hyphenate_re.sub('-', value)
 
