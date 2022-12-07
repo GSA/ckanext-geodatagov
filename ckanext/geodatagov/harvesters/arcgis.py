@@ -44,7 +44,7 @@ def _slugify(value):
     """
     if not isinstance(value, str):
         value = str(value)
-    value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')
+    value = unicodedata.normalize('NFKD', value)
     value = str(_slugify_strip_re.sub('', value).strip().lower())
     return _slugify_hyphenate_re.sub('-', value)
 
@@ -53,6 +53,7 @@ def _slugify(value):
 class MLStripper(HTMLParser):
     def __init__(self):
         self.reset()
+        self.convert_charrefs = True
         self.fed = []
 
     def handle_data(self, d):
@@ -123,7 +124,7 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
     def gather_stage(self, harvest_job):
 
         self.harvest_job = harvest_job
-        source_url = harvest_job.source.url
+        source_url = harvest_job.source.url + '/'
         source_config = json.loads(harvest_job.source.config or '{}')
         extra_search_criteria = source_config.get('extra_search_criteria')
 
@@ -132,7 +133,7 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
         modified_from = 0
         modified_to = 999999999999999999
 
-        query_template = 'modified:[{modified_from}+TO+{modified_to}]'
+        query_template = 'modified:%5B{modified_from}%20TO%20{modified_to}%5D'
 
         if extra_search_criteria:
             query_template = query_template + ' AND (%s)' % extra_search_criteria
