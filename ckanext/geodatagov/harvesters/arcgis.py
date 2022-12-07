@@ -53,6 +53,7 @@ def _slugify(value):
 class MLStripper(HTMLParser):
     def __init__(self):
         self.reset()
+        self.convert_charrefs = True
         self.fed = []
 
     def handle_data(self, d):
