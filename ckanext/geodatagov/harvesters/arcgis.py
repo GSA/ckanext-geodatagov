@@ -123,7 +123,7 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
     def gather_stage(self, harvest_job):
 
         self.harvest_job = harvest_job
-        source_url = harvest_job.source.url
+        source_url = harvest_job.source.url + '/'
         source_config = json.loads(harvest_job.source.config or '{}')
         extra_search_criteria = source_config.get('extra_search_criteria')
 
