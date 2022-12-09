@@ -56,9 +56,15 @@ class Sitemap:
         self.page_size = page_size
         self.xml = ""
 
+    def write_xml(self, some_xml, add_newline=True) -> None:
+        if add_newline:
+            self.xml += f"{some_xml}\n"
+        else:
+            self.xml += some_xml
+
     def write_sitemap_header(self) -> None:
-        self.xml += '<?xml version="1.0" encoding="UTF-8"?>\n'
-        self.xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        self.write_xml('<?xml version="1.0" encoding="UTF-8"?>')
+        self.write_xml('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
 
     def write_pkgs(self, package_query: GeoPackageSearchQuery) -> None:
 
@@ -66,22 +72,20 @@ class Sitemap:
             max_results=self.page_size, start=self.start
         )
         for pkg in pkgs:
-            self.xml += "    <url>\n"
-            self.xml += f"        <loc>{config.get('ckan.site_url')}/dataset/{pkg.get('name')}</loc>\n"
-            self.xml += f"        <lastmod>{pkg.get('metadata_modified').strftime('%Y-%m-%d')}</lastmod>\n"
-            self.xml += "    </url>\n"
+            self.write_xml("<url>")
+            self.write_xml(
+                f"<loc>{config.get('ckan.site_url')}/dataset/{pkg.get('name')}</loc>"
+            )
+            self.write_xml(
+                f"<lastmod>{pkg.get('metadata_modified').strftime('%Y-%m-%d')}</lastmod>"
+            )
+            self.write_xml("</url>")
 
     def write_sitemap_footer(self) -> None:
-        self.xml += "</urlset>\n"
+        self.write_xml("</urlset>")
 
     def to_json(self) -> str:
         return json.dumps(self, default=lambda o: o.__dict__)
-
-    def write_xml(self, some_xml, add_newline=True) -> None:
-        if add_newline:
-            self.xml += f"{some_xml}\n"
-        else:
-            self.xml += some_xml
 
 
 def get_s3() -> None:
