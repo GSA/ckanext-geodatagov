@@ -1,19 +1,19 @@
 import base64
+import cgitb
 import datetime
 import hashlib
-import sys
 import json
 import logging
-import warnings
-import cgitb
+import sys
 import tempfile
-import boto3
-import click
-from botocore.config import Config
+import warnings
 from typing import Optional
 
-import ckan.model as model
+import boto3
 import ckan.logic as logic
+import ckan.model as model
+import click
+from botocore.config import Config
 from ckan.common import config
 from ckan.lib.search import rebuild
 from ckan.lib.search.common import make_connection
@@ -374,7 +374,7 @@ def test_command():
 
 
 @geodatagov.command()
-@click.argument(u'start_date', required=False)
+@click.argument("start_date", required=False)
 def tracking_update(start_date: Optional[str]):
     """ckan tracking update with customized options and output"""
     engine = model.meta.engine
@@ -384,17 +384,18 @@ def tracking_update(start_date: Optional[str]):
 
 def update_all(engine, start_date=None):
     from ckan.cli.tracking import update_tracking
+
     if start_date:
-        start_date = datetime.datetime.strptime(start_date, u'%Y-%m-%d')
+        start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
     else:
         # No date given. See when we last have data for and get data
         # from 2 days before then in case new data is available.
         # If no date here then use 2011-01-01 as the start date
-        sql = u'''SELECT tracking_date from tracking_summary
-                    ORDER BY tracking_date DESC LIMIT 1;'''
+        sql = """SELECT tracking_date from tracking_summary
+                    ORDER BY tracking_date DESC LIMIT 1;"""
         result = engine.execute(sql).fetchall()
         if result:
-            start_date = result[0][u'tracking_date']
+            start_date = result[0]["tracking_date"]
             start_date += datetime.timedelta(-2)
             # convert date to datetime
             combine = datetime.datetime.combine
@@ -406,46 +407,45 @@ def update_all(engine, start_date=None):
     while start_date < end_date:
         stop_date = start_date + datetime.timedelta(1)
         update_tracking(engine, start_date)
-        log.info(u'tracking updated for {}'.format(start_date))
+        log.info("tracking updated for {}".format(start_date))
         start_date = stop_date
     update_tracking_solr(engine, start_date_solrsync)
 
 
 def update_tracking_solr(engine, start_date):
-    sql = u'''SELECT distinct(package_id) FROM tracking_summary
+    sql = """SELECT distinct(package_id) FROM tracking_summary
             where package_id!='~~not~found~~'
-            and tracking_date >= %s;'''
+            and tracking_date >= %s;"""
     results = engine.execute(sql, start_date)
     package_ids = set()
     for row in results:
-        package_ids.add(row[u'package_id'])
+        package_ids.add(row["package_id"])
     total = len(package_ids)
-    log.info(u'{} package index{} to be rebuilt starting from {}'.format(
-        total, u'' if total < 2 else u'es', start_date)
+    log.info(
+        "{} package index{} to be rebuilt starting from {}".format(
+            total, "" if total < 2 else "es", start_date
+        )
     )
 
-    context = {'model': model, 'ignore_auth': True, 'validate': False,
-               'use_cache': False}
+    context = {
+        "model": model,
+        "ignore_auth": True,
+        "validate": False,
+        "use_cache": False,
+    }
     package_index = index_for(model.Package)
     quiet = False
     force = True
     defer_commit = True
     for counter, pkg_id in enumerate(package_ids):
         if not quiet:
-            log.info(u'Indexing dataset {}/{}: {}'.format(
-                counter + 1, total, pkg_id)
-            )
+            log.info("Indexing dataset {}/{}: {}".format(counter + 1, total, pkg_id))
         try:
             package_index.update_dict(
-                logic.get_action('package_show')(
-                    context,
-                    {'id': pkg_id}
-                ),
-                defer_commit
+                logic.get_action("package_show")(context, {"id": pkg_id}), defer_commit
             )
         except Exception as e:
-            log.error(u'Error while indexing dataset %s: %s' %
-                      (pkg_id, repr(e)))
+            log.error("Error while indexing dataset %s: %s" % (pkg_id, repr(e)))
             if force:
                 log.error(text_traceback())
                 continue
@@ -458,8 +458,8 @@ def update_tracking_solr(engine, start_date):
 def text_traceback():
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
-        res = 'the original traceback:'.join(
-            cgitb.text(sys.exc_info()).split('the original traceback:')[1:]
+        res = "the original traceback:".join(
+            cgitb.text(sys.exc_info()).split("the original traceback:")[1:]
         ).strip()
     return res
 
