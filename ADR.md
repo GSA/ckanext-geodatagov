@@ -175,3 +175,24 @@ Write [custom test functions](https://github.com/GSA/ckanext-geodatagov/pull/190
 ## Consequences
 
 - ckanext-spatial or ckanext-harvester are not testing csw harvesting, so there are missing tests overall.
+
+
+# 7. Remove test_source_form test
+
+Date: 2022-12-12
+
+## Status
+
+Unreviewed
+
+## Context
+
+The test was trying to create a harvest source with a post request to `/harvest/new`; however, we suspect something in ckanext-harvest changed and broke this functionality.  Since we are doing harvest tests in catalog.data.gov, we thought it was acceptable to remove this test altogether.
+
+## Decision
+
+Remove test
+
+## Consequences
+
+- Less tests?
