@@ -102,6 +102,19 @@ environment variable.
 
     $ make CKAN_VERSION=2.9 test
 
+### Command line interface
+
+The following operations can be run from the command line as described underneath::
+
+      geodatagov sitemap-to-s3 [{upload_to_s3}] [{page_size}] [{max_per_page}]
+        - Generates sitemap and uploads to s3
+
+      geodatagov db-solr-sync [{dryrun}] [{cleanup_solr}] [{update_solr}]
+        - DB Solr sync. 
+
+      geodatagov tracking-update [{start_date}]
+        - ckan tracking update with customized options and output
+
 ## Credit / Copying
 
 Original work written by the HealthData.gov team. It has been modified in support of Data.gov.
