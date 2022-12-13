@@ -134,7 +134,7 @@ def get_content_type(filename: str) -> str:
     elif filename[:-3].lower() == "txt":
         content_type = "text/plain"
     else:
-        raise Exception(f"Unknown Content-Type for upload file {filename_on_s3}")
+        raise Exception(f"Unknown Content-Type for upload file {filename}")
 
     return content_type
 
