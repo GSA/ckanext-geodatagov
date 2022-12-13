@@ -122,11 +122,25 @@ def get_s3() -> None:
         pass
 
 
-def upload_to_key(upload_str: str, filename_on_s3: str) -> None:
-    """Upload upload_str to s3 bucket
-
-    Attempts to guess MIME type by filename_on_s3 extension
+def get_content_type(filename: str) -> str:
     """
+    Attempts to guess MIME type by filename extension
+    """
+
+    if filename[:-3].lower() == "xml":
+        content_type = "application/xml"
+    elif filename[:-4].lower() == "html":
+        content_type = "application/html"
+    elif filename[:-3].lower() == "txt":
+        content_type = "text/plain"
+    else:
+        raise Exception(f"Unknown Content-Type for upload file {filename_on_s3}")
+
+    return content_type
+
+
+def upload_to_key(upload_str: str, filename_on_s3: str) -> None:
+    """Upload upload_str to s3 bucket"""
 
     # Create temp file to upload
     temp_file = tempfile.NamedTemporaryFile()
@@ -134,15 +148,9 @@ def upload_to_key(upload_str: str, filename_on_s3: str) -> None:
         content = upload_str
         f.write(content)
 
-    if filename_on_s3[:-3].lower() == "xml":
-        content_type = "application/xml"
-    elif filename_on_s3[:-4].lower() == "html":
-        content_type = "application/html"
-    else:
-        raise Exception(f"Unknown Content-Type for upload file {filename_on_s3}")
-
     # Hash file and upload to S3
     md5 = base64.b64encode(hashsum(temp_file.name)).decode("utf-8")
+    content_type = get_content_type(filename_on_s3)
     with open(temp_file.name, "rb") as f:
         resp = S3.put_object(
             Body=f,
