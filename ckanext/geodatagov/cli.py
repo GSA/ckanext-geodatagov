@@ -127,11 +127,11 @@ def get_content_type(filename: str) -> str:
     Attempts to guess MIME type by filename extension
     """
 
-    if filename[:-3].lower() == "xml":
+    if filename[-3:].lower() == "xml":
         content_type = "application/xml"
-    elif filename[:-4].lower() == "html":
+    elif filename[-4:].lower() == "html":
         content_type = "application/html"
-    elif filename[:-3].lower() == "txt":
+    elif filename[-3:].lower() == "txt":
         content_type = "text/plain"
     else:
         raise Exception(f"Unknown Content-Type for upload file {filename}")
