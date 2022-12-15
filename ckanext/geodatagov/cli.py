@@ -498,13 +498,11 @@ def s3_test(file_type: str):
     content = f"Yay! I was created at {str(datetime.datetime.now())}"
 
     if file_type == "html":
-        upload_str = f"""
-            <!DOCTYPE html>
-            <html>
-                <head><title>Test Upload</title></head>
-                <body><p>{content}</b></body>
-            </html>
-        """
+        upload_str = "<!DOCTYPE html>"
+        upload_str += "<html>"
+        upload_str += "<head><title>Test Upload</title></head>"
+        upload_str += f"<body><p>{content}</b></body>"
+        upload_str += "</html>"
     elif file_type == 'txt':
         upload_str = content
     else:
