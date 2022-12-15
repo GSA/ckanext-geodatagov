@@ -42,7 +42,7 @@ class TestS3TestCommand(object):
         endpoint_url = config.get("ckanext.s3sitemap.endpoint_url")
         bucket = config.get("ckanext.s3sitemap.aws_bucket_name")
 
-        uploaded_html_file = requests.get(f"{endpoint_url}/{bucket}/test-html.html")
+        uploaded_html_file = requests.get(f"{endpoint_url}/{bucket}/test.html")
         assert html_cli_result.output.strip("\n") == uploaded_html_file.content.decode("utf8")
 
         uploaded_txt_file = requests.get(f"{endpoint_url}/{bucket}/test.txt")
