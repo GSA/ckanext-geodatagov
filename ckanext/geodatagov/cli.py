@@ -491,16 +491,31 @@ def text_traceback():
 
 
 @datagovs3.command()
-def s3_test():
+@click.argument("file_type", required=True)
+def s3_test(file_type: str):
     """Tests cli command talking to s3"""
+
+    content = f"Yay! I was created at {str(datetime.datetime.now())}"
+
+    if file_type == "html":
+        upload_str = f"""
+            <!DOCTYPE html>
+            <html>
+                <head><title>Test Upload</title></head>
+                <body><p>{content}</b></body>
+            </html>
+        """
+    elif file_type == 'txt':
+        upload_str = content
+    else:
+        raise Exception(f"Unsupported file type: {file_type}")
 
     # Set S3 globals
     get_s3()
 
     # Upload test file
-    content = f"Yay! I was created at {str(datetime.datetime.now())}"
-    print(content)  # output to be checked by test_s3test
-    upload_to_key(content, "test.txt")
+    print(upload_str)  # output to be checked by test_s3test
+    upload_to_key(upload_str, f"test.{file_type}")
 
 
 def hashsum(path: str, hash_type=hashlib.md5):
