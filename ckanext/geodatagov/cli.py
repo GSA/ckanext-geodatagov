@@ -1,19 +1,19 @@
 import base64
+import cgitb
 import datetime
 import hashlib
-import sys
 import json
 import logging
-import warnings
-import cgitb
+import sys
 import tempfile
-import boto3
-import click
-from botocore.config import Config
+import warnings
 from typing import Optional
 
-import ckan.model as model
+import boto3
 import ckan.logic as logic
+import ckan.model as model
+import click
+from botocore.config import Config
 from ckan.common import config
 from ckan.lib.search import rebuild
 from ckan.lib.search.common import make_connection
@@ -56,9 +56,15 @@ class Sitemap:
         self.page_size = page_size
         self.xml = ""
 
+    def write_xml(self, some_xml, add_newline=True) -> None:
+        if add_newline:
+            self.xml += f"{some_xml}\n"
+        else:
+            self.xml += some_xml
+
     def write_sitemap_header(self) -> None:
-        self.xml += '<?xml version="1.0" encoding="UTF-8"?>\n'
-        self.xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        self.write_xml('<?xml version="1.0" encoding="UTF-8"?>')
+        self.write_xml('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
 
     def write_pkgs(self, package_query: GeoPackageSearchQuery) -> None:
 
@@ -66,22 +72,20 @@ class Sitemap:
             max_results=self.page_size, start=self.start
         )
         for pkg in pkgs:
-            self.xml += "    <url>\n"
-            self.xml += f"        <loc>{config.get('ckan.site_url')}/dataset/{pkg.get('name')}</loc>\n"
-            self.xml += f"        <lastmod>{pkg.get('metadata_modified').strftime('%Y-%m-%d')}</lastmod>\n"
-            self.xml += "    </url>\n"
+            self.write_xml("<url>")
+            self.write_xml(
+                f"<loc>{config.get('ckan.site_url')}/dataset/{pkg.get('name')}</loc>"
+            )
+            self.write_xml(
+                f"<lastmod>{pkg.get('metadata_modified').strftime('%Y-%m-%d')}</lastmod>"
+            )
+            self.write_xml("</url>")
 
     def write_sitemap_footer(self) -> None:
-        self.xml += "</urlset>\n"
+        self.write_xml("</urlset>")
 
     def to_json(self) -> str:
         return json.dumps(self, default=lambda o: o.__dict__)
-
-    def write_xml(self, some_xml, add_newline=True) -> None:
-        if add_newline:
-            self.xml += f"{some_xml}\n"
-        else:
-            self.xml += some_xml
 
 
 def get_s3() -> None:
@@ -118,6 +122,23 @@ def get_s3() -> None:
         pass
 
 
+def get_content_type(filename: str) -> str:
+    """
+    Attempts to guess MIME type by filename extension
+    """
+
+    if filename[-3:].lower() == "xml":
+        content_type = "application/xml"
+    elif filename[-4:].lower() == "html":
+        content_type = "application/html"
+    elif filename[-3:].lower() == "txt":
+        content_type = "text/plain"
+    else:
+        raise Exception(f"Unknown Content-Type for upload file {filename}")
+
+    return content_type
+
+
 def upload_to_key(upload_str: str, filename_on_s3: str) -> None:
     """Upload upload_str to s3 bucket"""
 
@@ -129,9 +150,14 @@ def upload_to_key(upload_str: str, filename_on_s3: str) -> None:
 
     # Hash file and upload to S3
     md5 = base64.b64encode(hashsum(temp_file.name)).decode("utf-8")
+    content_type = get_content_type(filename_on_s3)
     with open(temp_file.name, "rb") as f:
         resp = S3.put_object(
-            Body=f, Bucket=BUCKET_NAME, Key=filename_on_s3, ContentMD5=md5
+            Body=f,
+            Bucket=BUCKET_NAME,
+            Key=filename_on_s3,
+            ContentMD5=md5,
+            ContentType=content_type,
         )
         resp_metadata = resp.get("ResponseMetadata")
         if resp_metadata.get("HTTPStatusCode") == 200:
@@ -374,7 +400,7 @@ def test_command():
 
 
 @geodatagov.command()
-@click.argument(u'start_date', required=False)
+@click.argument("start_date", required=False)
 def tracking_update(start_date: Optional[str]):
     """ckan tracking update with customized options and output"""
     engine = model.meta.engine
@@ -384,17 +410,18 @@ def tracking_update(start_date: Optional[str]):
 
 def update_all(engine, start_date=None):
     from ckan.cli.tracking import update_tracking
+
     if start_date:
-        start_date = datetime.datetime.strptime(start_date, u'%Y-%m-%d')
+        start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
     else:
         # No date given. See when we last have data for and get data
         # from 2 days before then in case new data is available.
         # If no date here then use 2011-01-01 as the start date
-        sql = u'''SELECT tracking_date from tracking_summary
-                    ORDER BY tracking_date DESC LIMIT 1;'''
+        sql = """SELECT tracking_date from tracking_summary
+                    ORDER BY tracking_date DESC LIMIT 1;"""
         result = engine.execute(sql).fetchall()
         if result:
-            start_date = result[0][u'tracking_date']
+            start_date = result[0]["tracking_date"]
             start_date += datetime.timedelta(-2)
             # convert date to datetime
             combine = datetime.datetime.combine
@@ -406,46 +433,45 @@ def update_all(engine, start_date=None):
     while start_date < end_date:
         stop_date = start_date + datetime.timedelta(1)
         update_tracking(engine, start_date)
-        log.info(u'tracking updated for {}'.format(start_date))
+        log.info("tracking updated for {}".format(start_date))
         start_date = stop_date
     update_tracking_solr(engine, start_date_solrsync)
 
 
 def update_tracking_solr(engine, start_date):
-    sql = u'''SELECT distinct(package_id) FROM tracking_summary
+    sql = """SELECT distinct(package_id) FROM tracking_summary
             where package_id!='~~not~found~~'
-            and tracking_date >= %s;'''
+            and tracking_date >= %s;"""
     results = engine.execute(sql, start_date)
     package_ids = set()
     for row in results:
-        package_ids.add(row[u'package_id'])
+        package_ids.add(row["package_id"])
     total = len(package_ids)
-    log.info(u'{} package index{} to be rebuilt starting from {}'.format(
-        total, u'' if total < 2 else u'es', start_date)
+    log.info(
+        "{} package index{} to be rebuilt starting from {}".format(
+            total, "" if total < 2 else "es", start_date
+        )
     )
 
-    context = {'model': model, 'ignore_auth': True, 'validate': False,
-               'use_cache': False}
+    context = {
+        "model": model,
+        "ignore_auth": True,
+        "validate": False,
+        "use_cache": False,
+    }
     package_index = index_for(model.Package)
     quiet = False
     force = True
     defer_commit = True
     for counter, pkg_id in enumerate(package_ids):
         if not quiet:
-            log.info(u'Indexing dataset {}/{}: {}'.format(
-                counter + 1, total, pkg_id)
-            )
+            log.info("Indexing dataset {}/{}: {}".format(counter + 1, total, pkg_id))
         try:
             package_index.update_dict(
-                logic.get_action('package_show')(
-                    context,
-                    {'id': pkg_id}
-                ),
-                defer_commit
+                logic.get_action("package_show")(context, {"id": pkg_id}), defer_commit
             )
         except Exception as e:
-            log.error(u'Error while indexing dataset %s: %s' %
-                      (pkg_id, repr(e)))
+            log.error("Error while indexing dataset %s: %s" % (pkg_id, repr(e)))
             if force:
                 log.error(text_traceback())
                 continue
@@ -458,23 +484,36 @@ def update_tracking_solr(engine, start_date):
 def text_traceback():
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
-        res = 'the original traceback:'.join(
-            cgitb.text(sys.exc_info()).split('the original traceback:')[1:]
+        res = "the original traceback:".join(
+            cgitb.text(sys.exc_info()).split("the original traceback:")[1:]
         ).strip()
     return res
 
 
 @datagovs3.command()
-def s3_test():
+@click.argument("file_type", required=True)
+def s3_test(file_type: str):
     """Tests cli command talking to s3"""
+
+    content = f"Yay! I was created at {str(datetime.datetime.now())}"
+
+    if file_type == "html":
+        upload_str = "<!DOCTYPE html>"
+        upload_str += "<html>"
+        upload_str += "<head><title>Test Upload</title></head>"
+        upload_str += f"<body><p>{content}</b></body>"
+        upload_str += "</html>"
+    elif file_type == 'txt':
+        upload_str = content
+    else:
+        raise Exception(f"Unsupported file type: {file_type}")
 
     # Set S3 globals
     get_s3()
 
     # Upload test file
-    content = f"Yay! I was created at {str(datetime.datetime.now())}"
-    print(content)  # output to be checked by test_s3test
-    upload_to_key(content, "test.txt")
+    print(upload_str)  # output to be checked by test_s3test
+    upload_to_key(upload_str, f"test.{file_type}")
 
 
 def hashsum(path: str, hash_type=hashlib.md5):
