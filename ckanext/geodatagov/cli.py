@@ -212,7 +212,7 @@ def upload_sitemap_files(sitemaps: list) -> None:
 
     log.info(f"Uploading {len(sitemaps)} sitemap files...")
     for sitemap in sitemaps:
-        upload_to_key(sitemap.xml, sitemap.filename_on_s3)
+        upload_to_key(sitemap.xml, sitemap.filename_s3)
         log.info(
             f"Sitemap file {sitemap.filename_s3} upload complete to: \
             {S3_ENDPOINT_URL}/{BUCKET_NAME}/{sitemap.filename_s3}"
