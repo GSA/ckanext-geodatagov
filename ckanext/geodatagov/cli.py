@@ -52,7 +52,7 @@ class Sitemap:
 
     def __init__(self, file_num: str, start: int, page_size: int) -> None:
         self.file_num = file_num
-        self.filename_s3 = f"sitemap-{file_num}.xml"
+        self.filename_s3 = f"sitemap/sitemap-{file_num}.xml"
         self.start = start
         self.page_size = page_size
         self.xml = ""
