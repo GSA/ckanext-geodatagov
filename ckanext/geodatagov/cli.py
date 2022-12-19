@@ -90,17 +90,14 @@ class Sitemap:
 
 
 def get_s3() -> None:
-    """Sets global S3 object, checks access to bucket BUCKET_NAME, creates if needed.
+    """Sets global CKAN_SITE_URL, S3 object, checks access to bucket BUCKET_NAME, creates if needed.
 
     Refer to values in .env file in ckanext_geodatagov and
     .profile file in catalog repo for s3 config.
     """
 
     global CKAN_SITE_URL
-    try:
-        CKAN_SITE_URL = os.environ["CKAN_SITE_URL"]
-    except KeyError:
-        log.error("Missing environment variable CKAN_SITE_URL")
+    CKAN_SITE_URL = config.get("ckan.site_url")
 
     log.info("Setting S3 globals...")
     global S3
