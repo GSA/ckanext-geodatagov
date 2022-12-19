@@ -46,12 +46,12 @@ def datagovs3():
 class Sitemap:
     """Sitemap object
 
-    Accepts filename, start, page_size
+    Accepts file_num, start, page_size
     """
 
-    def __init__(self, filename: str, start: int, page_size: int) -> None:
-        self.filename = filename
-        self.filename_s3 = f"sitemap-{filename}.xml"
+    def __init__(self, file_num: str, start: int, page_size: int) -> None:
+        self.file_num = file_num
+        self.filename_s3 = f"sitemap/sitemap-{file_num}.xml"
         self.start = start
         self.page_size = page_size
         self.xml = ""
@@ -89,11 +89,14 @@ class Sitemap:
 
 
 def get_s3() -> None:
-    """Sets global S3 object, checks access to bucket BUCKET_NAME, creates if needed.
+    """Sets global CKAN_SITE_URL, S3 object, checks access to bucket BUCKET_NAME, creates if needed.
 
     Refer to values in .env file in ckanext_geodatagov and
     .profile file in catalog repo for s3 config.
     """
+
+    global CKAN_SITE_URL
+    CKAN_SITE_URL = config.get("ckan.site_url")
 
     log.info("Setting S3 globals...")
     global S3
@@ -123,8 +126,9 @@ def get_s3() -> None:
 
 
 def get_content_type(filename: str) -> str:
-    """
-    Attempts to guess MIME type by filename extension
+    """Attempts to guess MIME type by filename extension
+
+    Returns content-type str
     """
 
     if filename[-3:].lower() == "xml":
@@ -186,13 +190,13 @@ def upload_sitemap_index(sitemaps: list) -> None:
     for sitemap in sitemaps:
         # add sitemaps to sitemap index file
         sitemap_index.write_xml("<sitemap>")
-        loc = f"{S3_ENDPOINT_URL}/{BUCKET_NAME}/{sitemap.filename_s3}"
+        loc = f"{CKAN_SITE_URL}/{sitemap.filename_s3}"
         sitemap_index.write_xml(f"<loc>{loc}</loc>")
         sitemap_index.write_xml(f"<lastmod>{current_time}</lastmod>")
         sitemap_index.write_xml("</sitemap>")
     sitemap_index.write_xml("</sitemapindex>")
 
-    upload_to_key(sitemap_index.xml, f"{sitemap_index.filename_s3}")
+    upload_to_key(sitemap_index.xml, sitemap_index.filename_s3)
     log.info(
         f"Sitemap index upload complete to: \
         {S3_ENDPOINT_URL}/{BUCKET_NAME}/{sitemap_index.filename_s3}"
@@ -204,8 +208,7 @@ def upload_sitemap_files(sitemaps: list) -> None:
 
     log.info(f"Uploading {len(sitemaps)} sitemap files...")
     for sitemap in sitemaps:
-        filename_on_s3 = f"{sitemap.filename_s3}"
-        upload_to_key(sitemap.xml, filename_on_s3)
+        upload_to_key(sitemap.xml, sitemap.filename_s3)
         log.info(
             f"Sitemap file {sitemap.filename_s3} upload complete to: \
             {S3_ENDPOINT_URL}/{BUCKET_NAME}/{sitemap.filename_s3}"
@@ -228,12 +231,12 @@ def sitemap_to_s3(upload_to_s3: bool, page_size: int, max_per_page: int):
         return
 
     start = 0
-    filename = 1
+    file_num = 1
     sitemaps = []
 
     paginations = (count // page_size) + 1
     for _ in range(paginations):
-        sitemap = Sitemap(str(filename), start, page_size)
+        sitemap = Sitemap(str(file_num), start, page_size)
         sitemap.write_sitemap_header()
         sitemap.write_pkgs(package_query)
         sitemap.write_sitemap_footer()
@@ -251,7 +254,7 @@ def sitemap_to_s3(upload_to_s3: bool, page_size: int, max_per_page: int):
         sitemaps.append(sitemap)
 
         start += page_size
-        filename += 1
+        file_num += 1
 
     if upload_to_s3:
         log.info("Starting S3 uploads...")
@@ -503,7 +506,7 @@ def s3_test(file_type: str):
         upload_str += "<head><title>Test Upload</title></head>"
         upload_str += f"<body><p>{content}</b></body>"
         upload_str += "</html>"
-    elif file_type == 'txt':
+    elif file_type == "txt":
         upload_str = content
     else:
         raise Exception(f"Unsupported file type: {file_type}")
