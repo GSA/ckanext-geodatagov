@@ -21,7 +21,7 @@ from ckan.lib.search.index import NoopSearchIndex, PackageSearchIndex
 
 from ckanext.geodatagov.search import GeoPackageSearchQuery
 
-from ckanext.harvest.model import HarvestSource, HarvestJob, HarvestObject, HarvestGatherError
+from ckanext.harvest.model import HarvestJob
 
 # default constants
 #   for sitemap_to_s3
