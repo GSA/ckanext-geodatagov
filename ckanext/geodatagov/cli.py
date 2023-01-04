@@ -21,6 +21,8 @@ from ckan.lib.search.index import NoopSearchIndex, PackageSearchIndex
 
 from ckanext.geodatagov.search import GeoPackageSearchQuery
 
+from ckanext.harvest.model import HarvestSource, HarvestJob, HarvestObject, HarvestGatherError
+
 # default constants
 #   for sitemap_to_s3
 UPLOAD_TO_S3 = True
@@ -393,6 +395,17 @@ def db_solr_sync(dryrun, cleanup_solr, update_solr):
             if count > max:
                 break
             log.info(f"{count}: {id}")
+
+
+def check_stuck_harvest_jobs(dryrun, cleanup_solr, update_solr):
+    """check stuck harvest jobs"""
+
+    log.info("Starting check stuck harvest jobs.")
+
+    # get stuck jobs from DB
+    stuck_jobs = model.Session.query(HarvestJob) \
+                        .order_by(HarvestJob.created.desc()).first()
+    log.info(f"total {len(stuck_jobs)} harvest jobs")
 
 
 @geodatagov.command()
