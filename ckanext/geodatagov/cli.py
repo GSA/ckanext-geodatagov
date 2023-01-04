@@ -403,8 +403,7 @@ def check_stuck_harvest_jobs(dryrun, cleanup_solr, update_solr):
     log.info("Starting check stuck harvest jobs.")
 
     # get stuck jobs from DB
-    stuck_jobs = model.Session.query(HarvestJob) \
-                        .order_by(HarvestJob.created.desc()).first()
+    stuck_jobs = model.Session.query(HarvestJob).order_by(HarvestJob.created.desc()).first()
     log.info(f"total {len(stuck_jobs)} harvest jobs")
 
 
