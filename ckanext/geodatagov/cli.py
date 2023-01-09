@@ -24,7 +24,7 @@ from ckanext.geodatagov.search import GeoPackageSearchQuery
 # default constants
 #   for sitemap_to_s3
 UPLOAD_TO_S3 = True
-PAGE_SIZE = 1000
+PAGE_SIZE = 30000
 MAX_PER_PAGE = 50000
 #   for db_solr_sync
 _INDICES = {"package": PackageSearchIndex}
