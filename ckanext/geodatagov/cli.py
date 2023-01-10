@@ -406,15 +406,15 @@ def check_stuck_jobs():
 
     # get stuck jobs which run more than 1 day
     stuck_jobs = model.Session.query(HarvestJob.source_id.label("id")) \
-                 .filter(HarvestJob.status == 'Running', \
-                         func.extract('day', func.now()-HarvestJob.created) >= 1) \
-                 .subquery()
+        .filter(HarvestJob.status == 'Running', \
+                func.extract('day', func.now() - HarvestJob.created) >= 1) \
+        .subquery()
 
     # get source title and org title
     report_jobs = model.Session.query(model.Package.id, model.Package.title, model.Group.title) \
-                  .join(model.Group, model.Package.owner_org == model.Group.id) \
-                  .filter(model.Package.id.in_(stuck_jobs)) \
-                  .all()
+        .join(model.Group, model.Package.owner_org == model.Group.id) \
+        .filter(model.Package.id.in_(stuck_jobs)) \
+        .all()
 
     log.info(f"total {len(report_jobs)} stuck harvest jobs")
     for job in report_jobs:
