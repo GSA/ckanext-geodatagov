@@ -418,6 +418,8 @@ def check_stuck_jobs():
     for job in report_jobs:
         log.info(job)
 
+    return len(report_jobs)
+
 
 @geodatagov.command()
 def test_command():
