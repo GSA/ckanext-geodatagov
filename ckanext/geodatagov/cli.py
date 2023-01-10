@@ -18,8 +18,10 @@ from ckan.common import config
 from ckan.lib.search import rebuild
 from ckan.lib.search.common import make_connection
 from ckan.lib.search.index import NoopSearchIndex, PackageSearchIndex
+from sqlalchemy import func
 
 from ckanext.geodatagov.search import GeoPackageSearchQuery
+from ckanext.harvest.model import HarvestJob
 
 # default constants
 #   for sitemap_to_s3
@@ -393,6 +395,37 @@ def db_solr_sync(dryrun, cleanup_solr, update_solr):
             if count > max:
                 break
             log.info(f"{count}: {id}")
+
+
+@geodatagov.command()
+def check_stuck_jobs():
+    """check stuck harvest jobs"""
+
+    log.info("Starting check stuck harvest jobs.")
+
+    # get stuck jobs which run more than 1 day
+    stuck_jobs = (
+        model.Session.query(HarvestJob.source_id.label("id"))
+        .filter(
+            HarvestJob.status == "Running",
+            func.extract("day", func.now() - HarvestJob.created) >= 1,
+        )
+        .subquery()
+    )
+
+    # get source title and org title
+    report_jobs = (
+        model.Session.query(model.Package.id, model.Package.title, model.Group.title)
+        .join(model.Group, model.Package.owner_org == model.Group.id)
+        .filter(model.Package.id.in_(stuck_jobs))
+        .all()
+    )
+
+    log.info(f"total {len(report_jobs)} stuck harvest jobs")
+    for job in report_jobs:
+        log.info(job)
+
+    sys.exit(len(report_jobs))
 
 
 @geodatagov.command()
