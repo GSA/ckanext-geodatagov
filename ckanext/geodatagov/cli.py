@@ -406,7 +406,7 @@ def check_stuck_jobs():
 
     # get stuck jobs which run more than 1 day
     stuck_jobs = model.Session.query(HarvestJob.source_id.label("id")) \
-        .filter(HarvestJob.status == 'Running', \
+        .filter(HarvestJob.status == 'Running',
                 func.extract('day', func.now() - HarvestJob.created) >= 1) \
         .subquery()
 
