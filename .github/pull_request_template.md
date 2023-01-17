@@ -11,4 +11,4 @@ Related to [LINK TO ISSUE]
 - [ ] The actual code changes.
 - [ ] Tests written and passed.
 - [ ] Any changes to docs?
-- [ ] Bumped version number in [setup.py](https://github.com/GSA/ckanext-geodatagov/blob/1b1bad0b2ff06112e18c7f4f4fb1143baec1266a/setup.py#L13) (also checked on [PyPi](https://pypi.org/project/ckanext-geodatagov/#history)).
+- [ ] Bumped version number in [setup.py](https://github.com/GSA/ckanext-geodatagov/blob/main/setup.py#L13) (also checked on [PyPi](https://pypi.org/project/ckanext-geodatagov/#history)).
