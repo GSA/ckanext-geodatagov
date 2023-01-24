@@ -8,7 +8,11 @@ Related to [LINK TO ISSUE]
 
 ## PR TASKS
 
+<!-- a friendly nonbinding list of reminders -->
+
 - [ ] The actual code changes.
 - [ ] Tests written and passed.
 - [ ] Any changes to docs?
-- [ ] Bumped version number in [setup.py](https://github.com/GSA/ckanext-geodatagov/blob/main/setup.py#L13) (also checked on [PyPi](https://pypi.org/project/ckanext-geodatagov/#history)).
+- [ ] Bumped version number in
+[setup.py](https://github.com/GSA/ckanext-geodatagov/blob/main/setup.py#L13)
+(also checked on [PyPi](https://pypi.org/project/ckanext-geodatagov/#history)).
