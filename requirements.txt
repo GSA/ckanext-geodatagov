@@ -22,6 +22,7 @@ argparse
 pyparsing>=2.1.10
 # requests>=1.1.0 # included in ckan-core
 six
+geojson==2.5.0
 
 # PyZ3950
 pyasn1
