@@ -416,12 +416,12 @@ def check_stuck_jobs():
     # get source title and org title
     report_jobs = (
         model.Session.query(
-                            model.Package.id, 
-                            model.Package.title.label("source_name"), 
-                            model.Group.title.label("org_name"), 
-                            HarvestJob.created, 
-                            func.now().label('current'),
-                            func.extract("hour", func.now() - HarvestJob.created).label('hours'))
+            model.Package.id,
+            model.Package.title.label("source_name"),
+            model.Group.title.label("org_name"),
+            HarvestJob.created,
+            func.now().label('current'),
+            func.extract("hour", func.now() - HarvestJob.created).label('hours'))
         .join(model.Group, model.Package.owner_org == model.Group.id)
         .join(HarvestJob, HarvestJob.source_id == model.Package.id)
         .filter(model.Package.id.in_(stuck_jobs))
