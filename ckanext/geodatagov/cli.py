@@ -408,7 +408,7 @@ def check_stuck_jobs():
         model.Session.query(HarvestJob.source_id.label("id"))
         .filter(
             HarvestJob.status == "Running",
-            func.extract("epoch", func.now() - HarvestJob.created) / 3600 >= 24,
+            func.extract("day", func.now() - HarvestJob.created) >= 1,
         )
         .subquery()
     )
@@ -421,7 +421,7 @@ def check_stuck_jobs():
             model.Group.title.label("org_name"),
             HarvestJob.created,
             func.now().label('current'),
-            (func.extract("epoch", func.now() - HarvestJob.created) / 3600).label('hours'))
+            (func.now() - HarvestJob.created).label('time_diff'))
         .join(model.Group, model.Package.owner_org == model.Group.id)
         .join(HarvestJob, HarvestJob.source_id == model.Package.id)
         .filter(model.Package.id.in_(stuck_jobs))
@@ -434,7 +434,7 @@ def check_stuck_jobs():
         message = "\nsource_id: " + job.id + \
                   "\ncreated_time: " + job.created.strftime("%Y-%m-%d-%H:%M:%S") + \
                   "\ncurrent_time: " + job.current.strftime("%Y-%m-%d-%H:%M:%S") + \
-                  "\nrunning_hours: " + str(int(job.hours)) + \
+                  "\nrunning_hours: " + str(job.time_diff) + \
                   "\nsource_title: " + job.source_name + \
                   "\norganization: " + job.org_name
 
