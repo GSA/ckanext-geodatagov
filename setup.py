@@ -10,7 +10,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name="ckanext-geodatagov",
-    version="0.1.24",
+    version="0.1.25",
     description="",
     long_description=long_description,
     long_description_content_type='text/markdown',
