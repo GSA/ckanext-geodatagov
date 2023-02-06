@@ -408,7 +408,7 @@ def check_stuck_jobs():
         model.Session.query(HarvestJob.source_id.label("id"))
         .filter(
             HarvestJob.status == "Running",
-            func.extract("epoch", func.now() - HarvestJob.created) / 3600 >= 24,
+            (func.extract("epoch", func.now() - HarvestJob.created) / 3600) >= 24,
         )
         .subquery()
     )
