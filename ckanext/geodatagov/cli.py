@@ -424,7 +424,7 @@ def check_stuck_jobs():
             (func.now() - HarvestJob.created).label('time_diff'))
         .join(model.Group, model.Package.owner_org == model.Group.id)
         .join(HarvestJob, HarvestJob.source_id == model.Package.id)
-        .filter(model.Package.id.in_(stuck_jobs))
+        .filter(model.Package.id.in_(stuck_jobs), HarvestJob.status == "Running")
         .all()
     )
 
@@ -434,7 +434,7 @@ def check_stuck_jobs():
         message = "\nsource_id: " + job.id + \
                   "\ncreated_time: " + job.created.strftime("%Y-%m-%d-%H:%M:%S") + \
                   "\ncurrent_time: " + job.current.strftime("%Y-%m-%d-%H:%M:%S") + \
-                  "\nrunning_hours: " + str(job.time_diff) + \
+                  "\nrunning_length: " + str(job.time_diff) + \
                   "\nsource_title: " + job.source_name + \
                   "\norganization: " + job.org_name
 
