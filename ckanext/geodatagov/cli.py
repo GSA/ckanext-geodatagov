@@ -405,42 +405,38 @@ def check_stuck_jobs():
 
     # get stuck jobs which run more than 1 day
     stuck_jobs = (
-        model.Session.query(HarvestJob.source_id.label("id"))
-        .filter(
-            HarvestJob.status == "Running",
-            func.extract("day", func.now() - HarvestJob.created) >= 1,
-        )
-        .subquery()
-    )
-
-    # get source title and org title
-    report_jobs = (
         model.Session.query(
             model.Package.id,
             model.Package.title.label("source_name"),
             model.Group.title.label("org_name"),
             HarvestJob.created,
+            HarvestJob.gather_started.label("gather_started"),
+            HarvestJob.gather_finished.label("gather_finished"),
             func.now().label('current'),
             (func.now() - HarvestJob.created).label('time_diff'))
         .join(model.Group, model.Package.owner_org == model.Group.id)
         .join(HarvestJob, HarvestJob.source_id == model.Package.id)
-        .filter(model.Package.id.in_(stuck_jobs), HarvestJob.status == "Running")
+        .filter(
+                func.extract("day", func.now() - HarvestJob.created) >= 1,
+                HarvestJob.status == "Running")
         .all()
     )
 
-    log.info(f"total {len(report_jobs)} stuck harvest jobs")
+    log.info(f"total {len(stuck_jobs)} stuck harvest jobs")
 
-    for job in report_jobs:
+    for job in stuck_jobs:
         message = "\nsource_id: " + job.id + \
-                  "\ncreated_time: " + job.created.strftime("%Y-%m-%d-%H:%M:%S") + \
-                  "\ncurrent_time: " + job.current.strftime("%Y-%m-%d-%H:%M:%S") + \
+                  "\ncreated_time: " + str(job.created) + \
+                  "\ncurrent_time: " + str(job.current) + \
+                  "\ngather_started: " + str(job.gather_started) + \
+                  "\ngather_finished: " + str(job.gather_finished) + \
                   "\nrunning_length: " + str(job.time_diff) + \
                   "\nsource_title: " + job.source_name + \
                   "\norganization: " + job.org_name
 
         log.info(message)
 
-    sys.exit(len(report_jobs))
+    sys.exit(len(stuck_jobs))
 
 
 @geodatagov.command()
