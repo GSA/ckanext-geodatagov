@@ -417,22 +417,22 @@ def check_stuck_jobs():
         .join(model.Group, model.Package.owner_org == model.Group.id)
         .join(HarvestJob, HarvestJob.source_id == model.Package.id)
         .filter(
-                func.extract("day", func.now() - HarvestJob.created) >= 1,
-                HarvestJob.status == "Running")
+        func.extract("day", func.now() - HarvestJob.created) >= 1,
+        HarvestJob.status == "Running")
         .all()
     )
 
     log.info(f"total {len(stuck_jobs)} stuck harvest jobs")
 
     for job in stuck_jobs:
-        message = "\nsource_id: " + job.id + \
-                  "\ncreated_time: " + str(job.created) + \
-                  "\ncurrent_time: " + str(job.current) + \
-                  "\ngather_started: " + str(job.gather_started) + \
-                  "\ngather_finished: " + str(job.gather_finished) + \
-                  "\nrunning_length: " + str(job.time_diff) + \
-                  "\nsource_title: " + job.source_name + \
-                  "\norganization: " + job.org_name
+        message = "source_id: " + job.id + \
+                  " | created_time: " + str(job.created) + \
+                  " | current_time: " + str(job.current) + \
+                  " | gather_started: " + str(job.gather_started) + \
+                  " | gather_finished: " + str(job.gather_finished) + \
+                  " | running_length: " + str(job.time_diff) + \
+                  " | source_title: " + job.source_name + \
+                  " | organization: " + job.org_name
 
         log.info(message)
 
