@@ -416,9 +416,8 @@ def check_stuck_jobs():
             (func.now() - HarvestJob.created).label('time_diff'))
         .join(model.Group, model.Package.owner_org == model.Group.id)
         .join(HarvestJob, HarvestJob.source_id == model.Package.id)
-        .filter(
-        func.extract("day", func.now() - HarvestJob.created) >= 1,
-        HarvestJob.status == "Running")
+        .filter(func.extract("day", func.now() - HarvestJob.created) >= 1,
+                HarvestJob.status == "Running")
         .all()
     )
 
