@@ -297,6 +297,7 @@ def get_all_entity_ids_and_date(max_results: int = 1000):
     query = "*:*"
     fq = '+site_id:"%s" ' % config.get("ckan.site_id")
     fq += "+state:active "
+    fq += "+type:dataset "
 
     conn = make_connection()
     data = conn.search(query, fq=fq, rows=max_results, fl="id, metadata_modified")
@@ -346,7 +347,8 @@ def db_solr_sync(dryrun, cleanup_solr, update_solr):
     active_package = [
         (r[0], r[1].replace(microsecond=0))
         for r in model.Session.query(model.Package.id, model.Package.metadata_modified)
-        .filter(model.Package.state != "deleted")
+        .filter(model.Package.type == "dataset")
+        .filter(model.Package.state == "active")
         .all()
     ]
     log.info(f"total {len(active_package)} DB active_package")
