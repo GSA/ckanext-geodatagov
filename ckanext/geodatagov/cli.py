@@ -366,7 +366,7 @@ def db_solr_sync(dryrun, cleanup_solr, update_solr):
             HarvestObject,
             and_(
                 HarvestObject.package_id == model.Package.id,
-                HarvestObject.current == True # noqa: E712
+                HarvestObject.current == True  # noqa: E712
             ),
             isouter=True
         )
