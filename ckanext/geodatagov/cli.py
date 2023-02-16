@@ -18,10 +18,10 @@ from ckan.common import config
 from ckan.lib.search import rebuild
 from ckan.lib.search.common import make_connection
 from ckan.lib.search.index import NoopSearchIndex, PackageSearchIndex
-from sqlalchemy import func
+from sqlalchemy import func, and_
 
 from ckanext.geodatagov.search import GeoPackageSearchQuery
-from ckanext.harvest.model import HarvestJob
+from ckanext.harvest.model import HarvestJob, HarvestObject
 
 # default constants
 #   for sitemap_to_s3
@@ -300,9 +300,20 @@ def get_all_entity_ids_and_date(max_results: int = 1000):
     fq += "+type:dataset "
 
     conn = make_connection()
-    data = conn.search(query, fq=fq, rows=max_results, fl="id, metadata_modified")
+    data = conn.search(query, fq=fq, rows=max_results, fl="id, metadata_modified, validated_data_dict")
 
-    return [(r.get("id"), r.get("metadata_modified")) for r in data.docs]
+    ret_all = []
+    for r in data.docs:
+        harvest_object_id = None
+        data_dict = json.loads(r.get("validated_data_dict"))
+        for extra in data_dict.get("extras", []):
+            if extra["key"] == "harvest_object_id":
+                harvest_object_id = extra["value"]
+                break
+
+        ret_all.append((r.get("id"), r.get("metadata_modified"), harvest_object_id))
+
+    return ret_all
 
 
 def delete_packages(package_ids):
@@ -345,25 +356,50 @@ def db_solr_sync(dryrun, cleanup_solr, update_solr):
 
     # get active packages from DB
     active_package = [
-        (r[0], r[1].replace(microsecond=0))
-        for r in model.Session.query(model.Package.id, model.Package.metadata_modified)
-        .filter(model.Package.type == "dataset")
-        .filter(model.Package.state == "active")
+        (r[0], r[1].replace(microsecond=0), r[2])
+        for r in model.Session.query(
+            model.Package.id,
+            model.Package.metadata_modified,
+            HarvestObject.id
+        )
+        .join(
+            HarvestObject,
+            and_(
+                HarvestObject.package_id == model.Package.id,
+                HarvestObject.current == True # noqa: E712
+            ),
+            isouter=True
+        )
+        .filter(
+            model.Package.type == "dataset",
+            model.Package.state == "active"
+        )
+        .order_by(HarvestObject.import_finished)
         .all()
     ]
+
+    # in case an id comes with multiple harvest_object_id,
+    # this removes anything but the latest
+    cleaning = {}
+    for id, metadata_modified, harvest_object_id in active_package:
+        cleaning[id] = (metadata_modified, harvest_object_id)
+
+    # now it is cleaned, change dict back to a set.
+    active_package = {(k,) + cleaning[k] for k in cleaning}
+
     log.info(f"total {len(active_package)} DB active_package")
 
     # get indexed packages from solr
     indexed_package = set(get_all_entity_ids_and_date(max_results=2000000))
     log.info(f"total {len(indexed_package)} solr indexed_package")
 
-    solr_package = indexed_package - set(active_package)
-    db_package = set(active_package) - indexed_package
+    solr_package = indexed_package - active_package
+    db_package = active_package - indexed_package
 
     work_list = {}
-    for id, _ in solr_package:
+    for id, *_ in solr_package:
         work_list[id] = "solr"
-    for id, _ in db_package:
+    for id, *_ in db_package:
         if id in work_list:
             work_list[id] = "solr-db"
         else:
