@@ -290,7 +290,7 @@ def index_for(_type):
         return NoopSearchIndex()
 
 
-def get_all_entity_ids_and_date(max_results: int = 1000):
+def get_all_entity_ids_date_hoid():
     """
     Return a list of the IDs and metadata_modified of all indexed packages.
     """
@@ -299,19 +299,32 @@ def get_all_entity_ids_and_date(max_results: int = 1000):
     fq += "+state:active "
     fq += "+type:dataset "
 
-    conn = make_connection()
-    data = conn.search(query, fq=fq, rows=max_results, fl="id, metadata_modified, validated_data_dict")
-
     ret_all = []
-    for r in data.docs:
-        harvest_object_id = None
-        data_dict = json.loads(r.get("validated_data_dict"))
-        for extra in data_dict.get("extras", []):
-            if extra["key"] == "harvest_object_id":
-                harvest_object_id = extra["value"]
-                break
 
-        ret_all.append((r.get("id"), r.get("metadata_modified"), harvest_object_id))
+    start = 0
+    page_size = 10000
+    conn = make_connection()
+
+    log.info(f"Now loading SOLR packages using page size {page_size}...")
+
+    while True:
+        log.info(f"loading packages starting from {start}")
+        data = conn.search(query, fq=fq, start=start, rows=page_size, fl="id, metadata_modified, validated_data_dict")
+
+        if not data:
+            break
+
+        for r in data.docs:
+            harvest_object_id = None
+            data_dict = json.loads(r.get("validated_data_dict"))
+            for extra in data_dict.get("extras", []):
+                if extra["key"] == "harvest_object_id":
+                    harvest_object_id = extra["value"]
+                    break
+
+            ret_all.append((r.get("id"), r.get("metadata_modified"), harvest_object_id))
+
+        start += page_size
 
     return ret_all
 
@@ -390,7 +403,7 @@ def db_solr_sync(dryrun, cleanup_solr, update_solr):
     log.info(f"total {len(active_package)} DB active_package")
 
     # get indexed packages from solr
-    indexed_package = set(get_all_entity_ids_and_date(max_results=2000000))
+    indexed_package = set(get_all_entity_ids_date_hoid())
     log.info(f"total {len(indexed_package)} solr indexed_package")
 
     solr_package = indexed_package - active_package
