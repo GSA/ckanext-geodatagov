@@ -294,7 +294,7 @@ def get_all_entity_ids_date_hoid():
     """
     Return a list of the IDs and metadata_modified of all indexed packages.
 
-    harvest_object_id is not readily available from solr result. It has to 
+    harvest_object_id is not readily available from solr result. It has to
     be extracted from a json object validated_data_dict. Due to the large size
     of validated_data_dict, Solr result has to be processed in batches at 10000
     pagination to avoid out-of-memory.
