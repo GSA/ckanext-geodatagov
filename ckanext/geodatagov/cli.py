@@ -18,10 +18,10 @@ from ckan.common import config
 from ckan.lib.search import rebuild
 from ckan.lib.search.common import make_connection
 from ckan.lib.search.index import NoopSearchIndex, PackageSearchIndex
-from sqlalchemy import func
+from sqlalchemy import func, and_
 
 from ckanext.geodatagov.search import GeoPackageSearchQuery
-from ckanext.harvest.model import HarvestJob
+from ckanext.harvest.model import HarvestJob, HarvestObject
 
 # default constants
 #   for sitemap_to_s3
@@ -290,18 +290,48 @@ def index_for(_type):
         return NoopSearchIndex()
 
 
-def get_all_entity_ids_and_date(max_results: int = 1000):
+def get_all_entity_ids_date_hoid():
     """
     Return a list of the IDs and metadata_modified of all indexed packages.
+
+    harvest_object_id is not readily available from solr result. It has to
+    be extracted from a json object validated_data_dict. Due to the large size
+    of validated_data_dict, Solr result has to be processed in batches at 10000
+    pagination to avoid out-of-memory.
     """
     query = "*:*"
     fq = '+site_id:"%s" ' % config.get("ckan.site_id")
     fq += "+state:active "
+    fq += "+type:dataset "
 
+    ret_all = []
+
+    start = 0
+    page_size = 10000
     conn = make_connection()
-    data = conn.search(query, fq=fq, rows=max_results, fl="id, metadata_modified")
 
-    return [(r.get("id"), r.get("metadata_modified")) for r in data.docs]
+    log.info(f"Now loading SOLR packages using page size {page_size}...")
+
+    while True:
+        log.info(f"loading packages starting from {start}")
+        data = conn.search(query, fq=fq, start=start, rows=page_size, fl="id, metadata_modified, validated_data_dict")
+
+        if not data:
+            break
+
+        for r in data.docs:
+            harvest_object_id = None
+            data_dict = json.loads(r.get("validated_data_dict"))
+            for extra in data_dict.get("extras", []):
+                if extra["key"] == "harvest_object_id":
+                    harvest_object_id = extra["value"]
+                    break
+
+            ret_all.append((r.get("id"), r.get("metadata_modified"), harvest_object_id))
+
+        start += page_size
+
+    return ret_all
 
 
 def delete_packages(package_ids):
@@ -344,24 +374,50 @@ def db_solr_sync(dryrun, cleanup_solr, update_solr):
 
     # get active packages from DB
     active_package = [
-        (r[0], r[1].replace(microsecond=0))
-        for r in model.Session.query(model.Package.id, model.Package.metadata_modified)
-        .filter(model.Package.state != "deleted")
+        (r[0], r[1].replace(microsecond=0), r[2])
+        for r in model.Session.query(
+            model.Package.id,
+            model.Package.metadata_modified,
+            HarvestObject.id
+        )
+        .join(
+            HarvestObject,
+            and_(
+                HarvestObject.package_id == model.Package.id,
+                HarvestObject.current == True  # noqa: E712
+            ),
+            isouter=True
+        )
+        .filter(
+            model.Package.type == "dataset",
+            model.Package.state == "active"
+        )
+        .order_by(HarvestObject.import_finished)
         .all()
     ]
+
+    # in case an id comes with multiple harvest_object_id,
+    # this removes anything but the latest
+    cleaning = {}
+    for id, metadata_modified, harvest_object_id in active_package:
+        cleaning[id] = (metadata_modified, harvest_object_id)
+
+    # now it is cleaned, change dict back to a set.
+    active_package = {(k,) + cleaning[k] for k in cleaning}
+
     log.info(f"total {len(active_package)} DB active_package")
 
     # get indexed packages from solr
-    indexed_package = set(get_all_entity_ids_and_date(max_results=2000000))
+    indexed_package = set(get_all_entity_ids_date_hoid())
     log.info(f"total {len(indexed_package)} solr indexed_package")
 
-    solr_package = indexed_package - set(active_package)
-    db_package = set(active_package) - indexed_package
+    solr_package = indexed_package - active_package
+    db_package = active_package - indexed_package
 
     work_list = {}
-    for id, _ in solr_package:
+    for id, *_ in solr_package:
         work_list[id] = "solr"
-    for id, _ in db_package:
+    for id, *_ in db_package:
         if id in work_list:
             work_list[id] = "solr-db"
         else:

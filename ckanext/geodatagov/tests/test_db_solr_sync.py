@@ -1,3 +1,4 @@
+import json
 import logging
 
 import pytest
@@ -8,6 +9,10 @@ import ckan.lib.search as search
 from ckan.tests import factories
 from ckan.tests.helpers import reset_db
 from click.testing import CliRunner
+
+from ckanext.harvest.model import HarvestObject
+from ckanext.harvest.tests import factories as harvest_factories
+from ckanext.harvest.logic import HarvestJobExists
 
 import ckanext.geodatagov.cli as cli
 
@@ -27,6 +32,15 @@ class TestSolrDBSync(object):
         self.dataset2 = factories.Dataset(owner_org=organization["id"])
         self.dataset3 = factories.Dataset(owner_org=organization["id"])
         self.dataset4 = factories.Dataset(owner_org=organization["id"])
+        # 5 is dedicated for harvest_object_id testing
+        self.dataset5 = factories.Dataset(owner_org=organization["id"])
+        dataset5_hoid = HarvestObject(
+            package_id=self.dataset5['id'],
+            job=create_harvest_job(),
+            current=True
+        )
+        dataset5_hoid.save()
+
         search.rebuild()
 
         # Case 1 - in DB, NOT in Solr
@@ -75,6 +89,26 @@ class TestSolrDBSync(object):
         assert (self.dataset3['id'] in case4_db) and (self.dataset3['id'] in case4_solr)
         assert (self.dataset4['id'] not in case4_db) and (self.dataset4['id'] in case4_solr)
 
+        # Case 5 - changing harvest_object_id in DB makes Solr out of date
+        # Solr starts with the same id as the current harvest_object.id
+        assert get_solr_hoid(self.dataset5['id']) == dataset5_hoid.id
+
+        # mark the current harvest_object outdated
+        dataset5_hoid.current = False
+        dataset5_hoid.save()
+
+        # a new harvest_object with a new id.
+        new_dataset5_hoid = HarvestObject(
+            id='newid',
+            package_id=dataset5_hoid.package_id,
+            job=dataset5_hoid.job,
+            current=True
+        )
+        new_dataset5_hoid.save()
+
+        # Solr is unaware of the new id
+        assert get_solr_hoid(self.dataset5['id']) != 'newid'
+
     @pytest.fixture
     def cli_result(self):
         self.create_datasets()
@@ -100,6 +134,8 @@ class TestSolrDBSync(object):
         assert self.dataset3['id'] in final_db and self.dataset3['id'] in final_solr
         assert get_db_id_time(self.dataset3["id"]) == get_solr_id_time(self.dataset3["id"])
         assert self.dataset4['id'] not in final_db and self.dataset4['id'] not in final_solr
+
+        assert get_solr_hoid(self.dataset5['id']) == "newid"
 
 
 def get_active_db_ids():
@@ -146,3 +182,48 @@ def get_solr_id_time(id):
     data = conn.search(query, fq=fq, rows=10, fl='metadata_modified')
 
     return [r.get('metadata_modified') for r in data.docs]
+
+
+def get_solr_hoid(id):
+    """
+    Return the harvest_object_id for a particular package id in Solr.
+    """
+    query = "*:*"
+    fq = "+site_id:\"%s\" " % config.get('ckan.site_id')
+    fq += "+state:active "
+    fq += "+id:%s" % (id)
+
+    conn = make_connection()
+    data = conn.search(query, fq=fq, rows=10, fl='validated_data_dict')
+
+    harvest_object_id = None
+    if data.docs:
+        data_dict = json.loads(data.docs[0].get("validated_data_dict"))
+        for extra in data_dict.get("extras", []):
+            if extra["key"] == "harvest_object_id":
+                harvest_object_id = extra["value"]
+                break
+
+    return harvest_object_id
+
+
+def create_harvest_job():
+    """
+    Create a fictitious harvest job object and return it
+    """
+    SOURCE_DICT = {
+        "url": "http://test",
+        "name": "test-ho-id",
+        "title": "Test source harvest object id",
+        "source_type": "ckan",
+        "frequency": "MANUAL"
+    }
+    source = harvest_factories.HarvestSourceObj(**SOURCE_DICT)
+    try:
+        job = harvest_factories.HarvestJobObj(source=source)
+    except HarvestJobExists:  # not sure why
+        job = source.get_jobs()[0]
+
+    job.save()
+
+    return job
