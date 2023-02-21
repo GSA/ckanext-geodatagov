@@ -206,8 +206,11 @@ def get_solr_hoid(id):
 
     return harvest_object_id
 
-def create_harvest_job():
 
+def create_harvest_job():
+    """
+    Create a fictitious harvest job object and return it
+    """
     SOURCE_DICT = {
         "url": "http://test",
         "name": "test-ho-id",
