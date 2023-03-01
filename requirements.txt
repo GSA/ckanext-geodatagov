@@ -6,7 +6,8 @@
 # ckanext-harvest dependencies
 ckantoolkit>=0.0.7
 pika>=1.1.0
-pyOpenSSL==22.0.0
+pyOpenSSL>22.10 #pinning to fix error with crypto (https://levelup.gitconnected.com/fix-attributeerror-module-lib-has-no-attribute-openssl-521a35d83769)
+
 # redis==2.10.6 # included in ckan core
 # requests>=2.11.1 # included in ckan core
 
