@@ -459,6 +459,9 @@ def translate_spatial(old_spatial):
                    '"coordinates": [[[{minx}, {miny}], [{minx}, {maxy}], '
                    '[{maxx}, {maxy}], [{maxx}, {miny}], [{minx}, {miny}]]]}}')
 
+    # replace all instances of '+' as this creates bad JSON https://github.com/GSA/data.gov/issues/3549
+    old_spatial = old_spatial.replace('+', '')
+
     # Analyze with type of data is JSON valid
     try:
         geometry = json.loads(old_spatial)  # NOQA F841
