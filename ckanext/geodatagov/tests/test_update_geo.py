@@ -50,7 +50,14 @@ class TestUpdateGeo(object):
                 {'key': 'spatial', 'value': '34.1,25.2,26.2,27.9'}
             ]
         )
-        self.dataset3 = factories.Dataset()
+
+        self.dataset3 = factories.Dataset(
+            extras=[
+                {'key': 'spatial', 'value': '34.1,25.2,+26.2,+27.9'}
+            ]
+        )
+
+        self.dataset4 = factories.Dataset()
 
         polygon = {
             "type": "Polygon",
@@ -64,7 +71,7 @@ class TestUpdateGeo(object):
                 ]
             ]
         }
-        self.dataset4 = factories.Dataset(
+        self.dataset5 = factories.Dataset(
             extras=[
                 {'key': 'spatial', 'value': json.dumps(polygon)}
             ]
@@ -81,9 +88,9 @@ class TestUpdateGeo(object):
         cmd.user_name = 'sysadmin'
         results = cmd.update_dataset_geo_fields()
 
-        assert results['total'] == 4
+        assert results['total'] == 5
         assert results['failed'] == 0
-        assert results['skipped'] == 4
+        assert results['skipped'] == 5
 
         # this dataset transformed its spatial data
         d1 = results['datasets'][self.dataset1['id']]
@@ -101,17 +108,25 @@ class TestUpdateGeo(object):
         keys = list(json.loads(extras['spatial']).keys())
         assert 'coordinates' in keys
 
-        # this dataset don't have any spatial data
+        # This dataset already include good spatial data
         d3 = results['datasets'][self.dataset3['id']]
-        assert d3['skip'] == 'No rolled up extras'
+        assert d3['skip'] == 'No rolled up spatial extra found'
         extras = {x['key']: x['value'] for x in self.dataset3['extras']}
+        assert extras['old-spatial'] == '34.1,25.2,+26.2,+27.9'
+        keys = list(json.loads(extras['spatial']).keys())
+        assert 'coordinates' in keys
+
+        # this dataset don't have any spatial data
+        d4 = results['datasets'][self.dataset4['id']]
+        assert d4['skip'] == 'No rolled up extras'
+        extras = {x['key']: x['value'] for x in self.dataset4['extras']}
         assert 'old-spatial' not in list(extras.keys())
         assert 'spatial' not in list(extras.keys())
 
         # This dataset already include good spatial data
-        d4 = results['datasets'][self.dataset4['id']]
-        assert d4['skip'] == 'No rolled up spatial extra found'
-        extras = {x['key']: x['value'] for x in self.dataset4['extras']}
+        d5 = results['datasets'][self.dataset5['id']]
+        assert d5['skip'] == 'No rolled up spatial extra found'
+        extras = {x['key']: x['value'] for x in self.dataset5['extras']}
         assert 'old-spatial' in list(extras.keys())
         keys = list(json.loads(extras['spatial']).keys())
         assert 'coordinates' in keys

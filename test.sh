@@ -12,8 +12,8 @@ test_ini=/srv/app/test.ini
 
 # Database is listening, but still unavailable. Just keep trying...
 while ! ckan -c $test_ini db init; do
-  echo Retrying in 5 seconds...
-  sleep 5
+    echo Retrying in 5 seconds...
+    sleep 5
 done
 
 HOST=db
