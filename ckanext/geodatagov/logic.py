@@ -459,9 +459,12 @@ def translate_spatial(old_spatial):
                    '"coordinates": [[[{minx}, {miny}], [{minx}, {maxy}], '
                    '[{maxx}, {maxy}], [{maxx}, {miny}], [{minx}, {miny}]]]}}')
 
+    # replace all instances of '+' as this creates bad JSON https://github.com/GSA/data.gov/issues/3549
+    old_spatial_transformed = old_spatial.replace('+', '')
+
     # Analyze with type of data is JSON valid
     try:
-        geometry = json.loads(old_spatial)  # NOQA F841
+        geometry = json.loads(old_spatial_transformed)  # NOQA F841
         # If we have 2 lists of 2 numbers, transform them as GeoJSON
         if (isinstance(geometry, list) and len(geometry) == 2):
             min, max = geometry
@@ -470,12 +473,12 @@ def translate_spatial(old_spatial):
             return new_spatial
         else:
             # If we already have a good geometry, use it
-            return old_spatial
+            return old_spatial_transformed
     except BaseException:
         pass
 
     # If we have 4 numbers separated by commas, transform them as GeoJSON
-    parts = old_spatial.strip().split(',')
+    parts = old_spatial_transformed.strip().split(',')
     if len(parts) == 4 and all(is_number(x) for x in parts):
         minx, miny, maxx, maxy = parts
         params = {"minx": minx, "miny": miny, "maxx": maxx, "maxy": maxy}
