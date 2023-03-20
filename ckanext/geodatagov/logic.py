@@ -475,6 +475,7 @@ def translate_spatial(old_spatial):
             # If we already have a good geometry, use it
             return old_spatial_transformed
     except BaseException:
+        log.info('JSON that could not be parsed\n\t{}'.format(old_spatial_transformed))
         pass
 
     # If we have 4 numbers separated by commas, transform them as GeoJSON
