@@ -466,9 +466,7 @@ def translate_spatial(old_spatial):
     # all leading 0s, '[-089.63,  30.36]' is not valid, '[-89.63,  30.36]' is valid
     old_spatial_transformed = old_spatial.replace('+', '')
     old_spatial_transformed = old_spatial_transformed.replace('.,', ',').replace('.]', ']')
-    leading_zeros_detect = r'(-?)0+([1-9]+\.?[1-9]*)'
-    leading_zeros_replace = r'\1\2'
-    old_spatial_transformed = re.sub(leading_zeros_detect, leading_zeros_replace, old_spatial_transformed)
+    old_spatial_transformed = re.sub(r'(-?)0+([1-9]+\.?[1-9]*)', r'\1\2', old_spatial_transformed)
 
     # Analyze with type of data is JSON valid
     try:
