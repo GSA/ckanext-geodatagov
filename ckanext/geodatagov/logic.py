@@ -459,8 +459,11 @@ def translate_spatial(old_spatial):
                    '"coordinates": [[[{minx}, {miny}], [{minx}, {maxy}], '
                    '[{maxx}, {maxy}], [{maxx}, {miny}], [{minx}, {miny}]]]}}')
 
-    # replace all instances of '+' as this creates bad JSON https://github.com/GSA/data.gov/issues/3549
+    # replace all things that create bad JSON, https://github.com/GSA/data.gov/issues/3549
+    # all instances of '+', '[+23, -1]' is not valid, but '[23, -1]' is valid
+    # all trailing decimals, '[34., 2]' is not valid, but '[34.0, 2]' and '[34, 2]' are valid
     old_spatial_transformed = old_spatial.replace('+', '')
+    old_spatial_transformed = old_spatial_transformed.replace('.,', ',').replace('.]', ']')
 
     # Analyze with type of data is JSON valid
     try:
