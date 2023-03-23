@@ -2,6 +2,7 @@ import datetime
 import hashlib
 import logging
 import json
+import re
 import time
 import uuid
 
@@ -462,8 +463,12 @@ def translate_spatial(old_spatial):
     # replace all things that create bad JSON, https://github.com/GSA/data.gov/issues/3549
     # all instances of '+', '[+23, -1]' is not valid, but '[23, -1]' is valid
     # all trailing decimals, '[34., 2]' is not valid, but '[34.0, 2]' and '[34, 2]' are valid
+    # all leading 0s, '[-089.63,  30.36]' is not valid, '[-89.63,  30.36]' is valid
     old_spatial_transformed = old_spatial.replace('+', '')
     old_spatial_transformed = old_spatial_transformed.replace('.,', ',').replace('.]', ']')
+    leading_zeros_detect = r'(-?)0+([1-9]+\.?[1-9]*)'
+    leading_zeros_replace = r'\1\2'
+    old_spatial_transformed = re.sub(leading_zeros_detect, leading_zeros_replace, old_spatial_transformed)
 
     # Analyze with type of data is JSON valid
     try:
