@@ -462,11 +462,14 @@ def translate_spatial(old_spatial):
 
     # replace all things that create bad JSON, https://github.com/GSA/data.gov/issues/3549
     # all instances of '+', '[+23, -1]' is not valid, but '[23, -1]' is valid
-    # all trailing decimals, '[34., 2]' is not valid, but '[34.0, 2]' and '[34, 2]' are valid
-    # all leading 0s, '[-089.63,  30.36]' is not valid, '[-89.63,  30.36]' is valid
     old_spatial_transformed = old_spatial.replace('+', '')
+    # all trailing decimals, '[34., 2]' is not valid, but '[34.0, 2]' and '[34, 2]' are valid
     old_spatial_transformed = old_spatial_transformed.replace('.,', ',').replace('.]', ']')
-    old_spatial_transformed = re.sub(r'(\s)(-?)0+((0|[1-9][0-9]*)(\.[0-9]*)?)', r'\1\2\3', old_spatial_transformed)
+    # '-98, 29, -83, 35.' is not valid
+    if old_spatial_transformed[-1] == '.':
+        old_spatial_transformed = old_spatial_transformed[0:-1]
+    # all leading 0s, '[-089.63,  30.36]' is not valid, '[-89.63,  30.36]' is valid
+    old_spatial_transformed = re.sub(r'(^|\s)(-?)0+((0|[1-9][0-9]*)(\.[0-9]*)?)', r'\1\2\3', old_spatial_transformed)
 
     # Analyze with type of data is JSON valid
     try:
