@@ -460,7 +460,7 @@ def translate_spatial(old_spatial):
                    '"coordinates": [[[{minx}, {miny}], [{minx}, {maxy}], '
                    '[{maxx}, {maxy}], [{maxx}, {miny}], [{minx}, {miny}]]]}}')
 
-    # replace all things that create bad JSON, https://github.com/GSA/data.gov/issues/3549
+    # Replace all things that create bad JSON, https://github.com/GSA/data.gov/issues/3549
     # all instances of '+', '[+23, -1]' is not valid, but '[23, -1]' is valid
     old_spatial_transformed = old_spatial.replace('+', '')
     # all trailing decimals, '[34., 2]' is not valid, but '[34.0, 2]' and '[34, 2]' are valid
@@ -470,6 +470,13 @@ def translate_spatial(old_spatial):
         old_spatial_transformed = old_spatial_transformed[0:-1]
     # all leading 0s, '[-089.63,  30.36]' is not valid, '[-89.63,  30.36]' is valid
     old_spatial_transformed = re.sub(r'(^|\s)(-?)0+((0|[1-9][0-9]*)(\.[0-9]*)?)', r'\1\2\3', old_spatial_transformed)
+    # if spatial is a space-separated number list, set the new spatial to 'null'
+    try:
+        numbers_with_spaces = [int(i) for i in old_spatial_transformed.split(' ')]
+        if all(isinstance(x, int) for x in numbers_with_spaces):
+            old_spatial_transformed = 'null'
+    except ValueError:
+        pass
 
     # Analyze with type of data is JSON valid
     try:

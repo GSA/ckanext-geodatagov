@@ -107,3 +107,32 @@ class TestSpatialField(object):
 
         assert result['count'] == 1
         assert result['results'][0]['id'] == dataset['id']
+
+    def test_space_separated_list_spatial_transformation(self):
+
+        old_geo = '20.0 10.0 25.0 15.0'
+
+        context = {'user': self.user['name'], 'ignore_auth': True}
+        pkg = {
+            'title': 'Spatial List',
+            'name': 'spatial-list',
+            'extras': [
+                {'key': 'spatial', 'value': old_geo}
+            ]
+        }
+        dataset = p.toolkit.get_action('package_create')(context, pkg)
+
+        spatial_extra_exists = False
+        for extra in dataset['extras']:
+            if extra['key'] == 'spatial':
+                spatial_extra_exists = True
+                assert extra['value'] == 'None'
+
+        assert spatial_extra_exists is True
+
+        result = helpers.call_action(
+            'package_search',
+            extras={'ext_bbox': '19,9,26,16'})
+
+        assert result['count'] == 1
+        assert result['results'][0]['id'] == dataset['id']
