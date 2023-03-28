@@ -114,8 +114,8 @@ class TestSpatialField(object):
 
         context = {'user': self.user['name'], 'ignore_auth': True}
         pkg = {
-            'title': 'Spatial List',
-            'name': 'spatial-list',
+            'title': 'Spatial Space-separated List',
+            'name': 'spatial-space-list',
             'extras': [
                 {'key': 'spatial', 'value': old_geo}
             ]
