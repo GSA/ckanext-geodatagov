@@ -635,7 +635,6 @@ class Miscs(p.SingletonPlugin):
     '''
     p.implements(p.IConfigurer)
     p.implements(p.IConfigurable)
-    p.implements(p.IRoutes, inherit=True)
     p.implements(p.IBlueprint)
 
     # IConfigurer

@@ -1,7 +1,7 @@
 -e git+https://github.com/ckan/ckanext-harvest.git#egg=ckanext_harvest
 -e git+https://github.com/ckan/ckanext-spatial.git#egg=ckanext-spatial
 -e git+https://github.com/asl2/PyZ3950.git#egg=PyZ3950
--e git+https://github.com/nickumia-reisys/werkzeug@e1f6527604ab30e4b46b5430a5fb97e7a7055cd7#egg=werkzeug
+# -e git+https://github.com/nickumia-reisys/werkzeug@e1f6527604ab30e4b46b5430a5fb97e7a7055cd7#egg=werkzeug
 
 # ckanext-harvest dependencies
 ckantoolkit>=0.0.7
@@ -13,17 +13,16 @@ pyOpenSSL>22.10 #pinning to fix error with crypto (https://levelup.gitconnected.
 
 # ckanext-spatial
 # ckantoolkit # included as dep of ckanext-harvest
-GeoAlchemy>=0.6
 GeoAlchemy2==0.5.0
 Shapely>=1.2.13
-pyproj==2.6.1
+pyproj==3.4.1
 OWSLib==0.28.1
 lxml>=2.3
 argparse
 pyparsing>=2.1.10
 # requests>=1.1.0 # included in ckan-core
 six
-geojson==2.5.0
+geojson==3.0.1
 
 # PyZ3950
 pyasn1
