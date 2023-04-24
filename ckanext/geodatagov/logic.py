@@ -6,6 +6,7 @@ import re
 import time
 import uuid
 
+from ckan.lib.navl.validators import not_empty
 from ckan.logic import side_effect_free
 import ckan.logic.schema as schema
 from ckan.logic.action import get as core_get
@@ -13,6 +14,7 @@ import ckan.model as model
 import ckan.plugins as p
 from ckanext.geodatagov.plugin import change_resource_details, split_tags
 from ckanext.geodatagov.harvesters.arcgis import _slugify
+from ckanext.geodatagov.helpers import string
 from ckanext.harvest.model import HarvestObject  # , HarvestJob
 
 from ckan.common import config
@@ -238,7 +240,7 @@ def datajson_create(context, data_dict):
              'extras': [{'key': 'organization_type', 'value': "Federal Government"}]})
 
     context['schema'] = schema.default_create_package_schema()
-    context['schema']['id'] = [p.toolkit.get_validator('not_empty')]
+    context['schema']['id'] = [not_empty]
     context['return_id_only'] = True
     return p.toolkit.get_action('package_create')(context, new_package)
 
@@ -303,7 +305,7 @@ def doi_create(context, data_dict):
     new_package["extras"].append({"key": "harvest_object_id", "value": obj.id})
 
     context['schema'] = schema.default_create_package_schema()
-    context['schema']['id'] = [p.toolkit.get_validator('not_empty')]
+    context['schema']['id'] = [not_empty]
     context['return_id_only'] = True
     p.toolkit.get_action('package_create')(context, new_package)
     print(str(datetime.datetime.now()) + ' Imported doi id ' + new_package['id'])
@@ -541,6 +543,12 @@ def package_create(up_func, context, data_dict):
     """ before_package_create for CKAN 2.8 """
     rollup_save_action(context, data_dict)
     data_dict = fix_dataset(data_dict)
+    # TODO: This fix is bad, find a better one :(
+    print("///////////////////////////////////////")
+    print(context)
+    if 'schema' in context.keys():
+        context['schema']['id'] = [string]
+        context['schema']['tags']['name'] = [not_empty, string]
     return up_func(context, data_dict)
 
 

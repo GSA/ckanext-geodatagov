@@ -23,6 +23,8 @@ from html.parser import HTMLParser
 from ckan.plugins.toolkit import add_template_directory, add_resource, requires_ckan_version
 from ckan.plugins import IConfigurer
 
+from ckanext.geodatagov.helpers import string as custom_string
+
 requires_ckan_version("2.9")
 
 
@@ -118,7 +120,7 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
     def extra_schema(self):
         return {
             'private_datasets': [ignore_empty, boolean_validator],
-            'extra_search_criteria': [ignore_empty, str],
+            'extra_search_criteria': [ignore_empty, custom_string],
         }
 
     def gather_stage(self, harvest_job):
@@ -287,7 +289,7 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
             package_schema = logic.schema.default_update_package_schema()
 
         tag_schema = logic.schema.default_tags_schema()
-        tag_schema['name'] = [not_empty, str]
+        tag_schema['name'] = [not_empty, custom_string]
         package_schema['tags'] = tag_schema
         context['schema'] = package_schema  # TODO: user
 
@@ -298,7 +300,7 @@ class ArcGISHarvester(SpatialHarvester, SingletonPlugin):
             # We need to explicitly provide a package ID, otherwise ckanext-spatial
             # won't be be able to link the extent to the package.
             package_dict['id'] = str(uuid.uuid4())
-            package_schema['id'] = [str]
+            package_schema['id'] = [custom_string]
 
             # Save reference to the package on the object
             harvest_object.package_id = package_dict['id']
