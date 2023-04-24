@@ -9,7 +9,7 @@ from ckanext.geodatagov.harvesters.base import GeoDataGovWAFHarvester
 from factories import HarvestJobObj, WafHarvestSourceObj
 
 from ckan.tests.helpers import reset_db
-from ckan.tests.factories import Organization, Sysadmin
+from ckan.tests.factories import Organization, SysadminWithToken
 import os
 
 log = logging.getLogger(__name__)
@@ -211,7 +211,7 @@ class TestWafHarvester(object):
         assert extras_rollup
 
         log.info("extras_rollup package info: %s", package)
-        sysadmin = factories.SysadminWithToken()
+        sysadmin = SysadminWithToken()
         user_name = sysadmin['name']
         context = {'user': user_name}
         new_extras = [{'key': key, 'value': value} for key, value in list(extras.items())]
