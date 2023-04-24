@@ -9,6 +9,7 @@ from factories import HarvestJobObj, WafHarvestSourceObj
 
 from ckan.tests.helpers import reset_db
 from ckan.tests.factories import Organization
+import os
 
 log = logging.getLogger(__name__)
 
