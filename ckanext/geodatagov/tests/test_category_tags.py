@@ -1,6 +1,7 @@
 
-import logging
+import copy
 import json
+import logging
 import os
 from ckan import plugins as p
 from ckan.tests.helpers import reset_db
@@ -44,25 +45,35 @@ class TestCategoryTags(object):
         self.dataset1['categories'] = '["cat1"]'
         self.dataset1['group_id'] = self.group1["id"]
         p.toolkit.get_action('group_catagory_tag_update')(context, self.dataset1)
-        expected_extra = {"key": "__category_tag_{}".format(self.group1["id"]),
-                          "value": json.dumps(self.dataset1['categories'])}
+        expected_extra = {'key': 'extras_rollup',
+                          'value': '{"__category_tag_%s": "%s"}' % (
+                              self.group1["id"],
+                              json.dumps(self.dataset1['categories']).replace('\\', '')
+                          )}
         pkg_dict = p.toolkit.get_action('package_show')(context, {'id': self.dataset1["id"]})
-        assert expected_extra in pkg_dict["extras"]
+        actual_extras = copy.deepcopy(pkg_dict['extras'])
+        actual_extras[0]['value'] = actual_extras[0]['value'].replace('\\', '')
+        assert expected_extra in actual_extras
 
         # test if we preserve category tag extras while we update the dataset
         pkg_dict['Title'] = 'Change title 02'
         pkg_dict = p.toolkit.get_action('package_update')(context, pkg_dict)
-        assert expected_extra in pkg_dict["extras"]
+        assert expected_extra in actual_extras
 
         self.dataset2['categories'] = '["cat2"]'
         self.dataset2['group_id'] = self.group2["id"]
         p.toolkit.get_action('group_catagory_tag_update')(context, self.dataset2)
-        expected_extra = {"key": "__category_tag_{}".format(self.group2["id"]),
-                          "value": json.dumps(self.dataset2['categories'])}
+        expected_extra = {'key': 'extras_rollup',
+                          'value': '{"__category_tag_%s": "%s"}' % (
+                              self.group2["id"],
+                              json.dumps(self.dataset2['categories']).replace('\\', '')
+                          )}
         pkg_dict = p.toolkit.get_action('package_show')(context, {'id': self.dataset2["id"]})
-        assert expected_extra in pkg_dict["extras"]
+        actual_extras = copy.deepcopy(pkg_dict['extras'])
+        actual_extras[0]['value'] = actual_extras[0]['value'].replace('\\', '')
+        assert expected_extra in actual_extras
 
         # test if we preserve category tag extras while we update the dataset
         pkg_dict['Title'] = 'Change title 03'
         pkg_dict = p.toolkit.get_action('package_update')(context, pkg_dict)
-        assert expected_extra in pkg_dict["extras"]
+        assert expected_extra in actual_extras
