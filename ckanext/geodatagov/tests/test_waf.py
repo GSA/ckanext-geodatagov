@@ -197,7 +197,7 @@ class TestWafHarvester(object):
         bad_list = list(set(tag_list) - set(expected_list))
         log.info("Tags that are not trimmed: %s", bad_list)
 
-        assert (tag_list == expected_list)
+        assert (sorted(tag_list) == sorted(expected_list))
 
     def test_extras_rollup(self):
         """ Test https://github.com/GSA/datagov-deploy/issues/2166 """
