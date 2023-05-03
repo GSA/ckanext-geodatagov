@@ -15,6 +15,7 @@ from ckanext.harvest.model import HarvestObject
 from ckanext.harvest.model import HarvestObjectExtra as HOExtra
 from ckanext.geodatagov.helpers import string
 
+
 class WAFCollectionHarvester(GeoDataGovWAFHarvester):
     def info(self):
         return {
