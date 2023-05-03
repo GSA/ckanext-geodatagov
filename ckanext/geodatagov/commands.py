@@ -917,7 +917,7 @@ class GeoGovCommand(p.SingletonPlugin):
         # iterate over all datasets
 
         search_backend = config.get('ckanext.spatial.search_backend', 'postgis')
-        if search_backend != 'solr':
+        if search_backend != 'solr-bbox':
             raise ValueError('Solr is not your default search backend (ckanext.spatial.search_backend)')
 
         datasets = model.Session.query(model.Package).all()
