@@ -487,7 +487,7 @@ class Demo(p.SingletonPlugin):
 
         return pkg_dict
 
-    def before_index(self, pkg_dict):
+    def before_dataset_index(self, pkg_dict):
 
         tags = pkg_dict.get('tags', [])
         tags.extend(tag for tag in split_tags(pkg_dict.get('extras_tags', '')))
@@ -522,7 +522,7 @@ class Demo(p.SingletonPlugin):
 
         return pkg_dict
 
-    def before_search(self, search_params):
+    def before_dataset_search(self, search_params):
 
         fq = search_params.get('fq', '')
 
@@ -549,7 +549,7 @@ class Demo(p.SingletonPlugin):
         search_params['fq'] = fq
         return search_params
 
-    def after_show(self, context, data_dict):
+    def after_dataset_show(self, context, data_dict):
 
         current_extras = data_dict.get('extras', [])
         new_extras = []
