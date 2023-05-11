@@ -415,7 +415,7 @@ def rollup_save_action(context, data_dict):
     if p.toolkit.check_ckan_version(min_version='2.8'):
         search_backend = config.get('ckanext.spatial.search_backend', 'postgis')
         log.debug('Search backend {}'.format(search_backend))
-        if search_backend == 'solr':
+        if search_backend == 'solr-bbox':
             old_spatial = new_extras_rollup.get('spatial', None)
             if old_spatial is not None:
                 log.info('Old Spatial found {}'.format(old_spatial))
