@@ -20,6 +20,7 @@ services:
       - db
       - redis
       - solr
+      - localstack-container
     volumes:
       - ./ckanext:/srv/app/ckanext/
       - ./test.sh:/srv/app/test.sh
