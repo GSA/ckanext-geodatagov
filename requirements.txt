@@ -1,7 +1,7 @@
 -e git+https://github.com/ckan/ckanext-harvest.git#egg=ckanext_harvest
 -e git+https://github.com/ckan/ckanext-spatial.git#egg=ckanext-spatial
 -e git+https://github.com/asl2/PyZ3950.git#egg=PyZ3950
--e git+https://github.com/gsa/ckanext-datajson.git@ckan-210#egg=ckanext_datajson
+-e git+https://github.com/gsa/ckanext-datajson.git@ckan-210#egg=ckanext-datajson
 # -e git+https://github.com/nickumia-reisys/werkzeug@e1f6527604ab30e4b46b5430a5fb97e7a7055cd7#egg=werkzeug
 
 # ckanext-harvest dependencies
