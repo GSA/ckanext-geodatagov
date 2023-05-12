@@ -28,7 +28,7 @@ setup(
     zip_safe=False,
     install_requires=[
         # -*- Extra requirements: -*-
-        'ckanext-datajson',
+        # 'ckanext-datajson',
         'boto3',
         'ply>=3.4',
     ],
