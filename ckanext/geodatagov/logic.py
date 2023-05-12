@@ -544,8 +544,6 @@ def package_create(up_func, context, data_dict):
     rollup_save_action(context, data_dict)
     data_dict = fix_dataset(data_dict)
     # TODO: This fix is bad, find a better one :(
-    print("///////////////////////////////////////")
-    print(context)
     if 'schema' in context.keys():
         context['schema']['id'] = [string]
         context['schema']['tags']['name'] = [not_empty, string]
