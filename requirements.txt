@@ -2,13 +2,12 @@
 -e git+https://github.com/ckan/ckanext-spatial.git#egg=ckanext-spatial
 -e git+https://github.com/asl2/PyZ3950.git#egg=PyZ3950
 -e git+https://github.com/gsa/ckanext-datajson.git@ckan-210#egg=ckanext-datajson
-# -e git+https://github.com/nickumia-reisys/werkzeug@e1f6527604ab30e4b46b5430a5fb97e7a7055cd7#egg=werkzeug
+-e git+https://github.com/ckan/ckan.git@76ebf1ebab92a9bb08649cfe5e758e91edb616b7#ckan
 
 # ckanext-harvest dependencies
 ckantoolkit>=0.0.7
 pika>=1.1.0
 pyOpenSSL>22.10 #pinning to fix error with crypto (https://levelup.gitconnected.com/fix-attributeerror-module-lib-has-no-attribute-openssl-521a35d83769)
-
 # redis==2.10.6 # included in ckan core
 # requests>=2.11.1 # included in ckan core
 
