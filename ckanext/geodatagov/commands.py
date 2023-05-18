@@ -16,7 +16,6 @@ import ckan
 import ckan.model as model
 import ckan.logic as logic
 import ckan.lib.munge as munge
-import ckan.lib.search as search
 from ckan import plugins as p
 from ckan.plugins.toolkit import config
 
