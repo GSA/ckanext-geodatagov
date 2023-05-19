@@ -34,7 +34,7 @@ class TestRelink(object):
         self.dataset1_hoid1 = HarvestObject(
             package_id=self.dataset1['id'],
             job=create_harvest_job(),
-            import_finished = datetime.datetime.utcnow(),
+            import_finished=datetime.datetime.utcnow(),
             state='COMPLETE',
             report_status='',
             current=False
@@ -44,7 +44,7 @@ class TestRelink(object):
         self.dataset1_hoid2 = HarvestObject(
             package_id=self.dataset1['id'],
             job=create_harvest_job(),
-            import_finished = datetime.datetime.utcnow(),
+            import_finished=datetime.datetime.utcnow(),
             state='COMPLETE',
             current=True
         )
