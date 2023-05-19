@@ -502,6 +502,84 @@ def test_command():
 
 
 @geodatagov.command()
+@click.argument("harvest_source_id", required=False)
+def harvest_object_relink(harvest_source_id: Optional[str]):
+    '''
+    Fix erroneous harvest objects for a harvest source or all harvest sources.
+    Some packages are left with no current harvest object after a harvesting job. This function
+    will fix the problem by making the latest COMPLETED harvest object current.
+    '''
+    log.info("Relinking harvest objects for harvest source {}.".format(
+        harvest_source_id if harvest_source_id else 'all'
+    ))
+
+    # find packages that has no current harvest object
+    sql = '''
+        WITH package_with_current AS (
+            SELECT package_id FROM harvest_object WHERE current
+        )
+        SELECT distinct(p.id) FROM package p
+        JOIN harvest_object h ON p.id = h.package_id
+        LEFT JOIN package_with_current c ON p.id = c.package_id
+        WHERE p.state='active' AND p.type='dataset' AND c.package_id IS NULL
+    '''
+    if harvest_source_id:
+        sql += '''
+        AND
+            h.harvest_source_id = :harvest_source_id
+        '''
+        results = model.Session.execute(sql,
+                                        {'harvest_source_id': harvest_source_id})
+    else:
+        results = model.Session.execute(sql)
+
+    pkgs_problematic = {row['id'] for row in results}
+    total = len(pkgs_problematic)
+    log.info(f'{total} packages to be fixed.')
+
+    # set last complete harvest object to be current
+    sql = '''
+        UPDATE harvest_object
+        SET current = 't'
+        WHERE
+            package_id = :id
+        AND
+            state = 'COMPLETE'
+        AND
+            import_finished = (
+                SELECT MAX(import_finished)
+                FROM harvest_object
+                WHERE
+                    state = 'COMPLETE'
+                AND
+                    report_status <> 'deleted'
+                AND
+                    package_id = :id
+            )
+        RETURNING 1
+    '''
+    count = 0
+    for id in pkgs_problematic:
+        result = model.Session.execute(sql, {'id': id}).fetchall()
+        model.Session.commit()
+        count = count + 1
+        if result:
+            log.info(f'{count}/{total}: {id} fixed. Now pushing to solr... ')
+            try:
+                rebuild(id)
+            except KeyboardInterrupt:
+                log.info("Stopped.")
+                return
+            except BaseException:
+                raise
+        else:
+            log.info(f'{count}/{total}: {id} has no valid harvest object. Need to inspect manually.')
+
+    if not pkgs_problematic:
+        log.info('All harvest objects look good. Nothing to do. ')
+
+
+@geodatagov.command()
 @click.argument("start_date", required=False)
 def tracking_update(start_date: Optional[str]):
     """ckan tracking update with customized options and output"""
