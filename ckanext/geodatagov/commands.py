@@ -645,7 +645,6 @@ class GeoGovCommand(p.SingletonPlugin):
                 result.append(package)
         return result
 
-
     # this code is defunct and will need to be refactored into cli.py
     """
     def jsonl_export(self):
