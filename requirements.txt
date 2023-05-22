@@ -2,7 +2,7 @@
 -e git+https://github.com/ckan/ckanext-spatial.git#egg=ckanext-spatial
 -e git+https://github.com/asl2/PyZ3950.git#egg=PyZ3950
 -e git+https://github.com/gsa/ckanext-datajson.git@ckan-210#egg=ckanext-datajson
--e git+https://github.com/ckan/ckan.git@76ebf1ebab92a9bb08649cfe5e758e91edb616b7#egg=ckan
+-e git+https://github.com/ckan/ckan.git@76ebf1ebab92a9bb08649cfe5e758e91edb616b7
 
 # ckanext-harvest dependencies
 ckantoolkit>=0.0.7
