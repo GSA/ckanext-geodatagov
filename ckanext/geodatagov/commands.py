@@ -21,7 +21,7 @@ from ckan import plugins as p
 from ckan.plugins.toolkit import config
 
 from ckanext.harvest.model import HarvestSource, HarvestJob
-from ckanext.geodatagov.model import MiscsFeed, MiscsTopicCSV
+from ckanext.geodatagov.model import MiscsFeed
 
 
 # https://github.com/GSA/ckanext-geodatagov/issues/117
@@ -645,103 +645,6 @@ class GeoGovCommand(p.SingletonPlugin):
                 result.append(package)
         return result
 
-    def export_csv(self, domain='https://catalog.data.gov'):
-        print('export started...')
-
-        # cron job
-        # paster --plugin=ckanext-geodatagov geodatagov export-csv --config=/etc/ckan/production.ini
-
-        # Exported CSV header list:
-        # - Dataset Title
-        # - Dataset URL
-        # - Organization Name
-        # - Organization Link
-        # - Harvest Source Name
-        # - Harvest Source Link
-        # - Topic Name
-        # - Topic Categories
-
-        import io
-        import csv
-
-        limit = 100
-        page = 1
-
-        import pprint
-
-        result = []
-
-        while True:
-            data_dict = {
-                'q': 'groups: *',
-                # 'fq': fq,
-                # 'facet.field': facets.keys(),
-                'rows': limit,
-                # 'sort': sort_by,
-                'start': (page - 1) * limit
-                # 'extras': search_extras
-            }
-
-            query = logic.get_action('package_search')({'model': model, 'ignore_auth': True}, data_dict)
-
-            page += 1
-            # import pprint
-            # pprint.pprint(packages)
-
-            if not query['results']:
-                break
-
-            packages = query['results']
-            result = result + GeoGovCommand.export_group_and_tags(packages=packages, domain=domain)
-
-        if not result:
-            print('nothing to do')
-            return
-
-        import datetime
-
-        print('writing into db...')
-
-        date_suffix = datetime.datetime.strftime(datetime.datetime.now(), '%Y%m%d')
-        csv_output = io.StringIO()
-
-        fieldnames = ['Dataset Title', 'Dataset URL', 'Organization Name', 'Organization Link',
-                      'Harvest Source Name', 'Harvest Source Link', 'Topic Name', 'Topic Categories']
-
-        writer = csv.writer(csv_output)
-        writer.writerow(fieldnames)
-
-        for pkg in result:
-            try:
-                writer.writerow(
-                    [
-                        pkg['title'],
-                        pkg['url'],
-                        pkg['organization'],
-                        pkg['organizationUrl'],
-                        pkg['harvestSourceTitle'],
-                        pkg['harvestSourceUrl'],
-                        pkg['topic'],
-                        pkg['topicCategories']
-                    ]
-                )
-            except UnicodeEncodeError:
-                pprint.pprint(pkg)
-
-        content = csv_output.getvalue()
-
-        entry = model.Session.query(MiscsTopicCSV) \
-            .filter_by(date=date_suffix) \
-            .first()
-        if not entry:
-            # create the empty entry for the first time
-            entry = MiscsTopicCSV()
-            entry.date = date_suffix
-        entry.csv = content
-        entry.save()
-
-        print('csv file topics-%s.csv is ready.' % date_suffix)
-        return result, entry
 
     # this code is defunct and will need to be refactored into cli.py
     """
