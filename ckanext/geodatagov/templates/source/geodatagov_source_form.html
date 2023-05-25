@@ -19,7 +19,7 @@
 
 {% set validator_profiles = source_config.get('validator_profiles') or data.validator_profiles %}
 {% set validator_schema = source_config.get('validator_schema') or data.validator_schema %}
-  <div data-module="reclinepreview" data-module-site_url="{{ h.dump_json(url_for('harvest.new')) }}">
+  <div data-module="reclinepreview" data-module-site_url="{{ g.site_url }}">
          <div class="harvest-types form-group control-group">
            <label class="control-label">Validation</label>
            <div class="controls">
