@@ -594,15 +594,16 @@ def update_all(engine, start_date=None):
     if start_date:
         start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
     else:
-        # No date given. See when we last have data for and get data
-        # from 2 days before then in case new data is available.
+        # No date given. As we change to weekly update, 
+        # See when we last have data for and get data
+        # from 9 days before then in case new data is available.
         # If no date here then use 2011-01-01 as the start date
         sql = """SELECT tracking_date from tracking_summary
                     ORDER BY tracking_date DESC LIMIT 1;"""
         result = engine.execute(sql).fetchall()
         if result:
             start_date = result[0]["tracking_date"]
-            start_date += datetime.timedelta(-2)
+            start_date += datetime.timedelta(-9)
             # convert date to datetime
             combine = datetime.datetime.combine
             start_date = combine(start_date, datetime.time(0))
