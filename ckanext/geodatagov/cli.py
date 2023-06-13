@@ -594,7 +594,7 @@ def update_all(engine, start_date=None):
     if start_date:
         start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
     else:
-        # No date given. As we change to weekly update, 
+        # No date given. As we change to weekly update,
         # See when we last have data for and get data
         # from 9 days before then in case new data is available.
         # If no date here then use 2011-01-01 as the start date
