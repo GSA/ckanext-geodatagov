@@ -559,24 +559,27 @@ def harvest_object_relink(harvest_source_id: Optional[str]):
         RETURNING 1
     '''
     count = 0
+    pkgs_to_index = set()
     for id in pkgs_problematic:
         result = model.Session.execute(sql, {'id': id}).fetchall()
         model.Session.commit()
         count = count + 1
         if result:
-            log.info(f'{count}/{total}: {id} fixed. Now pushing to solr... ')
-            try:
-                rebuild(id)
-            except KeyboardInterrupt:
-                log.info("Stopped.")
-                return
-            except BaseException:
-                raise
+            log.info(f'{count}/{total}: {id} fixed in DB. Addded to solr index queue.')
+            pkgs_to_index.add(id)
         else:
             log.info(f'{count}/{total}: {id} has no valid harvest object. Need to inspect manually.')
 
-    if not pkgs_problematic:
-        log.info('All harvest objects look good. Nothing to do. ')
+    if pkgs_to_index:
+        log.info("Rebuilding indexes")
+        package_index = index_for(model.Package)
+
+        try:
+            rebuild(package_ids=pkgs_to_index, defer_commit=True)
+        except Exception as e:
+            log.error("Error while rebuild index %s: %s" % (id, repr(e)))
+        package_index.commit()
+        log.info("Finished updating solr entries.")
 
 
 @geodatagov.command()
