@@ -494,7 +494,7 @@ def translate_spatial(old_spatial):
             return old_spatial_transformed
     except BaseException:
         log.info('JSON that could not be parsed\n\t{}'.format(old_spatial_transformed))
-        pass
+        return ''
 
     # If we have 4 numbers separated by commas, transform them as GeoJSON
     parts = old_spatial_transformed.strip().split(',')
