@@ -38,6 +38,8 @@ class TestSolrDBSync(object):
         add_harvest_object(self.dataset4)
         self.dataset5 = factories.Dataset(owner_org=organization["id"])
         ho5 = add_harvest_object(self.dataset5)
+        # dataset6 has no harvest object.
+        self.dataset6 = factories.Dataset(owner_org=organization["id"])
 
         search.rebuild()
 
@@ -101,6 +103,10 @@ class TestSolrDBSync(object):
         # Solr is unaware of the new id
         assert get_solr_hoid(self.dataset5['id']) != 'newid'
 
+        # Case 6 - Remove dataset from SOLR
+        # different from case 1, dataset6 should be added back to index after script run
+        package_index.remove_dict({'id': self.dataset6["id"]})
+
     @pytest.fixture
     def cli_result(self):
         self.create_datasets()
@@ -128,6 +134,8 @@ class TestSolrDBSync(object):
         assert self.dataset4['id'] not in final_db and self.dataset4['id'] not in final_solr
 
         assert get_solr_hoid(self.dataset5['id']) == "newid"
+
+        assert self.dataset6['id'] in final_db and self.dataset6['id'] not in final_solr
 
 
 def get_active_db_ids():
