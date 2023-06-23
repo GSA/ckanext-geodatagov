@@ -398,11 +398,18 @@ def db_solr_sync(dryrun, cleanup_solr, update_solr):
 
     # in case an id comes with multiple harvest_object_id,
     # this removes anything but the latest
+    # after which we have a dict formatted as
+    # {
+    #   'some_id': (some_mod_date, some_ho_id)
+    #   ...
+    # }
     cleaning = {}
     for id, metadata_modified, harvest_object_id in active_package:
         cleaning[id] = (metadata_modified, harvest_object_id)
 
     # now it is cleaned, change dict back to a set.
+    # after which we are back to a set formatted as
+    # {(some_id, some_mod_date, some_ho_id), ...}
     active_package = {(k,) + cleaning[k] for k in cleaning}
     # pick out those packages without harvest_object_id
     active_package_id_wo_ho = {k for k in cleaning if cleaning[k][1] is None}
