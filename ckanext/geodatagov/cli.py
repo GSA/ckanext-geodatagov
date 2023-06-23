@@ -398,12 +398,21 @@ def db_solr_sync(dryrun, cleanup_solr, update_solr):
 
     # in case an id comes with multiple harvest_object_id,
     # this removes anything but the latest
+    # after which we have a dict formatted as
+    # {
+    #   'some_id': (some_mod_date, some_ho_id)
+    #   ...
+    # }
     cleaning = {}
     for id, metadata_modified, harvest_object_id in active_package:
         cleaning[id] = (metadata_modified, harvest_object_id)
 
     # now it is cleaned, change dict back to a set.
+    # after which we are back to a set formatted as
+    # {(some_id, some_mod_date, some_ho_id), ...}
     active_package = {(k,) + cleaning[k] for k in cleaning}
+    # pick out those packages without harvest_object_id
+    active_package_id_wo_ho = {k for k in cleaning if cleaning[k][1] is None}
 
     log.info(f"total {len(active_package)} DB active_package")
 
@@ -425,9 +434,10 @@ def db_solr_sync(dryrun, cleanup_solr, update_solr):
 
     both = cleanup_solr == update_solr
     set_cleanup = {i if work_list[i] == "solr" else None for i in work_list} - {None}
-    set_update = work_list.keys() - set_cleanup
+    set_update = work_list.keys() - set_cleanup - active_package_id_wo_ho
     log.info(f"{len(set_cleanup)} packages need to be removed from Solr")
     log.info(f"{len(set_update)} packages need to be updated/added to Solr")
+    log.info(f"{len(active_package_id_wo_ho)} packages without harvest_object need to be mannually deleted")
 
     if not dryrun and set_cleanup and (cleanup_solr or both):
         log.info("Deleting indexes")
@@ -451,6 +461,11 @@ def db_solr_sync(dryrun, cleanup_solr, update_solr):
             if count > max:
                 break
             log.info(f"{count}: {id}")
+
+    # dryrun or not, we are printing out the active_package_id_wo_ho
+    if active_package_id_wo_ho:
+        log.info("Packages without harvest_object.")
+        print(*active_package_id_wo_ho, sep='\n')
 
 
 @geodatagov.command()
