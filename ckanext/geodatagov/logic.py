@@ -425,7 +425,7 @@ def rollup_save_action(context, data_dict):
                     old_spatial = 'United States'
 
                 new_spatial = translate_spatial(old_spatial)
-                if new_spatial is not None:
+                if new_spatial is not None and new_spatial != '':
                     log.info('New Spatial transformed {}'.format(new_spatial))
                     # add the real spatial
                     new_extras.append({'key': 'spatial', 'value': new_spatial})
