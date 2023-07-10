@@ -425,7 +425,7 @@ def rollup_save_action(context, data_dict):
                     old_spatial = 'United States'
 
                 new_spatial = translate_spatial(old_spatial)
-                if new_spatial is not None and new_spatial != '':
+                if new_spatial is not None:
                     log.info('New Spatial transformed {}'.format(new_spatial))
                     # add the real spatial
                     new_extras.append({'key': 'spatial', 'value': new_spatial})
@@ -494,7 +494,6 @@ def translate_spatial(old_spatial):
             return old_spatial_transformed
     except BaseException:
         log.info('JSON that could not be parsed\n\t{}'.format(old_spatial_transformed))
-        return ''
 
     # If we have 4 numbers separated by commas, transform them as GeoJSON
     parts = old_spatial_transformed.strip().split(',')
@@ -503,6 +502,9 @@ def translate_spatial(old_spatial):
         params = {"minx": minx, "miny": miny, "maxx": maxx, "maxy": maxy}
         new_spatial = geojson_tpl.format(**params)
         return new_spatial
+
+    if old_spatial is None:
+        return
 
     g = get_geo_from_string(old_spatial)
     return g
