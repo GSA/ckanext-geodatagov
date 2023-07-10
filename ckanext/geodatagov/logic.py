@@ -425,7 +425,7 @@ def rollup_save_action(context, data_dict):
                     old_spatial = 'United States'
 
                 new_spatial = translate_spatial(old_spatial)
-                if new_spatial is not None:
+                if new_spatial is not None and new_spatial != '':
                     log.info('New Spatial transformed {}'.format(new_spatial))
                     # add the real spatial
                     new_extras.append({'key': 'spatial', 'value': new_spatial})
@@ -480,6 +480,14 @@ def translate_spatial(old_spatial):
     except ValueError:
         pass
 
+    # If we have 4 numbers separated by commas, transform them as GeoJSON
+    parts = old_spatial_transformed.strip().split(',')
+    if len(parts) == 4 and all(is_number(x) for x in parts):
+        minx, miny, maxx, maxy = parts
+        params = {"minx": minx, "miny": miny, "maxx": maxx, "maxy": maxy}
+        new_spatial = geojson_tpl.format(**params)
+        return new_spatial
+
     # Analyze with type of data is JSON valid
     try:
         geometry = json.loads(old_spatial_transformed)  # NOQA F841
@@ -494,17 +502,7 @@ def translate_spatial(old_spatial):
             return old_spatial_transformed
     except BaseException:
         log.info('JSON that could not be parsed\n\t{}'.format(old_spatial_transformed))
-
-    # If we have 4 numbers separated by commas, transform them as GeoJSON
-    parts = old_spatial_transformed.strip().split(',')
-    if len(parts) == 4 and all(is_number(x) for x in parts):
-        minx, miny, maxx, maxy = parts
-        params = {"minx": minx, "miny": miny, "maxx": maxx, "maxy": maxy}
-        new_spatial = geojson_tpl.format(**params)
-        return new_spatial
-
-    if old_spatial is None:
-        return
+        return ''
 
     g = get_geo_from_string(old_spatial)
     return g
