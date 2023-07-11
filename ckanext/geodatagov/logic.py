@@ -476,7 +476,7 @@ def translate_spatial(old_spatial):
     try:
         numbers_with_spaces = [int(i) for i in old_spatial_transformed.split(' ')]
         if all(isinstance(x, int) for x in numbers_with_spaces):
-            old_spatial_transformed = 'null'
+            old_spatial_transformed = ''
     except ValueError:
         pass
 
@@ -502,10 +502,11 @@ def translate_spatial(old_spatial):
             return old_spatial_transformed
     except BaseException:
         log.info('JSON that could not be parsed\n\t{}'.format(old_spatial_transformed))
-        return ''
 
-    g = get_geo_from_string(old_spatial)
-    return g
+    try:
+        return get_geo_from_string(old_spatial)
+    except AttributeError:
+        return ''
 
 
 def is_number(s):
