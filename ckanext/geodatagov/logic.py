@@ -476,9 +476,17 @@ def translate_spatial(old_spatial):
     try:
         numbers_with_spaces = [int(i) for i in old_spatial_transformed.split(' ')]
         if all(isinstance(x, int) for x in numbers_with_spaces):
-            old_spatial_transformed = 'null'
+            old_spatial_transformed = ''
     except ValueError:
         pass
+
+    # If we have 4 numbers separated by commas, transform them as GeoJSON
+    parts = old_spatial_transformed.strip().split(',')
+    if len(parts) == 4 and all(is_number(x) for x in parts):
+        minx, miny, maxx, maxy = parts
+        params = {"minx": minx, "miny": miny, "maxx": maxx, "maxy": maxy}
+        new_spatial = geojson_tpl.format(**params)
+        return new_spatial
 
     # Analyze with type of data is JSON valid
     try:
@@ -494,18 +502,11 @@ def translate_spatial(old_spatial):
             return old_spatial_transformed
     except BaseException:
         log.info('JSON that could not be parsed\n\t{}'.format(old_spatial_transformed))
+
+    try:
+        return get_geo_from_string(old_spatial)
+    except AttributeError:
         return ''
-
-    # If we have 4 numbers separated by commas, transform them as GeoJSON
-    parts = old_spatial_transformed.strip().split(',')
-    if len(parts) == 4 and all(is_number(x) for x in parts):
-        minx, miny, maxx, maxy = parts
-        params = {"minx": minx, "miny": miny, "maxx": maxx, "maxy": maxy}
-        new_spatial = geojson_tpl.format(**params)
-        return new_spatial
-
-    g = get_geo_from_string(old_spatial)
-    return g
 
 
 def is_number(s):
