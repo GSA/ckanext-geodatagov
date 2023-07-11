@@ -10,7 +10,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name="ckanext-geodatagov",
-    version="0.1.37",
+    version="0.2.0",
     description="",
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -28,7 +28,7 @@ setup(
     zip_safe=False,
     install_requires=[
         # -*- Extra requirements: -*-
-        # 'ckanext-datajson',
+        'ckanext-datajson>=0.1.19',
         'boto3',
         'ply>=3.4',
     ],
