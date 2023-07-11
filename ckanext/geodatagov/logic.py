@@ -425,11 +425,15 @@ def rollup_save_action(context, data_dict):
                     old_spatial = 'United States'
 
                 new_spatial = translate_spatial(old_spatial)
-                if new_spatial is not None and new_spatial != '':
+                if new_spatial is not None:
                     log.info('New Spatial transformed {}'.format(new_spatial))
                     # add the real spatial
                     new_extras.append({'key': 'spatial', 'value': new_spatial})
                     # remove rolled spatial to skip run this process again
+                    new_extras_rollup['old-spatial'] = new_extras_rollup.pop('spatial')
+                else:
+                    log.info('New spatial could not be created')
+                    new_extras.append({'key': 'spatial', 'value': ''})
                     new_extras_rollup['old-spatial'] = new_extras_rollup.pop('spatial')
 
     if new_extras_rollup:
@@ -506,7 +510,9 @@ def translate_spatial(old_spatial):
     try:
         return get_geo_from_string(old_spatial)
     except AttributeError:
-        return ''
+        pass
+
+    return ''
 
 
 def is_number(s):

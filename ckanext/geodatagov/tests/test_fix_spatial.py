@@ -107,3 +107,54 @@ class TestSpatialField(object):
 
         assert result['count'] == 1
         assert result['results'][0]['id'] == dataset['id']
+
+    def test_spatial_plus_sign(self):
+
+        old_geo = '-179.231086,-14.601813,+179.859681,+71.441059'
+
+        context = {'user': self.user['name'], 'ignore_auth': True}
+        pkg = {
+            'title': 'Spatial Plus Sign',
+            'name': 'spatial-plus',
+            'extras': [
+                {'key': 'spatial', 'value': old_geo}
+            ]
+        }
+        dataset = p.toolkit.get_action('package_create')(context, pkg)
+
+        expected_spatial = ('{"type": "Polygon", "coordinates": [[[-179.231086, -14.601813], '
+                            '[-179.231086, 71.441059], [179.859681, 71.441059], [179.859681, '
+                            '-14.601813], [-179.231086, -14.601813]]]}')
+        spatial_extra_exists = False
+        for extra in dataset['extras']:
+            if extra['key'] == 'spatial':
+                spatial_extra_exists = True
+                assert extra['value'] == expected_spatial
+
+        assert spatial_extra_exists is True
+
+    def test_bad_string_transformation(self):
+
+        old_geo = 'US Domestic'
+        # require locations table to be installed
+
+        context = {'user': self.user['name'], 'ignore_auth': True}
+        pkg = {
+            'title': 'Spatial US Domestic',
+            'name': 'spatial-usd',
+            'extras': [
+                {'key': 'spatial', 'value': old_geo}
+            ]
+        }
+        dataset = p.toolkit.get_action('package_create')(context, pkg)
+
+        expected_spatial = ""
+        spatial_extra_exists = False
+        for extra in dataset['extras']:
+            if extra['key'] == 'spatial':
+                spatial_extra_exists = True
+                assert extra['value'] == expected_spatial
+            if extra['key'] == 'old-spatial':
+                assert extra['value'] == old_geo
+
+        assert spatial_extra_exists is True
