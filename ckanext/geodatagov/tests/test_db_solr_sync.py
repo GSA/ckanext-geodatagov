@@ -29,17 +29,17 @@ class TestSolrDBSync(object):
 
         organization = factories.Organization()
         self.dataset1 = factories.Dataset(owner_org=organization["id"])
+        add_harvest_object(self.dataset1)
         self.dataset2 = factories.Dataset(owner_org=organization["id"])
+        add_harvest_object(self.dataset2)
         self.dataset3 = factories.Dataset(owner_org=organization["id"])
+        add_harvest_object(self.dataset3)
         self.dataset4 = factories.Dataset(owner_org=organization["id"])
-        # 5 is dedicated for harvest_object_id testing
+        add_harvest_object(self.dataset4)
         self.dataset5 = factories.Dataset(owner_org=organization["id"])
-        dataset5_hoid = HarvestObject(
-            package_id=self.dataset5['id'],
-            job=create_harvest_job(),
-            current=True
-        )
-        dataset5_hoid.save()
+        ho5 = add_harvest_object(self.dataset5)
+        # dataset6 has no harvest object.
+        self.dataset6 = factories.Dataset(owner_org=organization["id"])
 
         search.rebuild()
 
@@ -91,23 +91,21 @@ class TestSolrDBSync(object):
 
         # Case 5 - changing harvest_object_id in DB makes Solr out of date
         # Solr starts with the same id as the current harvest_object.id
-        assert get_solr_hoid(self.dataset5['id']) == dataset5_hoid.id
+        assert get_solr_hoid(self.dataset5['id']) == ho5.id
 
         # mark the current harvest_object outdated
-        dataset5_hoid.current = False
-        dataset5_hoid.save()
+        ho5.current = False
+        ho5.save()
 
         # a new harvest_object with a new id.
-        new_dataset5_hoid = HarvestObject(
-            id='newid',
-            package_id=dataset5_hoid.package_id,
-            job=dataset5_hoid.job,
-            current=True
-        )
-        new_dataset5_hoid.save()
+        add_harvest_object(self.dataset5, "newid")
 
         # Solr is unaware of the new id
         assert get_solr_hoid(self.dataset5['id']) != 'newid'
+
+        # Case 6 - Remove dataset from SOLR
+        # different from case 1, dataset6 should be added back to index after script run
+        package_index.remove_dict({'id': self.dataset6["id"]})
 
     @pytest.fixture
     def cli_result(self):
@@ -136,6 +134,8 @@ class TestSolrDBSync(object):
         assert self.dataset4['id'] not in final_db and self.dataset4['id'] not in final_solr
 
         assert get_solr_hoid(self.dataset5['id']) == "newid"
+
+        assert self.dataset6['id'] in final_db and self.dataset6['id'] not in final_solr
 
 
 def get_active_db_ids():
@@ -227,3 +227,17 @@ def create_harvest_job():
     job.save()
 
     return job
+
+
+def add_harvest_object(dataset, id=None):
+
+    ho = HarvestObject(
+        package_id=dataset['id'],
+        job=create_harvest_job(),
+        current=True
+    )
+    if id:
+        ho.id = id
+
+    ho.save()
+    return ho

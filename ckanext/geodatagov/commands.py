@@ -16,7 +16,6 @@ import ckan
 import ckan.model as model
 import ckan.logic as logic
 import ckan.lib.munge as munge
-import ckan.lib.search as search
 from ckan import plugins as p
 from ckan.plugins.toolkit import config
 
@@ -100,11 +99,6 @@ class GeoGovCommand(p.SingletonPlugin):
             self.combine_feeds()
         if cmd == 'harvest-job-cleanup':
             self.harvest_job_cleanup()
-        if cmd == 'harvest-object-relink':
-            harvest_source_id = None
-            if len(self.args) == 2:
-                harvest_source_id = self.args[1]
-            self.harvest_object_relink(harvest_source_id)
         if cmd == 'export-csv':
             self.export_csv()
         # this code is defunct and will need to be refactored into cli.py
@@ -535,79 +529,6 @@ class GeoGovCommand(p.SingletonPlugin):
         if p.toolkit.check_ckan_version(min_version='2.8'):
             print('Task removed since new ckanext-harvest include ckan.harvest.timeout to mark as finished stuck jobs')
             return
-
-    def harvest_object_relink(self, harvest_source_id=None):
-        print('%s: Fix packages which lost harvest objects for harvest source %s.' %
-              (datetime.datetime.now(), harvest_source_id if harvest_source_id else 'all'))
-
-        pkgs_problematic = set()
-        # find packages that has no current harvest object
-        sql = '''
-            WITH package_with_current AS (
-                SELECT package_id FROM harvest_object WHERE current
-            )
-            SELECT distinct(p.id) FROM package p
-            JOIN harvest_object h ON p.id = h.package_id
-            LEFT JOIN package_with_current c ON p.id = c.package_id
-            WHERE p.state='active' AND p.type='dataset' AND c.package_id IS NULL
-        '''
-        if harvest_source_id:
-            sql += '''
-            AND
-                h.harvest_source_id = :harvest_source_id
-            '''
-            results = model.Session.execute(sql,
-                                            {'harvest_source_id': harvest_source_id})
-        else:
-            results = model.Session.execute(sql)
-
-        for row in results:
-            pkgs_problematic.add(row['id'])
-        total = len(pkgs_problematic)
-        print('%s packages to be fixed.' % total)
-
-        # set last complete harvest object to be current
-        sql = '''
-            UPDATE harvest_object
-            SET current = 't'
-            WHERE
-                package_id = :id
-            AND
-                state = 'COMPLETE'
-            AND
-                import_finished = (
-                    SELECT MAX(import_finished)
-                    FROM harvest_object
-                    WHERE
-                        state = 'COMPLETE'
-                    AND
-                        report_status <> 'deleted'
-                    AND
-                        package_id = :id
-                )
-            RETURNING 1
-        '''
-        count = 0
-        for id in pkgs_problematic:
-            result = model.Session.execute(sql, {'id': id}).fetchall()
-            model.Session.commit()
-            count = count + 1
-            if result:
-                print('%s: %s/%s id %s fixed. Now pushing to solr... ' % (datetime.datetime.now(), count, total, id))
-                try:
-                    search.rebuild(id)
-                except KeyboardInterrupt:
-                    print("Stopped.")
-                    return
-                except BaseException:
-                    raise
-                print('Done.')
-            else:
-                print('%s: %s/%s id %s has no valid harvest object. Need to inspect mannully. ' % (
-                    datetime.datetime.now(), count, total, id))
-
-        if not pkgs_problematic:
-            print('%s: All harvest objects look good. Nothing to do. ' % datetime.datetime.now())
 
     @staticmethod
     def export_group_and_tags(packages, domain='https://catalog.data.gov'):
