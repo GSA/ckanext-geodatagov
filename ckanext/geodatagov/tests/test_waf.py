@@ -9,8 +9,7 @@ from ckanext.geodatagov.harvesters.base import GeoDataGovWAFHarvester
 from factories import HarvestJobObj, WafHarvestSourceObj
 
 from ckan.tests.helpers import reset_db
-from ckan.tests.factories import Organization, Sysadmin
-
+from ckan.tests.factories import Organization, SysadminWithToken
 
 log = logging.getLogger(__name__)
 
@@ -197,7 +196,7 @@ class TestWafHarvester(object):
         bad_list = list(set(tag_list) - set(expected_list))
         log.info("Tags that are not trimmed: %s", bad_list)
 
-        assert (tag_list == expected_list)
+        assert (sorted(tag_list) == sorted(expected_list))
 
     def test_extras_rollup(self):
         """ Test https://github.com/GSA/datagov-deploy/issues/2166 """
@@ -211,7 +210,7 @@ class TestWafHarvester(object):
         assert extras_rollup
 
         log.info("extras_rollup package info: %s", package)
-        sysadmin = Sysadmin(name='testUpdate')
+        sysadmin = SysadminWithToken()
         user_name = sysadmin['name']
         context = {'user': user_name}
         new_extras = [{'key': key, 'value': value} for key, value in list(extras.items())]

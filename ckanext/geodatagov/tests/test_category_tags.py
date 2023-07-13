@@ -34,7 +34,7 @@ class TestCategoryTags(object):
         self.group2 = factories.Group()
         self.dataset1 = factories.Dataset(owner_org=organization['id'], groups=[{"name": self.group1["name"]}])
         self.dataset2 = factories.Dataset(owner_org=organization['id'], groups=[{"name": self.group2["name"]}])
-        sysadmin = factories.Sysadmin(name='testUpdate')
+        sysadmin = factories.SysadminWithToken()
         self.user_name = sysadmin['name']
 
     def test_group_catagory_tag_update(self):

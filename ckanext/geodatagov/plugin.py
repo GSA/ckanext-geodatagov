@@ -405,53 +405,6 @@ class Demo(p.SingletonPlugin):
 
     edit_url = None
 
-    UPDATE_CATEGORY_ACTIONS = ['package_update', 'dataset_update']
-    ROLLUP_SAVE_ACTIONS = ['package_create', 'dataset_create', 'package_update', 'dataset_update']
-
-    # source ignored as queried diretly
-    EXTRAS_ROLLUP_KEY_IGNORE = ["metadata-source", "tags", "extras_rollup"]
-
-    def before_action(self, action_name, context, data_dict):
-        """ before_action is a hook in CKAN 2.3 for ALL actions
-            This not exists at CKAN 2.8 and chained action do not exists at CKAN 2.3 """
-        log.info('before_action CKAN {} {} {} {}'.format(ckan_version, action_name, context, data_dict))
-        if action_name in self.UPDATE_CATEGORY_ACTIONS:
-            pkg_dict = p.toolkit.get_action('package_show')(context, {'id': data_dict['id']})
-            if 'groups' not in data_dict:
-                data_dict['groups'] = pkg_dict.get('groups', [])
-            cats = {}
-            for extra in pkg_dict.get('extras', []):
-                if extra['key'].startswith('__category_tag_'):
-                    cats[extra['key']] = extra['value']
-            extras = data_dict.get('extras', [])
-            for item in extras:
-                if item['key'] in cats:
-                    del cats[item['key']]
-            for cat in cats:
-                extras.append({'key': cat, 'value': cats[cat]})
-
-        # make sure rollup happens after any other actions
-        if action_name in self.ROLLUP_SAVE_ACTIONS:
-            extras_rollup = {}
-            new_extras = []
-            for extra in data_dict.get('extras', []):
-                if extra['key'] in self.EXTRAS_ROLLUP_KEY_IGNORE:
-                    new_extras.append(extra)
-                else:
-                    extras_rollup[extra['key']] = extra['value']
-            if extras_rollup:
-                found_extras_rollup = False
-                for new_extra in new_extras:
-                    if new_extra['key'] == "extras_rollup":
-                        # Update extras_rollup
-                        new_extra['value'] = json.dumps(extras_rollup)
-                        found_extras_rollup = True
-                if not found_extras_rollup:
-                    # Insert extras_rollup if not found
-                    new_extras.append({'key': 'extras_rollup',
-                                       'value': json.dumps(extras_rollup)})
-            data_dict['extras'] = new_extras
-
     def configure(self, config):
         log.info('plugin initialized: %s', self.__class__.__name__)
         self.__class__.edit_url = config.get('saml2.user_edit')
@@ -462,7 +415,7 @@ class Demo(p.SingletonPlugin):
 
     # IPackageController
 
-    def before_view(self, pkg_dict):
+    def before_dataset_view(self, pkg_dict):
 
         for num, extra in enumerate(pkg_dict.get('extras', [])):
             if extra['key'] == 'tags':
@@ -487,7 +440,7 @@ class Demo(p.SingletonPlugin):
 
         return pkg_dict
 
-    def before_index(self, pkg_dict):
+    def before_dataset_index(self, pkg_dict):
 
         tags = pkg_dict.get('tags', [])
         tags.extend(tag for tag in split_tags(pkg_dict.get('extras_tags', '')))
@@ -522,7 +475,7 @@ class Demo(p.SingletonPlugin):
 
         return pkg_dict
 
-    def before_search(self, search_params):
+    def before_dataset_search(self, search_params):
 
         fq = search_params.get('fq', '')
 
@@ -549,7 +502,7 @@ class Demo(p.SingletonPlugin):
         search_params['fq'] = fq
         return search_params
 
-    def after_show(self, context, data_dict):
+    def after_dataset_show(self, context, data_dict):
 
         current_extras = data_dict.get('extras', [])
         new_extras = []
@@ -635,7 +588,6 @@ class Miscs(p.SingletonPlugin):
     '''
     p.implements(p.IConfigurer)
     p.implements(p.IConfigurable)
-    p.implements(p.IRoutes, inherit=True)
     p.implements(p.IBlueprint)
 
     # IConfigurer

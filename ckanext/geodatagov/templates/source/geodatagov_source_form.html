@@ -1,6 +1,6 @@
 {% extends 'source/new_source_form.html' %}
 {% import 'macros/form.html' as form %}
-{% resource 'harvest-extra-field/main' %}
+{% asset 'harvest-extra-field/main' %}
 
 {% block extra_config %}
 
@@ -19,7 +19,7 @@
 
 {% set validator_profiles = source_config.get('validator_profiles') or data.validator_profiles %}
 {% set validator_schema = source_config.get('validator_schema') or data.validator_schema %}
-  <div data-module="reclinepreview" data-module-site_url="{{ h.dump_json(h.url('/', locale='default', qualified=true)) }}">
+  <div data-module="reclinepreview" data-module-site_url="{{ g.site_url }}">
          <div class="harvest-types form-group control-group">
            <label class="control-label">Validation</label>
            <div class="controls">

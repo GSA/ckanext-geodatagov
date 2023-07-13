@@ -61,3 +61,7 @@ def get_harvest_source_config(harvester_id):
 def get_collection_package(collection_package_id):
     package = p.toolkit.get_action('package_show')({}, {'id': collection_package_id})
     return package
+
+
+def string(value):
+    return str(value)

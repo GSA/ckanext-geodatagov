@@ -25,7 +25,7 @@ class TestLogic(FunctionalTestBase):
             ],
             extras=[])
 
-        sysadmin = factories.Sysadmin(name='testUpdate')
+        sysadmin = factories.SysadminWithToken()
         self.user_name = sysadmin['name']
 
     def test_rollup_save_action(self):

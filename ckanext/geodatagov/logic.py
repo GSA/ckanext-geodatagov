@@ -6,6 +6,7 @@ import re
 import time
 import uuid
 
+from ckan.lib.navl.validators import not_empty
 from ckan.logic import side_effect_free
 import ckan.logic.schema as schema
 from ckan.logic.action import get as core_get
@@ -13,6 +14,7 @@ import ckan.model as model
 import ckan.plugins as p
 from ckanext.geodatagov.plugin import change_resource_details, split_tags
 from ckanext.geodatagov.harvesters.arcgis import _slugify
+from ckanext.geodatagov.helpers import string
 from ckanext.harvest.model import HarvestObject  # , HarvestJob
 
 from ckan.common import config
@@ -238,7 +240,7 @@ def datajson_create(context, data_dict):
              'extras': [{'key': 'organization_type', 'value': "Federal Government"}]})
 
     context['schema'] = schema.default_create_package_schema()
-    context['schema']['id'] = [p.toolkit.get_validator('not_empty')]
+    context['schema']['id'] = [not_empty]
     context['return_id_only'] = True
     return p.toolkit.get_action('package_create')(context, new_package)
 
@@ -303,7 +305,7 @@ def doi_create(context, data_dict):
     new_package["extras"].append({"key": "harvest_object_id", "value": obj.id})
 
     context['schema'] = schema.default_create_package_schema()
-    context['schema']['id'] = [p.toolkit.get_validator('not_empty')]
+    context['schema']['id'] = [not_empty]
     context['return_id_only'] = True
     p.toolkit.get_action('package_create')(context, new_package)
     print(str(datetime.datetime.now()) + ' Imported doi id ' + new_package['id'])
@@ -413,7 +415,7 @@ def rollup_save_action(context, data_dict):
     if p.toolkit.check_ckan_version(min_version='2.8'):
         search_backend = config.get('ckanext.spatial.search_backend', 'postgis')
         log.debug('Search backend {}'.format(search_backend))
-        if search_backend == 'solr':
+        if search_backend == 'solr-bbox':
             old_spatial = new_extras_rollup.get('spatial', None)
             if old_spatial is not None:
                 log.info('Old Spatial found {}'.format(old_spatial))
@@ -428,6 +430,10 @@ def rollup_save_action(context, data_dict):
                     # add the real spatial
                     new_extras.append({'key': 'spatial', 'value': new_spatial})
                     # remove rolled spatial to skip run this process again
+                    new_extras_rollup['old-spatial'] = new_extras_rollup.pop('spatial')
+                else:
+                    log.info('New spatial could not be created')
+                    new_extras.append({'key': 'spatial', 'value': ''})
                     new_extras_rollup['old-spatial'] = new_extras_rollup.pop('spatial')
 
     if new_extras_rollup:
@@ -474,9 +480,17 @@ def translate_spatial(old_spatial):
     try:
         numbers_with_spaces = [int(i) for i in old_spatial_transformed.split(' ')]
         if all(isinstance(x, int) for x in numbers_with_spaces):
-            old_spatial_transformed = 'null'
+            old_spatial_transformed = ''
     except ValueError:
         pass
+
+    # If we have 4 numbers separated by commas, transform them as GeoJSON
+    parts = old_spatial_transformed.strip().split(',')
+    if len(parts) == 4 and all(is_number(x) for x in parts):
+        minx, miny, maxx, maxy = parts
+        params = {"minx": minx, "miny": miny, "maxx": maxx, "maxy": maxy}
+        new_spatial = geojson_tpl.format(**params)
+        return new_spatial
 
     # Analyze with type of data is JSON valid
     try:
@@ -492,18 +506,13 @@ def translate_spatial(old_spatial):
             return old_spatial_transformed
     except BaseException:
         log.info('JSON that could not be parsed\n\t{}'.format(old_spatial_transformed))
+
+    try:
+        return get_geo_from_string(old_spatial)
+    except AttributeError:
         pass
 
-    # If we have 4 numbers separated by commas, transform them as GeoJSON
-    parts = old_spatial_transformed.strip().split(',')
-    if len(parts) == 4 and all(is_number(x) for x in parts):
-        minx, miny, maxx, maxy = parts
-        params = {"minx": minx, "miny": miny, "maxx": maxx, "maxy": maxy}
-        new_spatial = geojson_tpl.format(**params)
-        return new_spatial
-
-    g = get_geo_from_string(old_spatial)
-    return g
+    return ''
 
 
 def is_number(s):
@@ -541,6 +550,10 @@ def package_create(up_func, context, data_dict):
     """ before_package_create for CKAN 2.8 """
     rollup_save_action(context, data_dict)
     data_dict = fix_dataset(data_dict)
+    # TODO: This fix is bad, find a better one :(
+    if 'schema' in context.keys():
+        context['schema']['id'] = [string]
+        context['schema']['tags']['name'] = [not_empty, string]
     return up_func(context, data_dict)
 
 

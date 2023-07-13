@@ -13,6 +13,7 @@ from ckanext.geodatagov.harvesters.base import (
 )  # , validate_profiles; , validate_profiles
 from ckanext.harvest.model import HarvestObject
 from ckanext.harvest.model import HarvestObjectExtra as HOExtra
+from ckanext.geodatagov.helpers import string
 
 
 class WAFCollectionHarvester(GeoDataGovWAFHarvester):
@@ -26,7 +27,7 @@ class WAFCollectionHarvester(GeoDataGovWAFHarvester):
 
     def extra_schema(self):
         extra_schema = super(WAFCollectionHarvester, self).extra_schema()
-        extra_schema["collection_metadata_url"] = [not_empty, str]
+        extra_schema["collection_metadata_url"] = [not_empty, string]
         log.debug(
             "Getting extra schema for WAFCollectionHarvester: {}".format(extra_schema)
         )

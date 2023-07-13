@@ -17,6 +17,7 @@ from ckan.lib.navl.validators import not_empty, convert_int, ignore_empty
 from ckan.logic.validators import boolean_validator
 
 from ckan.plugins.toolkit import add_template_directory, add_resource, requires_ckan_version
+from ckanext.geodatagov.helpers import string
 
 requires_ckan_version("2.9")
 
@@ -43,7 +44,7 @@ class Z3950Harvester(GeoDataGovHarvester, SingletonPlugin):
 
     def extra_schema(self):
         return {'private_datasets': [ignore_empty, boolean_validator],
-                'database': [not_empty, str],
+                'database': [not_empty, string],
                 'port': [not_empty, convert_int]}
 
     def gather_stage(self, harvest_job):

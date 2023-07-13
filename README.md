@@ -34,11 +34,12 @@ This extension is compatible with these versions of CKAN.
 CKAN version | Compatibility
 ------------ | -------------
 <=2.8        | no
-2.9          | [complete](https://github.com/GSA/datagov-ckan-multi/issues/570)
+2.9          | 0.1.37 (last supported)
+2.10         | >=0.2.0
 
 ## Tests
 
-All the tests live in the [/ckanext/geodatagov/tests](/ckanext/geodatagov/tests) folder. [Github actions](https://github.com/GSA/ckanext-geodatagov/blob/main/.github/workflows/test.yml) is configured to run the tests against CKAN 2.9 when you open a pull request.
+All the tests live in the [/ckanext/geodatagov/tests](/ckanext/geodatagov/tests) folder. [Github actions](https://github.com/GSA/ckanext-geodatagov/blob/main/.github/workflows/test.yml) is configured to run the tests against CKAN 2.10 when you open a pull request.
 
 ## Using the Docker Dev Environment
 
@@ -61,7 +62,7 @@ To docker exec into the CKAN image, run:
 ### Testing
 
 They follow the guidelines for [testing CKAN
-extensions](https://docs.ckan.org/en/2.9/extensions/testing-extensions.html#testing-extensions).
+extensions](https://docs.ckan.org/en/2.10/extensions/testing-extensions.html#testing-extensions).
 
 To run the extension tests, start the containers with `make up`, then:
 
@@ -100,7 +101,7 @@ In order to support multiple versions of CKAN, or even upgrade to new versions
 of CKAN, we support development and testing through the `CKAN_VERSION`
 environment variable.
 
-    $ make CKAN_VERSION=2.9 test
+    $ make CKAN_VERSION=2.10 test
 
 ### Command line interface
 
