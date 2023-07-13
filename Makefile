@@ -1,4 +1,4 @@
-CKAN_VERSION ?= 2.10
+CKAN_VERSION ?= 2.10.1
 COMPOSE_FILE ?= docker-compose.yml
 
 build: ## Build the docker containers
