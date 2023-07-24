@@ -12,7 +12,8 @@ ADD \
 
 ENV CLASSPATH=${CLASSPATH}:/usr/lib/jvm/java-11-openjdk/saxon/saxon.jar
 
-RUN pip install --upgrade pip
+# Pinned for build issue: https://stackoverflow.com/a/76044568
+RUN pip install pip==23.1.1
 
 COPY . $APP_DIR/
 

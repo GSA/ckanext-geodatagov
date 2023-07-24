@@ -66,7 +66,6 @@ class Sitemap:
         self.write_xml('<?xml version="1.0" encoding="UTF-8"?>')
         if index:
             self.write_xml('<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
-
         else:
             self.write_xml('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
 
