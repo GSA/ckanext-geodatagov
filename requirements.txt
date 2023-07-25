@@ -14,7 +14,6 @@ pyOpenSSL>22.10 #pinning to fix error with crypto (https://levelup.gitconnected.
 # ckantoolkit # included as dep of ckanext-harvest
 GeoAlchemy2==0.5.0
 Shapely>=1.2.13
-pyproj==3.4.1
 OWSLib==0.28.1
 lxml>=2.3
 argparse
