@@ -73,7 +73,7 @@ class Sitemap:
 class SitemapData(Sitemap):
 
     def __init__(self, file_num: str, start: int, page_size: int) -> None:
-        super(SitemapIndex, self).__init__(file_num, start, page_size)
+        super().__init__(file_num, start, page_size)
         self.filename_s3 = f"sitemap/sitemap-{file_num}.xml"
 
     def write_pkgs(self, package_query: GeoPackageSearchQuery) -> None:
@@ -98,7 +98,7 @@ class SitemapData(Sitemap):
 class SitemapIndex(Sitemap):
 
     def __init__(self, file_num: str, start: int, page_size: int) -> None:
-        super(SitemapIndex, self).__init__(file_num, start, page_size)
+        super().__init__(file_num, start, page_size)
         self.filename_s3 = "sitemap.xml"
 
     def write_table_of_contents(self, number_of_sitemaps):
@@ -114,7 +114,7 @@ class SitemapIndex(Sitemap):
         for file_num in range(number_of_sitemaps):
             # add sitemaps to sitemap index file
             self.write_xml("<sitemap>")
-            loc = f"{CKAN_SITE_URL}/sitemap/sitemap-{file_num}.xml"
+            loc = f"{config.get('ckan.site_url')}/sitemap/sitemap-{file_num}.xml"
             self.write_xml(f"<loc>{loc}</loc>")
             self.write_xml(f"<lastmod>{current_time}</lastmod>")
             self.write_xml("</sitemap>")
@@ -276,8 +276,8 @@ def sitemap_to_s3(upload_to_s3: bool, page_size: int, max_per_page: int):
             get_s3()
             upload_sitemap_file(sitemap)
         else:
-            log.info("Skip upload and finish.")
-            print(f"Done locally: Sitemap {file_num}\n{json.dumps(sitemap.to_json(), indent=4)}")
+            log.info(f"Skip upload and return local copy of sitemap {file_num}.")
+            print(json.dumps(sitemap.to_json(), indent=4))
 
 
 def _normalize_type(_type):
