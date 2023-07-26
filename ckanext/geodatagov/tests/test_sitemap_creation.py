@@ -53,7 +53,7 @@ class TestSitemapExport(object):
         # the example output I have only has one element in it,
         # this and _handle_cli_output will need to be updated for examples with more elements
         # checks only one list element in output string
-        assert cli_result.output.count("file_num") == 2
+        assert cli_result.output.count("file_num") == 1
 
     @staticmethod
     def _handle_cli_output(cli_result: Result) -> list:
@@ -126,7 +126,7 @@ class TestSitemapExport(object):
                     else:
                         raise Exception("Unexpected tag")
 
-        assert files == 2
+        assert files == 1
         assert datasets >= 4  # at least this four
         assert dataset1_found
         assert dataset2_found
