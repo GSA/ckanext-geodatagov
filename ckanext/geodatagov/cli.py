@@ -200,6 +200,8 @@ def upload_to_key(upload_str: str, filename_on_s3: str) -> None:
         else:
             log.error(f"File {filename_on_s3} upload failed. Error: {resp_metadata}")
 
+    del temp_file
+
 
 def upload_sitemap_file(sitemap: list) -> None:
     """Handles uploading sitemap files to s3"""
