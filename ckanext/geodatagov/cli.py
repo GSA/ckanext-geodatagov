@@ -233,7 +233,6 @@ def sitemap_to_s3(upload_to_s3: bool, page_size: int, max_per_page: int):
         return
 
     start = 0
-    file_num = 1
 
     num_of_pages = (count // page_size) + 1
 
@@ -251,7 +250,7 @@ def sitemap_to_s3(upload_to_s3: bool, page_size: int, max_per_page: int):
             {S3_ENDPOINT_URL}/{BUCKET_NAME}/{sitemap_index.filename_s3}"
         )
 
-    for _ in range(num_of_pages):
+    for file_num in range(1, num_of_pages + 1):
         sitemap = SitemapData(str(file_num), start, page_size)
         sitemap.write_sitemap_header()
         sitemap.write_pkgs(package_query)
@@ -269,15 +268,15 @@ def sitemap_to_s3(upload_to_s3: bool, page_size: int, max_per_page: int):
         log.info(f"done with {sitemap.filename_s3}.")
 
         start += page_size
-        file_num += 1
 
         if upload_to_s3:
-            log.info("Uploading {sitemap.filename_s3}...")
-            get_s3()
+            log.info(f"Uploading {sitemap.filename_s3}...")
             upload_sitemap_file(sitemap)
         else:
             log.info(f"Skip upload and return local copy of sitemap {file_num}.")
             print(json.dumps(sitemap.to_json(), indent=4))
+
+        del sitemap
 
 
 def _normalize_type(_type):
