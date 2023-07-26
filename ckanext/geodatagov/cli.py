@@ -105,11 +105,6 @@ class SitemapIndex(Sitemap):
         current_time = datetime.datetime.now().strftime("%Y-%m-%d")
 
         log.info("Creating sitemap index...")
-        # write sitemap index
-        self.write_xml('<?xml version="1.0" encoding="UTF-8"?>')
-        self.write_xml(
-            '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
-        )
 
         for file_num in range(number_of_sitemaps):
             # add sitemaps to sitemap index file
