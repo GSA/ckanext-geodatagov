@@ -243,13 +243,13 @@ def sitemap_to_s3(upload_to_s3: bool, page_size: int, max_per_page: int):
     sitemap_index.write_table_of_contents(num_of_pages)
 
     if upload_to_s3:
+        # set global S3 object and vars
+        get_s3()
+        upload_to_key(sitemap_index.xml, sitemap_index.filename_s3)
         log.info(
             f"Sitemap index upload complete to: \
             {S3_ENDPOINT_URL}/{BUCKET_NAME}/{sitemap_index.filename_s3}"
         )
-        # set global S3 object and vars
-        get_s3()
-        upload_to_key(sitemap_index.xml, sitemap_index.filename_s3)
 
     for _ in range(num_of_pages):
         sitemap = SitemapData(str(file_num), start, page_size)
