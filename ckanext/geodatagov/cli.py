@@ -249,10 +249,15 @@ def sitemap_to_s3(upload_to_s3: bool, page_size: int, max_per_page: int):
         )
 
     for file_num in range(14, 38):
+        log.info('a')
         sitemap = SitemapData(str(file_num), start, page_size)
+        log.info('b')
         sitemap.write_sitemap_header()
+        log.info('c')
         sitemap.write_pkgs(package_query)
+        log.info('d')
         sitemap.write_sitemap_footer()
+        log.info('e')
 
         log.info(
             f"{start+1} to {min(start + page_size, count)} of {count} records done."
