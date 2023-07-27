@@ -12,7 +12,11 @@ ADD \
 
 ENV CLASSPATH=${CLASSPATH}:/usr/lib/jvm/java-11-openjdk/saxon/saxon.jar
 
+# Pinned for build issue: https://github.com/pyproj4/pyproj/issues/1321
 RUN pip install --upgrade pip
+# RUN python3 -m pip install 'cython<3'
+# RUN python3 -m pip install --no-use-pep517 pyproj==3.4.1
+RUN python3 -m pip install pyproj@git+https://github.com/pyproj4/pyproj.git@main
 
 COPY . $APP_DIR/
 

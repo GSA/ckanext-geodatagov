@@ -46,14 +46,9 @@ def datagovs3():
 
 
 class Sitemap:
-    """Sitemap object
-
-    Accepts file_num, start, page_size
-    """
 
     def __init__(self, file_num: str, start: int, page_size: int) -> None:
         self.file_num = file_num
-        self.filename_s3 = f"sitemap/sitemap-{file_num}.xml"
         self.start = start
         self.page_size = page_size
         self.xml = ""
@@ -64,9 +59,22 @@ class Sitemap:
         else:
             self.xml += some_xml
 
-    def write_sitemap_header(self) -> None:
+    def to_json(self) -> str:
+        return json.dumps(self, default=lambda o: o.__dict__)
+
+    def write_sitemap_header(self, index=False) -> None:
         self.write_xml('<?xml version="1.0" encoding="UTF-8"?>')
-        self.write_xml('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
+        if index:
+            self.write_xml('<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
+        else:
+            self.write_xml('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
+
+
+class SitemapData(Sitemap):
+
+    def __init__(self, file_num: str, start: int, page_size: int) -> None:
+        super().__init__(file_num, start, page_size)
+        self.filename_s3 = f"sitemap/sitemap-{file_num}.xml"
 
     def write_pkgs(self, package_query: GeoPackageSearchQuery) -> None:
 
@@ -86,8 +94,26 @@ class Sitemap:
     def write_sitemap_footer(self) -> None:
         self.write_xml("</urlset>")
 
-    def to_json(self) -> str:
-        return json.dumps(self, default=lambda o: o.__dict__)
+
+class SitemapIndex(Sitemap):
+
+    def __init__(self, file_num: str, start: int, page_size: int) -> None:
+        super().__init__(file_num, start, page_size)
+        self.filename_s3 = "sitemap.xml"
+
+    def write_table_of_contents(self, number_of_sitemaps):
+        current_time = datetime.datetime.now().strftime("%Y-%m-%d")
+
+        log.info("Creating sitemap index...")
+
+        for file_num in range(number_of_sitemaps):
+            # add sitemaps to sitemap index file
+            self.write_xml("<sitemap>")
+            loc = f"{config.get('ckan.site_url')}/sitemap/sitemap-{file_num}.xml"
+            self.write_xml(f"<loc>{loc}</loc>")
+            self.write_xml(f"<lastmod>{current_time}</lastmod>")
+            self.write_xml("</sitemap>")
+        self.write_xml("</sitemapindex>")
 
 
 def get_s3() -> None:
@@ -174,47 +200,18 @@ def upload_to_key(upload_str: str, filename_on_s3: str) -> None:
         else:
             log.error(f"File {filename_on_s3} upload failed. Error: {resp_metadata}")
 
-
-def upload_sitemap_index(sitemaps: list) -> None:
-    """Creates and uploads sitemap index xml file"""
-
-    current_time = datetime.datetime.now().strftime("%Y-%m-%d")
-    sitemap_index = Sitemap("index", 0, 0)
-    sitemap_index.filename_s3 = "sitemap.xml"
-
-    log.info("Creating sitemap index...")
-    # write sitemap index
-    sitemap_index.write_xml('<?xml version="1.0" encoding="UTF-8"?>')
-    sitemap_index.write_xml(
-        '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
-    )
-
-    for sitemap in sitemaps:
-        # add sitemaps to sitemap index file
-        sitemap_index.write_xml("<sitemap>")
-        loc = f"{CKAN_SITE_URL}/{sitemap.filename_s3}"
-        sitemap_index.write_xml(f"<loc>{loc}</loc>")
-        sitemap_index.write_xml(f"<lastmod>{current_time}</lastmod>")
-        sitemap_index.write_xml("</sitemap>")
-    sitemap_index.write_xml("</sitemapindex>")
-
-    upload_to_key(sitemap_index.xml, sitemap_index.filename_s3)
-    log.info(
-        f"Sitemap index upload complete to: \
-        {S3_ENDPOINT_URL}/{BUCKET_NAME}/{sitemap_index.filename_s3}"
-    )
+    del temp_file
 
 
-def upload_sitemap_files(sitemaps: list) -> None:
+def upload_sitemap_file(sitemap: list) -> None:
     """Handles uploading sitemap files to s3"""
 
-    log.info(f"Uploading {len(sitemaps)} sitemap files...")
-    for sitemap in sitemaps:
-        upload_to_key(sitemap.xml, sitemap.filename_s3)
-        log.info(
-            f"Sitemap file {sitemap.filename_s3} upload complete to: \
-            {S3_ENDPOINT_URL}/{BUCKET_NAME}/{sitemap.filename_s3}"
-        )
+    log.info("Uploading sitemap file...")
+    upload_to_key(sitemap.xml, sitemap.filename_s3)
+    log.info(
+        f"Sitemap file {sitemap.filename_s3} upload complete to: \
+        {S3_ENDPOINT_URL}/{BUCKET_NAME}/{sitemap.filename_s3}"
+    )
 
 
 @geodatagov.command()
@@ -233,12 +230,25 @@ def sitemap_to_s3(upload_to_s3: bool, page_size: int, max_per_page: int):
         return
 
     start = 0
-    file_num = 1
-    sitemaps = []
 
-    paginations = (count // page_size) + 1
-    for _ in range(paginations):
-        sitemap = Sitemap(str(file_num), start, page_size)
+    num_of_pages = (count // page_size) + 1
+
+    # Create + Upload Sitemap Index File
+    sitemap_index = SitemapIndex("index", 0, 0)
+    sitemap_index.write_sitemap_header(index=True)
+    sitemap_index.write_table_of_contents(num_of_pages)
+
+    if upload_to_s3:
+        # set global S3 object and vars
+        get_s3()
+        upload_to_key(sitemap_index.xml, sitemap_index.filename_s3)
+        log.info(
+            f"Sitemap index upload complete to: \
+            {S3_ENDPOINT_URL}/{BUCKET_NAME}/{sitemap_index.filename_s3}"
+        )
+
+    for file_num in range(1, num_of_pages + 1):
+        sitemap = SitemapData(str(file_num), start, page_size)
         sitemap.write_sitemap_header()
         sitemap.write_pkgs(package_query)
         sitemap.write_sitemap_footer()
@@ -253,22 +263,17 @@ def sitemap_to_s3(upload_to_s3: bool, page_size: int, max_per_page: int):
         # 597610699434bde9415a48ed0b1085bfa0e9720f/ckanext/geodatagov/cli.py#L183
 
         log.info(f"done with {sitemap.filename_s3}.")
-        sitemaps.append(sitemap)
 
         start += page_size
-        file_num += 1
 
-    if upload_to_s3:
-        log.info("Starting S3 uploads...")
-        # set global S3 object and vars
-        get_s3()
+        if upload_to_s3:
+            log.info(f"Uploading {sitemap.filename_s3}...")
+            upload_sitemap_file(sitemap)
+        else:
+            log.info(f"Skip upload and return local copy of sitemap {file_num}.")
+            print(json.dumps(sitemap.to_json(), indent=4))
 
-        upload_sitemap_index(sitemaps)
-        upload_sitemap_files(sitemaps)
-    else:
-        log.info("Skip upload and finish.")
-        dump = [sitemap.to_json() for sitemap in sitemaps]
-        print(f"Done locally: Sitemap list\n{json.dumps(dump, indent=4)}")
+        del sitemap
 
 
 def _normalize_type(_type):
