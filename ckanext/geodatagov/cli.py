@@ -247,7 +247,7 @@ def sitemap_to_s3(upload_to_s3: bool, page_size: int, max_per_page: int):
             {S3_ENDPOINT_URL}/{BUCKET_NAME}/{sitemap_index.filename_s3}"
         )
 
-    for file_num in range(1, num_of_pages + 1):
+    for file_num in range(14, 38):
         sitemap = SitemapData(str(file_num), start, page_size)
         sitemap.write_sitemap_header()
         sitemap.write_pkgs(package_query)
