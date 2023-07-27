@@ -6,7 +6,6 @@ import json
 import logging
 import sys
 import tempfile
-import time
 import warnings
 from typing import Optional
 
@@ -27,7 +26,7 @@ from ckanext.harvest.model import HarvestJob, HarvestObject
 # default constants
 #   for sitemap_to_s3
 UPLOAD_TO_S3 = True
-PAGE_SIZE = 10000
+PAGE_SIZE = 5000
 MAX_PER_PAGE = 50000
 #   for db_solr_sync
 _INDICES = {"package": PackageSearchIndex}
@@ -202,7 +201,6 @@ def upload_to_key(upload_str: str, filename_on_s3: str) -> None:
             log.error(f"File {filename_on_s3} upload failed. Error: {resp_metadata}")
 
     del temp_file
-    time.sleep(30)
 
 
 def upload_sitemap_file(sitemap: list) -> None:
@@ -231,7 +229,7 @@ def sitemap_to_s3(upload_to_s3: bool, page_size: int, max_per_page: int):
         log.info("Nothing to process, exiting.")
         return
 
-    start = 140000
+    start = 150000
 
     num_of_pages = (count // page_size) + 1
 
@@ -249,7 +247,7 @@ def sitemap_to_s3(upload_to_s3: bool, page_size: int, max_per_page: int):
             {S3_ENDPOINT_URL}/{BUCKET_NAME}/{sitemap_index.filename_s3}"
         )
 
-    for file_num in range(14, 38):
+    for file_num in range(16, 76):
         sitemap = SitemapData(str(file_num), start, page_size)
         sitemap.write_sitemap_header()
         sitemap.write_pkgs(package_query)
@@ -276,7 +274,6 @@ def sitemap_to_s3(upload_to_s3: bool, page_size: int, max_per_page: int):
             print(json.dumps(sitemap.to_json(), indent=4))
 
         del sitemap
-        time.sleep(30)
 
 
 def _normalize_type(_type):
