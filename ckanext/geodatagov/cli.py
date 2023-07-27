@@ -81,7 +81,8 @@ class SitemapData(Sitemap):
         pkgs = package_query.get_paginated_entity_name_modtime(
             max_results=self.page_size, start=self.start
         )
-        for pkg in pkgs:
+        for i, pkg in enumerate(pkgs):
+            log.info((i, pkg))
             self.write_xml("<url>")
             self.write_xml(
                 f"<loc>{config.get('ckan.site_url')}/dataset/{pkg.get('name')}</loc>"
