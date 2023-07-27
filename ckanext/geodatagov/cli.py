@@ -229,7 +229,7 @@ def sitemap_to_s3(upload_to_s3: bool, page_size: int, max_per_page: int):
         log.info("Nothing to process, exiting.")
         return
 
-    start = 0
+    start = 140000
 
     num_of_pages = (count // page_size) + 1
 
