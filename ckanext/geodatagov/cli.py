@@ -248,7 +248,7 @@ def sitemap_to_s3(upload_to_s3: bool, page_size: int, max_per_page: int):
             {S3_ENDPOINT_URL}/{BUCKET_NAME}/{sitemap_index.filename_s3}"
         )
 
-    for file_num in range(14, 38):
+    for file_num in range(14, 10000):
         log.info('a')
         sitemap = SitemapData(str(file_num), start, page_size)
         log.info('b')
