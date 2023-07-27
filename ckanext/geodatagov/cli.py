@@ -26,7 +26,7 @@ from ckanext.harvest.model import HarvestJob, HarvestObject
 # default constants
 #   for sitemap_to_s3
 UPLOAD_TO_S3 = True
-PAGE_SIZE = 10000
+PAGE_SIZE = 100
 MAX_PER_PAGE = 50000
 #   for db_solr_sync
 _INDICES = {"package": PackageSearchIndex}
@@ -230,7 +230,7 @@ def sitemap_to_s3(upload_to_s3: bool, page_size: int, max_per_page: int):
         log.info("Nothing to process, exiting.")
         return
 
-    start = 140000
+    start = 160000
 
     num_of_pages = (count // page_size) + 1
 
