@@ -6,6 +6,7 @@ import json
 import logging
 import sys
 import tempfile
+import time
 import warnings
 from typing import Optional
 
@@ -201,6 +202,7 @@ def upload_to_key(upload_str: str, filename_on_s3: str) -> None:
             log.error(f"File {filename_on_s3} upload failed. Error: {resp_metadata}")
 
     del temp_file
+    time.sleep(30)
 
 
 def upload_sitemap_file(sitemap: list) -> None:
@@ -229,7 +231,7 @@ def sitemap_to_s3(upload_to_s3: bool, page_size: int, max_per_page: int):
         log.info("Nothing to process, exiting.")
         return
 
-    start = 0
+    start = 140000
 
     num_of_pages = (count // page_size) + 1
 
@@ -247,7 +249,7 @@ def sitemap_to_s3(upload_to_s3: bool, page_size: int, max_per_page: int):
             {S3_ENDPOINT_URL}/{BUCKET_NAME}/{sitemap_index.filename_s3}"
         )
 
-    for file_num in range(1, num_of_pages + 1):
+    for file_num in range(14, 38):
         sitemap = SitemapData(str(file_num), start, page_size)
         sitemap.write_sitemap_header()
         sitemap.write_pkgs(package_query)
@@ -274,6 +276,7 @@ def sitemap_to_s3(upload_to_s3: bool, page_size: int, max_per_page: int):
             print(json.dumps(sitemap.to_json(), indent=4))
 
         del sitemap
+        time.sleep(30)
 
 
 def _normalize_type(_type):
