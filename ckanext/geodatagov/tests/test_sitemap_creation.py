@@ -53,20 +53,14 @@ class TestSitemapExport(object):
         # the example output I have only has one element in it,
         # this and _handle_cli_output will need to be updated for examples with more elements
         # checks only one list element in output string
-        assert cli_result.output.count("[") == 1
-        assert cli_result.output.count("]") == 1
+        assert cli_result.output.count("file_num") == 1
 
     @staticmethod
     def _handle_cli_output(cli_result: Result) -> list:
         """Parses cli output Result to an interable file_list"""
 
-        file_list = [
-            eval(
-                cli_result.output[
-                    cli_result.output.index("[") + 1: cli_result.output.index("]") - 1
-                ].strip()
-            )
-        ]
+        file_list = cli_result.output.split("}\"\n")
+        file_list = list(set([f + "}\"" for f in file_list]) - {'}\"'})
 
         return file_list
 
@@ -79,7 +73,7 @@ class TestSitemapExport(object):
         datasets = 0
         for site_file in file_list:
             # site_file is dumped as string
-            site_file = eval(site_file)
+            site_file = eval(eval(site_file))
 
             files += 1
             """ expected something like
