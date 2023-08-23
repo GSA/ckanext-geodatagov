@@ -472,7 +472,7 @@ def translate_spatial(old_spatial):
     # all trailing decimals, '[34., 2]' is not valid, but '[34.0, 2]' and '[34, 2]' are valid
     old_spatial_transformed = old_spatial_transformed.replace('.,', ',').replace('.]', ']')
     # '-98, 29, -83, 35.' is not valid
-    if old_spatial_transformed[-1] == '.':
+    if old_spatial_transformed != "" and old_spatial_transformed[-1] == '.':
         old_spatial_transformed = old_spatial_transformed[0:-1]
     # all leading 0s, '[-089.63,  30.36]' is not valid, '[-89.63,  30.36]' is valid
     old_spatial_transformed = re.sub(r'(^|\s)(-?)0+((0|[1-9][0-9]*)(\.[0-9]*)?)', r'\1\2\3', old_spatial_transformed)
