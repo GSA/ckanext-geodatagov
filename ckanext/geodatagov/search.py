@@ -42,7 +42,7 @@ class GeoPackageSearchQuery(PackageSearchQuery):
             data = conn.search(query,
                                fq=fq,
                                rows=max_results,
-                               fields='name,metadata_modified',
+                               fl='name,metadata_modified',
                                start=start,
                                sort='metadata_created asc')
         except Exception as e:
