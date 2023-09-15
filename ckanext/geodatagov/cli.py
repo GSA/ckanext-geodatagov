@@ -74,7 +74,7 @@ class SitemapData(Sitemap):
 
     def __init__(self, file_num: str, start: int, page_size: int) -> None:
         super().__init__(file_num, start, page_size)
-        self.filename_s3 = f"sitemap/sitemap-{file_num}.xml"
+        self.filename_s3 = f"sitemap-{file_num}.xml"
 
     def write_pkgs(self, package_query: GeoPackageSearchQuery) -> None:
 
@@ -129,14 +129,16 @@ def get_s3() -> None:
     log.info("Setting S3 globals...")
     global S3
     global BUCKET_NAME
+    global PREFIX
     # global S3_STORAGE_PATH
     global S3_ENDPOINT_URL
 
     BUCKET_NAME = config.get("ckanext.s3sitemap.aws_bucket_name")
+    PREFIX = "sitemap"
     # S3_STORAGE_PATH = config.get("ckanext.s3sitemap.aws_storage_path")
     S3_ENDPOINT_URL = config.get("ckanext.s3sitemap.endpoint_url")
 
-    # Grab all of the necessary config and create S3 client
+# Grab all of the necessary config and create S3 client
     S3 = boto3.client(
         "s3",
         aws_access_key_id=config.get("ckanext.s3sitemap.aws_access_key_id"),
@@ -203,14 +205,23 @@ def upload_to_key(upload_str: str, filename_on_s3: str) -> None:
     del temp_file
 
 
+def delete_old_sitemaps():
+    objects_to_delete = S3.meta.client.list_objects(Bucket=BUCKET_NAME, Prefix=PREFIX)
+
+    delete_keys = {'Objects': []}
+    delete_keys['Objects'] = [{'Key': k} for k in [obj['Key'] for obj in objects_to_delete.get('Contents', [])]]
+
+    S3.meta.client.delete_objects(Bucket=BUCKET_NAME, Delete=delete_keys)
+
+
 def upload_sitemap_file(sitemap: list) -> None:
     """Handles uploading sitemap files to s3"""
 
     log.info("Uploading sitemap file...")
-    upload_to_key(sitemap.xml, sitemap.filename_s3)
+    upload_to_key(sitemap.xml, f"{PREFIX}/{sitemap.filename_s3}")
     log.info(
         f"Sitemap file {sitemap.filename_s3} upload complete to: \
-        {S3_ENDPOINT_URL}/{BUCKET_NAME}/{sitemap.filename_s3}"
+        {S3_ENDPOINT_URL}/{BUCKET_NAME}/{PREFIX}/{sitemap.filename_s3}"
     )
 
 
@@ -241,13 +252,14 @@ def sitemap_to_s3(upload_to_s3: bool, page_size: int, max_per_page: int):
     if upload_to_s3:
         # set global S3 object and vars
         get_s3()
+        delete_old_sitemaps()
         upload_to_key(sitemap_index.xml, sitemap_index.filename_s3)
         log.info(
             f"Sitemap index upload complete to: \
             {S3_ENDPOINT_URL}/{BUCKET_NAME}/{sitemap_index.filename_s3}"
         )
 
-    for file_num in range(1, num_of_pages + 1):
+    for file_num in range(num_of_pages):
         sitemap = SitemapData(str(file_num), start, page_size)
         sitemap.write_sitemap_header()
         sitemap.write_pkgs(package_query)
@@ -267,7 +279,7 @@ def sitemap_to_s3(upload_to_s3: bool, page_size: int, max_per_page: int):
         start += page_size
 
         if upload_to_s3:
-            log.info(f"Uploading {sitemap.filename_s3}...")
+            log.info(f"Uploading {PREFIX}/{sitemap.filename_s3}...")
             upload_sitemap_file(sitemap)
         else:
             log.info(f"Skip upload and return local copy of sitemap {file_num}.")

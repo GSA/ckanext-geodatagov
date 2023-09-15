@@ -127,6 +127,7 @@ class TestSitemapExport(object):
                         raise Exception("Unexpected tag")
 
         assert files == 1
+        assert site_file["filename_s3"] == "sitemap-0.xml"
         assert datasets >= 4  # at least this four
         assert dataset1_found
         assert dataset2_found
