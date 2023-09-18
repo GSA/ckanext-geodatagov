@@ -206,12 +206,12 @@ def upload_to_key(upload_str: str, filename_on_s3: str) -> None:
 
 
 def delete_old_sitemaps():
-    objects_to_delete = S3.meta.client.list_objects(Bucket=BUCKET_NAME, Prefix=PREFIX)
+    objects_to_delete = S3.list_objects(Bucket=BUCKET_NAME, Prefix=PREFIX)
 
     delete_keys = {'Objects': []}
     delete_keys['Objects'] = [{'Key': k} for k in [obj['Key'] for obj in objects_to_delete.get('Contents', [])]]
 
-    S3.meta.client.delete_objects(Bucket=BUCKET_NAME, Delete=delete_keys)
+    S3.delete_objects(Bucket=BUCKET_NAME, Delete=delete_keys)
 
 
 def upload_sitemap_file(sitemap: list) -> None:
