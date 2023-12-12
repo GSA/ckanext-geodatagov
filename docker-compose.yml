@@ -30,7 +30,7 @@ services:
       - ./docker-entrypoint.d:/docker-entrypoint.d
 
   db:
-    image: datagov/catalog.data.gov.db:latest
+    image: ckan/ckan-postgres-dev:${CKAN_VERSION}
     env_file:
       - .env
     healthcheck:
