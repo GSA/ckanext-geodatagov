@@ -19,7 +19,6 @@ class TestCategoryTags(object):
         os.system("PGPASSWORD=ckan psql -h db -U ckan -d ckan -c 'create extension postgis;'")
         # PY2
         os.system("ckan -c test.ini harvester initdb")
-        os.system("ckan -c test.ini spatial initdb")
         # echo "Downloading locations table"
         os.system("wget https://github.com/GSA/datagov-deploy/raw/71936f004be1882a506362670b82c710c64ef796/"
                   "ansible/roles/software/ec2/ansible/files/locations.sql.gz -O /tmp/locations.sql.gz")

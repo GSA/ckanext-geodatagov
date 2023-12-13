@@ -28,7 +28,6 @@ PASS=ckan
 # cd -
 
 ckan -c $test_ini harvester initdb
-ckan -c $test_ini spatial initdb
 
 pytest --ckan-ini=test.ini --cov=ckanext.geodatagov --disable-warnings ckanext/geodatagov/tests/
 
