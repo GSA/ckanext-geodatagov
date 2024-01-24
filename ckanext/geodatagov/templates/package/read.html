@@ -20,7 +20,7 @@
             {% snippet "snippets/package_item.html", package=collection_package, truncate=75 %}
         </ul>
     {% else %}
-        <p>{{ _('This dataset is part of the a deleted collection.') }}</p>
+        <p>{{ _('This dataset is part of a deleted collection.') }}</p>
         <p><a href="{{ h.url_for('search', collection_package_id=collection_package_id) }}" class="btn-collection">{{ _('Search other datasets within the same collection') }}</a></p>
     {% endif %}
 </section>
