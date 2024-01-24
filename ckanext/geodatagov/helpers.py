@@ -3,6 +3,7 @@ import logging
 
 from ckan import plugins as p
 from ckanext.harvest.model import HarvestSource
+from ckan.logic import NotFound, NotAuthorized
 
 log = logging.getLogger(__name__)
 
@@ -59,8 +60,11 @@ def get_harvest_source_config(harvester_id):
 
 
 def get_collection_package(collection_package_id):
-    package = p.toolkit.get_action('package_show')({}, {'id': collection_package_id})
-    return package
+    try:
+        package = p.toolkit.get_action('package_show')({}, {'id': collection_package_id})
+        return package
+    except (NotFound, NotAuthorized):
+        pass
 
 
 def string(value):
