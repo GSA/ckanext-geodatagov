@@ -532,7 +532,7 @@ def db_solr_sync(dryrun, cleanup_solr, update_solr):
     ),
 )
 def db_solr_sync_next(dryrun, cleanup_solr, update_solr):
-    """db solr sync next"""
+    """db solr sync next for catalog-next"""
     if dryrun:
         log.info("Starting dryrun to update index.")
 
