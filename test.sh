@@ -2,7 +2,7 @@
 # Setup and run extension tests. This script should be run in a _clean_ CKAN
 # environment. e.g.:
 #
-#     $ docker-compose run --rm app ./test.sh
+#     $ docker compose run --rm app ./test.sh
 #
 
 set -o errexit
