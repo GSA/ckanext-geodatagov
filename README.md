@@ -46,18 +46,18 @@ All the tests live in the [/ckanext/geodatagov/tests](/ckanext/geodatagov/tests)
 ### Build Environment
 
 To start environment, run:
-```docker-compose build```
-```docker-compose up```
+```docker compose build```
+```docker compose up```
 
 CKAN will start at localhost:5000
 
 To shut down environment, run:
 
-```docker-compose down```
+```docker compose down```
 
 To docker exec into the CKAN image, run:
 
-```docker-compose exec app /bin/bash```
+```docker compose exec app /bin/bash```
 
 ### Testing
 
