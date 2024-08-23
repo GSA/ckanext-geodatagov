@@ -478,10 +478,7 @@ def db_solr_sync(dryrun, cleanup_solr, update_solr):
     for id, *_ in solr_package:
         work_list[id] = "solr"
     for id, *_ in db_package:
-        if id in work_list:
-            work_list[id] = "solr-db"
-        else:
-            work_list[id] = "db"
+        work_list[id] = "db"
 
     both = cleanup_solr == update_solr
     set_cleanup = {i if work_list[i] == "solr" else None for i in work_list} - {None}
@@ -565,10 +562,7 @@ def db_solr_sync_next(dryrun, cleanup_solr, update_solr):
     for id, *_ in solr_package:
         work_list[id] = "solr"
     for id, *_ in db_package:
-        if id in work_list:
-            work_list[id] = "solr-db"
-        else:
-            work_list[id] = "db"
+        work_list[id] = "db"
 
     both = cleanup_solr == update_solr
     set_cleanup = {i if work_list[i] == "solr" else None for i in work_list} - {None}
