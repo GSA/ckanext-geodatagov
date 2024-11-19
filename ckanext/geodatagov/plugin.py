@@ -1,3 +1,4 @@
+import re
 import hashlib
 import urllib.parse
 import logging
@@ -491,11 +492,15 @@ class Demo(p.SingletonPlugin):
             # TypeError: No object (name: request) has been registered for this thread
             path = ''
 
-        if 'collection_package_id' not in fq and 'bulk_process' not in path:
-            log.debug('Added FQ to collection_package_id')
-            fq += ' -collection_package_id:["" TO *]'
-        else:
-            log.debug('NOT Added FQ to collection_package_id')
+        if 'collection_info' in fq:
+            # Replace collection_info with harvest_source_id and isPArtOf
+            pattern = r'collection_info:"([^"]+?) ([^"]+)"'
+            fq = re.sub(pattern, r'harvest_source_id:"\1" isPartOf:"\2"', fq)
+            log.debug('FQ changed for collection_info')
+        elif 'bulk_process' not in path:
+            # hide collection's children datasets from regular search
+            fq += ' -isPartOf:["" TO *]'
+            log.debug('Added FQ to hide collection')
 
         search_params['fq'] = fq
         return search_params
