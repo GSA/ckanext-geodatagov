@@ -60,12 +60,25 @@ def get_harvest_source_config(harvester_id):
     return source_config
 
 
-def get_collection_package(source_id, ispartof):
+def count_collection_package(source_id, identifier):
+    context = {'model': model, 'session': model.Session}
+    package_search = get_action('package_search')
+    search_params = {
+        'fq': f'harvest_source_id:{source_id} isPartOf:{identifier} include_collection:true',
+        'rows': 0,
+    }
+
+    search_result = package_search(context, search_params)
+
+    return search_result['count'] if search_result['count'] else 0
+
+
+def get_collection_package(source_id, identifier):
     context = {'model': model, 'session': model.Session}
 
     package_search = get_action('package_search')
     search_params = {
-        'fq': f'harvest_source_id:{source_id} identifier:{ispartof}',
+        'fq': f'harvest_source_id:{source_id} identifier:{identifier}',
         'rows': 1,
     }
 

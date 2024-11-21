@@ -545,6 +545,7 @@ class Demo(p.SingletonPlugin):
             'get_harvest_source_type': geodatagov_helpers.get_harvest_source_type,
             'get_harvest_source_config': geodatagov_helpers.get_harvest_source_config,
             'get_collection_package': geodatagov_helpers.get_collection_package,
+            'count_collection_package': geodatagov_helpers.count_collection_package,
         }
 
     # IActions
