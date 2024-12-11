@@ -1,9 +1,10 @@
 import json
 import logging
 
+from ckan import model
 from ckan import plugins as p
 from ckanext.harvest.model import HarvestSource
-from ckan.logic import NotFound, NotAuthorized
+from ckan.logic import NotFound, NotAuthorized, get_action
 
 log = logging.getLogger(__name__)
 
@@ -59,12 +60,45 @@ def get_harvest_source_config(harvester_id):
     return source_config
 
 
-def get_collection_package(collection_package_id):
-    try:
-        package = p.toolkit.get_action('package_show')({}, {'id': collection_package_id})
-        return package
-    except (NotFound, NotAuthorized):
-        pass
+def count_collection_package(source_id, identifier):
+    context = {'model': model, 'session': model.Session}
+    package_search = get_action('package_search')
+    search_params = {
+        'fq': f'harvest_source_id:{source_id} isPartOf:{identifier} include_collection:true',
+        'rows': 0,
+    }
+
+    search_result = package_search(context, search_params)
+
+    return search_result['count'] if search_result['count'] else 0
+
+
+def get_collection_package(source_id, identifier):
+    context = {'model': model, 'session': model.Session}
+
+    package_search = get_action('package_search')
+    search_params = {
+        'fq': f'harvest_source_id:{source_id} identifier:{identifier}',
+        'rows': 1,
+    }
+
+    search_result = package_search(context, search_params)
+
+    ret = None
+
+    if search_result['results']:
+        collection_package_id = search_result['results'][0]['id']
+
+        try:
+            package = p.toolkit.get_action('package_show')(
+                context,
+                {'id': collection_package_id}
+            )
+            ret = package
+        except (NotFound, NotAuthorized):
+            pass
+
+    return ret
 
 
 def string(value):

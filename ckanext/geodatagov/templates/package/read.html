@@ -3,17 +3,33 @@
 {% set pkg_dict = c.pkg_dict %}
 
 {% block collection_resources %}
-{% set collection_package_id = h.get_pkg_dict_extra(c.pkg_dict, 'collection_package_id', '') %}
-{% if h.get_pkg_dict_extra(c.pkg_dict, 'collection_metadata', '') %}
+
+{% set identifier = h.get_pkg_dict_extra(c.pkg_dict, 'Identifier', '') %}
+{% set collection_sourceid = h.get_pkg_dict_extra(c.pkg_dict, 'harvest_source_id', '') %}
+{% set collection_ispartof = h.get_pkg_dict_extra(c.pkg_dict, 'isPartOf', '') %}
+
+{#
+ 1.  we check each dataset to see if it is a collection parent using its identifier.
+ if count_collection returns a value other than 0, then we know that this dataset is a collection parent.
+
+ 2.  we use collection_ispartof to tell if this dataset is a collection child. 
+ if collection_package returns a dataset, then we know its collection parent is found.
+#}
+
+{% set count_collection = h.count_collection_package(collection_sourceid, identifier) %}
+
+{% if count_collection or collection_ispartof %}
 <section class="module-content">
     <h3>{{ _('Collection') }}</h3>
-    <p>{{ _('This dataset is a collection of other datasets.') }}</p>
-    <p><a href="{{ h.url_for('search', collection_package_id=pkg_dict.id) }}" class="btn-collection">{{ _('Search datasets within this collection') }}</a></p>
-</section>
-{% elif collection_package_id %}
-{% set collection_package = h.get_collection_package(collection_package_id) %}
-<section class="module-content">
-    <h3>{{ _('Collection') }}</h3>
+    {% if count_collection %}
+    {% set collection_info =  collection_sourceid ~ ' ' ~  identifier %}
+    <p>This dataset is a collection of {{ count_collection }} other datasets.</p>
+    <p><a href="{{ h.url_for('search', collection_info=collection_info) }}" class="btn-collection">{{ _('Search datasets within this collection') }}</a></p>
+    {% endif %}    
+
+    {% if collection_ispartof %}
+    {% set collection_info =  collection_sourceid ~ ' ' ~  collection_ispartof %}
+    {% set collection_package = h.get_collection_package(collection_sourceid, collection_ispartof) %}
     {% if collection_package %}
         <p>{{ _('This dataset is part of the following collection:') }}</p>
         <ul class="dataset-list unstyled">
@@ -21,7 +37,8 @@
         </ul>
     {% else %}
         <p>{{ _('This dataset is part of a deleted collection.') }}</p>
-        <p><a href="{{ h.url_for('search', collection_package_id=collection_package_id) }}" class="btn-collection">{{ _('Search other datasets within the same collection') }}</a></p>
+        <p><a href="{{ h.url_for('search', collection_info=collection_info) }}" class="btn-collection">{{ _('Search other datasets within the same collection') }}</a></p>
+    {% endif %}
     {% endif %}
 </section>
 {% endif %}

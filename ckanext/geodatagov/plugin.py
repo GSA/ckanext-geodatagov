@@ -499,10 +499,21 @@ class Demo(p.SingletonPlugin):
             pattern = r'collection_info:"([^"]+?) ([^"]+)"'
             fq = re.sub(pattern, r'harvest_source_id:"\1" isPartOf:"\2"', fq)
             log.info('FQ changed for collection_info')
-        elif 'bulk_process' not in path:
+        elif 'bulk_process' not in path and 'include_collection' not in fq:
             # hide collection's children datasets from regular search
             fq += ' -isPartOf:["" TO *]'
             log.info('Added FQ to hide collection')
+
+        # fq comes in as a string such as '(a:1 b:"2" c:["" to *])'
+        # remove string include_collection=true from fq, if found.
+        # Other values of include_collection will end up with a search term that return no results
+        pattern = r'include_collection:"?([^",\s)]+)"?'
+        match = re.search(pattern, fq, re.IGNORECASE)
+        if match and match.group(1).lower() == 'true':
+            fq = re.sub(pattern, '', fq, flags=re.IGNORECASE).strip()
+            # if include_collection=true is the only fq, we could end up with a set of parentheses.
+            if fq == "()":
+                fq = ""
 
         search_params['fq'] = fq
         return search_params
@@ -536,6 +547,7 @@ class Demo(p.SingletonPlugin):
             'get_harvest_source_type': geodatagov_helpers.get_harvest_source_type,
             'get_harvest_source_config': geodatagov_helpers.get_harvest_source_config,
             'get_collection_package': geodatagov_helpers.get_collection_package,
+            'count_collection_package': geodatagov_helpers.count_collection_package,
         }
 
     # IActions
