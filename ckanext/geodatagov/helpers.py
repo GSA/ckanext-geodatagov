@@ -61,6 +61,9 @@ def get_harvest_source_config(harvester_id):
 
 
 def count_collection_package(source_id, identifier):
+    if not source_id or not identifier:
+        return 0
+
     context = {'model': model, 'session': model.Session}
     package_search = get_action('package_search')
     search_params = {
