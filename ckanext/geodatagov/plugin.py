@@ -494,10 +494,10 @@ class Demo(p.SingletonPlugin):
             path = ''
 
         if 'collection_package_id' not in fq and 'bulk_process' not in path:
-            log.info('Added FQ to collection_package_id')
+            log.debug('Added FQ to collection_package_id')
             fq += ' -collection_package_id:["" TO *]'
         else:
-            log.info('NOT Added FQ to collection_package_id')
+            log.debug('NOT Added FQ to collection_package_id')
 
         search_params['fq'] = fq
         return search_params
