@@ -67,7 +67,7 @@ def count_collection_package(source_id, identifier):
     context = {'model': model, 'session': model.Session}
     package_search = get_action('package_search')
     search_params = {
-        'fq': f'harvest_source_id:{source_id} isPartOf:{identifier} include_collection:true',
+        'fq': f'harvest_source_id:{source_id} isPartOf:"{identifier}" include_collection:true',
         'rows': 0,
     }
 
