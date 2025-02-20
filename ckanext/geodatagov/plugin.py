@@ -6,12 +6,10 @@ import mimetypes
 from ckan.plugins.toolkit import request, requires_ckan_version
 
 from ckan.lib.munge import munge_tag
-import ckanext.geodatagov.model as geodatagovmodel
 from ckan import __version__ as ckan_version
 
 requires_ckan_version("2.9")
 
-from . import blueprint
 import ckanext.geodatagov.cli as cli
 
 mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
@@ -581,28 +579,6 @@ class Demo(p.SingletonPlugin):
             'related_update': geodatagov_auth.related_update,
             'group_catagory_tag_update': geodatagov_auth.group_catagory_tag_update,
         }
-
-
-class Miscs(p.SingletonPlugin):
-    ''' Places for something that has nowhere to go otherwise.
-    '''
-    p.implements(p.IConfigurer)
-    p.implements(p.IConfigurable)
-    p.implements(p.IBlueprint)
-
-    # IConfigurer
-    def update_config(self, config):
-        p.toolkit.add_template_directory(config, 'templates')
-        p.toolkit.add_resource('fanstatic_library', 'geodatagov')
-
-    # IConfigurable
-    def configure(self, config):
-        log.info('plugin initialized: %s', self.__class__.__name__)
-        geodatagovmodel.setup()
-
-    def get_blueprint(self):
-        return blueprint.datapusher
-
 
 class S3Test(p.SingletonPlugin):
 

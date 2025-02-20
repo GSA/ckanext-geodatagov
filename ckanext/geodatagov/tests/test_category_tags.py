@@ -37,6 +37,7 @@ class TestCategoryTags(object):
         self.user_name = sysadmin['name']
 
     def test_group_catagory_tag_update(self):
+        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
         self.create_datasets()
         context = {'user': self.user_name, 'ignore_auth': True}
 
