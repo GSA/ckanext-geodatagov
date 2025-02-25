@@ -2,9 +2,10 @@ ARG CKAN_VERSION=2.11
 FROM ckan/ckan-dev:${CKAN_VERSION}
 ARG CKAN_VERSION
 
-# RUN apk add geos-dev proj proj-util proj-dev openjdk11-jre
-
 USER root
+
+RUN apt-get update && apt-get install -y postgresql-client
+
 # Download Saxon jar for FGDC2ISO transform (geodatagov)
 ARG saxon_ver=9.9.1-7
 ADD \
