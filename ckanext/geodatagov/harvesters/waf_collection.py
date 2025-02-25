@@ -104,24 +104,15 @@ class WAFCollectionHarvester(GeoDataGovWAFHarvester):
             .first()
         )
 
-        if existing_harvest_object:
-            status = "change"
-            guid = existing_harvest_object.guid
-            package_id = existing_harvest_object.package_id
-        else:
-            status, package_id = "new", None
-
         obj = HarvestObject(
-            job=harvest_job,
-            extras=[
+            guid=guid,
+            job=harvest_job
+        )
+        obj.extras = [
                 HOExtra(key="collection_metadata", value="true"),
                 HOExtra(key="waf_location", value=collection_metadata_url),
-                HOExtra(key="status", value=status),
-            ],
-            guid=guid,
-            status=status,
-            package_id=package_id,
-        )
+        ]
+
         queue.fetch_and_import_stages(self, obj)
         if obj.state == "ERROR":
             self._save_gather_error(
