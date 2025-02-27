@@ -9,10 +9,13 @@ from factories import HarvestJobObj, WafHarvestSourceObj
 
 from ckan.tests.helpers import reset_db
 from ckan.tests.factories import Organization
+import pytest
+import os
+from ckan.model.meta import Session, metadata
 
 log = logging.getLogger(__name__)
 
-
+@pytest.mark.usefixtures("with_plugins")
 class TestWafHarvester(object):
 
     @classmethod
@@ -20,13 +23,18 @@ class TestWafHarvester(object):
         log.info('Starting mock http server')
         mock_static_file_server.serve()
 
-    @classmethod
-    def setup(cls):
+    def setup_method(self):
+        # https://github.com/ckan/ckan/issues/4764
+        # drop extension postgis so we can reset db
+        os.system("PGPASSWORD=ckan psql -h db -U ckan -d ckan -c 'drop extension IF EXISTS postgis cascade;'")
         reset_db()
-        cls.organization = Organization()
+        os.system("PGPASSWORD=ckan psql -h db -U ckan -d ckan -c 'create extension postgis;'")
+        # os.system("ckan -c test.ini db upgrade -p harvest")
+        metadata.create_all(bind=Session.bind)
+
+        self.organization = Organization()
 
     def run_gather(self, url, source_config):
-
         sc = json.loads(source_config)
 
         source = WafHarvestSourceObj(url=url,
