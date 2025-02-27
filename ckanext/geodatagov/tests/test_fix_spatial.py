@@ -1,15 +1,29 @@
+import os
 
 import ckan.plugins as p
-
 import ckan.tests.factories as factories
 import ckan.tests.helpers as helpers
+from ckan.model.meta import Session, metadata
 
 
 class TestSpatialField(object):
 
     @classmethod
     def setup_class(cls):
+        os.system("PGPASSWORD=ckan psql -h db -U ckan -d ckan -c 'drop extension IF EXISTS postgis cascade;'")
         helpers.reset_db()
+        os.system("PGPASSWORD=ckan psql -h db -U ckan -d ckan -c 'create extension postgis;'")
+        # echo "Downloading locations table"
+        os.system("PGPASSWORD=ckan psql -h db -U ckan -d ckan -c 'DROP TABLE IF EXISTS locations;'")
+        os.system("wget https://github.com/GSA/datagov-deploy/raw/71936f004be1882a506362670b82c710c64ef796/"
+                  "ansible/roles/software/ec2/ansible/files/locations.sql.gz -O /tmp/locations.sql.gz")
+        # echo "Creating locations table"
+        os.system("gunzip -c /tmp/locations.sql.gz | PGPASSWORD=ckan psql -h db -U ckan -d ckan -v ON_ERROR_STOP=1")
+        # echo "Cleaning"
+        os.system("rm -f /tmp/locations.sql.gz")
+
+        metadata.create_all(bind=Session.bind)
+
         cls.user = factories.Sysadmin(name='spatial_user')
 
     def test_numeric_spatial_transformation(self):

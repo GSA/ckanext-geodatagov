@@ -1,31 +1,14 @@
-
 import logging
 import json
-import os
+import pytest
 from ckan import plugins as p
-from ckan.tests.helpers import reset_db
 from ckan.tests import factories
 
 
 log = logging.getLogger(__name__)
 
-
+@pytest.mark.usefixtures("with_plugins")
 class TestCategoryTags(object):
-
-    @classmethod
-    def setup(cls):
-        os.system("PGPASSWORD=ckan psql -h db -U ckan -d ckan -c 'drop extension IF EXISTS postgis cascade;'")
-        reset_db()
-        os.system("PGPASSWORD=ckan psql -h db -U ckan -d ckan -c 'create extension postgis;'")
-        # PY2
-        os.system("ckan -c test.ini harvester initdb")
-        # echo "Downloading locations table"
-        os.system("wget https://github.com/GSA/datagov-deploy/raw/71936f004be1882a506362670b82c710c64ef796/"
-                  "ansible/roles/software/ec2/ansible/files/locations.sql.gz -O /tmp/locations.sql.gz")
-        # echo "Creating locations table"
-        os.system("gunzip -c /tmp/locations.sql.gz | PGPASSWORD=ckan psql -h db -U ckan -d ckan -v ON_ERROR_STOP=1")
-        # echo "Cleaning"
-        os.system("rm -f /tmp/locations.sql.gz")
 
     def create_datasets(self):
         organization = factories.Organization()

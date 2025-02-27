@@ -29,8 +29,8 @@ PASS=ckan
 
 ckan -c $test_ini db upgrade -p harvest
 
-#  pytest --ckan-ini=test.ini --cov=ckanext.geodatagov --disable-warnings ckanext/geodatagov/tests/
-pytest -s --ckan-ini=test.ini --cov=ckanext.geodatagov --disable-warnings ckanext/geodatagov/tests/
+# pytest --ckan-ini=test.ini --cov=ckanext.geodatagov --disable-warnings ckanext/geodatagov/tests/
+pytest -s --ckan-ini=test.ini --cov=ckanext.geodatagov --disable-warnings ckanext/geodatagov/tests/test_tracking.py
 
 # Run this this pytest command if only testing a single test
 # pytest --ckan-ini=$test_ini --cov=ckanext.geodatagov --disable-warnings ckanext/geodatagov/tests/test_category_tags.py 
