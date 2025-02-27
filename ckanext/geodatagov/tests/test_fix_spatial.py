@@ -4,8 +4,9 @@ import ckan.plugins as p
 import ckan.tests.factories as factories
 import ckan.tests.helpers as helpers
 from ckan.model.meta import Session, metadata
+import pytest
 
-
+@pytest.mark.usefixtures("with_plugins")
 class TestSpatialField(object):
 
     @classmethod
@@ -27,7 +28,6 @@ class TestSpatialField(object):
         cls.user = factories.Sysadmin(name='spatial_user')
 
     def test_numeric_spatial_transformation(self):
-
         old_geo = '10.0,0.0,15.0,5.0'
 
         context = {'user': self.user['name'], 'ignore_auth': True}
@@ -54,7 +54,6 @@ class TestSpatialField(object):
         result = helpers.call_action(
             'package_search',
             extras={'ext_bbox': '9,-1,16,4'})
-
         assert result['count'] == 1
         assert result['results'][0]['id'] == dataset['id']
 

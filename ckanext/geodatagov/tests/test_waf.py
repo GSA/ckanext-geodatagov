@@ -24,11 +24,6 @@ class TestWafHarvester(object):
         log.info('Starting mock http server')
         mock_static_file_server.serve()
 
-    # @classmethod
-    # def setup(cls):
-    #     reset_db()
-    #     cls.organization = Organization()
-
     def setup_method(self):
         # https://github.com/ckan/ckan/issues/4764
         # drop extension postgis so we can reset db
