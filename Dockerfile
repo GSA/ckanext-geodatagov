@@ -1,9 +1,10 @@
-ARG CKAN_VERSION=2.10
+ARG CKAN_VERSION=2.11
 FROM ckan/ckan-dev:${CKAN_VERSION}
 ARG CKAN_VERSION
 
-RUN apk add geos-dev proj proj-util proj-dev openjdk11-jre
+# RUN apk add geos-dev proj proj-util proj-dev openjdk11-jre
 
+USER root
 # Download Saxon jar for FGDC2ISO transform (geodatagov)
 ARG saxon_ver=9.9.1-7
 ADD \
@@ -16,7 +17,7 @@ ENV CLASSPATH=${CLASSPATH}:/usr/lib/jvm/java-11-openjdk/saxon/saxon.jar
 RUN pip install --upgrade pip
 # RUN python3 -m pip install 'cython<3'
 # RUN python3 -m pip install --no-use-pep517 pyproj==3.4.1
-RUN python3 -m pip install pyproj@git+https://github.com/pyproj4/pyproj.git@3.6.1
+RUN python3 -m pip install pyproj
 
 COPY . $APP_DIR/
 

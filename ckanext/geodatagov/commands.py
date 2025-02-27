@@ -20,7 +20,6 @@ from ckan import plugins as p
 from ckan.plugins.toolkit import config
 
 from ckanext.harvest.model import HarvestSource, HarvestJob
-from ckanext.geodatagov.model import MiscsFeed
 
 
 # https://github.com/GSA/ckanext-geodatagov/issues/117
@@ -387,15 +386,6 @@ class GeoGovCommand(p.SingletonPlugin):
             except Exception:
                 log.exception('Error when deleting doi id=%s', doi_id)
 
-    def get_doi_package(self, url_dataset):
-        dataset = requests.get(url_dataset, verify=False).json()
-        dataset = dataset['result']
-        return dataset
-
-    def get_doi_harvestobj(self, url_harvestobj):
-        harvestobj = requests.get(url_harvestobj, verify=False)
-        return harvestobj.text
-
     def clean_deleted(self):
         log.info('Starting delete for clean-deleted')
         # TODO make the 90-day purge configurable
@@ -460,70 +450,6 @@ class GeoGovCommand(p.SingletonPlugin):
     #  u'dataDictionary': 5841, u'temporal': 5830, u'modified': 5809, u'issued': 5793, u'mbox': 5547,
     #  u'granularity': 4434, u'license': 2048, u'dataQuality': 453}
 
-    def combine_feeds(self):
-        from xml.dom import minidom
-        from xml.parsers.expat import ExpatError
-        import urllib.error
-        import urllib.parse
-        import urllib.request
-
-        feed_url = config.get('ckan.site_url') + '/feeds/dataset.atom'
-        # from http://boodebr.org/main/python/all-about-python-and-unicode#UNI_XML
-        RE_XML_ILLEGAL = u'([\u0000-\u0008\u000b-\u000c\u000e-\u001f\ufffe-\uffff])' + \
-                         u'|' + \
-                         u'([%s-%s][^%s-%s])|([^%s-%s][%s-%s])|([%s-%s]$)|(^[%s-%s])' % \
-                         (chr(0xd800), chr(0xdbff), chr(0xdc00), chr(0xdfff),
-                          chr(0xd800), chr(0xdbff), chr(0xdc00), chr(0xdfff),
-                          chr(0xd800), chr(0xdbff), chr(0xdc00), chr(0xdfff))
-
-        def get_dom(url):
-            retry = 5
-            delay = 3
-            while retry > 0:
-                print('%s fetching %s' % (datetime.datetime.now(), url))
-                try:
-                    xml = urllib.request.urlopen(url_page_feed).read()
-                    xml = re.sub(RE_XML_ILLEGAL, "?", xml)
-                    dom = minidom.parseString(xml)
-                except ExpatError:
-                    print('retry url: %s' % url)
-                    print('deplay %s seconds...' % (delay ** (6 - retry)))
-                    time.sleep(delay ** (6 - retry))
-                    retry = retry - 1
-                    continue
-
-                return dom
-            raise Exception('Can not connect to %s after multiple tries' % url)
-
-        feed = None
-        for page in range(0, 20):
-            url_page_feed = feed_url + '?page=' + str(page + 1)
-            if not feed:
-                dom = get_dom(url_page_feed)
-                feed = dom.getElementsByTagName('feed')[0]
-                for child in feed.childNodes:
-                    if child.getAttribute('rel') in ['next', 'first', 'last']:
-                        feed.removeChild(child)
-            else:
-                dom = get_dom(url_page_feed)
-                entrylist = dom.getElementsByTagName('entry')
-                for entry in entrylist:
-                    feed.appendChild(entry)
-
-        if not feed:
-            raise Exception('Can not read any feed')
-
-        doc = minidom.Document()
-        doc.appendChild(feed)
-        output = doc.toxml('utf-8')
-        entry = model.Session.query(MiscsFeed).first()
-        if not entry:
-            # create the empty entry for the first time
-            entry = MiscsFeed()
-        entry.feed = output
-        entry.save()
-
-        print('%s combined feeds updated' % datetime.datetime.now())
 
     def harvest_job_cleanup(self):
         if p.toolkit.check_ckan_version(min_version='2.8'):

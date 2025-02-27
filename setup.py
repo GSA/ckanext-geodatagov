@@ -47,7 +47,6 @@ setup(
     waf_harvester_collection=ckanext.geodatagov.harvesters:WAFCollectionHarvester
     arcgis_harvester=ckanext.geodatagov.harvesters:ArcGISHarvester
     z3950_harvester=ckanext.geodatagov.harvesters:Z3950Harvester
-    geodatagov_miscs=ckanext.geodatagov.plugin:Miscs
 
     [paste.paster_command]
     geodatagov=ckanext.geodatagov.commands:GeoGovCommand
