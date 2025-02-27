@@ -41,7 +41,6 @@ class GeoGovCommand(p.SingletonPlugin):
         paster geodatagov combine-feeds -c <config>
         paster geodatagov harvest-job-cleanup -c <config>
         paster geodatagov export-csv -c <config>
-        paster geodatagov update-dataset-geo-fields -c <config>
     '''
     p.implements(p.IClick)
     summary = __doc__.split('\n')[0]
@@ -107,8 +106,6 @@ class GeoGovCommand(p.SingletonPlugin):
         if cmd == 'metrics-csv':
             self.metrics_csv()
         """
-        if cmd == 'update-dataset-geo-fields':
-            self.update_dataset_geo_fields()
 
     def get_user_org_mapping(self, location):
         user_org_mapping = open(location)
@@ -653,95 +650,6 @@ class GeoGovCommand(p.SingletonPlugin):
 
         print(str(datetime.datetime.now()) + ' Done.')
         """
-
-    def update_dataset_geo_fields(self):
-        """ Re-index dataset with geofields
-            Catalog-classic use `spatial` field with string values (like _California_) or
-            raw coordinates (like _-17.4,34.2,-17.1,24.6_). Catalog-next take this data and
-            transform it into a valid GeoJson polygon (with the `translate_spatial` function).
-            On `package_create` or `package_update` this transformation will happend but
-            datasets already harvested will not be updated automatically.
-            """
-
-        # iterate over all datasets
-
-        search_backend = config.get('ckanext.spatial.search_backend', 'postgis')
-        if search_backend != 'solr-bbox':
-            raise ValueError('Solr is not your default search backend (ckanext.spatial.search_backend)')
-
-        datasets = model.Session.query(model.Package).all()
-        total = len(datasets)
-        print('Transforming {} datasets.'.format(total))
-        c = 0
-        transformed = 0
-        failed = 0
-        skipped = 0
-        results = {
-            'datasets': {}
-        }
-        for dataset in datasets:
-            c += 1
-            print('Transforming {}/{}: {}. {} skipped, {} failed, {} transformed'.
-                  format(c, total, dataset.name, skipped, failed, transformed))
-            results['datasets'][dataset.id] = {'name': dataset.name}
-            dataset_dict = dataset.as_dict()
-            extras = dataset_dict['extras']
-            rolled_up = extras.get('extras_rollup', None)
-            if rolled_up is None:
-                results['datasets'][dataset.id]['skip'] = 'No rolled up extras'
-                skipped += 1
-                continue
-            new_extras_rollup = json.loads(rolled_up)
-
-            old_spatial = new_extras_rollup.get('spatial', None)
-            if old_spatial is None:
-                results['datasets'][dataset.id]['skip'] = 'No rolled up spatial extra found'
-                skipped += 1
-                continue
-            print(' - Old Spatial found "{}"'.format(old_spatial))
-
-            try:
-                # check if already we have spatial valid data
-                json.loads(old_spatial)
-                results['datasets'][dataset.id]['spatial-already-done'] = old_spatial
-                skipped += 1
-                continue
-            except BaseException:
-                pass
-
-            # update package, the translate_spatial function will fix spatial data
-            context = {'user': self.user_name, 'ignore_auth': True}
-            old_pkg = p.toolkit.get_action('package_show')(context, {'id': dataset.id})
-            pkg_dict = p.toolkit.get_action('package_update')(context, old_pkg)
-
-            # check the results
-            extras = pkg_dict['extras']
-            new_spatial = None
-            for extra in extras:
-                if extra['key'] == 'spatial':
-                    if old_spatial != extra['value']:
-                        transformed += 1
-                        new_spatial = extra['value']
-                        results['datasets'][dataset.id]['transformation'] = [old_spatial, new_spatial]
-                    else:
-                        results['datasets'][dataset.id]['transformation'] = [old_spatial, 'not found']
-
-            if new_spatial is None:
-                failed += 1
-                new_spatial = '**** NOT FOUND ****'
-
-            print(' - NEW Spatial: "{}"'.format(new_spatial))
-
-        print('Final results {} total datasets. {} skipped, {} failed, {} transformed'.
-              format(total, skipped, failed, transformed))
-
-        results.update({
-            'total': c,
-            'transformed': transformed,
-            'skipped': skipped,
-            'failed': failed
-        })
-        return results
 
 
 def get_response(url):

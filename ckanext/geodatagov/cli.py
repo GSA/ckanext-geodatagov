@@ -8,7 +8,7 @@ import sys
 import tempfile
 import warnings
 from typing import Optional
-from sqlalchemy import func, and_, select, desc
+from sqlalchemy import func, and_
 
 import boto3
 import ckan.logic as logic
@@ -20,7 +20,7 @@ from ckan.lib.search import rebuild
 from ckan.lib.search.common import make_connection
 from ckan.lib.search.index import NoopSearchIndex, PackageSearchIndex
 from ckan.model.meta import Session as session
-from ckanext.tracking.cli.tracking import update_tracking
+from ckanext.tracking.cli import tracking
 from ckanext.tracking.model import TrackingSummary as ts
 
 from ckanext.geodatagov.search import GeoPackageSearchQuery
@@ -730,38 +730,14 @@ def harvest_object_relink(harvest_source_id: Optional[str]):
 @click.argument("start_date", required=False)
 def tracking_update(start_date: Optional[str]):
     """ckan tracking update with customized options and output"""
-    update_all(start_date)
-
-
-def update_all(start_date: Optional[str] = None):
-    if start_date:
-        date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
-    else:
-        # No date given. See when we last have data for and get data
-        # from 2 days before then in case new data is available.
-        # If no date here then use 2020-01-01 as the start date
-        stmt = select(ts).order_by(desc(ts.tracking_date))
-        result = session.scalars(stmt).first()
-        if result:
-            date = result.tracking_date
-            date += datetime.timedelta(-2)
-            # convert date to datetime
-            combine = datetime.datetime.combine
-            date = combine(date, datetime.time(0))
-        else:
-            date = datetime.datetime(2020, 1, 1)
-    start_date_solrsync = date
-    end_date = datetime.datetime.now()
-
-    while date < end_date:
-        stop_date = date + datetime.timedelta(1)
-        update_tracking(date)
-        click.echo("tracking updated for {}".format(date))
-        date = stop_date
-
-    update_tracking_solr(start_date_solrsync)
+    # override the function update_tracking_solr in tracking module
+    tracking.update_tracking_solr = update_tracking_solr
+    tracking.update_all(start_date)
 
 def update_tracking_solr(start_date: datetime.datetime):
+    """copied from ckanext/tracking/cli/tracking.py
+       but with customized way of doing solr indexing
+    """
     results = (
         session.query(ts.package_id)
         .filter(
