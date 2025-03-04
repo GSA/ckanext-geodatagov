@@ -1,37 +1,16 @@
 import json
-import os
 
+from utils import populate_locations_table
 from ckan.tests.helpers import FunctionalTestBase
-import ckan.lib.search as search
 from ckan.tests import factories
-from ckan.tests.helpers import reset_db
-from ckan.model.meta import Session, metadata
 
 from ckanext.geodatagov.logic import rollup_save_action
 
 
 class TestLogic(FunctionalTestBase):
 
-    @classmethod
-    def setup(cls):
-        search.clear_all()
-
     def setup_method(self):
-        # https://github.com/ckan/ckan/issues/4764
-        # drop extension postgis so we can reset db
-        os.system("PGPASSWORD=ckan psql -h db -U ckan -d ckan -c 'drop extension IF EXISTS postgis cascade;'")
-        reset_db()
-        os.system("PGPASSWORD=ckan psql -h db -U ckan -d ckan -c 'create extension postgis;'")
-        # echo "Downloading locations table"
-        os.system("PGPASSWORD=ckan psql -h db -U ckan -d ckan -c 'DROP TABLE IF EXISTS locations;'")
-        os.system("wget https://github.com/GSA/datagov-deploy/raw/71936f004be1882a506362670b82c710c64ef796/"
-                  "ansible/roles/software/ec2/ansible/files/locations.sql.gz -O /tmp/locations.sql.gz")
-        # echo "Creating locations table"
-        os.system("gunzip -c /tmp/locations.sql.gz | PGPASSWORD=ckan psql -h db -U ckan -d ckan -v ON_ERROR_STOP=1")
-        # echo "Cleaning"
-        os.system("rm -f /tmp/locations.sql.gz")
-        # os.system("ckan -c test.ini db upgrade -p harvest")
-        metadata.create_all(bind=Session.bind)
+        populate_locations_table()
 
     def create_datasets(self):
         self.group1 = factories.Group()

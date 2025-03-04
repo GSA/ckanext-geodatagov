@@ -4,7 +4,7 @@ ARG CKAN_VERSION
 
 USER root
 
-RUN apt-get update && apt-get install -y postgresql-client openjdk-17-jre geos-dev
+RUN apt-get update && apt-get install -y postgresql-client openjdk-17-jre libgeos-dev
 
 # Download Saxon jar for FGDC2ISO transform (geodatagov)
 ARG saxon_ver=9.9.1-7

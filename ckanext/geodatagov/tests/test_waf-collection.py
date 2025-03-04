@@ -1,38 +1,23 @@
 import json
 import logging
 import pytest
-import os
 
-
-from ckan.model.meta import Session, metadata
 from factories import HarvestJobObj, WafCollectionHarvestSourceObj
-import mock_static_file_server
 from ckan import model
 from ckanext.geodatagov.harvesters.waf_collection import WAFCollectionHarvester
 from ckanext.spatial.validation import all_validators
 import ckanext.harvest.model as harvest_model
-
-from ckan.tests.helpers import reset_db, call_action
 from ckan.tests.factories import Organization
+
+from utils import PORT
 
 log = logging.getLogger(__name__)
 
 @pytest.mark.usefixtures("with_plugins")
 class TestWafCollectionHarvester(object):
 
-    @classmethod
-    def setup_class(cls):
-        log.info('Starting mock http server')
-        mock_static_file_server.serve()        
 
     def setup_method(self):
-        # https://github.com/ckan/ckan/issues/4764
-        # drop extension postgis so we can reset db
-        os.system("PGPASSWORD=ckan psql -h db -U ckan -d ckan -c 'drop extension IF EXISTS postgis cascade;'")
-        reset_db()
-        os.system("PGPASSWORD=ckan psql -h db -U ckan -d ckan -c 'create extension postgis;'")
-        # os.system("ckan -c test.ini db upgrade -p harvest")
-        metadata.create_all(bind=Session.bind)
 
         self.organization = Organization()
 
@@ -104,10 +89,9 @@ class TestWafCollectionHarvester(object):
 
     def get_datasets_from_waf_collection1_sample(self):
         """ harvest waf-collection1/ folder as waf-collection source """
-        url = 'http://127.0.0.1:%s/waf-collection1/index.html' % mock_static_file_server.PORT
+        url = f'http://127.0.0.1:{PORT}/waf-collection1/index.html'
 
-        collection_metadata = "http://127.0.0.1:%s/waf-collection1/cfg/SeriesCollection_tl_2013_county.shp.iso.xml" %\
-            mock_static_file_server.PORT
+        collection_metadata = f"http://127.0.0.1:{PORT}/waf-collection1/cfg/SeriesCollection_tl_2013_county.shp.iso.xml"
         config = '{"collection_metadata_url": "%s", "validator_profiles": ["iso19139ngdc"], "private_datasets": false}' %\
             collection_metadata
         self.run_gather(url=url, source_config=config)

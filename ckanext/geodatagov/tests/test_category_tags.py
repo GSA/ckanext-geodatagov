@@ -1,6 +1,7 @@
 import logging
 import json
 import pytest
+
 from ckan import plugins as p
 from ckan.tests import factories
 

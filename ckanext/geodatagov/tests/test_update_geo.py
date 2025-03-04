@@ -1,7 +1,6 @@
 import logging
 
-from ckan.tests.helpers import reset_db
-
+from utils import populate_locations_table
 from ckanext.geodatagov.logic import translate_spatial
 
 
@@ -10,9 +9,8 @@ log = logging.getLogger(__name__)
 
 class TestUpdateGeo(object):
 
-    @classmethod
-    def setup(cls):
-        reset_db()
+    def setup_method(self):
+        populate_locations_table()
 
     def test_translations(self):
         """ test translate_spatial function """

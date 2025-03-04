@@ -1,6 +1,5 @@
 import json
 import logging
-import os
 
 import pytest
 from ckan.common import config
@@ -8,9 +7,7 @@ from ckan.lib.search.common import make_connection
 import ckan.model as model
 import ckan.lib.search as search
 from ckan.tests import factories
-from ckan.tests.helpers import reset_db
 from click.testing import CliRunner
-from ckan.model.meta import Session, metadata
 
 from ckanext.harvest.model import HarvestObject
 from ckanext.harvest.tests import factories as harvest_factories
@@ -23,16 +20,6 @@ log = logging.getLogger(__name__)
 
 @pytest.mark.usefixtures("with_plugins")
 class TestSolrDBSync(object):
-    @classmethod
-    def setup_class(cls):
-        # https://github.com/ckan/ckan/issues/4764
-        # drop extension postgis so we can reset db
-        os.system("PGPASSWORD=ckan psql -h db -U ckan -d ckan -c 'drop extension IF EXISTS postgis cascade;'")
-        reset_db()
-        os.system("PGPASSWORD=ckan psql -h db -U ckan -d ckan -c 'create extension postgis;'")
-        metadata.create_all(bind=Session.bind)
-
-        search.clear_all()
 
     def create_datasets(self):
 
