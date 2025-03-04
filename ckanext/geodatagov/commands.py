@@ -443,7 +443,6 @@ class GeoGovCommand(p.SingletonPlugin):
     #  u'dataDictionary': 5841, u'temporal': 5830, u'modified': 5809, u'issued': 5793, u'mbox': 5547,
     #  u'granularity': 4434, u'license': 2048, u'dataQuality': 453}
 
-
     def harvest_job_cleanup(self):
         if p.toolkit.check_ckan_version(min_version='2.8'):
             print('Task removed since new ckanext-harvest include ckan.harvest.timeout to mark as finished stuck jobs')

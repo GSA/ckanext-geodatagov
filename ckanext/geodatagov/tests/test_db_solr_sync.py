@@ -17,6 +17,7 @@ import ckanext.geodatagov.cli as cli
 
 log = logging.getLogger(__name__)
 
+
 @pytest.mark.usefixtures("with_plugins")
 class TestSolrDBSync(object):
 

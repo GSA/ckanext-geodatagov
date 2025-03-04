@@ -10,6 +10,7 @@ import ckanext.geodatagov.cli as cli
 
 log = logging.getLogger(__name__)
 
+
 class TestS3TestCommand(object):
     @pytest.fixture
     def txt_cli_result(self) -> Result:

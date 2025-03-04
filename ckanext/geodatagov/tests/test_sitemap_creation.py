@@ -12,6 +12,7 @@ log = logging.getLogger(__name__)
 
 # TODO - test for output, test checking complete s3 cycle
 
+
 class TestSitemapExport(object):
 
     def create_datasets(self) -> None:

@@ -6,6 +6,7 @@ import ckan.tests.helpers as helpers
 
 from utils import populate_locations_table
 
+
 @pytest.mark.usefixtures("with_plugins")
 class TestSpatialField(object):
 

@@ -6,6 +6,7 @@ from ckanext.geodatagov.logic import rollup_save_action
 
 from utils import populate_locations_table
 
+
 class TestLogic(FunctionalTestBase):
 
     def setup_method(self):

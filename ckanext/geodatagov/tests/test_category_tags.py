@@ -8,6 +8,7 @@ from ckan.tests import factories
 
 log = logging.getLogger(__name__)
 
+
 @pytest.mark.usefixtures("with_plugins")
 class TestCategoryTags(object):
 

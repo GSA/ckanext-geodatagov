@@ -733,6 +733,7 @@ def tracking_update(start_date: Optional[str]):
     tracking.update_tracking_solr = update_tracking_solr
     tracking.update_all(start_date)
 
+
 def update_tracking_solr(start_date: datetime.datetime):
     """copied from ckanext/tracking/cli/tracking.py
        but with customized way of doing solr indexing

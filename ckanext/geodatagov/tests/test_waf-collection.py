@@ -15,6 +15,7 @@ from utils import PORT, reset_db_and_solr
 
 log = logging.getLogger(__name__)
 
+
 @pytest.mark.usefixtures("with_plugins")
 class TestWafCollectionHarvester(object):
 
@@ -22,7 +23,6 @@ class TestWafCollectionHarvester(object):
         reset_db_and_solr()
 
         self.organization = Organization()
-
 
     def run_gather(self, url, source_config):
 

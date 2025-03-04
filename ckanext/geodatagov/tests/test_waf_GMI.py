@@ -12,6 +12,7 @@ from utils import PORT, reset_db_and_solr
 
 log = logging.getLogger(__name__)
 
+
 @pytest.mark.usefixtures("with_plugins")
 class TestWafHarvester(object):
 

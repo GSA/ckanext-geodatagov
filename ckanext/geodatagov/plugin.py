@@ -580,6 +580,7 @@ class Demo(p.SingletonPlugin):
             'group_catagory_tag_update': geodatagov_auth.group_catagory_tag_update,
         }
 
+
 class S3Test(p.SingletonPlugin):
 
     p.implements(p.IClick)

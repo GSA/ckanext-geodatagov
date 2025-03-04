@@ -11,6 +11,7 @@ from ckan.plugins import toolkit
 
 log = logging.getLogger(__name__)
 
+
 class HarvestSource(factory.Factory):
     FACTORY_FOR = harvest_model.HarvestSource
     _return_type = 'dict'
