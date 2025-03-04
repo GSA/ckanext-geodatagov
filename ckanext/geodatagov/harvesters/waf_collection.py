@@ -119,10 +119,11 @@ class WAFCollectionHarvester(GeoDataGovWAFHarvester):
                 HOExtra(key="status", value=status),
             ],
             guid=guid,
-            status=status,
             package_id=package_id,
         )
+
         queue.fetch_and_import_stages(self, obj)
+
         if obj.state == "ERROR":
             self._save_gather_error(
                 "Collection object failed to harvest, not harvesting", harvest_job

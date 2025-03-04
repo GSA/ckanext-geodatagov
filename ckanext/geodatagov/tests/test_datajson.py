@@ -1,29 +1,25 @@
 import json
+import pytest
+import logging
 
-from ckan.tests.helpers import reset_db
 from ckan.tests.factories import Organization
 from ckan import model
-from factories import (DataJsonHarvestSourceObj,
-                       HarvestJobObj)
-
 import ckanext.harvest.model as harvest_model
 from ckanext.datajson.harvester_datajson import DataJsonHarvester
-import mock_static_file_server
-import logging
+
+from factories import (DataJsonHarvestSourceObj,
+                       HarvestJobObj)
+from utils import PORT, populate_locations_table
+
 log = logging.getLogger(__name__)
 
 
+@pytest.mark.usefixtures("with_plugins")
 class TestDataJsonHarvester(object):
 
     @classmethod
     def setup_class(cls):
-        log.info('Starting mock http server')
-        mock_static_file_server.serve(port=8996)
-
-    @classmethod
-    def setup(cls):
-        reset_db()
-        cls.organization = Organization()
+        populate_locations_table()
 
     def run_gather(self, url):
         source = DataJsonHarvestSourceObj(url=url, owner_org=self.organization['id'])
@@ -84,9 +80,10 @@ class TestDataJsonHarvester(object):
         return datasets
 
     def test_sample5_data(self):
-        # testing with data from https://www.consumerfinance.gov/data.json
+        self.organization = Organization()
 
-        url = 'http://127.0.0.1:8996/sample5_data.json'
+        # testing with data from https://www.consumerfinance.gov/data.json
+        url = f'http://127.0.0.1:{PORT}/sample5_data.json'
         obj_ids = self.run_gather(url=url)
         assert len(obj_ids) == 2
         self.run_fetch()

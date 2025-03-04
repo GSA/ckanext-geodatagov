@@ -1,17 +1,16 @@
 import json
 
 from ckan.tests.helpers import FunctionalTestBase
-import ckan.lib.search as search
 from ckan.tests import factories
-
 from ckanext.geodatagov.logic import rollup_save_action
+
+from utils import populate_locations_table
 
 
 class TestLogic(FunctionalTestBase):
 
-    @classmethod
-    def setup(cls):
-        search.clear_all()
+    def setup_method(self):
+        populate_locations_table()
 
     def create_datasets(self):
         self.group1 = factories.Group()

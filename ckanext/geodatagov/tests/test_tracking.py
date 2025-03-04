@@ -1,20 +1,18 @@
 import logging
-
 import pytest
+
 import ckan.model as model
 from ckan.tests import factories, helpers
-from ckan.tests.helpers import reset_db
 from click.testing import CliRunner
 
 import ckanext.geodatagov.cli as cli
 
+
 log = logging.getLogger(__name__)
 
 
+@pytest.mark.usefixtures("with_plugins")
 class TestTracking(object):
-    @classmethod
-    def setup_class(cls):
-        reset_db()
 
     def create_datasets(self):
 

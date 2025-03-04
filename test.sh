@@ -27,7 +27,8 @@ PASS=ckan
 # git pull
 # cd -
 
-ckan -c $test_ini harvester initdb
+ckan -c $test_ini db upgrade -p harvest
+
 
 pytest --ckan-ini=test.ini --cov=ckanext.geodatagov --disable-warnings ckanext/geodatagov/tests/
 

@@ -1,16 +1,17 @@
-
+import pytest
 import logging
-from ckan.tests.helpers import reset_db
+
 from ckan.tests import factories
+
 
 log = logging.getLogger(__name__)
 
 
+@pytest.mark.usefixtures("with_plugins")
 class TestFixPkg(object):
 
     @classmethod
-    def setup(cls):
-        reset_db()
+    def setup_class(cls):
         cls.organization = factories.Organization()
 
     def test_fix_tags(self):
