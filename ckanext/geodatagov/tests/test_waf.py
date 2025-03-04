@@ -1,18 +1,13 @@
 import json
 import logging
 import pytest
-import os
 
 import ckanext.harvest.model as harvest_model
-from ckan.tests.helpers import reset_db
 from ckan import model
 from ckan.logic import get_action
 from ckanext.geodatagov.harvesters.base import GeoDataGovWAFHarvester
 from factories import HarvestJobObj, WafHarvestSourceObj
 from ckan.tests.factories import Organization, SysadminWithToken
-import ckan.lib.search as search
-from ckan.model.meta import Session, metadata
-
 
 from utils import PORT, reset_db_and_solr
 

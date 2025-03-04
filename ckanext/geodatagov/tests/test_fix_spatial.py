@@ -1,10 +1,9 @@
 import os
+import pytest
 
 import ckan.plugins as p
 import ckan.tests.factories as factories
 import ckan.tests.helpers as helpers
-from ckan.model.meta import Session, metadata
-import pytest
 
 @pytest.mark.usefixtures("with_plugins")
 class TestSpatialField(object):
