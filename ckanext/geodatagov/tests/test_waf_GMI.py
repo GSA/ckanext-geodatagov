@@ -5,9 +5,9 @@ import pytest
 import ckanext.harvest.model as harvest_model
 from ckan import model
 from ckanext.geodatagov.harvesters.base import GeoDataGovWAFHarvester
-from factories import HarvestJobObj, WafHarvestSourceObj
 from ckan.tests.factories import Organization
 
+from factories import HarvestJobObj, WafHarvestSourceObj
 from utils import PORT, reset_db_and_solr
 
 log = logging.getLogger(__name__)

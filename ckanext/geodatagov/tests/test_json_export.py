@@ -13,10 +13,6 @@ log = logging.getLogger(__name__)
 
 class TestJSONExport(object):
 
-    @classmethod
-    def setup(cls):
-        reset_db()
-
     def create_datasets(self):
 
         org_extras = [{'key': 'organization_type', 'value': 'Federal Government'}]

@@ -1,24 +1,17 @@
-import os
 import pytest
 
 import ckan.plugins as p
 import ckan.tests.factories as factories
 import ckan.tests.helpers as helpers
 
+from utils import populate_locations_table
+
 @pytest.mark.usefixtures("with_plugins")
 class TestSpatialField(object):
 
     @classmethod
     def setup_class(cls):
-        # echo "Downloading locations table"
-        os.system("PGPASSWORD=ckan psql -h db -U ckan -d ckan -c 'DROP TABLE IF EXISTS locations;'")
-        os.system("wget https://github.com/GSA/datagov-deploy/raw/71936f004be1882a506362670b82c710c64ef796/"
-                  "ansible/roles/software/ec2/ansible/files/locations.sql.gz -O /tmp/locations.sql.gz")
-        # echo "Creating locations table"
-        os.system("gunzip -c /tmp/locations.sql.gz | PGPASSWORD=ckan psql -h db -U ckan -d ckan -v ON_ERROR_STOP=1")
-        # echo "Cleaning"
-        os.system("rm -f /tmp/locations.sql.gz")
-
+        populate_locations_table()
         cls.user = factories.Sysadmin(name='spatial_user')
 
     def test_numeric_spatial_transformation(self):

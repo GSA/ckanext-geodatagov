@@ -1,13 +1,10 @@
 import base64
 import csv
-import datetime
 import json
 import hashlib
 import logging
 import math
-import re
 import requests
-import time
 import xml.etree.ElementTree as ET
 from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
@@ -18,7 +15,6 @@ import ckan.logic as logic
 import ckan.lib.munge as munge
 from ckan import plugins as p
 from ckan.plugins.toolkit import config
-
 from ckanext.harvest.model import HarvestSource, HarvestJob
 
 

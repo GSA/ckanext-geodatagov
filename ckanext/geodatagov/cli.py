@@ -9,12 +9,12 @@ import tempfile
 import warnings
 from typing import Optional
 from sqlalchemy import func, and_
-
 import boto3
+from botocore.config import Config
+import click
+
 import ckan.logic as logic
 import ckan.model as model
-import click
-from botocore.config import Config
 from ckan.common import config
 from ckan.lib.search import rebuild
 from ckan.lib.search.common import make_connection
@@ -22,7 +22,6 @@ from ckan.lib.search.index import NoopSearchIndex, PackageSearchIndex
 from ckan.model.meta import Session as session
 from ckanext.tracking.cli import tracking
 from ckanext.tracking.model import TrackingSummary as ts
-
 from ckanext.geodatagov.search import GeoPackageSearchQuery
 from ckanext.harvest.model import HarvestJob, HarvestObject
 

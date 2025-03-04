@@ -4,13 +4,13 @@ import logging
 import mimetypes
 
 from ckan.plugins.toolkit import request, requires_ckan_version
-
 from ckan.lib.munge import munge_tag
 from ckan import __version__ as ckan_version
 
+import ckanext.geodatagov.cli as cli
+
 requires_ckan_version("2.9")
 
-import ckanext.geodatagov.cli as cli
 
 mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
 

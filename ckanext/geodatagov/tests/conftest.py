@@ -2,6 +2,7 @@ import pytest
 
 import utils
 
+
 @pytest.fixture(scope="session", autouse=True)
 def run_once_for_all_tests():
     utils.simple_http_server()

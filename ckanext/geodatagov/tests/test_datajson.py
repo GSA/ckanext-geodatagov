@@ -4,11 +4,11 @@ import logging
 
 from ckan.tests.factories import Organization
 from ckan import model
-from factories import (DataJsonHarvestSourceObj,
-                       HarvestJobObj)
 import ckanext.harvest.model as harvest_model
 from ckanext.datajson.harvester_datajson import DataJsonHarvester
 
+from factories import (DataJsonHarvestSourceObj,
+                       HarvestJobObj)
 from utils import PORT, populate_locations_table
 
 log = logging.getLogger(__name__)
@@ -16,7 +16,8 @@ log = logging.getLogger(__name__)
 @pytest.mark.usefixtures("with_plugins")
 class TestDataJsonHarvester(object):
 
-    def setup_method(self):
+    @classmethod
+    def setup_class(cls):
         populate_locations_table()
 
     def run_gather(self, url):

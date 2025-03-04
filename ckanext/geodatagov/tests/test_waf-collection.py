@@ -2,7 +2,6 @@ import json
 import logging
 import pytest
 
-from factories import HarvestJobObj, WafCollectionHarvestSourceObj
 from ckan import model
 from ckanext.geodatagov.harvesters.waf_collection import WAFCollectionHarvester
 from ckanext.spatial.validation import all_validators
@@ -10,7 +9,9 @@ import ckanext.harvest.model as harvest_model
 from ckan.tests.factories import Organization
 from ckan.tests.helpers import call_action
 
+from factories import HarvestJobObj, WafCollectionHarvestSourceObj
 from utils import PORT, reset_db_and_solr
+
 
 log = logging.getLogger(__name__)
 

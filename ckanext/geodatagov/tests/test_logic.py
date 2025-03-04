@@ -1,11 +1,10 @@
 import json
 
-from utils import populate_locations_table
 from ckan.tests.helpers import FunctionalTestBase
 from ckan.tests import factories
-
 from ckanext.geodatagov.logic import rollup_save_action
 
+from utils import populate_locations_table
 
 class TestLogic(FunctionalTestBase):
 

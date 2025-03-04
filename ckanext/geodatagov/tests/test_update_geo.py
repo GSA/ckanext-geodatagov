@@ -1,7 +1,8 @@
 import logging
 
-from utils import populate_locations_table
 from ckanext.geodatagov.logic import translate_spatial
+
+from utils import populate_locations_table
 
 
 log = logging.getLogger(__name__)

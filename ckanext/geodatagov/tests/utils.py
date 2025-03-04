@@ -42,14 +42,14 @@ def simple_http_server(port=PORT):
         httpd_thread.start()
 
 def populate_locations_table():
-    os.system("wget https://github.com/GSA/datagov-deploy/raw/71936f004be1882a506362670b82c710c64ef796/"
+    # download locations.sql.gz if not present
+    if not os.path.exists('/tmp/locations.sql.gz'):
+        os.system("wget https://github.com/GSA/datagov-deploy/raw/71936f004be1882a506362670b82c710c64ef796/"
                 "ansible/roles/software/ec2/ansible/files/locations.sql.gz -O /tmp/locations.sql.gz")
     # echo "Creating locations table"
     os.system("PGPASSWORD=ckan psql -h db -U ckan -d ckan -c 'DROP TABLE IF EXISTS locations;'")
     os.system("PGPASSWORD=ckan psql -h db -U ckan -d ckan -c 'DROP SEQUENCE IF EXISTS locations_id_seq;'")
     os.system("gunzip -c /tmp/locations.sql.gz | PGPASSWORD=ckan psql -h db -U ckan -d ckan -v ON_ERROR_STOP=1")
-    # echo "Cleaning"
-    os.system("rm -f /tmp/locations.sql.gz")
 
 def reset_db_and_solr():
     # https://github.com/ckan/ckan/issues/4764
@@ -64,7 +64,7 @@ def reset_db_and_solr():
     except Exception:
         pass
     os.system("PGPASSWORD=ckan psql -h db -U ckan -d ckan -c 'create extension postgis;'")
-    # os.system("ckan -c test.ini db upgrade -p harvest")
+    # add back tables from extensions
     metadata.create_all(bind=Session.bind)
 
     search.clear_all()
