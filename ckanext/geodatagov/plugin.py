@@ -496,7 +496,7 @@ class Demo(p.SingletonPlugin):
             # Replace collection_info with harvest_source_id and isPArtOf
             pattern = r'collection_info:"([^"]+?) ([^"]+)"'
             fq = re.sub(pattern, r'harvest_source_id:"\1" isPartOf:"\2"', fq)
-            log.debug('FQ changed for collection_info')
+            log.debug('FQ changed for collection_info: %s', fq)
         elif 'bulk_process' not in path and 'include_collection' not in fq:
             # hide collection's children datasets from regular search
             fq += ' -isPartOf:["" TO *]'
