@@ -411,31 +411,6 @@ def rollup_save_action(context, data_dict):
     # update new values
     new_extras_rollup.update(extras_rollup)
 
-    # If we use SOLR, try to index (with ckanext-spatial) a valid spatial data
-    if p.toolkit.check_ckan_version(min_version='2.8'):
-        search_backend = config.get('ckanext.spatial.search_backend', 'postgis')
-        log.debug('Search backend {}'.format(search_backend))
-        if search_backend == 'solr-bbox':
-            old_spatial = new_extras_rollup.get('spatial', None)
-            if old_spatial is not None:
-                log.info('Old Spatial found {}'.format(old_spatial))
-
-                # TODO look for more not-found location names
-                if old_spatial in ['National', 'US']:
-                    old_spatial = 'United States'
-
-                new_spatial = translate_spatial(old_spatial)
-                if new_spatial is not None:
-                    log.info('New Spatial transformed {}'.format(new_spatial))
-                    # add the real spatial
-                    new_extras.append({'key': 'spatial', 'value': new_spatial})
-                    # remove rolled spatial to skip run this process again
-                    new_extras_rollup['old-spatial'] = new_extras_rollup.pop('spatial')
-                else:
-                    log.info('New spatial could not be created')
-                    new_extras.append({'key': 'spatial', 'value': ''})
-                    new_extras_rollup['old-spatial'] = new_extras_rollup.pop('spatial')
-
     if new_extras_rollup:
         new_extras.append({'key': 'extras_rollup', 'value': json.dumps(new_extras_rollup)})
 
