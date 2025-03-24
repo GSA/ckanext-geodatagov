@@ -101,7 +101,7 @@ In order to support multiple versions of CKAN, or even upgrade to new versions
 of CKAN, we support development and testing through the `CKAN_VERSION`
 environment variable.
 
-    $ make CKAN_VERSION=2.10 test
+    $ make CKAN_VERSION=2.11 test
 
 ### Command line interface
 

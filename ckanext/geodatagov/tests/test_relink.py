@@ -1,40 +1,38 @@
 import json
 import logging
 import datetime
-
 import pytest
+
 from ckan.common import config
 from ckan.lib.search.common import make_connection
 import ckan.model as model
 import ckan.lib.search as search
 from ckan.tests import factories
-from ckan.tests.helpers import reset_db
 from click.testing import CliRunner
-
 from ckanext.harvest.model import HarvestObject
 from ckanext.harvest.tests import factories as harvest_factories
 from ckanext.harvest.logic import HarvestJobExists
 
 import ckanext.geodatagov.cli as cli
 
+
 log = logging.getLogger(__name__)
 
 
 class TestRelink(object):
-    def setup_class(self):
-        reset_db()
-        search.clear_all()
 
+    @classmethod
+    def setup_class(cls):
         organization = factories.Organization()
         # create two harvest sources
-        self.source1 = harvest_factories.HarvestSourceObj(
+        cls.source1 = harvest_factories.HarvestSourceObj(
             url="http://test1",
             name="test-ho-id1",
             title="Test relink 1",
             source_type="ckan",
             frequency="MANUAL"
         )
-        self.source2 = harvest_factories.HarvestSourceObj(
+        cls.source2 = harvest_factories.HarvestSourceObj(
             url="http://test2",
             name="test-ho-id2",
             title="Test relink 2",
@@ -43,65 +41,65 @@ class TestRelink(object):
         )
 
         # dataset 1 is for source 1
-        self.dataset1 = factories.Dataset(owner_org=organization["id"])
+        cls.dataset1 = factories.Dataset(owner_org=organization["id"])
         # with false hoid1 and true hoid2
-        self.dataset1_hoid1 = HarvestObject(
-            package_id=self.dataset1['id'],
-            job=create_harvest_job(self.source1),
+        cls.dataset1_hoid1 = HarvestObject(
+            package_id=cls.dataset1['id'],
+            job=create_harvest_job(cls.source1),
             import_finished=datetime.datetime.utcnow(),
             state='COMPLETE',
             report_status='',
             current=False
         )
-        self.dataset1_hoid2 = HarvestObject(
-            package_id=self.dataset1['id'],
-            job=create_harvest_job(self.source2),
+        cls.dataset1_hoid2 = HarvestObject(
+            package_id=cls.dataset1['id'],
+            job=create_harvest_job(cls.source2),
             import_finished=datetime.datetime.utcnow(),
             state='COMPLETE',
             current=True
         )
-        self.dataset1_hoid1.save()
-        self.dataset1_hoid2.save()
+        cls.dataset1_hoid1.save()
+        cls.dataset1_hoid2.save()
 
         # dataset 2 is for source 2
-        self.dataset2 = factories.Dataset(owner_org=organization["id"])
+        cls.dataset2 = factories.Dataset(owner_org=organization["id"])
         # with false hoid1 and true hoid2
-        self.dataset2_hoid1 = HarvestObject(
-            package_id=self.dataset2['id'],
-            job=create_harvest_job(self.source2),
+        cls.dataset2_hoid1 = HarvestObject(
+            package_id=cls.dataset2['id'],
+            job=create_harvest_job(cls.source2),
             import_finished=datetime.datetime.utcnow(),
             state='COMPLETE',
             report_status='',
             current=False
         )
-        self.dataset2_hoid2 = HarvestObject(
-            package_id=self.dataset2['id'],
-            job=create_harvest_job(self.source2),
+        cls.dataset2_hoid2 = HarvestObject(
+            package_id=cls.dataset2['id'],
+            job=create_harvest_job(cls.source2),
             import_finished=datetime.datetime.utcnow(),
             state='COMPLETE',
             current=True
         )
-        self.dataset2_hoid1.save()
-        self.dataset2_hoid2.save()
+        cls.dataset2_hoid1.save()
+        cls.dataset2_hoid2.save()
 
         search.rebuild()
 
         # check solr is using the current=True harvest object hoid2
-        assert get_solr_hoid(self.dataset1['id']) == self.dataset1_hoid2.id
-        assert get_solr_hoid(self.dataset2['id']) == self.dataset2_hoid2.id
+        assert get_solr_hoid(cls.dataset1['id']) == cls.dataset1_hoid2.id
+        assert get_solr_hoid(cls.dataset2['id']) == cls.dataset2_hoid2.id
 
         # make all harvest objects current=False, but hoid1 with newer import_finished
-        self.dataset1_hoid1.current = False
-        self.dataset1_hoid1.import_finished = datetime.datetime.utcnow()
-        self.dataset1_hoid1.save()
-        self.dataset1_hoid2.current = False
-        self.dataset1_hoid2.save()
+        cls.dataset1_hoid1.current = False
+        cls.dataset1_hoid1.import_finished = datetime.datetime.utcnow()
+        cls.dataset1_hoid1.save()
+        cls.dataset1_hoid2.current = False
+        cls.dataset1_hoid2.save()
 
-        self.dataset2_hoid1.current = False
-        self.dataset2_hoid1.import_finished = datetime.datetime.utcnow()
-        self.dataset2_hoid1.save()
-        self.dataset2_hoid2.current = False
-        self.dataset2_hoid2.save()
+        cls.dataset2_hoid1.current = False
+        cls.dataset2_hoid1.import_finished = datetime.datetime.utcnow()
+        cls.dataset2_hoid1.save()
+        cls.dataset2_hoid2.current = False
+        cls.dataset2_hoid2.save()
 
     @pytest.fixture
     def cli_result_source1(self):

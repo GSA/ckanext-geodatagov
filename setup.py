@@ -10,7 +10,7 @@ with open(path.join(here, "README.md"), encoding="utf-8") as f:
 
 setup(
     name="ckanext-geodatagov",
-    version="0.2.10",
+    version="0.3.0",
     description="",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -47,7 +47,6 @@ setup(
     waf_harvester_collection=ckanext.geodatagov.harvesters:WAFCollectionHarvester
     arcgis_harvester=ckanext.geodatagov.harvesters:ArcGISHarvester
     z3950_harvester=ckanext.geodatagov.harvesters:Z3950Harvester
-    geodatagov_miscs=ckanext.geodatagov.plugin:Miscs
 
     [paste.paster_command]
     geodatagov=ckanext.geodatagov.commands:GeoGovCommand

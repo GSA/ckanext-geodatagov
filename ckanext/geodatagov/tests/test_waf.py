@@ -1,30 +1,27 @@
 import json
 import logging
+import pytest
 
 import ckanext.harvest.model as harvest_model
-import mock_static_file_server
 from ckan import model
 from ckan.logic import get_action
 from ckanext.geodatagov.harvesters.base import GeoDataGovWAFHarvester
-from factories import HarvestJobObj, WafHarvestSourceObj
-
-from ckan.tests.helpers import reset_db
 from ckan.tests.factories import Organization, SysadminWithToken
+
+from factories import HarvestJobObj, WafHarvestSourceObj
+from utils import PORT, reset_db_and_solr
+
 
 log = logging.getLogger(__name__)
 
 
+@pytest.mark.usefixtures("with_plugins")
 class TestWafHarvester(object):
 
-    @classmethod
-    def setup_class(cls):
-        log.info('Starting mock http server')
-        mock_static_file_server.serve()
+    def setup_method(self):
+        reset_db_and_solr()
 
-    @classmethod
-    def setup(cls):
-        reset_db()
-        cls.organization = Organization()
+        self.organization = Organization()
 
     def run_gather(self, url, source_config):
 
@@ -93,23 +90,27 @@ class TestWafHarvester(object):
 
     def get_datasets_from_waf1_sample(self):
         """ harvest waf1/ folder as waf source """
-        url = 'http://127.0.0.1:%s/waf1/index.html' % mock_static_file_server.PORT
+        url = f'http://127.0.0.1:{PORT}/waf1/index.html'
 
         self.config1 = '{"validator_profiles": ["iso19139ngdc"], "private_datasets": "false"}'
         self.run_gather(url=url, source_config=self.config1)
         self.run_fetch()
         datasets = self.run_import()
+        self.job.status = 'Finished'
+        self.job.save()
 
         return datasets
 
     def get_datasets_from_waf_trim_tags(self):
         """ harvest waf-trim-tags/ folder as waf source """
-        url = 'http://127.0.0.1:%s/waf-trim-tags/index.html' % mock_static_file_server.PORT
+        url = f'http://127.0.0.1:{PORT}/waf-trim-tags/index.html'
 
         self.config1 = '{"validator_profiles": ["iso19139ngdc"], "private_datasets": "false"}'
         self.run_gather(url=url, source_config=self.config1)
         self.run_fetch()
         datasets = self.run_import()
+        self.job.status = 'Finished'
+        self.job.save()
 
         return datasets
 
@@ -122,12 +123,14 @@ class TestWafHarvester(object):
 
     def test_datasets_from_waf_fgdc_sample(self):
         """ harvest waf-fgdc/ folder as waf source """
-        url = 'http://127.0.0.1:%s/waf-fgdc/index.html' % mock_static_file_server.PORT
+        url = f'http://127.0.0.1:{PORT}/waf-fgdc/index.html'
 
         self.config1 = '{"private_datasets": "false"}'
         self.run_gather(url=url, source_config=self.config1)
         self.run_fetch()
         datasets = self.run_import()
+        self.job.status = 'Finished'
+        self.job.save()
 
         assert len(datasets) == 1
 
@@ -195,7 +198,6 @@ class TestWafHarvester(object):
         expected_list = ['tag1 /tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6']
         bad_list = list(set(tag_list) - set(expected_list))
         log.info("Tags that are not trimmed: %s", bad_list)
-
         assert (sorted(tag_list) == sorted(expected_list))
 
     def test_extras_rollup(self):

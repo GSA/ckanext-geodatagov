@@ -2,30 +2,27 @@ import json
 import logging
 import pytest
 
-import ckanext.harvest.model as harvest_model
-import mock_static_file_server
 from ckan import model
 from ckanext.geodatagov.harvesters.waf_collection import WAFCollectionHarvester
 from ckanext.spatial.validation import all_validators
-from factories import HarvestJobObj, WafCollectionHarvestSourceObj
-
-from ckan.tests.helpers import reset_db, call_action
+import ckanext.harvest.model as harvest_model
 from ckan.tests.factories import Organization
+from ckan.tests.helpers import call_action
+
+from factories import HarvestJobObj, WafCollectionHarvestSourceObj
+from utils import PORT, reset_db_and_solr
+
 
 log = logging.getLogger(__name__)
 
 
+@pytest.mark.usefixtures("with_plugins")
 class TestWafCollectionHarvester(object):
 
-    @classmethod
-    def setup_class(cls):
-        log.info('Starting mock http server')
-        mock_static_file_server.serve()
+    def setup_method(self):
+        reset_db_and_solr()
 
-    @classmethod
-    def setup(cls):
-        reset_db()
-        cls.organization = Organization()
+        self.organization = Organization()
 
     def run_gather(self, url, source_config):
 
@@ -36,16 +33,16 @@ class TestWafCollectionHarvester(object):
                                                owner_org=self.organization['id'],
                                                # config=source_config,
                                                **sc)
-        job = HarvestJobObj(source=source)
+        self.job = HarvestJobObj(source=source)
 
         self.harvester = WAFCollectionHarvester()
 
         # gather stage
         log.info('GATHERING %s', url)
-        obj_ids = self.harvester.gather_stage(job)
-        log.info('job.gather_errors=%s', job.gather_errors)
-        if len(job.gather_errors) > 0:
-            raise Exception(job.gather_errors[0])
+        obj_ids = self.harvester.gather_stage(self.job)
+        log.info('job.gather_errors=%s', self.job.gather_errors)
+        if len(self.job.gather_errors) > 0:
+            raise Exception(self.job.gather_errors[0])
 
         log.info('obj_ids=%s', obj_ids)
         if obj_ids is None or len(obj_ids) == 0:
@@ -94,15 +91,16 @@ class TestWafCollectionHarvester(object):
 
     def get_datasets_from_waf_collection1_sample(self):
         """ harvest waf-collection1/ folder as waf-collection source """
-        url = 'http://127.0.0.1:%s/waf-collection1/index.html' % mock_static_file_server.PORT
+        url = f'http://127.0.0.1:{PORT}/waf-collection1/index.html'
 
-        collection_metadata = "http://127.0.0.1:%s/waf-collection1/cfg/SeriesCollection_tl_2013_county.shp.iso.xml" %\
-            mock_static_file_server.PORT
+        collection_metadata = f"http://127.0.0.1:{PORT}/waf-collection1/cfg/SeriesCollection_tl_2013_county.shp.iso.xml"
         config = '{"collection_metadata_url": "%s", "validator_profiles": ["iso19139ngdc"], "private_datasets": false}' %\
             collection_metadata
         self.run_gather(url=url, source_config=config)
         self.run_fetch()
         datasets = self.run_import()
+        self.job.status = 'Finished'
+        self.job.save()
 
         return datasets
 
@@ -124,6 +122,7 @@ class TestWafCollectionHarvester(object):
         dataset = datasets[0]
 
         extras = json.loads(dataset.extras['extras_rollup'])
+        print(f'extras: {extras}')
         keys = [key for key in list(extras.keys())]
         assert 'collection_package_id' in keys
         assert 'collection_metadata' not in keys
@@ -157,10 +156,9 @@ class TestWafCollectionHarvester(object):
                                   'series-information-file-for-the-current-county-and-equivalent-nationa')
 
     def test_waf_collection_transformation_failed(self):
-        url = 'http://127.0.0.1:%s/waf-collection2/index.html' % mock_static_file_server.PORT
+        url = f'http://127.0.0.1:{PORT}/waf-collection2/index.html'
 
-        collection_metadata = "http://127.0.0.1:%s/waf-collection2/cfg/SeriesCollection_tl_2013_county.shp.iso.xml" %\
-            mock_static_file_server.PORT
+        collection_metadata = f"http://127.0.0.1:{PORT}/waf-collection2/cfg/SeriesCollection_tl_2013_county.shp.iso.xml"
         config = '{"collection_metadata_url": "%s", "validator_profiles": ["iso19139ngdc"], "private_datasets": false}' %\
             collection_metadata
         self.run_gather(url=url, source_config=config)

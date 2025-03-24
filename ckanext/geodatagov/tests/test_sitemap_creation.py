@@ -1,12 +1,12 @@
 import logging
 import xml.etree.ElementTree as ET
-
 import pytest
+
 from ckan.tests import factories
-from ckan.tests.helpers import reset_db
 from click.testing import CliRunner, Result
 
 import ckanext.geodatagov.cli as cli
+
 
 log = logging.getLogger(__name__)
 
@@ -14,9 +14,6 @@ log = logging.getLogger(__name__)
 
 
 class TestSitemapExport(object):
-    @classmethod
-    def setup(cls) -> None:
-        reset_db()
 
     def create_datasets(self) -> None:
 

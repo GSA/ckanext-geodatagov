@@ -1,32 +1,27 @@
 import json
 import logging
+import pytest
 
 import ckanext.harvest.model as harvest_model
-import mock_static_file_server
 from ckan import model
 from ckanext.geodatagov.harvesters.base import GeoDataGovWAFHarvester
-from factories import HarvestJobObj, WafHarvestSourceObj
-
-from ckan.tests.helpers import reset_db
 from ckan.tests.factories import Organization
+
+from factories import HarvestJobObj, WafHarvestSourceObj
+from utils import PORT, reset_db_and_solr
 
 log = logging.getLogger(__name__)
 
 
+@pytest.mark.usefixtures("with_plugins")
 class TestWafHarvester(object):
 
-    @classmethod
-    def setup_class(cls):
-        log.info('Starting mock http server')
-        mock_static_file_server.serve()
+    def setup_method(self):
+        reset_db_and_solr()
 
-    @classmethod
-    def setup(cls):
-        reset_db()
-        cls.organization = Organization()
+        self.organization = Organization()
 
     def run_gather(self, url, source_config):
-
         sc = json.loads(source_config)
 
         source = WafHarvestSourceObj(url=url,
@@ -92,7 +87,7 @@ class TestWafHarvester(object):
 
     def get_datasets_from_waf_gmi_sample(self):
         """ harvest waf-gmi/ folder as waf source """
-        url = 'http://127.0.0.1:%s/waf-gmi/index.html' % mock_static_file_server.PORT
+        url = f'http://127.0.0.1:{PORT}/waf-gmi/index.html'
 
         self.config1 = '{"private_datasets": "false"}'
         self.run_gather(url=url, source_config=self.config1)

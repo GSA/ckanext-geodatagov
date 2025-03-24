@@ -1,11 +1,12 @@
 import logging
-
 import pytest
 import requests
-from ckan.common import config
 from click.testing import CliRunner, Result
 
+from ckan.common import config
+
 import ckanext.geodatagov.cli as cli
+
 
 log = logging.getLogger(__name__)
 

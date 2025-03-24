@@ -1,29 +1,25 @@
 import json
 import logging
-
 import pytest
+from click.testing import CliRunner
+
 from ckan.common import config
 from ckan.lib.search.common import make_connection
 import ckan.model as model
 import ckan.lib.search as search
 from ckan.tests import factories
-from ckan.tests.helpers import reset_db
-from click.testing import CliRunner
-
 from ckanext.harvest.model import HarvestObject
 from ckanext.harvest.tests import factories as harvest_factories
 from ckanext.harvest.logic import HarvestJobExists
 
 import ckanext.geodatagov.cli as cli
 
+
 log = logging.getLogger(__name__)
 
 
+@pytest.mark.usefixtures("with_plugins")
 class TestSolrDBSync(object):
-    @classmethod
-    def setup_class(cls):
-        reset_db()
-        search.clear_all()
 
     def create_datasets(self):
 

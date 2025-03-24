@@ -8,18 +8,20 @@ import sys
 import tempfile
 import warnings
 from typing import Optional
-
+from sqlalchemy import func, and_
 import boto3
+from botocore.config import Config
+import click
+
 import ckan.logic as logic
 import ckan.model as model
-import click
-from botocore.config import Config
 from ckan.common import config
 from ckan.lib.search import rebuild
 from ckan.lib.search.common import make_connection
 from ckan.lib.search.index import NoopSearchIndex, PackageSearchIndex
-from sqlalchemy import func, and_
-
+from ckan.model.meta import Session as session
+from ckanext.tracking.cli import tracking
+from ckanext.tracking.model import TrackingSummary as ts
 from ckanext.geodatagov.search import GeoPackageSearchQuery
 from ckanext.harvest.model import HarvestJob, HarvestObject
 
@@ -727,51 +729,30 @@ def harvest_object_relink(harvest_source_id: Optional[str]):
 @click.argument("start_date", required=False)
 def tracking_update(start_date: Optional[str]):
     """ckan tracking update with customized options and output"""
-    engine = model.meta.engine
-    assert engine
-    update_all(engine, start_date)
+    # override the function update_tracking_solr in tracking module
+    tracking.update_tracking_solr = update_tracking_solr
+    tracking.update_all(start_date)
 
 
-def update_all(engine, start_date=None):
-    from ckan.cli.tracking import update_tracking
-
-    if start_date:
-        start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
-    else:
-        # No date given. See when we last have data for and get data
-        # from 2 days before then in case new data is available.
-        # If no date here then use 2011-01-01 as the start date
-        sql = """SELECT tracking_date from tracking_summary
-                    ORDER BY tracking_date DESC LIMIT 1;"""
-        result = engine.execute(sql).fetchall()
-        if result:
-            start_date = result[0]["tracking_date"]
-            start_date += datetime.timedelta(-2)
-            # convert date to datetime
-            combine = datetime.datetime.combine
-            start_date = combine(start_date, datetime.time(0))
-        else:
-            start_date = datetime.datetime(2011, 1, 1)
-    start_date_solrsync = start_date
-    end_date = datetime.datetime.now()
-    while start_date < end_date:
-        stop_date = start_date + datetime.timedelta(1)
-        update_tracking(engine, start_date)
-        log.info("tracking updated for {}".format(start_date))
-        start_date = stop_date
-    update_tracking_solr(engine, start_date_solrsync)
-
-
-def update_tracking_solr(engine, start_date):
-    sql = """SELECT distinct(package_id) FROM tracking_summary
-            where package_id!='~~not~found~~'
-            and tracking_date >= %s;"""
-    results = engine.execute(sql, start_date)
-    package_ids = set()
+def update_tracking_solr(start_date: datetime.datetime):
+    """copied from ckanext/tracking/cli/tracking.py
+       but with customized way of doing solr indexing
+    """
+    results = (
+        session.query(ts.package_id)
+        .filter(
+            ts.package_id != "~~not~found~~",
+            ts.tracking_date >= start_date,
+        )
+        .distinct()
+        .all()
+    )
+    package_ids: set[str] = set()
     for row in results:
-        package_ids.add(row["package_id"])
+        package_ids.add(row[0])
+
     total = len(package_ids)
-    log.info(
+    click.echo(
         "{} package index{} to be rebuilt starting from {}".format(
             total, "" if total < 2 else "es", start_date
         )
