@@ -8,6 +8,7 @@ import sys
 import tempfile
 import warnings
 from typing import Optional
+import sqlalchemy as sa
 from sqlalchemy import func, and_
 import boto3
 from botocore.config import Config
@@ -19,9 +20,7 @@ from ckan.common import config
 from ckan.lib.search import rebuild
 from ckan.lib.search.common import make_connection
 from ckan.lib.search.index import NoopSearchIndex, PackageSearchIndex
-from ckan.model.meta import Session as session
 from ckanext.tracking.cli import tracking
-from ckanext.tracking.model import TrackingSummary as ts
 from ckanext.geodatagov.search import GeoPackageSearchQuery
 from ckanext.harvest.model import HarvestJob, HarvestObject
 
@@ -731,22 +730,23 @@ def tracking_update(start_date: Optional[str]):
     """ckan tracking update with customized options and output"""
     # override the function update_tracking_solr in tracking module
     tracking.update_tracking_solr = update_tracking_solr
-    tracking.update_all(start_date)
+
+    engine = model.meta.engine
+    tracking.update_all(engine, start_date)
 
 
-def update_tracking_solr(start_date: datetime.datetime):
+def update_tracking_solr(engine: model.Engine, start_date: datetime.datetime):
     """copied from ckanext/tracking/cli/tracking.py
        but with customized way of doing solr indexing
     """
-    results = (
-        session.query(ts.package_id)
-        .filter(
-            ts.package_id != "~~not~found~~",
-            ts.tracking_date >= start_date,
-        )
-        .distinct()
-        .all()
-    )
+    sql = sa.text("""
+    SELECT package_id FROM tracking_summary
+    where package_id!='~~not~found~~'
+    and tracking_date >= :date
+    """)
+    with engine.connect() as conn:
+        results = conn.execute(sql, {"date": start_date})
+
     package_ids: set[str] = set()
     for row in results:
         package_ids.add(row[0])
