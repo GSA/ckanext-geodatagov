@@ -11,8 +11,8 @@ set -o pipefail
 test_ini=/srv/app/test.ini
 
 # Database is listening, but still unavailable. Just keep trying...
-while ! ckan -c $test_ini db init; do
-    echo Retrying in 5 seconds...
+while ! ckan -c $test_ini db init 2>/dev/null; do
+    echo DB not ready yet. Retrying in 5 seconds...
     sleep 5
 done
 
