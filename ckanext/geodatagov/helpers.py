@@ -81,7 +81,7 @@ def get_collection_package(source_id, identifier):
 
     package_search = get_action('package_search')
     search_params = {
-        'fq': f'harvest_source_id:{source_id} identifier:{identifier}',
+        'fq': f'harvest_source_id:"{source_id}" identifier:"{identifier}"',
         'rows': 1,
     }
 
