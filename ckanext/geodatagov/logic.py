@@ -2,6 +2,7 @@ import datetime
 import hashlib
 import logging
 import json
+from json.decoder import JSONDecodeError
 import re
 import time
 import uuid
@@ -393,6 +394,30 @@ EXTRAS_ROLLUP_KEY_IGNORE = [
     "harvest_source_title",
 ]
 
+def is_geojson(data):
+    geojson_types = [
+        "Point",
+        "LineString",
+        "Polygon",
+        "MultiPoint",
+        "MultiLineString",
+        "MultiPolygon",
+        "GeometryCollection",
+    ]
+
+    if isinstance(data, str):
+        try:
+            data = json.loads(data)
+        except JSONDecodeError:
+            return False
+        
+    is_dict = isinstance(data, dict)
+    if is_dict is False:
+        return is_dict
+
+    has_valid_type = "type" in data and data["type"] in geojson_types
+    has_coords = "coordinates" in data and len(data["coordinates"]) > 0
+    return is_dict and has_valid_type and has_coords
 
 def rollup_save_action(context, data_dict):
     """ to run before create actions """
@@ -423,18 +448,19 @@ def rollup_save_action(context, data_dict):
                 # TODO look for more not-found location names
                 if old_spatial in ['National', 'US']:
                     old_spatial = 'United States'
-
-                new_spatial = translate_spatial(old_spatial)
-                if new_spatial is not None:
-                    log.info('New Spatial transformed {}'.format(new_spatial))
-                    # add the real spatial
-                    new_extras.append({'key': 'spatial', 'value': new_spatial})
-                    # remove rolled spatial to skip run this process again
-                    new_extras_rollup['old-spatial'] = new_extras_rollup.pop('spatial')
-                else:
-                    log.info('New spatial could not be created')
-                    new_extras.append({'key': 'spatial', 'value': ''})
-                    new_extras_rollup['old-spatial'] = new_extras_rollup.pop('spatial')
+                    
+                if not is_geojson(old_spatial):
+                    new_spatial = translate_spatial(old_spatial)
+                    if new_spatial is not None:
+                        log.info('New Spatial transformed {}'.format(new_spatial))
+                        # add the real spatial
+                        new_extras.append({'key': 'spatial', 'value': new_spatial})
+                        # remove rolled spatial to skip run this process again
+                        new_extras_rollup['old-spatial'] = new_extras_rollup.pop('spatial')
+                    else:
+                        log.info('New spatial could not be created')
+                        new_extras.append({'key': 'spatial', 'value': ''})
+                        new_extras_rollup['old-spatial'] = new_extras_rollup.pop('spatial')
 
     if new_extras_rollup:
         new_extras.append({'key': 'extras_rollup', 'value': json.dumps(new_extras_rollup)})
