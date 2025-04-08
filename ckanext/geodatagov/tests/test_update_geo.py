@@ -1,6 +1,6 @@
 import logging
 
-from ckanext.geodatagov.logic import translate_spatial
+from ckanext.geodatagov.logic import translate_spatial, is_geojson
 
 from utils import populate_locations_table
 
@@ -13,6 +13,43 @@ class TestUpdateGeo(object):
     def setup_method(self):
         populate_locations_table()
 
+    def test_is_geojson(self):
+        valid_test_cases = [ {
+            "type": "Point",
+                "coordinates": [125.6, 10.1]
+        },
+        { "type": "Polygon",
+            "coordinates": [
+                [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0],
+                    [100.0, 1.0], [100.0, 0.0] ]
+                ]
+        },
+        { "type": "LineString",
+            "coordinates": [
+                [102.0, 0.0], [103.0, 1.0], [104.0, 0.0], [105.0, 1.0]
+                ]
+        }
+        ]
+
+        for case in valid_test_cases:
+            assert is_geojson(case)
+        
+        invalid_test_cases = [
+            "invalid type",
+            {},
+            { "type": "envelope",
+               "coordinates": [
+                    [102.0, 0.0], [103.0, 1.0], [104.0, 0.0], [105.0, 1.0]
+                    ]
+            },
+            { "type": "Polygon",
+               "coordinates": []
+            }
+        ]
+
+        for case in invalid_test_cases:
+            assert is_geojson(case) is False
+                
     def test_translations(self):
         """ test translate_spatial function """
 
