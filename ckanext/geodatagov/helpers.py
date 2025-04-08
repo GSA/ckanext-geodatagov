@@ -76,10 +76,15 @@ def count_collection_package(source_id, identifier):
     return search_result['count'] if search_result['count'] else 0
 
 
-def get_collection_package(source_id, identifier):
+def get_collection_package(collection_info):
     context = {'model': model, 'session': model.Session}
 
     package_search = get_action('package_search')
+
+    # collection_info is a string like "source-id parent-id"
+    # source_id is a GUID, not supposed to have spaces, therefore we can
+    # split it into source_id and identifier at the first space
+    source_id, identifier = collection_info.split(" ", 1)
     search_params = {
         'fq': f'harvest_source_id:"{source_id}" identifier:"{identifier}"',
         'rows': 1,

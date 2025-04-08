@@ -45,11 +45,13 @@ class TestCategoryTags(object):
         self.create_datasets()
 
         # from any child we can find the parent
-        parent = get_collection_package(self.datasets['child1']['source_id'], self.datasets['child1']['isPartOf'])
+        collection_info = f"{self.datasets['child1']['source_id']} {self.datasets['child1']['isPartOf']}"
+        parent = get_collection_package(collection_info)
         assert {'key': 'identifier', 'value': self.PARENT_ID} in parent['extras']
 
         # for the child from different source, there is no parent found
-        parent = get_collection_package(self.datasets['child4']['source_id'], self.datasets['child4']['isPartOf'])
+        collection_info = f"{self.datasets['child4']['source_id']} {self.datasets['child4']['isPartOf']}"
+        parent = get_collection_package(collection_info)
         assert parent is None
 
         # only two the children datasets found
@@ -57,7 +59,8 @@ class TestCategoryTags(object):
         assert count == 2
 
         # no error for identifiers with special chars (colon)
-        parent = get_collection_package(self.datasets['child5']['source_id'], self.datasets['child5']['isPartOf'])
+        collection_info = f"{self.datasets['child5']['source_id']} {self.datasets['child5']['isPartOf']}"
+        parent = get_collection_package(collection_info)
         assert parent is None
 
         # collection_info="source-id parent-id" works. can find two children datasets with collection_info.

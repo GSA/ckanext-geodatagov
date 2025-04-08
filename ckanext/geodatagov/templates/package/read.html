@@ -29,11 +29,11 @@
 
     {% if collection_ispartof %}
     {% set collection_info =  collection_sourceid ~ ' ' ~  collection_ispartof %}
-    {% set collection_package = h.get_collection_package(collection_sourceid, collection_ispartof) %}
+    {% set collection_package = h.get_collection_package(collection_info) %}
     {% if collection_package %}
         <p>{{ _('This dataset is part of the following collection:') }}</p>
         <ul class="dataset-list unstyled">
-            {% snippet "snippets/package_item.html", package=collection_package, truncate=75 %}
+            {% snippet "snippets/package_item.html", package=collection_package, is_collection=true, truncate=75 %}
         </ul>
     {% else %}
         <p>{{ _('This dataset is part of a deleted collection.') }}</p>
