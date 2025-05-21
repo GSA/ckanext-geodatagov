@@ -6,7 +6,7 @@ from click.testing import CliRunner
 from ckan.common import config
 from ckan.lib.search.common import make_connection
 import ckan.model as model
-import ckan.lib.search as search
+from ckanext.geodatagov.rebuild import rebuild
 from ckan.tests import factories
 from ckanext.harvest.model import HarvestObject
 from ckanext.harvest.tests import factories as harvest_factories
@@ -37,7 +37,7 @@ class TestSolrDBSync(object):
         # dataset6 has no harvest object.
         self.dataset6 = factories.Dataset(owner_org=organization["id"])
 
-        search.rebuild()
+        rebuild()
 
         # Case 1 - in DB, NOT in Solr
         # -- Everything is okay

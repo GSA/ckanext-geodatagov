@@ -465,7 +465,6 @@ def translate_spatial(old_spatial):
     geojson_tpl = ('{{"type": "Polygon", '
                    '"coordinates": [[[{minx}, {miny}], [{minx}, {maxy}], '
                    '[{maxx}, {maxy}], [{maxx}, {miny}], [{minx}, {miny}]]]}}')
-
     # Replace all things that create bad JSON, https://github.com/GSA/data.gov/issues/3549
     # all instances of '+', '[+23, -1]' is not valid, but '[23, -1]' is valid
     old_spatial_transformed = old_spatial.replace('+', '')
@@ -512,7 +511,7 @@ def translate_spatial(old_spatial):
     except AttributeError:
         pass
 
-    return ''
+    return ""
 
 
 def is_number(s):

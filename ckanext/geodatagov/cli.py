@@ -16,7 +16,7 @@ import click
 import ckan.logic as logic
 import ckan.model as model
 from ckan.common import config
-from ckan.lib.search import rebuild
+from .rebuild import rebuild
 from ckan.lib.search.common import make_connection
 from ckan.lib.search.index import NoopSearchIndex, PackageSearchIndex
 from ckan.model.meta import Session as session
