@@ -6,7 +6,6 @@ import pytest
 from ckan.common import config
 from ckan.lib.search.common import make_connection
 import ckan.model as model
-import ckan.lib.search as search
 from ckanext.geodatagov.rebuild import rebuild
 from ckan.tests import factories
 from click.testing import CliRunner
