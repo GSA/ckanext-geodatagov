@@ -1,5 +1,4 @@
 import logging
-import sys
 from typing import Collection, Optional
 
 import ckan.logic as logic
@@ -36,13 +35,13 @@ def rebuild(
 
     if package_id:
         pkg_dict = logic.get_action("package_show")(context, {"id": package_id})
-        log.info("Indexing just package %r...", pkg_dict["name"])
+        log.info("Indexing package %r...", pkg_dict["name"])
         package_index.remove_dict(pkg_dict)
         package_index.insert_dict(pkg_dict)
     elif package_ids is not None:
         for package_id in package_ids:
             pkg_dict = logic.get_action("package_show")(context, {"id": package_id})
-            log.info("Indexing just package %r...", pkg_dict["name"])
+            log.info("Indexing package %r...", pkg_dict["name"])
             try:
                 package_index.update_dict(pkg_dict, True)
             except Exception as e:
@@ -52,6 +51,7 @@ def rebuild(
                     continue
                 else:
                     raise
+    # If no package_id or package_ids is provided, rebuild the index for all packages
     else:
         packages = model.Session.query(model.Package.id)
         if config.get("ckan.search.remove_deleted_packages"):
@@ -80,10 +80,9 @@ def rebuild(
         total_packages = len(package_ids)
         for counter, pkg_id in enumerate(package_ids):
             if not quiet:
-                sys.stdout.write(
+                log.info(
                     "\rIndexing dataset {0}/{1}".format(counter + 1, total_packages)
                 )
-                sys.stdout.flush()
             try:
                 package_index.update_dict(
                     logic.get_action("package_show")(context, {"id": pkg_id}),
