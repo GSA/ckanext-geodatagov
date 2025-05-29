@@ -106,3 +106,16 @@ class TestDataJsonHarvester(object):
                                                 '[-124.733253,24.544245]]]}')
             assert extras['old-spatial'] == 'United States'
             assert extras['programCode'] == ['000:000']
+
+    def test_bad_data_JSONDecodeError(self):
+        """
+        Test for JSONDecodeError when the data.json file is not valid JSON.
+        """
+        self.organization = Organization()
+
+        # testing with data from https://www.consumerfinance.gov/data.json
+        url = f"http://127.0.0.1:{PORT}/sample6_bad_data.json"
+        with pytest.raises(Exception) as error:
+            self.run_gather(url=url)
+
+        assert "JSONDecodeError" in error.value.args[0].message
