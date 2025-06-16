@@ -6,7 +6,7 @@ import pytest
 from ckan.common import config
 from ckan.lib.search.common import make_connection
 import ckan.model as model
-import ckan.lib.search as search
+from ckanext.geodatagov.rebuild import rebuild
 from ckan.tests import factories
 from click.testing import CliRunner
 from ckanext.harvest.model import HarvestObject
@@ -82,7 +82,7 @@ class TestRelink(object):
         cls.dataset2_hoid1.save()
         cls.dataset2_hoid2.save()
 
-        search.rebuild()
+        rebuild()
 
         # check solr is using the current=True harvest object hoid2
         assert get_solr_hoid(cls.dataset1['id']) == cls.dataset1_hoid2.id

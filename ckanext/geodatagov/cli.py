@@ -16,7 +16,7 @@ import click
 import ckan.logic as logic
 import ckan.model as model
 from ckan.common import config
-from ckan.lib.search import rebuild
+from ckanext.geodatagov.rebuild import rebuild
 from ckan.lib.search.common import make_connection
 from ckan.lib.search.index import NoopSearchIndex, PackageSearchIndex
 from ckan.model.meta import Session as session
@@ -418,7 +418,12 @@ def delete_packages(package_ids):
         "(Update solr entries with new data from DB) OR (Add DB data to Solr that is missing)"
     ),
 )
-def db_solr_sync(dryrun, cleanup_solr, update_solr):
+@click.option(
+    "--force_rebuild",
+    is_flag=False,
+    help=("Force the rebuild step."),
+)
+def db_solr_sync(dryrun, cleanup_solr, update_solr, force_rebuild):
     """db solr sync"""
     if dryrun:
         log.info("Starting dryrun to update index.")
@@ -498,7 +503,7 @@ def db_solr_sync(dryrun, cleanup_solr, update_solr):
     if not dryrun and set_update and (update_solr or both):
         log.info("Rebuilding indexes")
         try:
-            rebuild(package_ids=set_update, defer_commit=True)
+            rebuild(package_ids=set_update, defer_commit=True, force=force_rebuild)
         except Exception as e:
             log.error("Error while rebuild index %s: %s" % (id, repr(e)))
         package_index.commit()
@@ -530,7 +535,14 @@ def db_solr_sync(dryrun, cleanup_solr, update_solr):
         "(Update solr entries with new data from DB) OR (Add DB data to Solr that is missing)"
     ),
 )
-def db_solr_sync_next(dryrun, cleanup_solr, update_solr):
+@click.option(
+    "--force_rebuild",
+    is_flag=False,
+    help=(
+        "Force the rebuild step."
+    ),
+)
+def db_solr_sync_next(dryrun, cleanup_solr, update_solr, force_rebuild):
     """db solr sync next for catalog-next"""
     if dryrun:
         log.info("Starting dryrun to update index.")
@@ -581,7 +593,7 @@ def db_solr_sync_next(dryrun, cleanup_solr, update_solr):
     if not dryrun and set_update and (update_solr or both):
         log.info("Rebuilding indexes")
         try:
-            rebuild(package_ids=set_update, defer_commit=True)
+            rebuild(package_ids=set_update, defer_commit=True, force=force_rebuild)
         except Exception as e:
             log.error("Error while rebuild index %s: %s" % (id, repr(e)))
         package_index.commit()
