@@ -500,6 +500,8 @@ def translate_spatial(old_spatial):
             min, max = geometry
             params = {"minx": min[0], "miny": min[1], "maxx": max[0], "maxy": max[1]}
             new_spatial = geojson_tpl.format(**params)
+            # assert it is valid JSON
+            json.loads(new_spatial)
             return new_spatial
         else:
             # If we already have a good geometry, use it
