@@ -32,3 +32,13 @@ class TestUpdateGeo(object):
         assert translate_spatial('not exists') is None
         assert translate_spatial('1.0,3.0') is None
         assert translate_spatial('US, Virginia, Fairfax, Reston') is None
+        assert translate_spatial(
+            '["CARTESIAN", [{"WestBoundingCoordinate": -69.864167, "NorthBoundingCoordinate": 70.843889, '
+            '"EastBoundingCoordinate": -69.864167, "SouthBoundingCoordinate": 70.843889}, '
+            '{"WestBoundingCoordinate": -68.156667, "NorthBoundingCoordinate": 70.313889, '
+            '"EastBoundingCoordinate": -68.156667, "SouthBoundingCoordinate": 70.313889}, '
+            '{"WestBoundingCoordinate": -70.52, "NorthBoundingCoordinate": 69.846667, '
+            '"EastBoundingCoordinate": -70.52, "SouthBoundingCoordinate": 69.846667}, '
+            '{"WestBoundingCoordinate": -70.52007, "NorthBoundingCoordinate": 70.843889, '
+            '"EastBoundingCoordinate": -68.15668, "SouthBoundingCoordinate": 69.84673}]]'
+        ) is None
