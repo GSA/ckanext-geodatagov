@@ -6,6 +6,7 @@ from ckan.logic import NotFound, NotAuthorized, get_action
 
 log = logging.getLogger(__name__)
 
+
 def count_collection_package(source_id, identifier):
     if not source_id or not identifier:
         return 0

@@ -1,18 +1,12 @@
 import base64
 import csv
-import json
 import hashlib
 import logging
-import math
-import requests
-import xml.etree.ElementTree as ET
 from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
 
-import ckan
 import ckan.model as model
 import ckan.logic as logic
-import ckan.lib.munge as munge
 from ckan import plugins as p
 from ckan.plugins.toolkit import config
 
@@ -96,7 +90,6 @@ class GeoGovCommand(p.SingletonPlugin):
         for row in csv_reader:
             mapping[row[0].lower()] = row[1]
         return mapping
-
 
     def import_organizations(self, location):
         fields = ['title', 'type', 'name']

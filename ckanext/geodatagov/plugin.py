@@ -279,7 +279,6 @@ def split_tags(tag):
     return [munge_tag(tag) for tag in tags if munge_tag(tag) != '']
 
 
-
 def get_filename_and_extension(resource):
     url = resource.get('url').rstrip('/')
     if '?' in url:

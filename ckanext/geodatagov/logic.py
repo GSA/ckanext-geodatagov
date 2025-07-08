@@ -5,7 +5,6 @@ import re
 
 from ckan.lib.navl.validators import not_empty
 from ckan.logic import side_effect_free
-import ckan.logic.schema as schema
 from ckan.logic.action import get as core_get
 import ckan.model as model
 import ckan.plugins as p
@@ -251,6 +250,7 @@ EXTRAS_ROLLUP_KEY_IGNORE = [
     "harvest_source_title",
 ]
 
+
 def is_geojson(data):
     geojson_types = [
         "Point",
@@ -267,7 +267,7 @@ def is_geojson(data):
             data = json.loads(data)
         except JSONDecodeError:
             return False
-        
+
     is_dict = isinstance(data, dict)
     if is_dict is False:
         return is_dict
@@ -275,6 +275,7 @@ def is_geojson(data):
     has_valid_type = "type" in data and data["type"] in geojson_types
     has_coords = "coordinates" in data and len(data["coordinates"]) > 0
     return is_dict and has_valid_type and has_coords
+
 
 def rollup_save_action(context, data_dict):
     """ to run before create actions """
@@ -305,7 +306,7 @@ def rollup_save_action(context, data_dict):
                 # TODO look for more not-found location names
                 if old_spatial in ['National', 'US']:
                     old_spatial = 'United States'
-                    
+
                 if not is_geojson(old_spatial):
                     new_spatial = translate_spatial(old_spatial)
                     if new_spatial is not None:
