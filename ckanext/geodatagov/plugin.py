@@ -40,19 +40,10 @@ def ping_connection(dbapi_connection, connection_record, connection_proxy):
 
 import ckan.plugins as p
 import ckan.model as model
-import ckanext.harvest.plugin
 import json
-from ckan.logic.converters import convert_from_extras
-from ckan.lib.navl.validators import ignore_missing
-from sqlalchemy.util import OrderedDict
 
 
 log = logging.getLogger(__name__)
-
-try:
-    from ckanext.harvest.logic.schema import harvest_source_show_package_schema
-except ImportError as e:
-    log.critical('Harvester not available %s' % str(e))
 
 
 RESOURCE_MAPPING = {
@@ -288,55 +279,6 @@ def split_tags(tag):
     return [munge_tag(tag) for tag in tags if munge_tag(tag) != '']
 
 
-# copied from harvest but deals withe single item list keys like validation
-def harvest_source_convert_from_config(key, data, errors, context):
-    config = data[key]
-    if config:
-        config_dict = json.loads(config)
-        for key, value in list(config_dict.items()):
-            if isinstance(value, list):
-                data[(key, )] = value[0]
-            else:
-                data[(key, )] = value
-
-
-class DataGovHarvest(ckanext.harvest.plugin.Harvest):
-
-    def package_form(self):
-        return 'source/geodatagov_source_form.html'
-
-    def show_package_schema(self):
-        '''
-        Returns the schema for mapping package data from the database into a
-        format suitable for the form
-        '''
-
-        schema = harvest_source_show_package_schema()
-        schema['config'] = [convert_from_extras, harvest_source_convert_from_config, ignore_missing]
-        return schema
-
-    def dataset_facets(self, facets_dict, package_type):
-
-        if package_type != 'harvest':
-            return facets_dict
-
-        return OrderedDict([('organization_type', 'Organization Types'),
-                            ('frequency', 'Frequency'),
-                            ('source_type', 'Type'),
-                            ('organization', 'Organizations'),
-                            # ('publisher', 'Publisher'),
-                            ])
-
-    def organization_facets(self, facets_dict, organization_type, package_type):
-
-        if package_type != 'harvest':
-            return facets_dict
-
-        return OrderedDict([('frequency', 'Frequency'),
-                            ('source_type', 'Type'),
-                            # ('publisher', 'Publisher'),
-                            ])
-
 
 def get_filename_and_extension(resource):
     url = resource.get('url').rstrip('/')
@@ -539,11 +481,7 @@ class Demo(p.SingletonPlugin):
     def get_helpers(self):
         from ckanext.geodatagov import helpers as geodatagov_helpers
         return {
-            'get_validation_profiles': geodatagov_helpers.get_validation_profiles,
-            'get_validation_schema': geodatagov_helpers.get_validation_schema,
             'saml2_user_edit_url': self.saml2_user_edit_url,
-            'get_harvest_source_type': geodatagov_helpers.get_harvest_source_type,
-            'get_harvest_source_config': geodatagov_helpers.get_harvest_source_config,
             'get_collection_package': geodatagov_helpers.get_collection_package,
             'count_collection_package': geodatagov_helpers.count_collection_package,
         }
@@ -561,10 +499,6 @@ class Demo(p.SingletonPlugin):
             'organization_list': geodatagov_logic.organization_list,
             'group_show': geodatagov_logic.group_show,
             'group_catagory_tag_update': geodatagov_logic.group_catagory_tag_update,
-            'datajson_create': geodatagov_logic.datajson_create,
-            'datajson_update': geodatagov_logic.datajson_update,
-            'doi_create': geodatagov_logic.doi_create,
-            'doi_update': geodatagov_logic.doi_update,
             'package_show_rest': geodatagov_logic.package_show_rest
         }
 

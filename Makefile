@@ -16,8 +16,6 @@ clean: ## Clean workspace and containers
 test: ## Run tests in a new container
 	CKAN_VERSION=$(CKAN_VERSION) docker compose -f $(COMPOSE_FILE) run --rm app /srv/app/test.sh
 
-java-test: ## Test java transformation command (java + saxon installed)
-	CKAN_VERSION=$(CKAN_VERSION) docker compose -f $(COMPOSE_FILE) run --rm app bash -c "java net.sf.saxon.Transform -s:/app/ckanext/geodatagov/tests/data-samples/waf-fgdc/fgdc-csdgm_sample.xml -xsl:/app/ckanext/geodatagov/harvesters/fgdcrse2iso19115-2.xslt"
 
 up: ## Start the containers
 	CKAN_VERSION=$(CKAN_VERSION) docker compose -f $(COMPOSE_FILE) up

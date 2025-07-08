@@ -38,15 +38,6 @@ setup(
     # Add plugins here, eg
     geodatagov=ckanext.geodatagov.plugin:Demo
     s3test=ckanext.geodatagov.plugin:S3Test
-    datagov_harvest=ckanext.geodatagov.plugin:DataGovHarvest
-
-    geodatagov_csw_harvester=ckanext.geodatagov.harvesters:GeoDataGovCSWHarvester
-    geodatagov_waf_harvester=ckanext.geodatagov.harvesters:GeoDataGovWAFHarvester
-    geodatagov_doc_harvester=ckanext.geodatagov.harvesters:GeoDataGovDocHarvester
-    geodatagov_geoportal_harvester=ckanext.geodatagov.harvesters:GeoDataGovGeoportalHarvester
-    waf_harvester_collection=ckanext.geodatagov.harvesters:WAFCollectionHarvester
-    arcgis_harvester=ckanext.geodatagov.harvesters:ArcGISHarvester
-    z3950_harvester=ckanext.geodatagov.harvesters:Z3950Harvester
 
     [paste.paster_command]
     geodatagov=ckanext.geodatagov.commands:GeoGovCommand
