@@ -1,22 +1,15 @@
-import datetime
-import hashlib
 import logging
 import json
 from json.decoder import JSONDecodeError
 import re
-import time
-import uuid
 
 from ckan.lib.navl.validators import not_empty
 from ckan.logic import side_effect_free
-import ckan.logic.schema as schema
 from ckan.logic.action import get as core_get
 import ckan.model as model
 import ckan.plugins as p
 from ckanext.geodatagov.plugin import change_resource_details, split_tags
-from ckanext.geodatagov.harvesters.arcgis import _slugify
 from ckanext.geodatagov.helpers import string
-from ckanext.harvest.model import HarvestObject  # , HarvestJob
 
 from ckan.common import config
 
@@ -224,143 +217,6 @@ def group_catagory_tag_update(context, data_dict):
     return data_dict
 
 
-def datajson_create(context, data_dict):
-    model = context['model']
-    new_package = create_data_dict(data_dict)
-    owner_org = model.Group.get(new_package['owner_org'])
-    group_name = new_package.pop('owner_name', None)
-    new_package['name'] = _slugify(new_package['title'])[:80]
-    existing_package = model.Package.get(new_package['name'])
-    if existing_package:
-        new_package['name'] = new_package['name'] + '-' + new_package['id'].lower()
-
-    if not owner_org:
-        p.toolkit.get_action('organization_create')(
-            context,
-            {'name': new_package['owner_org'], 'title': group_name,
-             'extras': [{'key': 'organization_type', 'value': "Federal Government"}]})
-
-    context['schema'] = schema.default_create_package_schema()
-    context['schema']['id'] = [not_empty]
-    context['return_id_only'] = True
-    return p.toolkit.get_action('package_create')(context, new_package)
-
-
-def datajson_update(context, data_dict):
-    new_package = create_data_dict(data_dict)
-    model = context['model']
-    owner_org = model.Group.get(new_package['owner_org'])
-    group_name = new_package.pop('owner_name', None)
-    old_package = p.toolkit.get_action('package_show')(
-        {'model': model, 'ignore_auth': True}, {"id": new_package['id']})
-    old_resources = old_package['resources']
-
-    if not owner_org:
-        p.toolkit.get_action('organization_create')(
-            context,
-            {'name': new_package['owner_org'], 'title': group_name,
-             'extras': [{'key': 'organization_type', 'value': "Federal Government"}]})
-
-    for num, resource in enumerate(new_package['resources']):
-        try:
-            old_id = old_resources[num]['id']
-            resource['id'] = old_id
-        except IndexError:
-            pass
-    context['return_id_only'] = True
-    p.toolkit.get_action('package_update')(context, new_package)
-
-
-def doi_create(context, data_dict):
-    model = context['model']
-    new_package = data_dict
-    source_hash = hashlib.sha1(json.dumps(data_dict, sort_keys=True)).hexdigest()
-    new_package["extras"].append({"key": "source_hash", "value": source_hash})
-    new_package["extras"].append({"key": "metadata-source", "value": "doi"})
-    new_package["extras"].append({"key": "source_doi_import_identifier", "value": True})
-    owner_org = model.Group.get(ORG_MAPPING.get(new_package['organization']['name']))
-    if not owner_org:
-        print(str((datetime.datetime.now()) + ' Fail to import doi id ' + new_package['id'] + ''
-                  '. Organization ' + new_package['organization']['name'] + ' does not exist.'))
-        return
-    new_package['owner_org'] = owner_org.name
-    group_name = new_package.pop('owner_name', None)  # NOQA F841
-    new_package['name'] = _slugify(new_package['title'])[:80]
-    existing_package = model.Package.get(new_package['name'])
-    if existing_package:
-        new_package['name'] = new_package['name'] + '-' + str(int(time.time()))
-
-    resources = []
-    for resource in new_package['resources']:
-        resource.pop('resource_group_id', None)
-        resource.pop('revision_id', None)
-        resource.pop('id', None)
-        resources.append(resource)
-    new_package['resources'] = resources
-
-    obj = HarvestObject(
-        guid=uuid.uuid4().hex,
-        job=context['harvest_job'],
-        content=context['harvestobj'])
-    obj.save()
-    new_package["extras"].append({"key": "harvest_object_id", "value": obj.id})
-
-    context['schema'] = schema.default_create_package_schema()
-    context['schema']['id'] = [not_empty]
-    context['return_id_only'] = True
-    p.toolkit.get_action('package_create')(context, new_package)
-    print(str(datetime.datetime.now()) + ' Imported doi id ' + new_package['id'])
-
-
-def doi_update(context, data_dict):
-    model = context['model']
-    new_package = data_dict
-    source_hash = hashlib.sha1(json.dumps(data_dict, sort_keys=True)).hexdigest()
-    old_package = p.toolkit.get_action('package_show')(
-        {'model': model, 'ignore_auth': True}, {"id": new_package['id']})
-    for extra in old_package['extras']:
-        if extra['key'] == 'source_hash':
-            old_source_hash = extra['value']
-            break
-    else:
-        old_source_hash = None
-
-    if source_hash == old_source_hash and old_package.get('state') == 'active':
-        print(str(datetime.datetime.now()) + ' No change for doi id ' + new_package['id'])
-        return
-
-    new_package["extras"].append({"key": "source_hash", "value": source_hash})
-    new_package["extras"].append({"key": "metadata-source", "value": "doi"})
-    new_package["extras"].append({"key": "source_doi_import_identifier", "value": True})
-    new_package.pop("name", None)
-    owner_org = model.Group.get(ORG_MAPPING.get(new_package['organization']['name']))
-    if not owner_org:
-        print(str(datetime.datetime.now()) + ' Fail to update doi id ' + new_package['id'] + ''
-              '. Organization ' + new_package['organization']['name'] + ' does not exist.')
-        return
-    new_package['owner_org'] = owner_org.name
-    group_name = new_package.pop('owner_name', None)  # NOQA F841
-
-    resources = []
-    for resource in new_package['resources']:
-        resource.pop('resource_group_id', None)
-        resource.pop('revision_id', None)
-        resource.pop('id', None)
-        resources.append(resource)
-    new_package['resources'] = resources
-
-    obj = HarvestObject(
-        guid=uuid.uuid4().hex,
-        job=context['harvest_job'],
-        content=context['harvestobj'])
-    obj.save()
-    new_package["extras"].append({"key": "harvest_object_id", "value": obj.id})
-
-    context['return_id_only'] = True
-    p.toolkit.get_action('package_update')(context, new_package)
-    print(str(datetime.datetime.now()) + ' Updated doi id ' + new_package['id'])
-
-
 def preserve_category_tags(context, data_dict):
     """ Look category tags in previous version before update dataset """
 
@@ -394,6 +250,7 @@ EXTRAS_ROLLUP_KEY_IGNORE = [
     "harvest_source_title",
 ]
 
+
 def is_geojson(data):
     geojson_types = [
         "Point",
@@ -410,7 +267,7 @@ def is_geojson(data):
             data = json.loads(data)
         except JSONDecodeError:
             return False
-        
+
     is_dict = isinstance(data, dict)
     if is_dict is False:
         return is_dict
@@ -418,6 +275,7 @@ def is_geojson(data):
     has_valid_type = "type" in data and data["type"] in geojson_types
     has_coords = "coordinates" in data and len(data["coordinates"]) > 0
     return is_dict and has_valid_type and has_coords
+
 
 def rollup_save_action(context, data_dict):
     """ to run before create actions """
@@ -448,7 +306,7 @@ def rollup_save_action(context, data_dict):
                 # TODO look for more not-found location names
                 if old_spatial in ['National', 'US']:
                     old_spatial = 'United States'
-                    
+
                 if not is_geojson(old_spatial):
                     new_spatial = translate_spatial(old_spatial)
                     if new_spatial is not None:

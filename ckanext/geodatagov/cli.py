@@ -8,7 +8,6 @@ import sys
 import tempfile
 import warnings
 from typing import Optional
-from sqlalchemy import func, and_
 import boto3
 from botocore.config import Config
 import click
@@ -23,7 +22,6 @@ from ckan.model.meta import Session as session
 from ckanext.tracking.cli import tracking
 from ckanext.tracking.model import TrackingSummary as ts
 from ckanext.geodatagov.search import GeoPackageSearchQuery
-from ckanext.harvest.model import HarvestJob, HarvestObject
 
 # default constants
 #   for sitemap_to_s3
@@ -343,50 +341,6 @@ def get_all_entity_ids_date():
     return ret_all
 
 
-def get_all_entity_ids_date_hoid():
-    """
-    Return a list of the IDs and metadata_modified of all indexed packages.
-
-    harvest_object_id is not readily available from solr result. It has to
-    be extracted from a json object validated_data_dict. Due to the large size
-    of validated_data_dict, Solr result has to be processed in batches at 10000
-    pagination to avoid out-of-memory.
-    """
-    query = "*:*"
-    fq = '+site_id:"%s" ' % config.get("ckan.site_id")
-    fq += "+state:active "
-    fq += "+type:dataset "
-
-    ret_all = []
-
-    start = 0
-    page_size = 10000
-    conn = make_connection()
-
-    log.info(f"Now loading SOLR packages using page size {page_size}...")
-
-    while True:
-        log.info(f"loading packages starting from {start}")
-        data = conn.search(query, fq=fq, start=start, rows=page_size, fl="id, metadata_modified, validated_data_dict")
-
-        if not data:
-            break
-
-        for r in data.docs:
-            harvest_object_id = None
-            data_dict = json.loads(r.get("validated_data_dict"))
-            for extra in data_dict.get("extras", []):
-                if extra["key"] == "harvest_object_id":
-                    harvest_object_id = extra["value"]
-                    break
-
-            ret_all.append((r.get("id"), r.get("metadata_modified"), harvest_object_id))
-
-        start += page_size
-
-    return ret_all
-
-
 def delete_packages(package_ids):
     """
     Delete solr indexes for a list of packages and defer the commit to the end.
@@ -404,118 +358,6 @@ def delete_packages(package_ids):
         except Exception as e:
             log.error(f"Error while delete index {id}: {repr(e)}")
     conn.commit(waitSearcher=False)
-
-
-@geodatagov.command()
-@click.option("--dryrun", is_flag=True, help="inspect what will be updated")
-@click.option(
-    "--cleanup_solr", is_flag=True, help="Only remove orphaned entries in Solr"
-)
-@click.option(
-    "--update_solr",
-    is_flag=True,
-    help=(
-        "(Update solr entries with new data from DB) OR (Add DB data to Solr that is missing)"
-    ),
-)
-def db_solr_sync(dryrun, cleanup_solr, update_solr):
-    """db solr sync"""
-    if dryrun:
-        log.info("Starting dryrun to update index.")
-
-    package_index = index_for(model.Package)
-
-    # get active packages from DB
-    active_package = [
-        (r[0], r[1].replace(microsecond=0), r[2])
-        for r in model.Session.query(
-            model.Package.id,
-            model.Package.metadata_modified,
-            HarvestObject.id
-        )
-        .join(
-            HarvestObject,
-            and_(
-                HarvestObject.package_id == model.Package.id,
-                HarvestObject.current == True  # noqa: E712
-            ),
-            isouter=True
-        )
-        .filter(
-            model.Package.type == "dataset",
-            model.Package.state == "active"
-        )
-        .order_by(HarvestObject.import_finished)
-        .all()
-    ]
-
-    # in case an id comes with multiple harvest_object_id,
-    # this removes anything but the latest
-    # after which we have a dict formatted as
-    # {
-    #   'some_id': (some_mod_date, some_ho_id)
-    #   ...
-    # }
-    cleaning = {}
-    for id, metadata_modified, harvest_object_id in active_package:
-        cleaning[id] = (metadata_modified, harvest_object_id)
-
-    # now it is cleaned, change dict back to a set.
-    # after which we are back to a set formatted as
-    # {(some_id, some_mod_date, some_ho_id), ...}
-    active_package = {(k,) + cleaning[k] for k in cleaning}
-    # pick out those packages without harvest_object_id
-    active_package_id_wo_ho = {k for k in cleaning if cleaning[k][1] is None}
-
-    log.info(f"total {len(active_package)} DB active_package")
-
-    # get indexed packages from solr
-    indexed_package = set(get_all_entity_ids_date_hoid())
-    log.info(f"total {len(indexed_package)} solr indexed_package")
-
-    solr_package = indexed_package - active_package
-    db_package = active_package - indexed_package
-
-    work_list = {}
-    for id, *_ in solr_package:
-        work_list[id] = "solr"
-    for id, *_ in db_package:
-        work_list[id] = "db"
-
-    both = cleanup_solr == update_solr
-    set_cleanup = {i if work_list[i] == "solr" else None for i in work_list} - {None}
-    set_update = work_list.keys() - set_cleanup - active_package_id_wo_ho
-    log.info(f"{len(set_cleanup)} packages need to be removed from Solr")
-    log.info(f"{len(set_update)} packages need to be updated/added to Solr")
-    log.info(f"{len(active_package_id_wo_ho)} packages without harvest_object need to be mannually deleted")
-
-    if not dryrun and set_cleanup and (cleanup_solr or both):
-        log.info("Deleting indexes")
-        delete_packages(set_cleanup)
-        package_index.commit()
-        log.info("Finished cleaning solr entries.")
-
-    if not dryrun and set_update and (update_solr or both):
-        log.info("Rebuilding indexes")
-        try:
-            rebuild(package_ids=set_update, defer_commit=True)
-        except Exception as e:
-            log.error("Error while rebuild index %s: %s" % (id, repr(e)))
-        package_index.commit()
-        log.info("Finished updating solr entries.")
-        log.info("Here is the first a few dataset ids that are rebuilt:")
-        count = 0
-        max = 10
-        for id in set_update:
-            count = count + 1
-            if count > max:
-                break
-            log.info(f"{count}: {id}")
-
-    # dryrun or not, we are printing out the active_package_id_wo_ho
-    if active_package_id_wo_ho:
-        log.info("Packages without harvest_object.")
-        print(*active_package_id_wo_ho, sep='\n')
 
 
 @geodatagov.command()
@@ -597,132 +439,10 @@ def db_solr_sync_next(dryrun, cleanup_solr, update_solr):
 
 
 @geodatagov.command()
-def check_stuck_jobs():
-    """check stuck harvest jobs"""
-
-    log.info("Starting check stuck harvest jobs.")
-
-    # get stuck jobs which run more than 1 day
-    stuck_jobs = (
-        model.Session.query(
-            model.Package.id,
-            model.Package.title.label("source_name"),
-            model.Group.title.label("org_name"),
-            HarvestJob.created,
-            HarvestJob.gather_started.label("gather_started"),
-            HarvestJob.gather_finished.label("gather_finished"),
-            func.now().label('current'),
-            (func.now() - HarvestJob.created).label('time_diff'))
-        .join(model.Group, model.Package.owner_org == model.Group.id)
-        .join(HarvestJob, HarvestJob.source_id == model.Package.id)
-        .filter(func.extract("day", func.now() - HarvestJob.created) >= 1,
-                HarvestJob.status == "Running")
-        .all()
-    )
-
-    log.info(f"total {len(stuck_jobs)} stuck harvest jobs")
-
-    for job in stuck_jobs:
-        message = "source_id: " + job.id + \
-                  " | created_time: " + str(job.created) + \
-                  " | current_time: " + str(job.current) + \
-                  " | gather_started: " + str(job.gather_started) + \
-                  " | gather_finished: " + str(job.gather_finished) + \
-                  " | running_length: " + str(job.time_diff) + \
-                  " | source_title: " + job.source_name + \
-                  " | organization: " + job.org_name
-
-        log.info(message)
-
-    sys.exit(len(stuck_jobs))
-
-
-@geodatagov.command()
 def test_command():
     """Basic cli command with normal result"""
     print("This is a good test!")
     return True
-
-
-@geodatagov.command()
-@click.argument("harvest_source_id", required=False)
-def harvest_object_relink(harvest_source_id: Optional[str]):
-    '''
-    Fix erroneous harvest objects for a harvest source or all harvest sources.
-    Some packages are left with no current harvest object after a harvesting job. This function
-    will fix the problem by making the latest COMPLETED harvest object current.
-    '''
-    log.info("Relinking harvest objects for harvest source {}.".format(
-        harvest_source_id if harvest_source_id else 'all'
-    ))
-
-    # find packages that has no current harvest object
-    sql = '''
-        WITH package_with_current AS (
-            SELECT package_id FROM harvest_object WHERE current
-        )
-        SELECT distinct(p.id) FROM package p
-        JOIN harvest_object h ON p.id = h.package_id
-        LEFT JOIN package_with_current c ON p.id = c.package_id
-        WHERE p.state='active' AND p.type='dataset' AND c.package_id IS NULL
-    '''
-    if harvest_source_id:
-        sql += '''
-        AND
-            h.harvest_source_id = :harvest_source_id
-        '''
-        results = model.Session.execute(sql,
-                                        {'harvest_source_id': harvest_source_id})
-    else:
-        results = model.Session.execute(sql)
-
-    pkgs_problematic = {row['id'] for row in results}
-    total = len(pkgs_problematic)
-    log.info(f'{total} packages to be fixed.')
-
-    # set last complete harvest object to be current
-    sql = '''
-        UPDATE harvest_object
-        SET current = 't'
-        WHERE
-            package_id = :id
-        AND
-            state = 'COMPLETE'
-        AND
-            import_finished = (
-                SELECT MAX(import_finished)
-                FROM harvest_object
-                WHERE
-                    state = 'COMPLETE'
-                AND
-                    report_status <> 'deleted'
-                AND
-                    package_id = :id
-            )
-        RETURNING 1
-    '''
-    count = 0
-    pkgs_to_index = set()
-    for id in pkgs_problematic:
-        result = model.Session.execute(sql, {'id': id}).fetchall()
-        model.Session.commit()
-        count = count + 1
-        if result:
-            log.info(f'{count}/{total}: {id} fixed in DB. Addded to solr index queue.')
-            pkgs_to_index.add(id)
-        else:
-            log.info(f'{count}/{total}: {id} has no valid harvest object. Need to inspect manually.')
-
-    if pkgs_to_index:
-        log.info("Rebuilding indexes")
-        package_index = index_for(model.Package)
-
-        try:
-            rebuild(package_ids=pkgs_to_index, defer_commit=True)
-        except Exception as e:
-            log.error("Error while rebuild index %s: %s" % (id, repr(e)))
-        package_index.commit()
-        log.info("Finished updating solr entries.")
 
 
 @geodatagov.command()

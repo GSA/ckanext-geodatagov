@@ -5,8 +5,10 @@ from ckan.tests import factories
 import ckan.lib.search as search
 from ckan.tests.helpers import call_action
 
-from ckanext.geodatagov.helpers import (count_collection_package,
-    get_collection_package)
+from ckanext.geodatagov.helpers import (
+    count_collection_package,
+    get_collection_package
+)
 
 log = logging.getLogger(__name__)
 
@@ -15,8 +17,8 @@ log = logging.getLogger(__name__)
 class TestCategoryTags(object):
 
     def create_datasets(self):
-        self.SOURCE_ID = "this-source" # this should be a GUID, so only use alphanumeric and dash
-        self.PARENT_ID = 'pa-rent: id' # this can be any string, so make it complex with colon and space
+        self.SOURCE_ID = "this-source"  # this should be a GUID, so only use alphanumeric and dash
+        self.PARENT_ID = 'pa-rent: id'  # this can be any string, so make it complex with colon and space
 
         organization = factories.Organization()
 
@@ -30,14 +32,14 @@ class TestCategoryTags(object):
         }
 
         for dataset in self.datasets.values():
-          factories.Dataset(
-              owner_org=organization['id'],
-              extras=[
-                  {'key': 'harvest_source_id', 'value': dataset['source_id']},
-                  {'key': 'identifier', 'value': dataset['identifier']},
-                  {'key': 'isPartOf', 'value': dataset.get('isPartOf', '')}
-              ]
-        )
+            factories.Dataset(
+                owner_org=organization['id'],
+                extras=[
+                    {'key': 'harvest_source_id', 'value': dataset['source_id']},
+                    {'key': 'identifier', 'value': dataset['identifier']},
+                    {'key': 'isPartOf', 'value': dataset.get('isPartOf', '')}
+                ]
+            )
 
         search.rebuild()
 
@@ -66,8 +68,8 @@ class TestCategoryTags(object):
         # collection_info="source-id parent-id" works. can find two children datasets with collection_info.
         all_children = call_action(
             'package_search',
-            q = '*:*',
-            fq = f'collection_info:"{self.SOURCE_ID} {self.PARENT_ID}"',
+            q='*:*',
+            fq=f'collection_info:"{self.SOURCE_ID} {self.PARENT_ID}"',
         )
         assert all_children['count'] == 2
 
@@ -82,13 +84,13 @@ class TestCategoryTags(object):
         # toggle include_collection=true to have children datasets show or hide from search
         all_dataset = call_action(
             'package_search',
-            q = '*:*',
+            q='*:*',
         )
         assert all_dataset['count'] == 1
 
         all_dataset_include_collection = call_action(
             'package_search',
-            q = '*:*',
-            fq = 'include_collection:true',
+            q='*:*',
+            fq='include_collection:true',
         )
         assert all_dataset_include_collection['count'] == len(self.datasets)
