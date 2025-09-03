@@ -47,10 +47,9 @@ class TestTracking(object):
         assert cli_result.exit_code == 0
 
         package = helpers.call_action("package_show", id=self.dataset["id"], include_tracking=True)
-        
         assert package['tracking_summary']['total'] == 1
         assert package['tracking_summary']['recent'] == 1
-    
+
     def test_sorting_working_in_package_search(self):
 
         response = helpers.call_action("package_search")
