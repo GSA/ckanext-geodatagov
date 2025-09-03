@@ -418,12 +418,11 @@ class Demo(p.SingletonPlugin):
     def before_dataset_search(self, search_params):
 
         fq = search_params.get('fq', '')
-
         if search_params.get('sort') in (None, 'rank'):
-            search_params['sort'] = 'views_recent desc'
+            search_params['sort'] = 'score desc, views_recent desc'
 
         if search_params.get('sort') in ('none'):
-            search_params['sort'] = 'score desc, name asc'
+            search_params['sort'] = 'score desc, views_recent desc'
 
         # only show collections on bulk update page and when the facet is explictely added
         try:
