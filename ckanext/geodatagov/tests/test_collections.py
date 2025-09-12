@@ -28,7 +28,8 @@ class TestCategoryTags(object):
             'child2': {'source_id': self.SOURCE_ID, 'identifier': 'child2-id', 'isPartOf': self.PARENT_ID},
             'child3': {'source_id': self.SOURCE_ID, 'identifier': 'child3-id', 'isPartOf': 'parent-id-not'},
             'child4': {'source_id': 'not-this-source', 'identifier': 'child4-id', 'isPartOf': self.PARENT_ID},
-            'child5': {'source_id': 'source:with:colon', 'identifier': 'id:with:colon', 'isPartOf': 'id:with:colon'},
+            'child5': {'source_id': 'some-source-5', 'identifier': 'id:with:colon', 'isPartOf': 'id:with:colon-anther'},
+            'child6': {'source_id': 'some-source-6', 'identifier': 'id-itself', 'isPartOf': 'id-itself'},
         }
 
         for dataset in self.datasets.values():
@@ -65,6 +66,12 @@ class TestCategoryTags(object):
         parent = get_collection_package(collection_info)
         assert parent is None
 
+        # it is allowed for a dataset to claim itself as the parent, or is it?
+        # just test what is happening now, searching its parent results in itself.
+        collection_info = f"{self.datasets['child6']['source_id']} {self.datasets['child6']['isPartOf']}"
+        parent = get_collection_package(collection_info)
+        assert next((item["value"] for item in parent['extras'] if item["key"] == "identifier"), None) == self.datasets['child6']['identifier']
+
         # collection_info="source-id parent-id" works. can find two children datasets with collection_info.
         all_children = call_action(
             'package_search',
@@ -81,16 +88,16 @@ class TestCategoryTags(object):
 
         assert dataset_identifiers == {'child1-id', 'child2-id'}
 
-        # toggle include_collection=true to have children datasets show or hide from search
+        # toggle exclude_collection=true to have children datasets show or hide from search
         all_dataset = call_action(
             'package_search',
             q='*:*',
         )
-        assert all_dataset['count'] == 1
+        assert all_dataset['count'] == len(self.datasets)
 
-        all_dataset_include_collection = call_action(
+        dataset_exclude_collection = call_action(
             'package_search',
             q='*:*',
-            fq='include_collection:true',
+            fq='exclude_collection:true',
         )
-        assert all_dataset_include_collection['count'] == len(self.datasets)
+        assert dataset_exclude_collection['count'] == 1
