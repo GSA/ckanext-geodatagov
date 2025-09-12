@@ -4,7 +4,7 @@ import urllib.parse
 import logging
 import mimetypes
 
-from ckan.plugins.toolkit import request, requires_ckan_version
+from ckan.plugins.toolkit import requires_ckan_version
 from ckan.lib.munge import munge_tag
 from ckan import __version__ as ckan_version
 
