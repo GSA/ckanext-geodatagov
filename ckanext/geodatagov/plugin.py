@@ -4,7 +4,7 @@ import urllib.parse
 import logging
 import mimetypes
 
-from ckan.plugins.toolkit import request, requires_ckan_version
+from ckan.plugins.toolkit import requires_ckan_version
 from ckan.lib.munge import munge_tag
 from ckan import __version__ as ckan_version
 
@@ -424,32 +424,25 @@ class Demo(p.SingletonPlugin):
         if search_params.get('sort') in ('none'):
             search_params['sort'] = 'score desc, views_recent desc'
 
-        # only show collections on bulk update page and when the facet is explictely added
-        try:
-            path = request.path
-        except BaseException:
-            # when there is no requests we get a
-            # TypeError: No object (name: request) has been registered for this thread
-            path = ''
-
         if 'collection_info' in fq:
             # Replace collection_info with harvest_source_id and isPArtOf
             pattern = r'collection_info:"([^"]+?) ([^"]+)"'
             fq = re.sub(pattern, r'harvest_source_id:"\1" isPartOf:"\2"', fq)
             log.debug('FQ changed for collection_info: %s', fq)
-        elif 'bulk_process' not in path and 'include_collection' not in fq:
-            # hide collection's children datasets from regular search
+
+        # hide collections
+        if 'exclude_collection' in fq:
             fq += ' -isPartOf:["" TO *]'
             log.debug('Added FQ to hide collection')
 
         # fq comes in as a string such as '(a:1 b:"2" c:["" to *])'
-        # remove string include_collection=true from fq, if found.
-        # Other values of include_collection will end up with a search term that return no results
-        pattern = r'include_collection:"?([^",\s)]+)"?'
+        # remove string exclude_collection=true from fq, if found.
+        # Other values of exclude_collection will end up with a search term that return no results
+        pattern = r'exclude_collection:"?([^",\s)]+)"?'
         match = re.search(pattern, fq, re.IGNORECASE)
         if match and match.group(1).lower() == 'true':
             fq = re.sub(pattern, '', fq, flags=re.IGNORECASE).strip()
-            # if include_collection=true is the only fq, we could end up with a set of parentheses.
+            # if exclude_collection=true is the only fq, we could end up with a set of parentheses.
             if fq == "()":
                 fq = ""
 
