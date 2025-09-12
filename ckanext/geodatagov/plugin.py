@@ -424,13 +424,6 @@ class Demo(p.SingletonPlugin):
         if search_params.get('sort') in ('none'):
             search_params['sort'] = 'score desc, views_recent desc'
 
-        try:
-            path = request.path
-        except BaseException:
-            # when there is no requests we get a
-            # TypeError: No object (name: request) has been registered for this thread
-            path = ''
-
         if 'collection_info' in fq:
             # Replace collection_info with harvest_source_id and isPArtOf
             pattern = r'collection_info:"([^"]+?) ([^"]+)"'
@@ -441,7 +434,6 @@ class Demo(p.SingletonPlugin):
         if 'exclude_collection' in fq:
             fq += ' -isPartOf:["" TO *]'
             log.debug('Added FQ to hide collection')
-
 
         # fq comes in as a string such as '(a:1 b:"2" c:["" to *])'
         # remove string exclude_collection=true from fq, if found.

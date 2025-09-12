@@ -67,10 +67,14 @@ class TestCategoryTags(object):
         assert parent is None
 
         # it is allowed for a dataset to claim itself as the parent, or is it?
-        # just test what is happening now, searching its parent results in itself.
+        # just test what is happening now, searching its parent results in itself
         collection_info = f"{self.datasets['child6']['source_id']} {self.datasets['child6']['isPartOf']}"
         parent = get_collection_package(collection_info)
-        assert next((item["value"] for item in parent['extras'] if item["key"] == "identifier"), None) == self.datasets['child6']['identifier']
+        identifier = next(
+            (item["value"] for item in parent['extras'] if item["key"] == "identifier"),
+            None
+        )
+        assert identifier == self.datasets['child6']['identifier']
 
         # collection_info="source-id parent-id" works. can find two children datasets with collection_info.
         all_children = call_action(
