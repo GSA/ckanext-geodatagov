@@ -33,11 +33,11 @@
     {% if collection_package %}
         <p>{{ _('This dataset is part of the following collection:') }}</p>
         <ul class="dataset-list unstyled">
-            {% snippet "snippets/package_item.html", package=collection_package, is_collection=true, truncate=75 %}
+            {% snippet "snippets/package_item.html", package=collection_package, truncate=75 %}
         </ul>
     {% else %}
-        <p>{{ _('This dataset is part of a deleted collection.') }}</p>
-        <p><a href="{{ h.url_for('search', collection_info=collection_info) }}" class="btn-collection">{{ _('Search other datasets within the same collection') }}</a></p>
+        <p>{{ _('This dataset is part of a collection.') }}</p>
+        <p><a href="{{ h.url_for('search', collection_info=collection_info) }}" class="btn-collection">{{ _('Search datasets within the same collection') }}</a></p>
     {% endif %}
     {% endif %}
 </section>
