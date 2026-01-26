@@ -30,7 +30,6 @@ setup(
         # -*- Extra requirements: -*-
         "ckanext-datajson>=0.1.19",
         "boto3",
-        "ply>=3.4",
     ],
     setup_requires=["wheel"],
     entry_points="""
@@ -46,7 +45,6 @@ setup(
     geodatagov_geoportal_harvester=ckanext.geodatagov.harvesters:GeoDataGovGeoportalHarvester
     waf_harvester_collection=ckanext.geodatagov.harvesters:WAFCollectionHarvester
     arcgis_harvester=ckanext.geodatagov.harvesters:ArcGISHarvester
-    z3950_harvester=ckanext.geodatagov.harvesters:Z3950Harvester
 
     [paste.paster_command]
     geodatagov=ckanext.geodatagov.commands:GeoGovCommand

@@ -26,7 +26,6 @@ Package                                                                | Notes
 ---------------------------------------------------------------------- | -------------
 [ckanext-harvest](https://github.com/ckan/ckanext-harvest/)            | --
 [ckanext-spatial](https://github.com/ckan/ckanext-spatial)             | --
-[PyZ3950](https://github.com/asl2/PyZ3950)                             | --
 [werkzeug](https://github.com/nickumia-reisys/werkzeug)                | This only effects the tests.  For all intents and purposes, this should be tracking [upstream](https://github.com/pallets/werkzeug)
 
 This extension is compatible with these versions of CKAN.

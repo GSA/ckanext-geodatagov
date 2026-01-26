@@ -1,7 +1,5 @@
 -e git+https://github.com/ckan/ckanext-harvest.git#egg=ckanext_harvest
 -e git+https://github.com/ckan/ckanext-spatial.git#egg=ckanext-spatial
--e git+https://github.com/asl2/PyZ3950.git#egg=PyZ3950
-
 pyutilib
 
 # ckanext-harvest dependencies
@@ -21,10 +19,6 @@ pyparsing>=2.1.10
 # requests>=1.1.0 # included in ckan-core
 six
 geojson==3.1.0
-
-# PyZ3950
-pyasn1
-# ply #required in setup.py
 
 # other requirments
 boto3
