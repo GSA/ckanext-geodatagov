@@ -12,5 +12,4 @@ from ckanext.geodatagov.harvesters.base import GeoDataGovWAFHarvester  # NOQA F4
 from ckanext.geodatagov.harvesters.base import GeoDataGovDocHarvester  # NOQA F401
 from ckanext.geodatagov.harvesters.base import GeoDataGovGeoportalHarvester  # NOQA F401
 from ckanext.geodatagov.harvesters.waf_collection import WAFCollectionHarvester  # NOQA F401
-from ckanext.geodatagov.harvesters.z3950 import Z3950Harvester  # NOQA F401
 from ckanext.geodatagov.harvesters.arcgis import ArcGISHarvester  # NOQA F401

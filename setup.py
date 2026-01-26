@@ -10,7 +10,7 @@ with open(path.join(here, "README.md"), encoding="utf-8") as f:
 
 setup(
     name="ckanext-geodatagov",
-    version="0.3.6",
+    version="0.3.7",
     description="",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -30,7 +30,6 @@ setup(
         # -*- Extra requirements: -*-
         "ckanext-datajson>=0.1.19",
         "boto3",
-        "ply>=3.4",
     ],
     setup_requires=["wheel"],
     entry_points="""
@@ -46,7 +45,6 @@ setup(
     geodatagov_geoportal_harvester=ckanext.geodatagov.harvesters:GeoDataGovGeoportalHarvester
     waf_harvester_collection=ckanext.geodatagov.harvesters:WAFCollectionHarvester
     arcgis_harvester=ckanext.geodatagov.harvesters:ArcGISHarvester
-    z3950_harvester=ckanext.geodatagov.harvesters:Z3950Harvester
 
     [paste.paster_command]
     geodatagov=ckanext.geodatagov.commands:GeoGovCommand

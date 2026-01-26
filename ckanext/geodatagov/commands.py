@@ -134,7 +134,7 @@ class GeoGovCommand(p.SingletonPlugin):
                 row = dict(list(zip(fields, row)))
 
                 # neeeds some fix
-                # if row['PROTOCOL_TYPE'].lower() not in ('waf', 'csw', 'z3950'):
+                # if row['PROTOCOL_TYPE'].lower() not in ('waf', 'csw'):
                 # continue
 
                 # frequency = row['FREQUENCY'].upper()
